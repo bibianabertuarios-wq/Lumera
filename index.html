@@ -54,7 +54,9 @@
             const [session, setSession] = useState(null);
             const [isLoadingAuth, setIsLoadingAuth] = useState(false);
             const [currentUser, setCurrentUser] = useState(null);
-            const [currentPage, setCurrentPage] = useState('home');
+            const [showAuth, setShowAuth] = useState(false);
+const [authMode, setAuthMode] = useState('login'); // 'login' o 'register'
+const [authData, setAuthData] = useState({ email: '', password: '' });            
             const [showQuiz, setShowQuiz] = useState(false);
             const [quizStep, setQuizStep] = useState(1);
             const [symptoms, setSymptoms] = useState([]);
@@ -186,7 +188,85 @@
                     alert(language === 'es' ? 'Por favor completa el cuestionario primero' : 'Please complete the questionnaire first');
                     return;
                 }
+                // Cargar perfil desde Supabase
+const loadUserFromDB = async (userId) => {
+    try {
+        const { data, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', userId)
+            .single();
+        
+        if (error) throw error;
+        
+        if (data) {
+            setCurrentUser(data);
+            setShowQuiz(false);
+            setShowAuth(false);
+        }
+    } catch (error) {
+        console.error('Error loading user:', error);
+    }
+};
 
+// Login
+const handleLogin = async () => {
+    if (!authData.email || !authData.password) {
+        alert(language === 'es' ? 'Completa email y contraseña' : 'Complete email and password');
+        return;
+    }
+    
+    setIsLoadingAuth(true);
+    try {
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email: authData.email,
+            password: authData.password
+        });
+        
+        if (error) throw error;
+        
+        await loadUserFromDB(data.user.id);
+    } catch (error) {
+        console.error('Login error:', error);
+        alert(language === 'es' ? 'Error al iniciar sesión' : 'Login error');
+    } finally {
+        setIsLoadingAuth(false);
+    }
+};
+
+// Register
+const handleRegister = async () => {
+    if (!authData.email || !authData.password) {
+        alert(language === 'es' ? 'Completa email y contraseña' : 'Complete email and password');
+        return;
+    }
+    
+    if (authData.password.length < 6) {
+        alert(language === 'es' ? 'La contraseña debe tener al menos 6 caracteres' : 'Password must be at least 6 characters');
+        return;
+    }
+    
+    setIsLoadingAuth(true);
+    try {
+        const { data, error } = await supabase.auth.signUp({
+            email: authData.email,
+            password: authData.password
+        });
+        
+        if (error) throw error;
+        
+        // Guardamos email en formData para usarlo después en el quiz
+        setFormData({...formData, email: authData.email});
+        setSession(data.session);
+        setShowAuth(false);
+        setShowQuiz(true);
+    } catch (error) {
+        console.error('Register error:', error);
+        alert(language === 'es' ? 'Error al registrarse' : 'Registration error');
+    } finally {
+        setIsLoadingAuth(false);
+    }
+};
                 try {
                     const region = currentUser.region || 'latam';
                     const priceId = PRICES[region].id;
@@ -212,7 +292,7 @@
                     }
                 } catch (error) {
                     console.error('Error:', error);
-                    alert(language === 'es' ? 'Error al procesar el pago' : 'Error processing payment');
+                    alert(language === 'es' ? 'Error al procesar el pago': 'Error processing payment');
                 }
             };
 
@@ -276,28 +356,31 @@
                 </div>
             );
 
-            // CARGAR DATOS
-            useEffect(() => {
-                const saved = localStorage.getItem('lumeraUser');
-                const savedDark = localStorage.getItem('lumeraDark');
-                const savedLang = localStorage.getItem('lumeraLang');
-                const savedSymptoms = localStorage.getItem('lumeraSymptoms');
-                const savedPeriod = localStorage.getItem('lumeraPeriod');
-                const savedMessages = localStorage.getItem('lumeraMessages');
-                
-                if (saved) {
-                    setCurrentUser(JSON.parse(saved));
-                    setCurrentPage('home');
-                } else {
-                    setShowQuiz(true);
-                }
-                
-                if (savedDark) setDarkMode(JSON.parse(savedDark));
-                if (savedLang) setLanguage(savedLang);
-                if (savedSymptoms) setSymptoms(JSON.parse(savedSymptoms));
-                if (savedPeriod) setPeriodLog(JSON.parse(savedPeriod));
-                if (savedMessages) setUserMessages(JSON.parse(savedMessages));
-            }, []);
+            // CARGAR AUTH Y DATOS
+useEffect(() => {
+    const checkAuth = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (session) {
+            setSession(session);
+            await loadUserFromDB(session.user.id);
+        } else {
+            setShowAuth(true);
+        }
+    };
+    
+    checkAuth();
+    
+    // Escuchar cambios de auth
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        setSession(session);
+        if (session) {
+            loadUserFromDB(session.user.id);
+        }
+    });
+    
+    return () => subscription.unsubscribe();
+}, []);            
 
             // GUARDAR DATOS
             useEffect(() => {
@@ -819,18 +902,34 @@
                                     const bmr = 10 * parseFloat(formData.weight) + 6.25 * parseFloat(formData.height) - 5 * parseInt(formData.age) + 161;
                                     const tdee = Math.round(bmr * 1.55);
                                     
-                                    const newUser = { 
-                                        ...formData, 
-                                        bmi, 
-                                        tdee, 
-                                        createdAt: new Date().toISOString(), 
-                                        exerciseGoal, 
-                                        subscription_status: 'free',
-                                        ...legalAgreements 
-                                    };
-                                    setCurrentUser(newUser);
-                                    localStorage.setItem('lumeraUser', JSON.stringify(newUser));
-                                    setQuizStep(6);
+// Guardar en Supabase
+try {
+    const { error } = await supabase
+        .from('users')
+        .insert([{
+            id: session.user.id,
+            email: formData.email,
+            profile_name: formData.profileName,
+            age: parseInt(formData.age),
+            height: parseFloat(formData.height),
+            weight: parseFloat(formData.weight),
+            bmi: parseFloat(bmi),
+            tdee: tdee,
+            region: formData.region,
+            exercise_goal: exerciseGoal,
+            subscription_status: 'free',
+            created_at: new Date().toISOString()
+        }]);
+    
+    if (error) throw error;
+    
+    // Cargar usuario desde DB
+    await loadUserFromDB(session.user.id);
+    setQuizStep(6);
+} catch (error) {
+    console.error('Error saving user:', error);
+    alert(language === 'es' ? 'Error al guardar perfil' : 'Error saving profile');
+}
                                 }} className="w-full bg-gradient-to-r from-purple-400 to-yellow-200 text-white py-3 rounded-lg font-semibold hover:shadow-lg">
                                     {language === 'es' ? 'Siguiente' : 'Next'} →
                                 </button>
@@ -1574,8 +1673,74 @@
                     default: return renderHome();
                 }
             };
+// Pantalla de Login/Registro
+if (showAuth) {
+    return (
+        <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-purple-100 to-yellow-50'} flex items-center justify-center p-4`}>
+            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl p-12 max-w-md w-full`}>
+                <div className="text-center mb-8">
+                    <h1 className="text-4xl font-light gradient-text mb-2">Lumera</h1>
+                    <p className="text-gray-600 dark:text-gray-400">
+                        {language === 'es' ? 'Tu compañera en perimenopausia' : 'Your perimenopause companion'}
+                    </p>
+                </div>
 
-            if (showQuiz) return renderQuiz();
+                <div className="flex gap-2 mb-6">
+                    <button
+                        onClick={() => setAuthMode('login')}
+                        className={`flex-1 py-2 rounded-lg font-semibold ${authMode === 'login' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                    >
+                        {language === 'es' ? 'Iniciar Sesión' : 'Login'}
+                    </button>
+                    <button
+                        onClick={() => setAuthMode('register')}
+                        className={`flex-1 py-2 rounded-lg font-semibold ${authMode === 'register' ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700'}`}
+                    >
+                        {language === 'es' ? 'Registrarse' : 'Register'}
+                    </button>
+                </div>
+
+                <div className="space-y-4 mb-6">
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        value={authData.email}
+                        onChange={(e) => setAuthData({...authData, email: e.target.value})}
+                        className={`w-full px-4 py-3 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}
+                    />
+                    <input
+                        type="password"
+                        placeholder={language === 'es' ? 'Contraseña' : 'Password'}
+                        value={authData.password}
+                        onChange={(e) => setAuthData({...authData, password: e.target.value})}
+                        className={`w-full px-4 py-3 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}
+                    />
+                </div>
+
+                <button
+                    onClick={authMode === 'login' ? handleLogin : handleRegister}
+                    disabled={isLoadingAuth}
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg disabled:opacity-50"
+                >
+                    {isLoadingAuth ? '...' : (authMode === 'login' ? (language === 'es' ? 'Entrar' : 'Enter') : (language === 'es' ? 'Crear Cuenta' : 'Create Account'))}
+                </button>
+
+                <div className="mt-6 text-center">
+                    <button
+                        onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
+                        className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600"
+                    >
+                        {language === 'es' ? '🇬🇧 English' : '🇪🇸 Español'}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+```
+
+---
+
 
             return (
                 <div className={darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50'}>
