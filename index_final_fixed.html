@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumera - Tu Compañera de Bienestar</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Stripe -->
+    <script src="https://js.stripe.com/v3/"></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Nunito', sans-serif; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; }
+        .gradient-text { background: linear-gradient(135deg, #b8a8d8 0%, #d4af7f 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // ============================================================
+        // CONFIGURACIÓN DE BACKEND
+        // ============================================================
+        const SUPABASE_URL = 'https://pyekwpmbdnmglrjieexc.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5ZWt3cG1iZG5tZ2xyamllZXhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0ODM0OTgsImV4cCI6MjA4MTA1OTQ5OH0.zQl7GF3E6BhDqW3bEMixAbdDcOsW8BsFOBeAGa-5bzY';
+        const BACKEND_URL = 'https://lumera-backend-production.up.railway.app';
+        const STRIPE_PUBLISHABLE_KEY = 'pk_test_51Sejh162SZ6DF120ogS0E67ngoK4aE2C2xRW0pMJcfwWxaQq1UJ7kj9nKbmZQ8h0v3lG';
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const stripe = window.Stripe(STRIPE_PUBLISHABLE_KEY);
+
+        const PRICES = {
+            latam: { id: 'price_1Sejoa62SZ6DF12Ox5sU1Y9v', price: '$4.99', original: '$8.32' },
+            emea: { id: 'price_1Sejso62SZ6DF12O5eSsNiGQ', price: '€4.99', original: '€8.32' },
+            usa: { id: 'price_1Sejuh62SZ6DF12OUR0k19Rd', price: '$6.99', original: '$11.65' }
+        };
+
+        const LumeraApp = () => {
+            const [language, setLanguage] = useState('es');
+            const [darkMode, setDarkMode] = useState(false);
+            const [session, setSession] = useState(null);
+            const [isLoadingAuth, setIsLoadingAuth] = useState(true);
+            const [currentUser, setCurrentUser] = useState(null);
+            const [currentPage, setCurrentPage] = useState('home');
+            const [showAuth, setShowAuth] = useState(false);
+            const [authMode, setAuthMode] = useState('login');
+            const [authData, setAuthData] = useState({ email: '', password: '' });
+            const [showQuiz, setShowQuiz] = useState(false);
+            const [quizStep, setQuizStep] = useState(0); // 0 = bienvenida, 1-3 = pasos
+            const [symptoms, setSymptoms] = useState([]);
+            const [periodLog, setPeriodLog] = useState([]);
+            const [userMessages, setUserMessages] = useState([]);
+            const [exerciseGoal, setExerciseGoal] = useState('hormonal');
+            
+            const [formData, setFormData] = useState({
+                profileName: '',
+                age: '',
+                height: '',
+                weight: '',
+                conditions: [],
+            });
+
+            const [legalAgreements, setLegalAgreements] = useState({
+                over18: false,
+                notReplaceDoctor: false,
+                privacy: false
+            });
+
+            const [symptomForm, setSymptomForm] = useState({
+                sleep: 5,
+                energy: 5,
+                mood: 5,
+                hotFlashes: 0,
+                anxiety: 5,
+                date: new Date().toISOString().split('T')[0]
+            });
+
+            const [periodForm, setPeriodForm] = useState({
+                intensity: 5,
+                duration: 5,
+                symptoms: '',
+                date: new Date().toISOString().split('T')[0]
+            });
+
+            const [communityMessage, setCommunityMessage] = useState('');
+
+            // REFS PARA GRÁFICOS
+            const chartRefSleep = useRef(null);
+            const chartRefEnergy = useRef(null);
+            const chartRefMood = useRef(null);
+            const chartRefHotFlashes = useRef(null);
+            const chartRefPeriod = useRef(null);
+
+            const chartsRef = useRef({
+                sleep: null,
+                energy: null,
+                mood: null,
+                hotFlashes: null,
+                period: null
+            });
+
+            const t = {
+                es: {
+                    app_name: 'Lumera',
+                    tagline: 'Tu compañera de bienestar',
+                    home: 'Inicio',
+                    nutrition: 'Nutrición',
+                    exercise: 'Ejercicio',
+                    symptoms: 'Síntomas',
+                    period: 'Período',
+                    myths: 'Mitos',
+                    tips: 'Consejos',
+                    workshops: 'Talleres',
+                    community: 'Comunidad',
+                    save: 'Guardar',
+                    cancel: 'Cancelar',
+                    next: 'Siguiente',
+                    exit: 'Salir',
+                    ingredients: 'Ingredientes',
+                    preparation: 'Preparación',
+                    why: 'Por qué',
+                    benefits: 'Beneficios',
+                    day: 'Día',
+                    breakfast: 'Desayuno',
+                    lunch: 'Almuerzo',
+                    dinner: 'Cena',
+                    snack: 'Snack',
+                    personalized: 'Personalizado para ti',
+                    download: 'Descargar',
+                    addRecord: 'Registrar',
+                    strength: 'Ganar Fuerza',
+                    weightLoss: 'Perder Peso',
+                    hormonal: 'Equilibrio Hormonal',
+                    premium_title: 'Contenido Premium',
+                    premium_desc: 'Desbloquea todas las funcionalidades de Lumera',
+                    subscribe: 'Suscribirme',
+                    loading: 'Cargando...',
+                    welcome_title: '¡Bienvenida a Lumera!',
+                    welcome_subtitle: 'Tu compañera en esta nueva etapa de transformación',
+                    welcome_desc: 'Lumera te acompaña en tu bienestar hormonal con herramientas personalizadas de nutrición, ejercicio y seguimiento.',
+                    start: 'Comenzar'
+                },
+                en: {
+                    app_name: 'Lumera',
+                    tagline: 'Your wellness companion',
+                    home: 'Home',
+                    nutrition: 'Nutrition',
+                    exercise: 'Exercise',
+                    symptoms: 'Symptoms',
+                    period: 'Period',
+                    myths: 'Myths',
+                    tips: 'Tips',
+                    workshops: 'Workshops',
+                    community: 'Community',
+                    save: 'Save',
+                    cancel: 'Cancel',
+                    next: 'Next',
+                    exit: 'Exit',
+                    ingredients: 'Ingredients',
+                    preparation: 'Preparation',
+                    why: 'Why',
+                    benefits: 'Benefits',
+                    day: 'Day',
+                    breakfast: 'Breakfast',
+                    lunch: 'Lunch',
+                    dinner: 'Dinner',
+                    snack: 'Snack',
+                    personalized: 'Personalized for you',
+                    download: 'Download',
+                    addRecord: 'Record',
+                    strength: 'Build Strength',
+                    weightLoss: 'Lose Weight',
+                    hormonal: 'Hormonal Balance',
+                    premium_title: 'Premium Content',
+                    premium_desc: 'Unlock all Lumera features',
+                    subscribe: 'Subscribe',
+                    loading: 'Loading...',
+                    welcome_title: 'Welcome to Lumera!',
+                    welcome_subtitle: 'Your companion in this new stage of transformation',
+                    welcome_desc: 'Lumera accompanies you in your hormonal wellness with personalized nutrition, exercise and tracking tools.',
+                    start: 'Start'
+                }
+            };
+
+            // ============================================================
+            // AUTENTICACIÓN CON SUPABASE
+            // ============================================================
+            useEffect(() => {
+                supabase.auth.getSession().then(({ data: { session } }) => {
+                    setSession(session);
+                    if (session) {
+                        loadUserProfile(session.user.id);
+                    } else {
+                        setShowAuth(true);
+                    }
+                    setIsLoadingAuth(false);
+                });
+
+                const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+                    setSession(session);
+                    if (session) {
+                        loadUserProfile(session.user.id);
+                        setShowAuth(false);
+                    } else {
+                        setShowAuth(true);
+                        setCurrentUser(null);
+                    }
+                });
+
+                return () => subscription.unsubscribe();
+            }, []);
+
+            const loadUserProfile = async (userId) => {
+                try {
+                    const { data, error } = await supabase
+                        .from('user_profiles')
+                        .select('*')
+                        .eq('user_id', userId)
+                        .single();
+
+                    if (error && error.code !== 'PGRST116') {
+                        console.error('Error loading profile:', error);
+                        return;
+                    }
+
+                    if (data) {
+                        setCurrentUser(data);
+                        setShowQuiz(false);
+                        loadUserData(userId);
+                    } else {
+                        // Usuario nuevo, mostrar quiz
+                        setShowQuiz(true);
+                        setQuizStep(0);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            };
+
+            const loadUserData = async (userId) => {
+                try {
+                    const { data: symptomsData } = await supabase
+                        .from('symptoms')
+                        .select('*')
+                        .eq('user_id', userId)
+                        .order('date', { ascending: false });
+                    
+                    if (symptomsData) setSymptoms(symptomsData);
+
+                    const { data: periodData } = await supabase
+                        .from('period_logs')
+                        .select('*')
+                        .eq('user_id', userId)
+                        .order('date', { ascending: false });
+                    
+                    if (periodData) setPeriodLog(periodData);
+
+                    const { data: messagesData } = await supabase
+                        .from('community_messages')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+                    
+                    if (messagesData) setUserMessages(messagesData);
+                } catch (error) {
+                    console.error('Error loading user data:', error);
+                }
+            };
+
+            const handleLogin = async () => {
+                setIsLoadingAuth(true);
+                try {
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email: authData.email,
+                        password: authData.password,
+                    });
+
+                    if (error) {
+                        alert(error.message);
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    alert('Error al iniciar sesión');
+                } finally {
+                    setIsLoadingAuth(false);
+                }
+            };
+
+            const handleRegister = async () => {
+                setIsLoadingAuth(true);
+                try {
+                    const { data, error } = await supabase.auth.signUp({
+                        email: authData.email,
+                        password: authData.password,
+                        options: {
+                            emailRedirectTo: window.location.origin,
+                            data: {
+                                email_confirm: true // Auto-confirmar en desarrollo
+                            }
+                        }
+                    });
+
+                    if (error) {
+                        alert(error.message);
+                    } else {
+                        // Registro exitoso, iniciar sesión automáticamente
+                        alert(language === 'es' 
+                            ? '¡Cuenta creada! Completemos tu perfil.' 
+                            : 'Account created! Let\'s complete your profile.');
+                    }
+                } catch (error) {
+                    console.error('Register error:', error);
+                    alert('Error al registrarse');
+                } finally {
+                    setIsLoadingAuth(false);
+                }
+            };
+
+            const handleLogout = async () => {
+                await supabase.auth.signOut();
+                setCurrentUser(null);
+                setShowAuth(true);
+                setShowQuiz(false);
+            };
+
+            // ============================================================
+            // SISTEMA PREMIUM Y STRIPE
+            // ============================================================
+            const isPremium = () => {
+                return currentUser?.subscription_status === 'active';
+            };
+
+            const getRegion = () => {
+                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                if (timezone.includes('America')) return 'latam';
+                if (timezone.includes('Europe') || timezone.includes('Africa')) return 'emea';
+                return 'usa';
+            };
+
+            const handleSubscribe = async () => {
+                if (!session) {
+                    alert(language === 'es' ? 'Debes iniciar sesión primero' : 'You must log in first');
+                    return;
+                }
+
+                try {
+                    const region = getRegion();
+                    const priceId = PRICES[region].id;
+
+                    const response = await fetch(`${BACKEND_URL}/create-checkout-session`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            priceId: priceId,
+                            userId: session.user.id,
+                            userEmail: session.user.email,
+                        }),
+                    });
+
+                    const { sessionId } = await response.json();
+                    const { error } = await stripe.redirectToCheckout({ sessionId });
+
+                    if (error) {
+                        console.error('Stripe error:', error);
+                        alert('Error al procesar el pago');
+                    }
+                } catch (error) {
+                    console.error('Subscribe error:', error);
+                    alert('Error al crear la suscripción');
+                }
+            };
+
+            // ============================================================
+            // GUARDAR PERFIL EN SUPABASE
+            // ============================================================
+            const saveProfile = async () => {
+                if (!session) return;
+
+                try {
+                    const profileData = {
+                        user_id: session.user.id,
+                        profile_name: formData.profileName,
+                        age: parseInt(formData.age),
+                        height: parseFloat(formData.height),
+                        weight: parseFloat(formData.weight),
+                        conditions: formData.conditions,
+                        bmi: calculateBMI(),
+                        bmr: calculateBMR(),
+                        tdee: calculateTDEE(),
+                        updated_at: new Date().toISOString()
+                    };
+
+                    const { data, error } = await supabase
+                        .from('user_profiles')
+                        .upsert(profileData)
+                        .select()
+                        .single();
+
+                    if (error) throw error;
+
+                    setCurrentUser(data);
+                    setShowQuiz(false);
+                    setCurrentPage('home');
+                } catch (error) {
+                    console.error('Error saving profile:', error);
+                    alert('Error al guardar el perfil');
+                }
+            };
+
+            // ============================================================
+            // CÁLCULOS BMI/BMR/TDEE
+            // ============================================================
+            const calculateBMI = () => {
+                if (!formData.weight || !formData.height) return 0;
+                const heightM = formData.height / 100;
+                return (formData.weight / (heightM * heightM)).toFixed(1);
+            };
+
+            const calculateBMR = () => {
+                if (!formData.weight || !formData.height || !formData.age) return 0;
+                return (10 * formData.weight + 6.25 * formData.height - 5 * formData.age - 161).toFixed(0);
+            };
+
+            const calculateTDEE = () => {
+                const bmr = calculateBMR();
+                return (bmr * 1.55).toFixed(0);
+            };
+
+            // ============================================================
+            // GUARDAR SÍNTOMAS
+            // ============================================================
+            const saveSymptom = async () => {
+                if (!session) return;
+
+                try {
+                    const symptomData = {
+                        user_id: session.user.id,
+                        ...symptomForm,
+                        created_at: new Date().toISOString()
+                    };
+
+                    const { data, error } = await supabase
+                        .from('symptoms')
+                        .insert([symptomData])
+                        .select();
+
+                    if (error) throw error;
+
+                    setSymptoms([data[0], ...symptoms]);
+                    setSymptomForm({
+                        sleep: 5,
+                        energy: 5,
+                        mood: 5,
+                        hotFlashes: 0,
+                        anxiety: 5,
+                        date: new Date().toISOString().split('T')[0]
+                    });
+                } catch (error) {
+                    console.error('Error saving symptom:', error);
+                    alert('Error al guardar síntoma');
+                }
+            };
+
+            // ============================================================
+            // GUARDAR PERÍODO
+            // ============================================================
+            const savePeriod = async () => {
+                if (!session) return;
+
+                try {
+                    const periodData = {
+                        user_id: session.user.id,
+                        ...periodForm,
+                        created_at: new Date().toISOString()
+                    };
+
+                    const { data, error } = await supabase
+                        .from('period_logs')
+                        .insert([periodData])
+                        .select();
+
+                    if (error) throw error;
+
+                    setPeriodLog([data[0], ...periodLog]);
+                    setPeriodForm({
+                        intensity: 5,
+                        duration: 5,
+                        symptoms: '',
+                        date: new Date().toISOString().split('T')[0]
+                    });
+                } catch (error) {
+                    console.error('Error saving period:', error);
+                    alert('Error al guardar período');
+                }
+            };
+
+            // ============================================================
+            // CARGAR DATOS DE PREFERENCIAS
+            // ============================================================
+            useEffect(() => {
+                const savedDark = localStorage.getItem('lumeraDark');
+                const savedLang = localStorage.getItem('lumeraLang');
+                
+                if (savedDark) setDarkMode(JSON.parse(savedDark));
+                if (savedLang) setLanguage(savedLang);
+            }, []);
+
+            useEffect(() => {
+                localStorage.setItem('lumeraDark', JSON.stringify(darkMode));
+                localStorage.setItem('lumeraLang', language);
+            }, [darkMode, language]);
+
+            // GRÁFICOS DE SÍNTOMAS
+            useEffect(() => {
+                if (symptoms.length === 0) return;
+
+                const labels = symptoms.map(s => s.date).slice(-14).reverse();
+                const sleepData = symptoms.map(s => s.sleep).slice(-14).reverse();
+                const energyData = symptoms.map(s => s.energy).slice(-14).reverse();
+                const moodData = symptoms.map(s => s.mood).slice(-14).reverse();
+                const hotFlashesData = symptoms.map(s => s.hotFlashes).slice(-14).reverse();
+
+                const chartOptions = {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: true } },
+                    scales: { y: { beginAtZero: true, max: 10 } }
+                };
+
+                setTimeout(() => {
+                    if (chartRefSleep.current && window.Chart) {
+                        if (chartsRef.current.sleep) chartsRef.current.sleep.destroy();
+                        chartsRef.current.sleep = new window.Chart(chartRefSleep.current, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [{ label: language === 'es' ? 'Sueño' : 'Sleep', data: sleepData, borderColor: '#9333ea', backgroundColor: 'rgba(147,51,234,0.1)', borderWidth: 2, fill: true, tension: 0.4 }]
+                            },
+                            options: chartOptions
+                        });
+                    }
+
+                    if (chartRefEnergy.current && window.Chart) {
+                        if (chartsRef.current.energy) chartsRef.current.energy.destroy();
+                        chartsRef.current.energy = new window.Chart(chartRefEnergy.current, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [{ label: language === 'es' ? 'Energía' : 'Energy', data: energyData, borderColor: '#ec4899', backgroundColor: 'rgba(236,72,153,0.1)', borderWidth: 2, fill: true, tension: 0.4 }]
+                            },
+                            options: chartOptions
+                        });
+                    }
+
+                    if (chartRefMood.current && window.Chart) {
+                        if (chartsRef.current.mood) chartsRef.current.mood.destroy();
+                        chartsRef.current.mood = new window.Chart(chartRefMood.current, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [{ label: language === 'es' ? 'Ánimo' : 'Mood', data: moodData, borderColor: '#06b6d4', backgroundColor: 'rgba(6,182,212,0.1)', borderWidth: 2, fill: true, tension: 0.4 }]
+                            },
+                            options: chartOptions
+                        });
+                    }
+
+                    if (chartRefHotFlashes.current && window.Chart) {
+                        if (chartsRef.current.hotFlashes) chartsRef.current.hotFlashes.destroy();
+                        chartsRef.current.hotFlashes = new window.Chart(chartRefHotFlashes.current, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [{ label: language === 'es' ? 'Sofocos' : 'Hot Flashes', data: hotFlashesData, backgroundColor: '#f97316', borderColor: '#ea580c', borderWidth: 1 }]
+                            },
+                            options: chartOptions
+                        });
+                    }
+                }, 100);
+            }, [symptoms, language]);
+
+            // GRÁFICOS DE PERÍODO
+            useEffect(() => {
+                if (periodLog.length === 0) return;
+
+                const labels = periodLog.map(p => p.date).slice(-12).reverse();
+                const intensityData = periodLog.map(p => p.intensity).slice(-12).reverse();
+                const durationData = periodLog.map(p => p.duration).slice(-12).reverse();
+
+                const chartOptions = {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: true } },
+                    scales: { y: { beginAtZero: true } }
+                };
+
+                setTimeout(() => {
+                    if (chartRefPeriod.current && window.Chart) {
+                        if (chartsRef.current.period) chartsRef.current.period.destroy();
+                        chartsRef.current.period = new window.Chart(chartRefPeriod.current, {
+                            type: 'bar',
+                            data: {
+                                labels: labels,
+                                datasets: [
+                                    { label: language === 'es' ? 'Intensidad' : 'Intensity', data: intensityData, backgroundColor: '#ec4899', borderColor: '#be185d', borderWidth: 1 },
+                                    { label: language === 'es' ? 'Duración (días)' : 'Duration (days)', data: durationData, backgroundColor: '#f97316', borderColor: '#c2410c', borderWidth: 1 }
+                                ]
+                            },
+                            options: chartOptions
+                        });
+                    }
+                }, 100);
+            }, [periodLog, language]);
+
+            // MENÚS 7 DÍAS
+            const getWeekMenus = () => {
+                return {
+                    es: {
+                        lunes: [
+                            { name: 'Avena con Bayas', meal: 'Desayuno', calories: 380, time: '10 min', ingredients: [{ name: 'Avena integral', qty: 50, unit: 'g', why: 'Fibra y saciedad' }, { name: 'Leche desnatada', qty: 200, unit: 'ml', why: 'Proteína, calcio' }, { name: 'Arándanos', qty: 80, unit: 'g', why: 'Antioxidantes' }], steps: ['Calienta leche', 'Agrega avena', 'Cocina 8 min', 'Añade bayas'], why: 'Estabiliza glucosa y energía' },
+                            { name: 'Ensalada Pollo y Quinoa', meal: 'Almuerzo', calories: 520, time: '20 min', ingredients: [{ name: 'Pechuga pollo', qty: 200, unit: 'g', why: 'Proteína magra' }, { name: 'Quinoa cocida', qty: 100, unit: 'g', why: 'Proteína completa' }], steps: ['Cocina pollo', 'Prepara quinoa', 'Mezcla todo'], why: 'Alto en proteína estabiliza hormonas' },
+                            { name: 'Lentejas Especiadas', meal: 'Cena', calories: 380, time: '30 min', ingredients: [{ name: 'Lentejas rojas', qty: 200, unit: 'g', why: 'Proteína vegetal' }, { name: 'Cúrcuma', qty: 0.5, unit: 'cucharadita', why: 'Antiinflamatorio' }], steps: ['Sofríe cebolla', 'Agrega lentejas', 'Cocina 30 min'], why: 'Favorece sueño reparador' },
+                            { name: 'Yogur Griego', meal: 'Snack', calories: 250, time: '5 min', ingredients: [{ name: 'Yogur griego', qty: 150, unit: 'g', why: 'Proteína y probióticos' }, { name: 'Arándanos', qty: 80, unit: 'g', why: 'Antioxidantes' }], steps: ['Vierte yogur', 'Añade arándanos'], why: 'Snack nutritivo' }
+                        ]
+                    },
+                    en: {
+                        lunes: [
+                            { name: 'Berry Oatmeal', meal: 'Breakfast', calories: 380, time: '10 min', ingredients: [{ name: 'Oats', qty: 50, unit: 'g', why: 'Fiber and satiety' }, { name: 'Skim milk', qty: 200, unit: 'ml', why: 'Protein, calcium' }, { name: 'Blueberries', qty: 80, unit: 'g', why: 'Antioxidants' }], steps: ['Heat milk', 'Add oats', 'Cook 8 min', 'Add berries'], why: 'Stabilizes glucose and energy' },
+                            { name: 'Chicken Quinoa Salad', meal: 'Lunch', calories: 520, time: '20 min', ingredients: [{ name: 'Chicken breast', qty: 200, unit: 'g', why: 'Lean protein' }, { name: 'Cooked quinoa', qty: 100, unit: 'g', why: 'Complete protein' }], steps: ['Cook chicken', 'Prepare quinoa', 'Mix everything'], why: 'High protein stabilizes hormones' },
+                            { name: 'Spiced Lentils', meal: 'Dinner', calories: 380, time: '30 min', ingredients: [{ name: 'Red lentils', qty: 200, unit: 'g', why: 'Plant protein' }, { name: 'Turmeric', qty: 0.5, unit: 'tsp', why: 'Anti-inflammatory' }], steps: ['Sauté onion', 'Add lentils', 'Cook 30 min'], why: 'Promotes restful sleep' },
+                            { name: 'Greek Yogurt', meal: 'Snack', calories: 250, time: '5 min', ingredients: [{ name: 'Greek yogurt', qty: 150, unit: 'g', why: 'Protein and probiotics' }, { name: 'Blueberries', qty: 80, unit: 'g', why: 'Antioxidants' }], steps: ['Pour yogurt', 'Add blueberries'], why: 'Nutritious snack' }
+                        ]
+                    }
+                };
+            };
+
+            // ============================================================
+            // RENDERIZADO DE CONTENIDO
+            // ============================================================
+            const renderContent = () => {
+                if (!currentUser) return null;
+
+                const premiumPages = ['nutrition', 'exercise', 'symptoms', 'period', 'workshops', 'community'];
+                const requiresPremium = premiumPages.includes(currentPage);
+
+                if (requiresPremium && !isPremium()) {
+                    return (
+                        <div className="text-center py-20">
+                            <div className="mb-6">
+                                <div className="inline-block p-8 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full mb-6">
+                                    <svg className="w-24 h-24 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <h2 className="text-3xl font-bold mb-4 gradient-text">{t[language].premium_title}</h2>
+                            <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
+                                {t[language].premium_desc}
+                            </p>
+                            <div className={`max-w-md mx-auto ${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-xl p-8 mb-6`}>
+                                <div className="mb-6">
+                                    <div className="text-5xl font-bold gradient-text mb-2">
+                                        {PRICES[getRegion()].price}
+                                    </div>
+                                    <div className="text-gray-500 line-through mb-1">
+                                        {PRICES[getRegion()].original}
+                                    </div>
+                                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                                        {language === 'es' ? 'por mes' : 'per month'}
+                                    </div>
+                                </div>
+                                <ul className="text-left space-y-3 mb-8">
+                                    <li className="flex items-start">
+                                        <svg className="w-6 h-6 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        <span>{language === 'es' ? 'Menús personalizados semanales' : 'Personalized weekly menus'}</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <svg className="w-6 h-6 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        <span>{language === 'es' ? 'Rutinas de ejercicio adaptadas' : 'Adapted exercise routines'}</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <svg className="w-6 h-6 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        <span>{language === 'es' ? 'Seguimiento de síntomas y análisis' : 'Symptom tracking and analysis'}</span>
+                                    </li>
+                                    <li className="flex items-start">
+                                        <svg className="w-6 h-6 text-green-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                        <span>{language === 'es' ? 'Talleres y comunidad' : 'Workshops and community'}</span>
+                                    </li>
+                                </ul>
+                                <button
+                                    onClick={handleSubscribe}
+                                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-lg font-semibold text-lg hover:shadow-lg transition"
+                                >
+                                    💎 {t[language].subscribe}
+                                </button>
+                            </div>
+                        </div>
+                    );
+                }
+
+                switch(currentPage) {
+                    case 'home': return renderHome();
+                    case 'nutrition': return renderNutrition();
+                    case 'exercise': return renderExercise();
+                    case 'symptoms': return renderSymptoms();
+                    case 'period': return renderPeriod();
+                    case 'myths': return renderMyths();
+                    case 'tips': return renderTips();
+                    case 'workshops': return renderWorkshops();
+                    case 'community': return renderCommunity();
+                    default: return renderHome();
+                }
+            };
+
+            const renderHome = () => (
+                <div className="space-y-8">
+                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-8`}>
+                        <h2 className="text-3xl font-bold mb-4 gradient-text">
+                            {language === 'es' ? `¡Hola, ${currentUser?.profile_name}!` : `Hello, ${currentUser?.profile_name}!`}
+                        </h2>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                            <div className={`${darkMode ? 'bg-gray-700' : 'bg-purple-50'} rounded-lg p-6`}>
+                                <div className="text-4xl mb-2">📊</div>
+                                <div className="text-2xl font-bold gradient-text">{currentUser?.bmi}</div>
+                                <div className="text-sm text-gray-600 dark:text-gray-400">IMC</div>
+                            </div>
+                            <div className={`${darkMode ? 'bg-gray-700' : 'bg-pink-50'} rounded-lg p-6`}>
+                                <div className="text-4xl mb-2">🔥</div>
+                                <div className="text-2xl font-bold gradient-text">{currentUser?.bmr}</div>
+                                <div className="text-sm text-gray-600 dark:text-gray-400">BMR (kcal/día)</div>
+                            </div>
+                            <div className={`${darkMode ? 'bg-gray-700' : 'bg-yellow-50'} rounded-lg p-6`}>
+                                <div className="text-4xl mb-2">⚡</div>
+                                <div className="text-2xl font-bold gradient-text">{currentUser?.tdee}</div>
+                                <div className="text-sm text-gray-600 dark:text-gray-400">TDEE (kcal/día)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {!isPremium() && (
+                        <div className={`${darkMode ? 'bg-gradient-to-r from-purple-900 to-pink-900' : 'bg-gradient-to-r from-purple-100 to-pink-100'} rounded-xl p-8 text-center`}>
+                            <h3 className="text-2xl font-bold mb-4 gradient-text">
+                                {language === 'es' ? '¡Desbloquea todo el potencial de Lumera!' : 'Unlock Lumera\'s full potential!'}
+                            </h3>
+                            <button
+                                onClick={handleSubscribe}
+                                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition"
+                            >
+                                💎 {language === 'es' ? 'Hazte Premium' : 'Go Premium'}
+                            </button>
+                        </div>
+                    )}
+                </div>
+            );
+
+            const renderNutrition = () => {
+                const menus = getWeekMenus();
+                const weekMenu = menus[language].lunes;
+
+                return (
+                    <div>
+                        <h2 className="text-3xl font-bold mb-6 gradient-text">{t[language].nutrition}</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {weekMenu.map((recipe, idx) => (
+                                <div key={idx} className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                                    <div className="flex justify-between items-start mb-4">
+                                        <div>
+                                            <h3 className="text-xl font-bold">{recipe.name}</h3>
+                                            <div className="text-sm text-gray-600 dark:text-gray-400">{recipe.meal}</div>
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="text-2xl font-bold text-purple-600">{recipe.calories}</div>
+                                            <div className="text-xs">kcal</div>
+                                        </div>
+                                    </div>
+                                    <div className="space-y-4">
+                                        <div>
+                                            <h4 className="font-semibold mb-2">{t[language].ingredients}:</h4>
+                                            <ul className="text-sm space-y-1">
+                                                {recipe.ingredients.map((ing, i) => (
+                                                    <li key={i}>• {ing.qty}{ing.unit} {ing.name}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-semibold mb-2">{t[language].preparation}:</h4>
+                                            <ol className="text-sm space-y-1 list-decimal list-inside">
+                                                {recipe.steps.map((step, i) => (
+                                                    <li key={i}>{step}</li>
+                                                ))}
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                );
+            };
+
+            const renderExercise = () => (
+                <div>
+                    <h2 className="text-3xl font-bold mb-6 gradient-text">{t[language].exercise}</h2>
+                    <div className="mb-6">
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => setExerciseGoal('hormonal')}
+                                className={`px-4 py-2 rounded-lg ${exerciseGoal === 'hormonal' ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700'}`}
+                            >
+                                {t[language].hormonal}
+                            </button>
+                            <button
+                                onClick={() => setExerciseGoal('strength')}
+                                className={`px-4 py-2 rounded-lg ${exerciseGoal === 'strength' ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700'}`}
+                            >
+                                {t[language].strength}
+                            </button>
+                            <button
+                                onClick={() => setExerciseGoal('weightLoss')}
+                                className={`px-4 py-2 rounded-lg ${exerciseGoal === 'weightLoss' ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700'}`}
+                            >
+                                {t[language].weightLoss}
+                            </button>
+                        </div>
+                    </div>
+                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                        <p className="text-gray-600 dark:text-gray-400">
+                            {language === 'es' 
+                                ? 'Rutinas de ejercicio personalizadas próximamente...' 
+                                : 'Personalized exercise routines coming soon...'}
+                        </p>
+                    </div>
+                </div>
+            );
+
+            const renderSymptoms = () => (
+                <div>
+                    <h2 className="text-3xl font-bold mb-6 gradient-text">{t[language].symptoms}</h2>
+                    
+                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6 mb-6`}>
+                        <h3 className="text-xl font-bold mb-4">{t[language].addRecord}</h3>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-semibold mb-2">
+                                    {language === 'es' ? 'Fecha' : 'Date'}
+                                </label>
+                                <input
+                                    type="date"
+                                    value={symptomForm.date}
+                                    onChange={(e) => setSymptomForm({...symptomForm, date: e.target.value})}
+                                    className={`w-full px-4 py-2 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600' : 'border-gray-300'}`}
+                                />
+                            </div>
+                            
+                            {['sleep', 'energy', 'mood', 'anxiety'].map(field => (
+                                <div key={field}>
+                                    <label className="block text-sm font-semibold mb-2">
+                                        {language === 'es' 
+                                            ? field === 'sleep' ? 'Sueño' 
+                                            : field === 'energy' ? 'Energía' 
+                                            : field === 'mood' ? 'Ánimo' 
+                                            : 'Ansiedad'
+                                            : field === 'sleep' ? 'Sleep' 
+                                            : field === 'energy' ? 'Energy' 
+                                            : field === 'mood' ? 'Mood' 
+                                            : 'Anxiety'
+                                        } ({symptomForm[field]}/10)
+                                    </label>
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max="10"
+                                        value={symptomForm[field]}
+                                        onChange={(e) => setSymptomForm({...symptomForm, [field]: parseInt(e.target.value)})}
+                                        className="w-full"
+                                    />
+                                </div>
+                            ))}
+
+                            <div>
+                                <label className="block text-sm font-semibold mb-2">
+                                    {language === 'es' ? 'Sofocos (cantidad)' : 'Hot Flashes (count)'} ({symptomForm.hotFlashes})
+                                </label>
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="20"
+                                    value={symptomForm.hotFlashes}
+                                    onChange={(e) => setSymptomForm({...symptomForm, hotFlashes: parseInt(e.target.value)})}
+                                    className="w-full"
+                                />
+                            </div>
+
+                            <button
+                                onClick={saveSymptom}
+                                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg"
+                            >
+                                {t[language].save}
+                            </button>
+                        </div>
+                    </div>
+
+                    {symptoms.length > 0 && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                                <h3 className="font-bold mb-4">{language === 'es' ? 'Sueño' : 'Sleep'}</h3>
+                                <canvas ref={chartRefSleep}></canvas>
+                            </div>
+                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                                <h3 className="font-bold mb-4">{language === 'es' ? 'Energía' : 'Energy'}</h3>
+                                <canvas ref={chartRefEnergy}></canvas>
+                            </div>
+                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                                <h3 className="font-bold mb-4">{language === 'es' ? 'Ánimo' : 'Mood'}</h3>
+                                <canvas ref={chartRefMood}></canvas>
+                            </div>
+                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                                <h3 className="font-bold mb-4">{language === 'es' ? 'Sofocos' : 'Hot Flashes'}</h3>
+                                <canvas ref={chartRefHotFlashes}></canvas>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+
+            const renderPeriod = () => (
+                <div>
+                    <h2 className="text-3xl font-bold mb-6 gradient-text">{t[language].period}</h2>
+                    
+                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6 mb-6`}>
+                        <h3 className="text-xl font-bold mb-4">{t[language].addRecord}</h3>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-semibold mb-2">
+                                    {language === 'es' ? 'Fecha' : 'Date'}
+                                </label>
+                                <input
+                                    type="date"
+                                    value={periodForm.date}
+                                    onChange={(e) => setPeriodForm({...periodForm, date: e.target.value})}
+                                    className={`w-full px-4 py-2 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600' : 'border-gray-300'}`}
+                                />
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-semibold mb-2">
+                                    {language === 'es' ? 'Intensidad' : 'Intensity'} ({periodForm.intensity}/10)
+                                </label>
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="10"
+                                    value={periodForm.intensity}
+                                    onChange={(e) => setPeriodForm({...periodForm, intensity: parseInt(e.target.value)})}
+                                    className="w-full"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-semibold mb-2">
+                                    {language === 'es' ? 'Duración (días)' : 'Duration (days)'} ({periodForm.duration})
+                                </label>
+                                <input
+                                    type="range"
+                                    min="1"
+                                    max="10"
+                                    value={periodForm.duration}
+                                    onChange={(e) => setPeriodForm({...periodForm, duration: parseInt(e.target.value)})}
+                                    className="w-full"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-semibold mb-2">
+                                    {language === 'es' ? 'Síntomas adicionales' : 'Additional symptoms'}
+                                </label>
+                                <textarea
+                                    value={periodForm.symptoms}
+                                    onChange={(e) => setPeriodForm({...periodForm, symptoms: e.target.value})}
+                                    className={`w-full px-4 py-2 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600' : 'border-gray-300'}`}
+                                    rows="3"
+                                />
+                            </div>
+
+                            <button
+                                onClick={savePeriod}
+                                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg"
+                            >
+                                {t[language].save}
+                            </button>
+                        </div>
+                    </div>
+
+                    {periodLog.length > 0 && (
+                        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                            <h3 className="font-bold mb-4">{language === 'es' ? 'Historial de Períodos' : 'Period History'}</h3>
+                            <canvas ref={chartRefPeriod}></canvas>
+                        </div>
+                    )}
+                </div>
+            );
+
+            const renderMyths = () => (
+                <div>
+                    <h2 className="text-3xl font-bold mb-6 gradient-text">{t[language].myths}</h2>
+                    <div className="space-y-4">
+                        {[
+                            {
+                                es: { title: 'Mito: Solo afecta a mujeres mayores', text: 'Falso. Puede comenzar entre los 35-45 años.' },
+                                en: { title: 'Myth: Only affects older women', text: 'False. It can begin between ages 35-45.' }
+                            },
+                            {
+                                es: { title: 'Mito: Aumentar de peso es inevitable', text: 'Falso. Con ejercicio y nutrición adecuada se puede controlar.' },
+                                en: { title: 'Myth: Weight gain is inevitable', text: 'False. With proper exercise and nutrition it can be controlled.' }
+                            }
+                        ].map((myth, idx) => (
+                            <div key={idx} className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                                <h3 className="text-xl font-bold mb-2">{myth[language].title}</h3>
+                                <p className="text-gray-600 dark:text-gray-400">{myth[language].text}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+
+            const renderTips = () => (
+                <div>
+                    <h2 className="text-3xl font-bold mb-6 gradient-text">{t[language].tips}</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {[
+                            { emoji: '😴', es: 'Mantén rutina de sueño consistente', en: 'Keep consistent sleep routine' },
+                            { emoji: '💧', es: 'Hidrátate abundantemente', en: 'Stay well hydrated' },
+                            { emoji: '🧘', es: 'Practica mindfulness diario', en: 'Practice daily mindfulness' },
+                            { emoji: '🥗', es: 'Come proteína en cada comida', en: 'Eat protein at every meal' }
+                        ].map((tip, idx) => (
+                            <div key={idx} className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6 text-center`}>
+                                <div className="text-5xl mb-4">{tip.emoji}</div>
+                                <p className="text-lg">{language === 'es' ? tip.es : tip.en}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+
+            const renderWorkshops = () => (
+                <div>
+                    <h2 className="text-3xl font-bold mb-6 gradient-text">{t[language].workshops}</h2>
+                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                        <p className="text-gray-600 dark:text-gray-400">
+                            {language === 'es' ? 'Talleres próximamente...' : 'Workshops coming soon...'}
+                        </p>
+                    </div>
+                </div>
+            );
+
+            const renderCommunity = () => (
+                <div>
+                    <h2 className="text-3xl font-bold mb-6 gradient-text">{t[language].community}</h2>
+                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                        <p className="text-gray-600 dark:text-gray-400">
+                            {language === 'es' ? 'Comunidad próximamente...' : 'Community coming soon...'}
+                        </p>
+                    </div>
+                </div>
+            );
+
+            // ============================================================
+            // PANTALLA DE QUIZ INICIAL
+            // ============================================================
+            if (showQuiz) {
+                const canContinue = () => {
+                    switch(quizStep) {
+                        case 0: return true;
+                        case 1: return formData.profileName && formData.age && formData.height && formData.weight;
+                        case 2: return true;
+                        case 3: return legalAgreements.over18 && legalAgreements.notReplaceDoctor && legalAgreements.privacy;
+                        default: return false;
+                    }
+                };
+
+                const handleNext = () => {
+                    if (quizStep === 0) {
+                        setQuizStep(1);
+                    } else if (quizStep < 3) {
+                        setQuizStep(quizStep + 1);
+                    } else {
+                        saveProfile();
+                    }
+                };
+
+                return (
+                    <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-purple-100 to-yellow-50'} flex items-center justify-center p-4`}>
+                        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl p-12 max-w-2xl w-full`}>
+                            {quizStep === 0 ? (
+                                <div className="text-center">
+                                    <div className="mb-8">
+                                        <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" className="mx-auto mb-4">
+                                            <defs>
+                                                <linearGradient id="flameGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                    <stop offset="0%" style={{stopColor:'#d4af7f',stopOpacity:1}} />
+                                                    <stop offset="100%" style={{stopColor:'#e8c89f',stopOpacity:1}} />
+                                                </linearGradient>
+                                            </defs>
+                                            <path d="M 32 12 A 20 20 0 0 0 32 52 A 16 16 0 0 1 32 16 Z" fill="#b8a8d8"/>
+                                            <path d="M 40 32 Q 40 26 42 22 Q 42 28 40 35 Q 38 28 38 22 Q 40 26 40 32" fill="url(#flameGrad)"/>
+                                        </svg>
+                                        <h1 className="text-4xl font-light gradient-text mb-4">{t[language].welcome_title}</h1>
+                                        <p className="text-xl text-gray-600 dark:text-gray-400 mb-6">{t[language].welcome_subtitle}</p>
+                                    </div>
+                                    
+                                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-700 dark:to-gray-700 rounded-xl p-8 mb-8">
+                                        <p className="text-lg text-gray-700 dark:text-gray-300">
+                                            {t[language].welcome_desc}
+                                        </p>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4 mb-8 text-left">
+                                        <div className="flex items-start space-x-3">
+                                            <div className="text-3xl">🥗</div>
+                                            <div>
+                                                <h3 className="font-bold">{language === 'es' ? 'Nutrición' : 'Nutrition'}</h3>
+                                                <p className="text-sm text-gray-600 dark:text-gray-400">{language === 'es' ? 'Menús personalizados' : 'Personalized menus'}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start space-x-3">
+                                            <div className="text-3xl">💪</div>
+                                            <div>
+                                                <h3 className="font-bold">{language === 'es' ? 'Ejercicio' : 'Exercise'}</h3>
+                                                <p className="text-sm text-gray-600 dark:text-gray-400">{language === 'es' ? 'Rutinas adaptadas' : 'Adapted routines'}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start space-x-3">
+                                            <div className="text-3xl">📊</div>
+                                            <div>
+                                                <h3 className="font-bold">{language === 'es' ? 'Seguimiento' : 'Tracking'}</h3>
+                                                <p className="text-sm text-gray-600 dark:text-gray-400">{language === 'es' ? 'Síntomas y análisis' : 'Symptoms & analytics'}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-start space-x-3">
+                                            <div className="text-3xl">💜</div>
+                                            <div>
+                                                <h3 className="font-bold">{language === 'es' ? 'Comunidad' : 'Community'}</h3>
+                                                <p className="text-sm text-gray-600 dark:text-gray-400">{language === 'es' ? 'Apoyo y talleres' : 'Support & workshops'}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button
+                                        onClick={handleNext}
+                                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-lg font-semibold text-lg hover:shadow-lg"
+                                    >
+                                        {t[language].start} →
+                                    </button>
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="text-center mb-8">
+                                        <h1 className="text-3xl font-light gradient-text mb-2">Lumera</h1>
+                                        <p className="text-gray-600 dark:text-gray-400">
+                                            {language === 'es' ? `Paso ${quizStep} de 3` : `Step ${quizStep} of 3`}
+                                        </p>
+                                    </div>
+
+                                    {quizStep === 1 && (
+                                        <div className="space-y-4">
+                                            <h3 className="text-xl font-bold mb-4">{language === 'es' ? 'Datos básicos' : 'Basic info'}</h3>
+                                            <input
+                                                type="text"
+                                                placeholder={language === 'es' ? 'Tu nombre' : 'Your name'}
+                                                value={formData.profileName}
+                                                onChange={(e) => setFormData({...formData, profileName: e.target.value})}
+                                                className={`w-full px-4 py-3 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}
+                                            />
+                                            <input
+                                                type="number"
+                                                placeholder={language === 'es' ? 'Edad' : 'Age'}
+                                                value={formData.age}
+                                                onChange={(e) => setFormData({...formData, age: e.target.value})}
+                                                className={`w-full px-4 py-3 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}
+                                            />
+                                            <input
+                                                type="number"
+                                                placeholder={language === 'es' ? 'Altura (cm)' : 'Height (cm)'}
+                                                value={formData.height}
+                                                onChange={(e) => setFormData({...formData, height: e.target.value})}
+                                                className={`w-full px-4 py-3 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}
+                                            />
+                                            <input
+                                                type="number"
+                                                placeholder={language === 'es' ? 'Peso (kg)' : 'Weight (kg)'}
+                                                value={formData.weight}
+                                                onChange={(e) => setFormData({...formData, weight: e.target.value})}
+                                                className={`w-full px-4 py-3 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}
+                                            />
+                                        </div>
+                                    )}
+
+                                    {quizStep === 2 && (
+                                        <div className="space-y-4">
+                                            <h3 className="text-xl font-bold mb-4">
+                                                {language === 'es' ? '¿Tienes alguna condición médica?' : 'Do you have any medical conditions?'}
+                                            </h3>
+                                            {['diabetes', 'hipertensión', 'tiroides', 'artritis'].map(condition => (
+                                                <label key={condition} className="flex items-center">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={formData.conditions.includes(condition)}
+                                                        onChange={(e) => {
+                                                            if (e.target.checked) {
+                                                                setFormData({...formData, conditions: [...formData.conditions, condition]});
+                                                            } else {
+                                                                setFormData({...formData, conditions: formData.conditions.filter(c => c !== condition)});
+                                                            }
+                                                        }}
+                                                        className="mr-2"
+                                                    />
+                                                    <span className="capitalize">{condition}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {quizStep === 3 && (
+                                        <div className="space-y-4">
+                                            <h3 className="text-xl font-bold mb-4">
+                                                {language === 'es' ? 'Términos y condiciones' : 'Terms and conditions'}
+                                            </h3>
+                                            <label className="flex items-start">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={legalAgreements.over18}
+                                                    onChange={(e) => setLegalAgreements({...legalAgreements, over18: e.target.checked})}
+                                                    className="mr-2 mt-1"
+                                                />
+                                                <span className="text-sm">
+                                                    {language === 'es' ? 'Confirmo que tengo más de 18 años' : 'I confirm I am over 18 years old'}
+                                                </span>
+                                            </label>
+                                            <label className="flex items-start">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={legalAgreements.notReplaceDoctor}
+                                                    onChange={(e) => setLegalAgreements({...legalAgreements, notReplaceDoctor: e.target.checked})}
+                                                    className="mr-2 mt-1"
+                                                />
+                                                <span className="text-sm">
+                                                    {language === 'es' 
+                                                        ? 'Entiendo que esta app no reemplaza la consulta médica' 
+                                                        : 'I understand this app does not replace medical consultation'}
+                                                </span>
+                                            </label>
+                                            <label className="flex items-start">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={legalAgreements.privacy}
+                                                    onChange={(e) => setLegalAgreements({...legalAgreements, privacy: e.target.checked})}
+                                                    className="mr-2 mt-1"
+                                                />
+                                                <span className="text-sm">
+                                                    {language === 'es' 
+                                                        ? 'Acepto la política de privacidad' 
+                                                        : 'I accept the privacy policy'}
+                                                </span>
+                                            </label>
+                                        </div>
+                                    )}
+
+                                    <button
+                                        onClick={handleNext}
+                                        disabled={!canContinue()}
+                                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-semibold mt-6 disabled:opacity-50 hover:shadow-lg"
+                                    >
+                                        {quizStep < 3 ? t[language].next : t[language].save}
+                                    </button>
+
+                                    {quizStep > 1 && (
+                                        <button
+                                            onClick={() => setQuizStep(quizStep - 1)}
+                                            className="w-full text-gray-600 dark:text-gray-400 py-2 mt-2"
+                                        >
+                                            {language === 'es' ? '← Atrás' : '← Back'}
+                                        </button>
+                                    )}
+                                </>
+                            )}
+                        </div>
+                    </div>
+                );
+            }
+
+            // ============================================================
+            // PANTALLA DE LOGIN/REGISTRO
+            // ============================================================
+            if (showAuth) {
+                return (
+                    <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-purple-100 to-yellow-50'} flex items-center justify-center p-4`}>
+                        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl p-12 max-w-md w-full`}>
+                            <div className="text-center mb-8">
+                                <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" className="mx-auto mb-4">
+                                    <defs>
+                                        <linearGradient id="flameGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" style={{stopColor:'#d4af7f',stopOpacity:1}} />
+                                            <stop offset="100%" style={{stopColor:'#e8c89f',stopOpacity:1}} />
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M 32 12 A 20 20 0 0 0 32 52 A 16 16 0 0 1 32 16 Z" fill="#b8a8d8"/>
+                                    <path d="M 40 32 Q 40 26 42 22 Q 42 28 40 35 Q 38 28 38 22 Q 40 26 40 32" fill="url(#flameGrad2)"/>
+                                </svg>
+                                <h1 className="text-4xl font-light gradient-text mb-2">Lumera</h1>
+                                <p className="text-gray-600 dark:text-gray-400">
+                                    {t[language].tagline}
+                                </p>
+                            </div>
+
+                            <div className="flex gap-2 mb-6">
+                                <button
+                                    onClick={() => setAuthMode('login')}
+                                    className={`flex-1 py-2 rounded-lg font-semibold ${authMode === 'login' ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}`}
+                                >
+                                    {language === 'es' ? 'Iniciar Sesión' : 'Login'}
+                                </button>
+                                <button
+                                    onClick={() => setAuthMode('register')}
+                                    className={`flex-1 py-2 rounded-lg font-semibold ${authMode === 'register' ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'}`}
+                                >
+                                    {language === 'es' ? 'Registrarse' : 'Register'}
+                                </button>
+                            </div>
+
+                            <div className="space-y-4 mb-6">
+                                <input
+                                    type="email"
+                                    placeholder="Email"
+                                    value={authData.email}
+                                    onChange={(e) => setAuthData({...authData, email: e.target.value})}
+                                    className={`w-full px-4 py-3 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}
+                                />
+                                <input
+                                    type="password"
+                                    placeholder={language === 'es' ? 'Contraseña (mínimo 6 caracteres)' : 'Password (minimum 6 characters)'}
+                                    value={authData.password}
+                                    onChange={(e) => setAuthData({...authData, password: e.target.value})}
+                                    className={`w-full px-4 py-3 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}
+                                />
+                            </div>
+
+                            <button
+                                onClick={authMode === 'login' ? handleLogin : handleRegister}
+                                disabled={isLoadingAuth}
+                                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg disabled:opacity-50"
+                            >
+                                {isLoadingAuth ? '...' : (authMode === 'login' ? (language === 'es' ? 'Entrar' : 'Enter') : (language === 'es' ? 'Crear Cuenta' : 'Create Account'))}
+                            </button>
+
+                            <div className="mt-6 text-center">
+                                <button
+                                    onClick={() => setLanguage(language === 'es' ? 'en' : 'es')}
+                                    className="text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600"
+                                >
+                                    {language === 'es' ? '🇬🇧 English' : '🇪🇸 Español'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            // ============================================================
+            // PANTALLA DE CARGA
+            // ============================================================
+            if (isLoadingAuth) {
+                return (
+                    <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-purple-100 to-yellow-50'} flex items-center justify-center`}>
+                        <div className="text-center">
+                            <h1 className="text-4xl font-light gradient-text mb-4">Lumera</h1>
+                            <p className="text-gray-600 dark:text-gray-400">{t[language].loading}</p>
+                        </div>
+                    </div>
+                );
+            }
+
+            // ============================================================
+            // APLICACIÓN PRINCIPAL
+            // ============================================================
+            return (
+                <div className={darkMode ? 'bg-gray-900 text-white min-h-screen' : 'bg-gray-50 min-h-screen'}>
+                    <header className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} shadow sticky top-0 z-40 border-b`}>
+                        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+                            <div className="flex items-center gap-3">
+                                <svg width="32" height="32" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        <linearGradient id="flameGradHeader" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" style={{stopColor:'#d4af7f',stopOpacity:1}} />
+                                            <stop offset="100%" style={{stopColor:'#e8c89f',stopOpacity:1}} />
+                                        </linearGradient>
+                                    </defs>
+                                    <path d="M 32 12 A 20 20 0 0 0 32 52 A 16 16 0 0 1 32 16 Z" fill="#b8a8d8"/>
+                                    <path d="M 40 32 Q 40 26 42 22 Q 42 28 40 35 Q 38 28 38 22 Q 40 26 40 32" fill="url(#flameGradHeader)"/>
+                                </svg>
+                                <h1 className="text-2xl font-light gradient-text">Lumera</h1>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <select value={language} onChange={(e) => setLanguage(e.target.value)} className={`px-3 py-2 rounded text-sm border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-100 border-gray-300'}`}>
+                                    <option value="es">🇪🇸</option>
+                                    <option value="en">🇬🇧</option>
+                                </select>
+                                <button onClick={() => setDarkMode(!darkMode)} className={`px-3 py-2 rounded text-sm ${darkMode ? 'bg-yellow-500 text-black' : 'bg-gray-200'}`}>
+                                    {darkMode ? '☀️' : '🌙'}
+                                </button>
+                                {!isPremium() && currentUser && (
+                                    <button 
+                                        onClick={handleSubscribe}
+                                        className="px-4 py-2 rounded text-sm font-semibold bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:shadow-lg transition"
+                                    >
+                                        💎 Premium
+                                    </button>
+                                )}
+                                <button onClick={handleLogout} className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white">
+                                    {t[language].exit}
+                                </button>
+                            </div>
+                        </div>
+                    </header>
+
+                    <main className="max-w-6xl mx-auto px-4 py-8 pb-24" key={`content-${currentPage}-${language}`}>
+                        {renderContent()}
+                    </main>
+
+                    <nav className={`fixed bottom-0 left-0 right-0 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-t shadow-lg`}>
+                        <div className="max-w-6xl mx-auto flex justify-around overflow-x-auto">
+                            {[
+                                { page: 'home', label: t[language].home, emoji: '📊', premium: false },
+                                { page: 'nutrition', label: t[language].nutrition, emoji: '🥗', premium: true },
+                                { page: 'exercise', label: t[language].exercise, emoji: '💪', premium: true },
+                                { page: 'symptoms', label: t[language].symptoms, emoji: '📝', premium: true },
+                                { page: 'period', label: t[language].period, emoji: '📅', premium: true },
+                                { page: 'myths', label: t[language].myths, emoji: '❌', premium: false },
+                                { page: 'tips', label: t[language].tips, emoji: '✨', premium: false },
+                                { page: 'workshops', label: t[language].workshops, emoji: '🎓', premium: true },
+                                { page: 'community', label: t[language].community, emoji: '💜', premium: true }
+                            ].map((item) => (
+                                <button key={item.page} onClick={() => setCurrentPage(item.page)}
+                                    className={`py-4 px-3 text-xs sm:text-sm border-t-4 transition whitespace-nowrap ${
+                                        currentPage === item.page
+                                            ? `border-purple-300 ${darkMode ? 'bg-gray-700' : 'bg-purple-100'} text-purple-400`
+                                            : `${darkMode ? 'border-gray-700 text-gray-400' : 'border-gray-200 text-gray-600'}`
+                                    }`}>
+                                    <div>{item.emoji}{item.premium && !isPremium() && ' 🔒'}</div>
+                                    <div className="hidden sm:block text-xs">{item.label}</div>
+                                </button>
+                            ))}
+                        </div>
+                    </nav>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<LumeraApp />);
+    </script>
+</body>
+</html>
