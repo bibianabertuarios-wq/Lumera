@@ -30,7 +30,8 @@
         const SUPABASE_URL = 'https://pyekwpmbdnmglrjieexc.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5ZWt3cG1iZG5tZ2xyamllZXhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0ODM0OTgsImV4cCI6MjA4MTA1OTQ5OH0.zQl7GF3E6BhDqW3bEMixAbdDcOsW8BsFOBeAGa-5bzY';
         const BACKEND_URL = 'https://lumera-backend-production.up.railway.app';
-        const STRIPE_KEY = 'pk_test_51Sejh162SZ6DF12OogSOE67ngoK4aE2C2xRW0pMJcfwWxaQq1UJ7SxzrOzrPfqnHdk1aa5VLyu91fFDBdKnFln6b00BS7k0uvU        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const STRIPE_KEY = 'pk_test_51Sejh162SZ6DF12OogSOE67ngoK4aE2C2xRW0pMJcfwWxaQq1UJ7SxzrOzrPfqnHdk1aa5VLyu91fFDBdKnFln6b00BS7k0uvU';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);        
         const stripe = window.Stripe(STRIPE_KEY);
         const PRICES = {
             latam: { id: 'price_1Sejoa62SZ6DF12Ox5sU1Y9v', price: '$4.99' },
