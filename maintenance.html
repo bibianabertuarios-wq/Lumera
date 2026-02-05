@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumera - Maintenance / Mantenimiento</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #faf5ff 0%, #fef3c7 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        h1, h2 {
+            font-family: 'Cormorant', serif;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+        }
+        
+        .container {
+            max-width: 600px;
+            background: white;
+            border-radius: 24px;
+            padding: 48px 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .logo {
+            margin-bottom: 32px;
+        }
+        
+        .logo svg {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto;
+        }
+        
+        .logo h1 {
+            font-size: 42px;
+            background: linear-gradient(135deg, #a78bfa 0%, #fbbf24 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-top: 12px;
+        }
+        
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: #fef3c7;
+            border-radius: 50px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #92400e;
+        }
+        
+        .status.checking {
+            background: #dbeafe;
+            color: #1e3a8a;
+        }
+        
+        .status.online {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background: #f59e0b;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .status.checking .pulse {
+            background: #3b82f6;
+        }
+        
+        .status.online .pulse {
+            background: #10b981;
+            animation: none;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.1);
+            }
+        }
+        
+        h2 {
+            font-size: 32px;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+        
+        .message {
+            font-size: 16px;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        
+        .info-box {
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+        
+        .info-box h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-box ul {
+            list-style: none;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .info-box li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+        
+        .info-box li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #a78bfa;
+            font-weight: bold;
+        }
+        
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #a78bfa 0%, #fbbf24 100%);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(167, 139, 250, 0.3);
+        }
+        
+        .button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .links {
+            margin-top: 24px;
+            font-size: 14px;
+            color: #9ca3af;
+        }
+        
+        .links a {
+            color: #a78bfa;
+            text-decoration: none;
+            margin: 0 8px;
+        }
+        
+        .links a:hover {
+            text-decoration: underline;
+        }
+        
+        .spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #a78bfa;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 24px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .countdown {
+            font-size: 14px;
+            color: #9ca3af;
+            margin-top: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="flameGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#d4af7f;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#e8c89f;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <path d="M 32 12 A 20 20 0 0 0 32 52 A 16 16 0 0 1 32 16 Z" fill="#b8a8d8"/>
+                <path d="M 40 32 Q 40 26 42 22 Q 42 28 40 35 Q 38 28 38 22 Q 40 26 40 32" fill="url(#flameGrad)"/>
+            </svg>
+            <h1>Lumera</h1>
+        </div>
+        
+        <div id="statusBadge" class="status checking">
+            <span class="pulse"></span>
+            <span id="statusText">Verificando conexión...</span>
+        </div>
+        
+        <h2 id="mainTitle">Verificando conexión</h2>
+        <p class="message" id="mainMessage">
+            Estamos comprobando que todo funcione correctamente. Esto solo tomará unos segundos...
+        </p>
+        
+        <div id="spinner" class="spinner"></div>
+        
+        <div id="infoBox" class="info-box" style="display: none;">
+            <h3 id="infoTitle">📋 ¿Qué está pasando?</h3>
+            <ul id="infoList">
+                <li>Nuestro servicio de base de datos está experimentando problemas temporales</li>
+                <li>Tu información está completamente segura</li>
+                <li>Estamos trabajando para resolver esto lo antes posible</li>
+                <li>No necesitas hacer nada, la app volverá automáticamente</li>
+            </ul>
+        </div>
+        
+        <button id="retryButton" class="button" onclick="checkConnection()" style="display: none;">
+            🔄 Reintentar ahora
+        </button>
+        
+        <p class="countdown" id="countdown" style="display: none;">
+            Reintentando automáticamente en <strong id="countdownNum">30</strong> segundos...
+        </p>
+        
+        <div class="links">
+            <a href="mailto:support@getlumera.app" id="supportLink">✉️ Soporte</a>
+            <span>•</span>
+            <a href="https://status.supabase.com" target="_blank" id="statusLink">📊 Estado del servicio</a>
+        </div>
+    </div>
+    
+    <script>
+        const SUPABASE_URL = 'https://pyekwpmbdnmglrjieexc.supabase.co';
+        const MAX_RETRIES = 3;
+        let retryCount = 0;
+        let countdownInterval;
+        let countdownValue = 30;
+        
+        // Detectar idioma del navegador
+        const userLang = navigator.language || navigator.userLanguage;
+        const isSpanish = userLang.startsWith('es');
+        
+        // Textos en ambos idiomas
+        const texts = {
+            es: {
+                checking: 'Verificando conexión...',
+                unavailable: '⚠️ Servicio temporalmente no disponible',
+                restored: '✓ Conexión restablecida',
+                verifying: 'Verificando conexión',
+                checkingMsg: 'Estamos comprobando que todo funcione correctamente. Esto solo tomará unos segundos...',
+                maintenance: 'Estamos en mantenimiento',
+                maintenanceMsg: 'Nuestros servicios están experimentando dificultades técnicas temporales. Por favor, inténtalo de nuevo en unos minutos.',
+                allReady: '¡Todo listo!',
+                allReadyMsg: 'La conexión se ha restablecido correctamente. Redirigiendo a la app...',
+                infoTitle: '📋 ¿Qué está pasando?',
+                infoItems: [
+                    'Nuestro servicio de base de datos está experimentando problemas temporales',
+                    'Tu información está completamente segura',
+                    'Estamos trabajando para resolver esto lo antes posible',
+                    'No necesitas hacer nada, la app volverá automáticamente'
+                ],
+                retryBtn: '🔄 Reintentar ahora',
+                retryingIn: 'Reintentando automáticamente en',
+                seconds: 'segundos...',
+                support: '✉️ Soporte',
+                status: '📊 Estado del servicio'
+            },
+            en: {
+                checking: 'Checking connection...',
+                unavailable: '⚠️ Service temporarily unavailable',
+                restored: '✓ Connection restored',
+                verifying: 'Verifying connection',
+                checkingMsg: "We're checking that everything is working correctly. This will only take a few seconds...",
+                maintenance: 'We are under maintenance',
+                maintenanceMsg: 'Our services are experiencing temporary technical difficulties. Please try again in a few minutes.',
+                allReady: 'All ready!',
+                allReadyMsg: 'Connection has been successfully restored. Redirecting to the app...',
+                infoTitle: '📋 What\'s happening?',
+                infoItems: [
+                    'Our database service is experiencing temporary issues',
+                    'Your information is completely safe',
+                    "We're working to resolve this as soon as possible",
+                    "You don't need to do anything, the app will return automatically"
+                ],
+                retryBtn: '🔄 Retry now',
+                retryingIn: 'Retrying automatically in',
+                seconds: 'seconds...',
+                support: '✉️ Support',
+                status: '📊 Service status'
+            }
+        };
+        
+        const t = texts[isSpanish ? 'es' : 'en'];
+        
+        // Aplicar textos iniciales
+        document.getElementById('statusText').textContent = t.checking;
+        document.getElementById('mainTitle').textContent = t.verifying;
+        document.getElementById('mainMessage').textContent = t.checkingMsg;
+        document.getElementById('retryButton').textContent = t.retryBtn;
+        document.getElementById('supportLink').textContent = t.support;
+        document.getElementById('statusLink').textContent = t.status;
+        
+        async function checkConnection() {
+            const statusBadge = document.getElementById('statusBadge');
+            const statusText = document.getElementById('statusText');
+            const mainTitle = document.getElementById('mainTitle');
+            const mainMessage = document.getElementById('mainMessage');
+            const spinner = document.getElementById('spinner');
+            const infoBox = document.getElementById('infoBox');
+            const retryButton = document.getElementById('retryButton');
+            const countdown = document.getElementById('countdown');
+            
+            // Reset UI
+            statusBadge.className = 'status checking';
+            statusText.textContent = t.checking;
+            spinner.style.display = 'block';
+            retryButton.style.display = 'none';
+            countdown.style.display = 'none';
+            
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/`, {
+                    method: 'GET',
+                    headers: {
+                        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5ZWt3cG1iZG5tZ2xyamllZXhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY5Mzk1MTcsImV4cCI6MjA1MjUxNTUxN30.Qw3j4X1xdvvG5P-NYUYAWfpXVP5u7LkdA6Cm-Pq2wAw'
+                    },
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (response.ok || response.status === 404) {
+                    statusBadge.className = 'status online';
+                    statusText.textContent = t.restored;
+                    mainTitle.textContent = t.allReady;
+                    mainMessage.textContent = t.allReadyMsg;
+                    spinner.style.display = 'none';
+                    infoBox.style.display = 'none';
+                    
+                    setTimeout(() => {
+                        window.location.href = '/index.html';
+                    }, 2000);
+                } else {
+                    throw new Error('Service unavailable');
+                }
+            } catch (error) {
+                retryCount++;
+                spinner.style.display = 'none';
+                statusBadge.className = 'status';
+                statusText.textContent = t.unavailable;
+                mainTitle.textContent = t.maintenance;
+                mainMessage.textContent = t.maintenanceMsg;
+                
+                // Actualizar info box con textos traducidos
+                document.getElementById('infoTitle').textContent = t.infoTitle;
+                const infoList = document.getElementById('infoList');
+                infoList.innerHTML = '';
+                t.infoItems.forEach(item => {
+                    const li = document.createElement('li');
+                    li.textContent = item;
+                    infoList.appendChild(li);
+                });
+                
+                infoBox.style.display = 'block';
+                retryButton.style.display = 'inline-block';
+                
+                if (retryCount < MAX_RETRIES) {
+                    countdown.style.display = 'block';
+                    startCountdown();
+                }
+            }
+        }
+        
+        function startCountdown() {
+            countdownValue = 30;
+            const countdown = document.getElementById('countdown');
+            countdown.innerHTML = `${t.retryingIn} <strong id="countdownNum">${countdownValue}</strong> ${t.seconds}`;
+            
+            if (countdownInterval) clearInterval(countdownInterval);
+            
+            countdownInterval = setInterval(() => {
+                countdownValue--;
+                document.getElementById('countdownNum').textContent = countdownValue;
+                
+                if (countdownValue <= 0) {
+                    clearInterval(countdownInterval);
+                    checkConnection();
+                }
+            }, 1000);
+        }
+        
+        window.addEventListener('load', () => {
+            setTimeout(checkConnection, 1000);
+        });
+    </script>
+</body>
+</html>
