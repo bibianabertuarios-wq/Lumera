@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumera - Cuando tu cuerpo cambia, tener un plan lo cambia todo</title>
+    <meta name="description" content="Acompañamiento personalizado para mujeres 40+ | Personalized support for women 40+">
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        * { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        h1, h2, h3, h4, h5, h6 { 
+            font-family: 'Cormorant', serif;
+            font-weight: 500;
+        }
+        body { background: #fafaf9; }
+        .btn-premium {
+            background: linear-gradient(135deg, #d4af37 0%, #f4e4c1 100%);
+            color: #78716c;
+            padding: 0.625rem 1.5rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+        .card-elegant {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        
+        // ========================================
+        // CONFIGURACIÓN SUPABASE
+        // ========================================
+        const SUPABASE_URL = 'https://pyekwpmbdnmglrjieexc.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5ZWt3cG1iZG5tZ2xyamllZXhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0ODM0OTgsImV4cCI6MjA4MTA1OTQ5OH0.zQl7GF3E6BhDqW3bEMixAbdDcOsW8BsFOBeAGa-5bzY';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // ========================================
+        // TRADUCCIONES
+        // ========================================
+        const t = {
+            es: {
+                nutrition: 'Nutrición',
+                personalized: 'Personalizado para ti',
+                loading: 'Cargando...',
+                ingredients: 'Ingredientes',
+                preparation: 'Preparación',
+                why: 'Por qué',
+                breakfast: 'Desayuno',
+                lunch: 'Almuerzo',
+                dinner: 'Cena',
+                snack: 'Snack'
+            },
+            en: {
+                nutrition: 'Nutrition',
+                personalized: 'Personalized for you',
+                loading: 'Loading...',
+                ingredients: 'Ingredients',
+                preparation: 'Preparation',
+                why: 'Why',
+                breakfast: 'Breakfast',
+                lunch: 'Lunch',
+                dinner: 'Dinner',
+                snack: 'Snack'
+            }
+        };
+        
+        // ========================================
+        // ✅ FIX 1: FUNCIÓN PARA CARGAR MENÚS DE SUPABASE (POR SÍNTOMA)
+        // ========================================
+        const loadMenusFromSupabase = async (userLang, userRegion, userSymptoms = [], userConditions = []) => {
+            try {
+                console.log('🔄 Cargando menús de Supabase...');
+                console.log('   - Idioma:', userLang);
+                console.log('   - Región:', userRegion);
+                
+                // Cargar TODOS los menús del idioma
+                const { data: recipes, error } = await supabase
+                    .from('menus')
+                    .select('*')
+                    .eq('locale', userLang);
+                
+                if (error) {
+                    console.error('❌ Error Supabase:', error);
+                    throw error;
+                }
+                
+                if (!recipes || recipes.length === 0) {
+                    console.warn('⚠️ Sin menús en Supabase para', userLang);
+                    throw new Error('No menus found');
+                }
+                
+                console.log('✅', recipes.length, 'menús cargados de Supabase');
+                
+                // ✅ FIX 2: PARSER ROBUSTO DE INGREDIENTES
+                const parsedRecipes = recipes.map(recipe => {
+                    let parsedIngredients = [];
+                    
+                    if (Array.isArray(recipe.ingredients)) {
+                        parsedIngredients = recipe.ingredients.map(ing => {
+                            // Si ya es objeto
+                            if (typeof ing === 'object' && ing !== null && ing.name) {
+                                return ing;
+                            }
+                            
+                            // Si es string: "Salmón 180g"
+                            if (typeof ing === 'string') {
+                                const match = ing.match(/^(.+?)\s+(\d+(?:\.\d+)?)\s*(g|ml|kg|l|ud|cdta|cda)?$/i);
+                                if (match) {
+                                    const [, name, qty, unit] = match;
+                                    return {
+                                        name: name.trim(),
+                                        ingredient: name.trim(),
+                                        qty: parseFloat(qty),
+                                        unit: unit || 'g'
+                                    };
+                                }
+                                return { name: ing.trim(), ingredient: ing.trim() };
+                            }
+                            
+                            return { name: String(ing), ingredient: String(ing) };
+                        });
+                    }
+                    
+                    return {
+                        id: recipe.id,
+                        name: recipe.name,
+                        meal: recipe.meal_type || 'desayuno',
+                        symptom: recipe.symptom, // ✅ CAMPO CORRECTO
+                        calories: recipe.calories || 0,
+                        protein: recipe.protein || 0,
+                        carbs: recipe.carbs || 0,
+                        fats: recipe.fats || 0,
+                        ingredients: parsedIngredients,
+                        steps: recipe.steps || [],
+                        why: recipe.why || '',
+                        horario: recipe.horario || recipe.time || '',
+                        whyHorario: recipe.why_horario || '',
+                        hormonalBenefit: recipe.hormonal_benefit || '',
+                        keyNutrients: Array.isArray(recipe.key_nutrients) ? recipe.key_nutrients : [],
+                        cookingTips: recipe.cooking_tips || '',
+                        locale: recipe.locale,
+                        region: recipe.region
+                    };
+                });
+                
+                // ✅ Organizar por SÍNTOMA (no por día)
+                const menusBySymptom = {};
+                parsedRecipes.forEach(recipe => {
+                    const symptom = recipe.symptom;
+                    if (!symptom) return; // Skip si no tiene síntoma
+                    
+                    if (!menusBySymptom[symptom]) menusBySymptom[symptom] = [];
+                    menusBySymptom[symptom].push(recipe);
+                });
+                
+                // Ordenar comidas dentro de cada síntoma
+                const mealOrder = {
+                    'desayuno': 1, 'breakfast': 1,
+                    'almuerzo': 2, 'lunch': 2,
+                    'snack': 3,
+                    'cena': 4, 'dinner': 4
+                };
+                
+                Object.keys(menusBySymptom).forEach(symptom => {
+                    menusBySymptom[symptom].sort((a, b) => {
+                        const orderA = mealOrder[a.meal?.toLowerCase()] || 999;
+                        const orderB = mealOrder[b.meal?.toLowerCase()] || 999;
+                        return orderA - orderB;
+                    });
+                });
+                
+                console.log('📊 Menús organizados por síntoma:', Object.keys(menusBySymptom).join(', '));
+                
+                return menusBySymptom;
+                
+            } catch (error) {
+                console.error('❌ Error fatal cargando menús:', error);
+                throw error;
+            }
+        };
+        
+        // ========================================
+        // ✅ FIX 3: PERSONALIZACIÓN POR SÍNTOMAS (MAPEO CORRECTO)
+        // ========================================
+        const getPersonalizedSymptom = (symptoms, userTier) => {
+            // FREE: síntoma rotativo semanal
+            if (userTier === 'free') {
+                const today = new Date();
+                const startOfYear = new Date(today.getFullYear(), 0, 1);
+                const weekNumber = Math.floor(((today - startOfYear) / 86400000 + startOfYear.getDay() + 1) / 7);
+                const symptomsList = ['sofocos', 'fatiga', 'insomnio', 'ansiedad', 'niebla_mental', 'dolor_articular', 'cambios_humor', 'hinchazon', 'cambios_peso', 'sequedad_vaginal'];
+                const staticSymptom = symptomsList[weekNumber % symptomsList.length];
+                console.log('🔒 FREE tier → menú estático:', staticSymptom);
+                return staticSymptom;
+            }
+            
+            // PREMIUM/TRIAL: Personalización por síntomas registrados
+            if (!symptoms || symptoms.length < 2) {
+                console.log('⚠️ Sin síntomas suficientes → usando sofocos (default)');
+                return 'sofocos'; // Default
+            }
+            
+            // Analizar últimos 2-3 días de síntomas
+            const recent = symptoms.slice(-3);
+            const avgSleep = recent.reduce((sum, s) => sum + (s.sleep || 5), 0) / recent.length;
+            const avgEnergy = recent.reduce((sum, s) => sum + (s.energy || 5), 0) / recent.length;
+            const avgHotFlashes = recent.reduce((sum, s) => sum + (s.hotFlashes || 0), 0) / recent.length;
+            const avgAnxiety = recent.reduce((sum, s) => sum + (s.anxiety || 0), 0) / recent.length;
+            const avgBrainFog = recent.reduce((sum, s) => sum + (s.brainFog || 0), 0) / recent.length;
+            const avgMood = recent.reduce((sum, s) => sum + (s.mood || 5), 0) / recent.length;
+            
+            console.log('📊 Análisis síntomas promedio:', {
+                sueño: avgSleep.toFixed(1),
+                energía: avgEnergy.toFixed(1),
+                sofocos: avgHotFlashes.toFixed(1),
+                ansiedad: avgAnxiety.toFixed(1),
+                nieblaMental: avgBrainFog.toFixed(1),
+                humor: avgMood.toFixed(1)
+            });
+            
+            // ✅ MAPEO CORRECTO: Síntoma dominante → Campo "symptom" en Supabase
+            
+            // Prioridad 1: Sofocos altos
+            if (avgHotFlashes >= 5) {
+                console.log('🔥 Sofocos altos → menú: sofocos');
+                return 'sofocos';
+            }
+            
+            // Prioridad 2: Insomnio severo
+            if (avgSleep <= 3) {
+                console.log('😴 Insomnio → menú: insomnio');
+                return 'insomnio';
+            }
+            
+            // Prioridad 3: Ansiedad alta
+            if (avgAnxiety >= 6) {
+                console.log('💜 Ansiedad alta → menú: ansiedad');
+                return 'ansiedad';
+            }
+            
+            // Prioridad 4: Niebla mental
+            if (avgBrainFog >= 5) {
+                console.log('🧠 Niebla mental → menú: niebla_mental');
+                return 'niebla_mental';
+            }
+            
+            // Prioridad 5: Fatiga
+            if (avgEnergy <= 3) {
+                console.log('⚡ Fatiga → menú: fatiga');
+                return 'fatiga';
+            }
+            
+            // Prioridad 6: Cambios de humor
+            if (avgMood <= 3) {
+                console.log('😔 Cambios de humor → menú: cambios_humor');
+                return 'cambios_humor';
+            }
+            
+            // Default: sofocos (el más común)
+            console.log('📅 Sin prioridad clara → menú default: sofocos');
+            return 'sofocos';
+        };
+        
+        // ========================================
+        // ✅ FIX 4: APLICAR RESTRICCIONES DIETÉTICAS
+        // ========================================
+        const applyDietaryRestrictions = (ingredient, userConditions) => {
+            if (!userConditions || userConditions.length === 0) {
+                return ingredient;
+            }
+            
+            const restrictions = {
+                'sin lactosa': {
+                    prohibited: ['leche', 'milk', 'yogur', 'yogurt', 'queso', 'cheese'],
+                    substitute: (ing) => {
+                        const n = ing.name.toLowerCase();
+                        if (n.includes('leche') || n.includes('milk')) {
+                            return { ...ing, name: 'Leche sin lactosa' + (ing.qty ? ` ${ing.qty}${ing.unit || 'ml'}` : ''), why: 'Versión sin lactosa' };
+                        }
+                        if (n.includes('yogur') || n.includes('yogurt')) {
+                            return { ...ing, name: 'Yogur sin lactosa' + (ing.qty ? ` ${ing.qty}${ing.unit || 'g'}` : ''), why: 'Sin lactosa' };
+                        }
+                        return null;
+                    }
+                },
+                'sin gluten': {
+                    prohibited: ['avena', 'oats', 'pan', 'bread', 'harina', 'flour'],
+                    substitute: (ing) => {
+                        const n = ing.name.toLowerCase();
+                        if (n.includes('avena') || n.includes('oats')) {
+                            return { ...ing, name: 'Avena certificada sin gluten' + (ing.qty ? ` ${ing.qty}${ing.unit || 'g'}` : ''), why: 'Certificada sin gluten' };
+                        }
+                        if (n.includes('pan') || n.includes('bread')) {
+                            return { ...ing, name: 'Pan sin gluten' + (ing.qty ? ` ${ing.qty}${ing.unit || 'g'}` : ''), why: 'Versión sin gluten' };
+                        }
+                        return { ...ing, name: 'Arroz integral', why: 'Alternativa sin gluten' };
+                    }
+                },
+                'vegetariana': {
+                    prohibited: ['pescado', 'fish', 'salmón', 'salmon', 'carne', 'meat', 'pollo', 'chicken'],
+                    substitute: (ing) => {
+                        return { name: 'Tofu firme', qty: Math.ceil((ing.qty || 100) * 1.2), unit: 'g', why: 'Proteína vegetal completa' };
+                    }
+                }
+            };
+            
+            for (const condition of userConditions) {
+                const condLower = condition.toLowerCase();
+                const restriction = restrictions[condLower];
+                
+                if (!restriction) continue;
+                
+                const ingNameLower = ingredient.name.toLowerCase();
+                const isProhibited = restriction.prohibited.some(p => ingNameLower.includes(p));
+                
+                if (isProhibited && restriction.substitute) {
+                    const substituted = restriction.substitute(ingredient);
+                    if (substituted) {
+                        console.log('✅ Sustituido:', ingredient.name, '→', substituted.name);
+                        return substituted;
+                    }
+                    return null; // Eliminar si no hay sustituto
+                }
+            }
+            
+            return ingredient;
+        };
+        
+        // ========================================
+        // COMPONENTE PRINCIPAL
+        // ========================================
+        const LumeraApp = () => {
+            const [language, setLanguage] = useState('es');
+            const [session, setSession] = useState(null);
+            const [currentUser, setCurrentUser] = useState(null);
+            const [loading, setLoading] = useState(true);
+            const [symptoms, setSymptoms] = useState([]);
+            const [userRegion, setUserRegion] = useState('latam');
+            
+            // ✅ Estados para menús
+            const [menus, setMenus] = useState({});
+            const [menusLoading, setMenusLoading] = useState(true);
+            const [menusError, setMenusError] = useState(null);
+            
+            // Mock user tier (reemplazar con lógica real)
+            const getUserTier = () => {
+                if (!currentUser) return 'free';
+                if (currentUser.subscription_status === 'active') return 'premium';
+                if (currentUser.trial_ends_at && new Date(currentUser.trial_ends_at) > new Date()) return 'trial';
+                return 'free';
+            };
+            
+            // ✅ CARGAR MENÚS cuando cambia idioma/región/usuario
+            useEffect(() => {
+                const loadMenus = async () => {
+                    if (!currentUser) {
+                        setMenusLoading(false);
+                        return;
+                    }
+                    
+                    try {
+                        setMenusLoading(true);
+                        setMenusError(null);
+                        
+                        const loadedMenus = await loadMenusFromSupabase(
+                            language,
+                            userRegion,
+                            symptoms,
+                            currentUser.conditions || []
+                        );
+                        
+                        setMenus(loadedMenus);
+                        setMenusLoading(false);
+                        
+                    } catch (error) {
+                        console.error('❌ Error cargando menús:', error);
+                        setMenusError(error.message);
+                        setMenusLoading(false);
+                    }
+                };
+                
+                loadMenus();
+            }, [language, userRegion, currentUser]);
+            
+            // ✅ RENDERIZAR MENÚ PERSONALIZADO
+            const renderNutrition = () => {
+                if (menusLoading) {
+                    return (
+                        <div className="text-center py-12">
+                            <p className="text-gray-600">{t[language].loading}</p>
+                        </div>
+                    );
+                }
+                
+                if (menusError) {
+                    return (
+                        <div className="text-center py-12">
+                            <p className="text-red-600">Error: {menusError}</p>
+                        </div>
+                    );
+                }
+                
+                const tier = getUserTier();
+                const selectedSymptom = getPersonalizedSymptom(symptoms, tier);
+                const symptomMenus = menus[selectedSymptom] || [];
+                
+                console.log('🎯 Síntoma seleccionado:', selectedSymptom);
+                console.log('🍽️ Menús encontrados:', symptomMenus.length);
+                
+                if (symptomMenus.length === 0) {
+                    return (
+                        <div className="text-center py-12">
+                            <p className="text-gray-600">No hay menús disponibles para: {selectedSymptom}</p>
+                            <p className="text-sm text-gray-500 mt-2">Síntomas disponibles: {Object.keys(menus).join(', ')}</p>
+                        </div>
+                    );
+                }
+                
+                return (
+                    <div className="max-w-4xl mx-auto p-6">
+                        <h2 className="text-3xl font-bold mb-2">{t[language].nutrition}</h2>
+                        <p className="text-purple-600 mb-2">{t[language].personalized}</p>
+                        <p className="text-sm text-gray-500 mb-8">Menú enfocado en: <strong>{selectedSymptom.replace('_', ' ')}</strong></p>
+                        
+                        <div className="space-y-6">
+                            {symptomMenus.map((menu, idx) => {
+                                // Aplicar restricciones dietéticas
+                                const filteredIngredients = menu.ingredients
+                                    .map(ing => applyDietaryRestrictions(ing, currentUser?.conditions || []))
+                                    .filter(Boolean);
+                                
+                                return (
+                                    <div key={idx} className="card-elegant">
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div>
+                                                <span className="text-sm text-purple-600 font-medium">{menu.meal}</span>
+                                                <h3 className="text-2xl font-bold mt-1">{menu.name}</h3>
+                                                {menu.horario && (
+                                                    <p className="text-sm text-gray-500 mt-1">⏰ {menu.horario}</p>
+                                                )}
+                                            </div>
+                                            <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">
+                                                {menu.calories} kcal
+                                            </span>
+                                        </div>
+                                        
+                                        {/* Macros */}
+                                        {(menu.protein || menu.carbs || menu.fats) && (
+                                            <div className="flex gap-4 mb-4 text-sm">
+                                                {menu.protein && <span className="text-gray-600">🥩 {menu.protein}g proteína</span>}
+                                                {menu.carbs && <span className="text-gray-600">🍞 {menu.carbs}g carbos</span>}
+                                                {menu.fats && <span className="text-gray-600">🥑 {menu.fats}g grasas</span>}
+                                            </div>
+                                        )}
+                                        
+                                        {/* Ingredientes */}
+                                        <div className="mb-6">
+                                            <h4 className="font-semibold mb-3">{t[language].ingredients}</h4>
+                                            <ul className="space-y-2">
+                                                {filteredIngredients.map((ing, i) => (
+                                                    <li key={i} className="flex justify-between">
+                                                        <span>{ing.name || ing.ingredient}</span>
+                                                        {ing.qty && (
+                                                            <span className="text-gray-500">{ing.qty}{ing.unit}</span>
+                                                        )}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                        
+                                        {/* Preparación */}
+                                        {menu.steps && menu.steps.length > 0 && (
+                                            <div className="mb-6">
+                                                <h4 className="font-semibold mb-3">{t[language].preparation}</h4>
+                                                <ol className="list-decimal list-inside space-y-2">
+                                                    {menu.steps.map((step, i) => (
+                                                        <li key={i} className="text-gray-700">{step}</li>
+                                                    ))}
+                                                </ol>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Por qué */}
+                                        {menu.why && (
+                                            <div className="bg-purple-50 p-4 rounded-lg mb-4">
+                                                <h4 className="font-semibold text-purple-900 mb-2">{t[language].why}</h4>
+                                                <p className="text-gray-700">{menu.why}</p>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Beneficio hormonal */}
+                                        {menu.hormonalBenefit && (
+                                            <div className="bg-pink-50 p-4 rounded-lg mb-4">
+                                                <h4 className="font-semibold text-pink-900 mb-2">💜 Beneficio hormonal</h4>
+                                                <p className="text-gray-700">{menu.hormonalBenefit}</p>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Key Nutrients */}
+                                        {menu.keyNutrients && menu.keyNutrients.length > 0 && (
+                                            <div className="border-t pt-4 mt-4">
+                                                <h4 className="font-semibold mb-2">🔬 Nutrientes clave</h4>
+                                                <ul className="space-y-2 text-sm text-gray-600">
+                                                    {menu.keyNutrients.map((nutrient, i) => (
+                                                        <li key={i}>• {nutrient}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                        
+                                        {/* Cooking Tips */}
+                                        {menu.cookingTips && (
+                                            <div className="border-t pt-4 mt-4">
+                                                <h4 className="font-semibold mb-2">👩‍🍳 Tips de cocina</h4>
+                                                <p className="text-sm text-gray-600">{menu.cookingTips}</p>
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                );
+            };
+            
+            // ✅ CARGAR SESIÓN AL INICIO
+            useEffect(() => {
+                const checkSession = async () => {
+                    const { data: { session } } = await supabase.auth.getSession();
+                    
+                    if (session) {
+                        const { data: profile } = await supabase
+                            .from('users')
+                            .select('*')
+                            .eq('id', session.user.id)
+                            .single();
+                        
+                        setSession(session);
+                        setCurrentUser(profile || { id: session.user.id, email: session.user.email });
+                        
+                        // Cargar síntomas del usuario
+                        const { data: symptomsData } = await supabase
+                            .from('symptoms')
+                            .select('*')
+                            .eq('user_id', session.user.id)
+                            .order('date', { ascending: false })
+                            .limit(10);
+                        
+                        if (symptomsData) {
+                            setSymptoms(symptomsData);
+                        }
+                    }
+                    
+                    setLoading(false);
+                };
+                
+                checkSession();
+            }, []);
+            
+            if (loading) {
+                return (
+                    <div className="flex items-center justify-center min-h-screen">
+                        <p className="text-gray-600">{t[language].loading}</p>
+                    </div>
+                );
+            }
+            
+            if (!currentUser) {
+                return (
+                    <div className="flex items-center justify-center min-h-screen">
+                        <div className="text-center">
+                            <h1 className="text-4xl font-bold mb-4">Lumera</h1>
+                            <p className="text-gray-600 mb-8">Inicia sesión para ver tus menús personalizados</p>
+                            <button 
+                                onClick={() => {/* Lógica de login */}}
+                                className="btn-premium"
+                            >
+                                Iniciar sesión
+                            </button>
+                        </div>
+                    </div>
+                );
+            }
+            
+            return (
+                <div className="min-h-screen">
+                    {renderNutrition()}
+                </div>
+            );
+        };
+        
+        // ========================================
+        // RENDERIZAR APP
+        // ========================================
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<LumeraApp />);
+    </script>
+</body>
+</html>
