@@ -5252,10 +5252,10 @@ Respond in English, max 3-4 lines, conversational tone.`;
                                 onClick={(e) => e.stopPropagation()}>
                                 
                                 <div className="flex justify-between items-center mb-6">
-                                    <h3 className="text-xl font-bold gradient-text">
-                                        {language === 'es' ? '🔑 Resetear Contraseña' : '🔑 Reset Password'}
-                                    </h3>
-                                    <button 
+                                    <h3 className="text-xl font-bold gradient-text">{language === 'es' ? '🔑 Resetear Contraseña' : '🔑 Reset Password'}</h3>
+                                        
+                                   
+                                         <button 
                                         onClick={() => setShowPasswordReset(false)}
                                         className="text-gray-600 hover:text-gray-900 text-2xl"
                                     >
