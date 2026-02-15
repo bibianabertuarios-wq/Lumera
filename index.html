@@ -2800,27 +2800,10 @@ return allExercises[exerciseGoal] || [];
                 if (lastQuestionDate !== today) {
                     setDailyQuestions(0);
                     setLastQuestionDate(today);
-                    const testProactiveMessages = async () => {
-    setTestingLumi(true);
-    try {
-        const { data, error } = await supabase.functions.invoke('generate-proactive-messages', {
-            body: { test: true }
+                   
         });
         
-        if (error) throw error;
-        
-        console.log('✅ Resultado:', data);
-        alert(`✅ Edge Function ejecutada!\n\nProcesados: ${data.processed} usuarios\nMensajes enviados: ${data.messages_sent}`);
-        
-        setTimeout(() => window.location.reload(), 2000);
-        
-    } catch (err) {
-        console.error('❌ Error:', err);
-        alert(`❌ Error: ${err.message}`);
-    } finally {
-        setTestingLumi(false);
-    }
-};
+ 
                     return true;
                 }
                 
