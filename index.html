@@ -277,6 +277,7 @@
             const [showAuth, setShowAuth] = useState(true); // FORZAR TRUE AL INICIO
             const [loading, setLoading] = useState(true);
             const [currentUser, setCurrentUser] = useState(null);
+            const [showProfileModal, setShowProfileModal] = useState(false)
             const [currentPage, setCurrentPage] = useState('home');
             const [showQuiz, setShowQuiz] = useState(false);
             const [quizStep, setQuizStep] = useState(1);
@@ -291,6 +292,10 @@
             const [showBmiInfo, setShowBmiInfo] = useState(false);
             const [showBmrInfo, setShowBmrInfo] = useState(false);
             const [showTdeeInfo, setShowTdeeInfo] = useState(false);
+            const [generatedExercises, setGeneratedExercises] = useState([]);
+const [loadingExercises, setLoadingExercises] = useState(false);
+const [cookingTips, setCookingTips] = useState({});
+const [lumiInsight, setLumiInsight] = useState('');
             
             // CHAT LUMI
             const [showLumiChat, setShowLumiChat] = useState(false);
@@ -1795,10 +1800,64 @@
                         { name: language === 'es' ? 'Estiramientos Profundos' : 'Deep Stretching', duration: '20 min', difficulty: language === 'es' ? 'Fácil' : 'Easy', freq: '3x semana', day: language === 'es' ? 'Miércoles, Viernes, Domingo' : 'Wed, Fri, Sun', why: language === 'es' ? 'Libera tensión física. Mejora flexibilidad.' : 'Releases physical tension. Improves flexibility.', science: language === 'es' ? 'Estrés se almacena en músculos. Estiramientos liberan tensión y reduce cortisol.' : 'Stress is stored in muscles. Stretching releases tension and reduces cortisol.' }
                     ]
                 };
+                // GENERAR EJERCICIOS CON EDGE FUNCTION (Premium)
+const fetchAIExercises = async () => {
+    if (getUserTier() !== 'premium' || !currentUser) return;
+    
+    setLoadingExercises(true);
+    
+    try {
+        // Obtener síntoma actual
+        const { data: symptoms } = await supabase
+            .from('symptoms')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .order('symptom_date', { ascending: false })
+            .limit(1);
+        
+        const currentSymptom = symptoms && symptoms.length > 0 
+            ? (symptoms[0].sleep <= 3 ? 'insomnio' : 
+               symptoms[0].energy <= 3 ? 'fatiga' : 
+               symptoms[0].hot_flashes >= 5 ? 'sofocos' : 'general')
+            : 'general';
+        
+        const response = await fetch('https://pyekwpmbdnmglrjieexc.supabase.co/functions/v1/generate-exercises', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                symptom: currentSymptom,
+                activity_level: currentUser.activity_level || 'moderate',
+                goal: exerciseGoal,
+                language: language
+            })
+        });
+        
+        const data = await response.json();
+        if (data.exercises) {
+            setGeneratedExercises(data.exercises);
+        }
+    } catch (error) {
+        console.error('Error generating exercises:', error);
+    } finally {
+        setLoadingExercises(false);
+    }
+};
+
+// Llamar al cargar si es premium
+React.useEffect(() => {
+    if (getUserTier() === 'premium') {
+        fetchAIExercises();
+    }
+}, [currentUser, exerciseGoal, language]);
                 
                 // PERSONALIZACIÓN: Ya filtra por exerciseGoal (strength/weightLoss/hormonal)
                 // TODO futuro: Ajustar intensidad según edad y condiciones físicas
-                return allExercises[exerciseGoal] || [];
+             // Si es premium y tenemos ejercicios generados, usarlos
+if (getUserTier() === 'premium' && generatedExercises.length > 0) {
+    return generatedExercises;
+}
+
+return allExercises[exerciseGoal] || [];
             };
 
             // MITOS
@@ -2143,12 +2202,22 @@
             // trial = dentro de los 3 días desde el registro
             // free = más de 3 días sin suscripción activa
             // premium = suscripción activa
-            const getUserTier = () => {
-                if (!currentUser) return 'free';
-                if (currentUser.subscription_status === 'active') return 'premium';
-                if (getTrialDaysLeft() > 0) return 'trial';
-                return 'free';
-            };
+           const getUserTier = () => {
+    if (!currentUser) return 'free';
+    
+    // Premium: subscription activa
+    if (currentUser.subscription_status === 'active') {
+        return 'premium';
+    }
+    
+    // Trial: trial activo
+    if (currentUser.trial_active) {
+        return 'trial';
+    }
+    
+    // Free: por defecto
+    return 'free';
+};
 
             // Obtiene el día de la semana estático basado en la semana del año
             // Así en free el menú cambia una vez por semana, no cada día
@@ -2242,6 +2311,12 @@
                                         <option value="en">🇬🇧 English</option>
                                     </select>
                                 </div>
+                                {/* Badge Premium */}
+             {getUserTier() === 'premium' && (
+                    <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full">
+                        <span className="text-white text-sm font-semibold">💎 Premium</span>
+                    </div>
+                )}
 
                                 <div className="text-center mb-8">
                                     <h1 className="text-5xl font-light gradient-text mb-4">✨ Lumera</h1>
@@ -3761,6 +3836,55 @@ Respond in English, max 3-4 lines, conversational tone.`;
                                     </div>
                                 </div>
                             )}
+                            {/* Perfil Metabólico - Solo Premium */}
+            {getUserTier() === 'premium' && currentUser && (
+                <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-lg p-6 mb-6`}>
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-2xl font-semibold gradient-text">
+                            {language === 'es' ? '📊 Tu Perfil Metabólico' : '📊 Your Metabolic Profile'}
+                        </h3>
+                        <button 
+                            onClick={() => setShowProfileModal(true)}
+                            className="text-purple-600 hover:text-purple-700 text-sm font-semibold"
+                        >
+                            {language === 'es' ? '✏️ Editar' : '✏️ Edit'}
+                        </button>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className={`${darkMode ? 'bg-gray-700' : 'bg-purple-50'} p-4 rounded-lg`}>
+                            <p className="text-xs text-gray-500 mb-1">{language === 'es' ? 'IMC' : 'BMI'}</p>
+                            <p className="text-2xl font-bold text-purple-600">
+                                {currentUser.bmi ? currentUser.bmi.toFixed(1) : '-'}
+                            </p>
+                        </div>
+                        
+                        <div className={`${darkMode ? 'bg-gray-700' : 'bg-pink-50'} p-4 rounded-lg`}>
+                            <p className="text-xs text-gray-500 mb-1">{language === 'es' ? 'TMB' : 'BMR'}</p>
+                            <p className="text-2xl font-bold text-pink-600">
+                                {currentUser.bmr ? `${Math.round(currentUser.bmr)}` : '-'}
+                            </p>
+                            <p className="text-xs text-gray-500">kcal/día</p>
+                        </div>
+                        
+                        <div className={`${darkMode ? 'bg-gray-700' : 'bg-amber-50'} p-4 rounded-lg`}>
+                            <p className="text-xs text-gray-500 mb-1">TDEE</p>
+                            <p className="text-2xl font-bold text-amber-600">
+                                {currentUser.tdee ? `${Math.round(currentUser.tdee)}` : '-'}
+                            </p>
+                            <p className="text-xs text-gray-500">kcal/día</p>
+                        </div>
+                        
+                        <div className={`${darkMode ? 'bg-gray-700' : 'bg-green-50'} p-4 rounded-lg`}>
+                            <p className="text-xs text-gray-500 mb-1">{language === 'es' ? 'Objetivo' : 'Target'}</p>
+                            <p className="text-2xl font-bold text-green-600">
+                                {currentUser.target_calories ? `${Math.round(currentUser.target_calories)}` : '-'}
+                            </p>
+                            <p className="text-xs text-gray-500">kcal/día</p>
+                        </div>
+                    </div>
+                </div>
+            )}
                             <div className="bg-gradient-to-r from-rose-400 to-amber-300 text-white p-6">
                                 <h3 className="text-2xl font-semibold">{language === 'es' ? '✨ Tu Menú de Hoy' : '✨ Your Menu Today'}</h3>
                                 <p className="text-sm opacity-90 mt-1">
@@ -5895,7 +6019,44 @@ Respond in English, max 3-4 lines, conversational tone.`;
                             </div>
                         </div>
                     )}
-                    
+                   {/* MODAL EDITAR PERFIL */}
+            {showProfileModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl max-w-md w-full p-6`}>
+                        <h3 className="text-2xl font-semibold mb-6 gradient-text">
+                            {language === 'es' ? 'Editar Perfil' : 'Edit Profile'}
+                        </h3>
+                        
+                        <div className="space-y-4">
+                            <div>
+                                <label className="text-sm font-medium block mb-2">
+                                    {language === 'es' ? 'Peso (kg)' : 'Weight (kg)'}
+                                </label>
+                                <input 
+                                    type="number" 
+                                    defaultValue={currentUser?.weight || ''}
+                                    id="profile-weight"
+                                    className="w-full p-3 border rounded-lg"
+                                    placeholder="65"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label className="text-sm font-medium block mb-2">
+                                    {language === 'es' ? 'Talla (cm)' : 'Height (cm)'}
+                                </label>
+                                <input 
+                                    type="number" 
+                                    defaultValue={currentUser?.height || ''}
+                                    id="profile-height"
+                                    className="w-full p-3 border rounded-lg"
+                                    placeholder="165"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label className="text-sm font-medium block mb-2">
+                                    {language === 'es' ? 'Edad' 
                     {/* MODAL RESETEO DE CONTRASEÑA */}
                 </div>
             );
