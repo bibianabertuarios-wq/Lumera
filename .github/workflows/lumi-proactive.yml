@@ -1,0 +1,24 @@
+name: LUMI Proactive Messages
+
+on:
+  schedule:
+    - cron: '0 8 * * *'   # 8:00 AM UTC
+    - cron: '0 14 * * *'  # 2:00 PM UTC  
+    - cron: '0 20 * * *'  # 8:00 PM UTC
+  workflow_dispatch:
+
+jobs:
+  send-lumi-messages:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Trigger LUMI Edge Function
+        run: |
+          curl -X POST \
+            https://pyekwpmbdnmglrjieexc.supabase.co/functions/v1/generate-proactive-messages \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{}'
+      
+      - name: Log execution
+        run: echo "✅ LUMI messages sent at $(date)"
