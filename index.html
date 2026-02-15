@@ -6019,44 +6019,8 @@ Respond in English, max 3-4 lines, conversational tone.`;
                             </div>
                         </div>
                     )}
-                   {/* MODAL EDITAR PERFIL */}
-            {showProfileModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl max-w-md w-full p-6`}>
-                        <h3 className="text-2xl font-semibold mb-6 gradient-text">
-                            {language === 'es' ? 'Editar Perfil' : 'Edit Profile'}
-                        </h3>
-                        
-                        <div className="space-y-4">
-                            <div>
-                                <label className="text-sm font-medium block mb-2">
-                                    {language === 'es' ? 'Peso (kg)' : 'Weight (kg)'}
-                                </label>
-                                <input 
-                                    type="number" 
-                                    defaultValue={currentUser?.weight || ''}
-                                    id="profile-weight"
-                                    className="w-full p-3 border rounded-lg"
-                                    placeholder="65"
-                                />
-                            </div>
-                            
-                            <div>
-                                <label className="text-sm font-medium block mb-2">
-                                    {language === 'es' ? 'Talla (cm)' : 'Height (cm)'}
-                                </label>
-                                <input 
-                                    type="number" 
-                                    defaultValue={currentUser?.height || ''}
-                                    id="profile-height"
-                                    className="w-full p-3 border rounded-lg"
-                                    placeholder="165"
-                                />
-                            </div>
-                            
-                            <div>
-                                <label className="text-sm font-medium block mb-2">
-                                    {language === 'es' ? 'Edad' 
+                   
+                               
                     {/* MODAL RESETEO DE CONTRASEÑA */}
                 </div>
             );
