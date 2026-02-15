@@ -318,6 +318,7 @@ const [lumiInsight, setLumiInsight] = useState('');
             const [showProactiveModal, setShowProactiveModal] = useState(false);
             const [proactiveMessages, setProactiveMessages] = useState([]);
             const [showPlanModal, setShowPlanModal] = useState(false);
+            const [testingLumi, setTestingLumi] = useState(false);
 
             // TRIAL BANNER
             const [trialDaysRemaining, setTrialDaysRemaining] = useState(3);
@@ -2799,6 +2800,27 @@ return allExercises[exerciseGoal] || [];
                 if (lastQuestionDate !== today) {
                     setDailyQuestions(0);
                     setLastQuestionDate(today);
+                    const testProactiveMessages = async () => {
+    setTestingLumi(true);
+    try {
+        const { data, error } = await supabase.functions.invoke('generate-proactive-messages', {
+            body: { test: true }
+        });
+        
+        if (error) throw error;
+        
+        console.log('✅ Resultado:', data);
+        alert(`✅ Edge Function ejecutada!\n\nProcesados: ${data.processed} usuarios\nMensajes enviados: ${data.messages_sent}`);
+        
+        setTimeout(() => window.location.reload(), 2000);
+        
+    } catch (err) {
+        console.error('❌ Error:', err);
+        alert(`❌ Error: ${err.message}`);
+    } finally {
+        setTestingLumi(false);
+    }
+};
                     return true;
                 }
                 
@@ -4185,7 +4207,26 @@ Respond in English, max 3-4 lines, conversational tone.`;
                                     </p>
                                 </div>
                             </div>
-                        )}
+                        
+                 )}
+                        {/* BOTÓN DE TESTING - REMOVER EN PRODUCCIÓN */}
+{currentUser && (currentUser.subscription_status === 'active' || currentUser.trial_active) && (
+    <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <div className="flex items-center justify-between">
+            <div>
+                <p className="text-sm font-semibold text-yellow-800">🧪 Testing Mode</p>
+                <p className="text-xs text-yellow-600">Ejecuta manualmente la generación de mensajes LUMI</p>
+            </div>
+            <button
+                onClick={testProactiveMessages}
+                disabled={testingLumi}
+                className="bg-yellow-500 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-yellow-600 disabled:opacity-50"
+            >
+                {testingLumi ? '⏳ Ejecutando...' : '▶️ Ejecutar LUMI'}
+            </button>
+        </div>
+    </div>
+)}
 
                         <div className="flex gap-4 overflow-x-auto pb-4">
                             {['strength', 'weightLoss', 'hormonal'].map((goal) => (
@@ -5612,7 +5653,29 @@ Respond in English, max 3-4 lines, conversational tone.`;
                         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" onClick={() => {
                             setShowProactiveModal(false);
                             markMessagesAsRead();
-                        }}>
+                            
+                        }>;
+                            const testProactiveMessages = async () => {
+    setTestingLumi(true);
+    try {
+        const { data, error } = await supabase.functions.invoke('generate-proactive-messages', {
+            body: { test: true }
+        });
+        
+        if (error) throw error;
+        
+        console.log('✅ Resultado:', data);
+        alert(`✅ Edge Function ejecutada!\n\nProcesados: ${data.processed} usuarios\nMensajes enviados: ${data.messages_sent}`);
+        
+        setTimeout(() => window.location.reload(), 2000);
+        
+    } catch (err) {
+        console.error('❌ Error:', err);
+        alert(`❌ Error: ${err.message}`);
+    } finally {
+        setTestingLumi(false);
+    }
+};
                             <div 
                                 className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl w-full max-w-md max-h-[80vh] overflow-hidden flex flex-col`}
                                 onClick={(e) => e.stopPropagation()}>
