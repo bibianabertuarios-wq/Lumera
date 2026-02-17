@@ -18,6 +18,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        <link rel="stylesheet" href="./premium/premium-dashboard.css">
+<script src="./premium/premium-dashboard.js"></script>
         * { 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-font-smoothing: antialiased;
@@ -3470,6 +3472,10 @@
                 
                 // Si hay usuario, mostrar HOME completo (dashboard)
                 const userName = currentUser.profile_name || (language === 'es' ? 'amiga' : 'friend');
+                // 🐍✨ DASHBOARD PREMIUM - CONDICIONAL
+if (isPremium()) {
+  return renderPremiumDashboard();
+}
                 const isInTrial = !isPremium() && getTrialDaysLeft() > 0;
                 const trialDaysLeft = getTrialDaysLeft();
                 
