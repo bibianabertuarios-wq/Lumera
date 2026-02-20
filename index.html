@@ -1184,10 +1184,8 @@
                         .select('*')
                         .eq('locale', userLang);
                     
-                    // Para español, filtrar por región. Para inglés, traer todos
-                    if (userLang === 'es') {
-                        query = query.eq('region', region.toUpperCase());
-                    }
+                  // Filtrar por región para ambos idiomas
+query = query.eq('region', region.toUpperCase()); 
                     
                     const { data: recipes, error } = await query;
                     
