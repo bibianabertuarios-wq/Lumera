@@ -4895,6 +4895,37 @@ query = query.eq('region', region.toUpperCase());
                                                         ))}
                                                     </ol>
                                                 )}
+                                                ))}
+                            
+                    
+
+                        {/* YouTube Video Link */}
+                        {ex.youtube && (
+                            <div className="mt-4 p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
+                                <p className="text-sm font-medium text-red-800 mb-2">
+                                    🎥 {language === 'es' ? 'Video de referencia:' : 'Reference video:'}
+                                </p>
+                                <a 
+                                   
+        
+                    href={ex.youtube}
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-red-600 underline text-sm hover:text-red-800"
+                >
+                    {language === 'es' ? 'Ver en YouTube →' : 'Watch on YouTube →'}
+                </a>
+            </div>
+        )} 
+                                    href={ex.youtube}
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="text-red-600 underline text-sm hover:text-red-800"
+                                >
+                                    {language === 'es' ? 'Ver en YouTube →' : 'Watch on YouTube →'}
+                                </a>
+                            </div>
+                        )}
                                             </div>
                                         ))}
                                         <p className={`text-xs ${darkMode ? 'text-purple-400' : 'text-purple-600'} italic text-center mt-2`}>
