@@ -1,9 +1,13 @@
 {
+  "version": 2,
+  "builds": [
+    { "src": "index.html", "use": "@vercel/static" }
+  ],
   "routes": [
     { "src": "/terminos", "dest": "/terminos.html" },
     { "src": "/privacidad", "dest": "/privacidad.html" },
     { "src": "/terms", "dest": "/terms.html" },
     { "src": "/privacy", "dest": "/privacy.html" },
-    { "src": "/", "dest": "/index.html" }
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
