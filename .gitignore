@@ -1,0 +1,12 @@
+# env files
+.env.local
+.env
+.env*.local
+
+# Next.js
+.next/
+node_modules/
+out/
+
+# OS
+.DS_Store
