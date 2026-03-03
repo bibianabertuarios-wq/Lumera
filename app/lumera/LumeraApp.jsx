@@ -4191,12 +4191,12 @@ query = query.eq('region', region.toUpperCase());
                             const scores = {
                                 'fatiga':          avgEnergy  < 6 ? (6 - avgEnergy)  * 2.0 : 0,
                                 'insomnio':        avgSleep   < 6 ? (6 - avgSleep)   * 2.0 : 0,
-                                'sofocos':         avgHotFlashes > 2 ? (avgHotFlashes - 2) * 2.5 : 0,
-                                'ansiedad':        avgAnxiety    > 2 ? (avgAnxiety    - 2) * 2.5 : 0,
-                                'niebla_mental':   (avgBrainFog  > 2 ? (avgBrainFog  - 2) * 2.5 : 0) + (avgMemory < 5 ? (5 - avgMemory) * 1.5 : 0),
+                                'sofocos':         avgHotFlashes > 3 ? (avgHotFlashes - 3) * 2.0 : 0,
+                                'ansiedad':        avgAnxiety    > 3 ? (avgAnxiety    - 3) * 2.0 : 0,
+                                'niebla_mental':   (avgBrainFog > 3 ? (avgBrainFog - 3) * 2.0 : 0) + (avgMemory < 6 ? (6 - avgMemory) * 2.0 : 0),
                                 'cambios_humor':   avgMood    < 6 ? (6 - avgMood)   * 2.0 : 0,
-                                'dolor_articular': avgJointPain  > 2 ? (avgJointPain - 2) * 2.0 : 0,
-                                'hinchazon':       avgBloating   > 2 ? (avgBloating  - 2) * 2.0 : 0,
+                                'dolor_articular': avgJointPain  > 3 ? (avgJointPain - 3) * 2.0 : 0,
+                                'hinchazon':       avgBloating   > 3 ? (avgBloating  - 3) * 2.0 : 0,
                             };
 
                             // Si hay síntoma principal del perfil, darle un boost para desempates
