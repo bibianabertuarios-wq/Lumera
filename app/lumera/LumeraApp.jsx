@@ -4189,12 +4189,12 @@ query = query.eq('region', region.toUpperCase());
                             // Para síntomas donde ALTO es malo (sofocos, ansiedad, niebla)
                             // Para síntomas donde BAJO es malo (sueño, energía, ánimo, memoria)
                             const scores = {
-                                'fatiga':          avgEnergy  < 5 ? (5 - avgEnergy)  * 2.0 : 0,
-                                'insomnio':        avgSleep   < 5 ? (5 - avgSleep)   * 2.0 : 0,
+                                'fatiga':          avgEnergy  < 6 ? (6 - avgEnergy)  * 2.0 : 0,
+                                'insomnio':        avgSleep   < 6 ? (6 - avgSleep)   * 2.0 : 0,
                                 'sofocos':         avgHotFlashes > 2 ? (avgHotFlashes - 2) * 2.5 : 0,
                                 'ansiedad':        avgAnxiety    > 2 ? (avgAnxiety    - 2) * 2.5 : 0,
                                 'niebla_mental':   (avgBrainFog  > 2 ? (avgBrainFog  - 2) * 2.5 : 0) + (avgMemory < 5 ? (5 - avgMemory) * 1.5 : 0),
-                                'cambios_humor':   avgMood    < 5 ? (5 - avgMood)    * 2.0 : 0,
+                                'cambios_humor':   avgMood    < 6 ? (6 - avgMood)   * 2.0 : 0,
                                 'dolor_articular': avgJointPain  > 2 ? (avgJointPain - 2) * 2.0 : 0,
                                 'hinchazon':       avgBloating   > 2 ? (avgBloating  - 2) * 2.0 : 0,
                             };
