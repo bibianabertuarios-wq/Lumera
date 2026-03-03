@@ -478,7 +478,7 @@ import './lumera.css'
                         }
 
                         if (data && data.length > 0) {
-                            setSymptoms(data);
+                            const normalized = data.map(s => ({...s, hotFlashes: s.hot_flashes ?? s.hotFlashes ?? 0, brainFog: s.brain_fog ?? s.brainFog ?? 0, vaginalDryness: s.vaginal_dryness ?? s.vaginalDryness ?? 0, jointPain: s.joint_pain ?? s.jointPain ?? 0})); setSymptoms(normalized);
                         }
                     } catch (err) {
                     }
