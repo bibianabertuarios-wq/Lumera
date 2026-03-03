@@ -2875,8 +2875,7 @@ query = query.eq('region', region.toUpperCase());
 
                                     const { data: updatedProfile, error } = await supabase
                                         .from('users')
-                                        .update(profileData)
-                                        .eq('id', activeSession.user.id)
+                                        .upsert({id: activeSession.user.id, email: activeSession.user.email, ...profileData})
                                         .select()
                                         .single();
 
