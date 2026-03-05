@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { pelvicFloorChallenge } from '../data/pelvicFloorChallenge';
 
 // ─── COMPONENTE PRINCIPAL ─────────────────────────────────────────────────────
-export default function PelvicFloorChallenge({ language = 'es', darkMode = false }) {
+export default function PelvicFloorChallenge({ language = 'es', darkMode = false, userTier = 'free' }) {
+    const isPremiumOrTrial = userTier === 'premium' || userTier === 'trial';
     const [expanded, setExpanded] = useState(false);         // intro expandida
     const [howToOpen, setHowToOpen] = useState(false);       // acordeón cómo hacer
     const [activeStep, setActiveStep] = useState(null);      // paso del acordeón
@@ -285,15 +286,26 @@ export default function PelvicFloorChallenge({ language = 'es', darkMode = false
                 )}
 
                 {/* CTA */}
-                <button
-                    onClick={() => setShowChallenge(true)}
-                    className="w-full bg-gradient-to-r from-rose-400 to-amber-300 text-white py-3 rounded-xl font-semibold text-sm hover:shadow-lg transition"
-                >
-                    {completedDays.length === 0
-                        ? (lang === 'es' ? '🏆 Comenzar el Challenge' : '🏆 Start the Challenge')
-                        : (lang === 'es' ? `Continuar — Día ${currentDay}` : `Continue — Day ${currentDay}`)
-                    }
-                </button>
+                {isPremiumOrTrial ? (
+                    <button
+                        onClick={() => setShowChallenge(true)}
+                        className="w-full bg-gradient-to-r from-rose-400 to-amber-300 text-white py-3 rounded-xl font-semibold text-sm hover:shadow-lg transition"
+                    >
+                        {completedDays.length === 0
+                            ? (lang === 'es' ? '🏆 Comenzar el Challenge' : '🏆 Start the Challenge')
+                            : (lang === 'es' ? `Continuar — Día ${currentDay}` : `Continue — Day ${currentDay}`)
+                        }
+                    </button>
+                ) : (
+                    <div className={`rounded-xl p-4 text-center ${darkMode ? 'bg-purple-900/40' : 'bg-purple-50'} border border-purple-200`}>
+                        <p className={`text-sm font-medium mb-2 ${darkMode ? 'text-purple-200' : 'text-purple-700'}`}>
+                            💎 {lang === 'es' ? 'Hazte Premium para acceder al challenge completo' : 'Go Premium to access the full challenge'}
+                        </p>
+                        <p className={`text-xs ${darkMode ? 'text-purple-300' : 'text-purple-500'}`}>
+                            {lang === 'es' ? '21 días · Videos guiados · Progresión científica' : '21 days · Guided videos · Scientific progression'}
+                        </p>
+                    </div>
+                )}
             </div>
         </div>
     );

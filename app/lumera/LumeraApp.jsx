@@ -4842,7 +4842,7 @@ query = query.eq('region', region.toUpperCase());
                         </div>
 
                         {/* CHALLENGE SUELO PÉLVICO */}
-                        <PelvicFloorChallenge language={language} darkMode={darkMode} />
+                        <PelvicFloorChallenge language={language} darkMode={darkMode} userTier={getUserTier()} />
 
                         {/* EJERCICIOS PERSONALIZADOS - Trial y Premium */}
                         {(getUserTier() === 'premium' || getUserTier() === 'trial') && (
