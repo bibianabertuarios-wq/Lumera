@@ -3910,7 +3910,18 @@ query = query.eq('region', region.toUpperCase());
                             </div>
                         </div>
 
-                        {/* ── SI TE SIENTES ASÍ, USA LUMERA ── */}
+                        
+                        {/* ── BANNER CHALLENGE SUELO PÉLVICO ── */}
+                        <div onClick={() => setCurrentPage('exercise')} style={{position:'relative',borderRadius:'1.25rem',overflow:'hidden',cursor:'pointer',minHeight:'160px'}}>
+                            <video autoPlay loop muted playsInline style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}} src="/videos/pelvic-floor-hero.mp4" />
+                            <div style={{position:'relative',background:'linear-gradient(135deg,rgba(0,0,0,0.45),rgba(124,58,237,0.6))',padding:'1.5rem 1.75rem'}}>
+                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'rgba(255,255,255,0.8)',letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:'0.4rem'}}>🏆 {language === 'es' ? '21 DÍAS CHALLENGE' : '21 DAYS CHALLENGE'}</p>
+                                <h3 style={{fontFamily:"'Cormorant', serif",fontSize:'1.6rem',fontWeight:500,color:'white',lineHeight:1.2,marginBottom:'0.5rem'}}>{language === 'es' ? 'Empieza hoy,' : 'Start today,'}<br/>{language === 'es' ? 'siéntelo en 3 semanas' : 'feel it in 3 weeks'}</h3>
+                                <p style={{fontSize:'0.82rem',color:'rgba(255,255,255,0.85)'}}>{language === 'es' ? 'Challenge Suelo Pélvico →' : 'Pelvic Floor Challenge →'}</p>
+                            </div>
+                        </div>
+
+{/* ── SI TE SIENTES ASÍ, USA LUMERA ── */}
                         <div style={{background: bgCard, borderRadius: '1.25rem', padding: '1.5rem', border: `1px solid ${borderSoft}`, boxShadow: '0 2px 16px rgba(0,0,0,0.05)'}}>
                             <h2 style={{fontFamily: "'Cormorant', serif", fontSize: '1.45rem', fontWeight: 500, color: textMain, marginBottom: '0.25rem'}}>
                                 {language === 'es' ? 'Si te sientes así, Lumera es para ti' : 'If you feel this way, Lumera is for you'}
