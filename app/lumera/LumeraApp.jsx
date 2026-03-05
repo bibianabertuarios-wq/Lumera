@@ -1,4 +1,5 @@
 'use client'
+import PelvicFloorChallenge from "../components/PelvicFloorChallenge";
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import './lumera.css'
@@ -4839,6 +4840,9 @@ query = query.eq('region', region.toUpperCase());
                                 </p>
                             </div>
                         </div>
+
+                        {/* CHALLENGE SUELO PÉLVICO */}
+                        <PelvicFloorChallenge language={language} darkMode={darkMode} />
 
                         {/* EJERCICIOS PERSONALIZADOS - Trial y Premium */}
                         {(getUserTier() === 'premium' || getUserTier() === 'trial') && (
