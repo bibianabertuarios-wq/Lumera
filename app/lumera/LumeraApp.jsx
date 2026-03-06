@@ -6787,9 +6787,17 @@ query = query.eq('region', region.toUpperCase());
                                                 const result = analyzePatterns(symptoms);
                                                 if (result && result.length > 0) {
                                                     setPatternResult(result);
-                                                    setShowPatternModal(true);
-                                                    setPatternShown(true);
+                                                } else {
+                                                    setPatternResult([{
+                                                        type: 'no_data',
+                                                        symptom: '',
+                                                        message: language === 'es'
+                                                            ? 'Aún estás construyendo tu historial. Registra tus síntomas cada día y en 3 días tendré patrones reales de tu cuerpo para mostrarte.'
+                                                            : 'You are still building your history. Log your symptoms every day and in 3 days I will have real patterns from your body to show you.'
+                                                    }]);
                                                 }
+                                                setShowPatternModal(true);
+                                                setPatternShown(true);
                                             }}
                                             style={{
                                                 width: '100%',
@@ -6874,7 +6882,27 @@ query = query.eq('region', region.toUpperCase());
                     )}
 
                     {/* MODAL PATRÓN DÍA 3 - RESUMEN LUMI */}
-                    {showPatternModal && patternResult && (
+                    {showPatternModal && patternResult && patternResult[0]?.type === 'no_data' && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" onClick={() => setShowPatternModal(false)}>
+                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl w-full max-w-md overflow-hidden`} onClick={e => e.stopPropagation()}>
+                                <div style={{background: 'linear-gradient(135deg, #7c3aed, #a855f7)', padding: '1.75rem 1.5rem', textAlign: 'center', color: 'white'}}>
+                                    <div style={{fontSize: '2.5rem', marginBottom: '0.5rem'}}>🌱</div>
+                                    <h3 style={{fontFamily: "'Cormorant', serif", fontSize: '1.6rem', fontWeight: 400, marginBottom: '0.25rem'}}>
+                                        {language === 'es' ? 'Estamos empezando' : 'We are just starting'}
+                                    </h3>
+                                </div>
+                                <div style={{padding: '1.5rem', textAlign: 'center'}}>
+                                    <p style={{fontSize: '0.95rem', lineHeight: 1.7, color: darkMode ? '#e7e5e4' : '#44403c', marginBottom: '1.5rem'}}>
+                                        {patternResult[0].message}
+                                    </p>
+                                    <button onClick={() => { setShowPatternModal(false); setCurrentPage('symptoms'); }} style={{background: 'linear-gradient(135deg, #7c3aed, #a855f7)', color: 'white', border: 'none', borderRadius: '9999px', padding: '0.75rem 2rem', fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer', width: '100%'}}>
+                                        {language === 'es' ? 'Registrar síntomas ahora →' : 'Log symptoms now →'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    {showPatternModal && patternResult && patternResult[0]?.type !== 'no_data' && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
                             <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl w-full max-w-md overflow-hidden max-h-[92vh] overflow-y-auto`}>
 
