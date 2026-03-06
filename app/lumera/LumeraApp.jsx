@@ -52,6 +52,12 @@ import './lumera.css'
 
         const LumeraApp = () => {
             const [language, setLanguage] = useState('es');
+
+            // Sync idioma con Supabase cuando cambia
+            useEffect(() => {
+                if (!currentUser || !currentUser.id) return;
+                supabase.from('users').update({ language }).eq('id', currentUser.id);
+            }, [language]);
             const [darkMode, setDarkMode] = useState(false);
             const [session, setSession] = useState(null);
             const [authMode, setAuthMode] = useState('login');
@@ -72,6 +78,7 @@ import './lumera.css'
             const [exerciseGoal, setExerciseGoal] = useState('hormonal');
             const [userRegion, setUserRegion] = useState('latam');
             const [showTutorial, setShowTutorial] = useState(false);
+            const [showHowTo, setShowHowTo] = useState(false);
             const [editingProfile, setEditingProfile] = useState(false);
             const [profileEdits, setProfileEdits] = useState({});
             const [showBmiInfo, setShowBmiInfo] = useState(false);
@@ -392,14 +399,14 @@ import './lumera.css'
                             `${greetEs} ${userName} 🌿 Un nuevo día para cuidarte. ¿Cómo dormiste anoche?`,
                             `${greetEs} ${userName} ✨ Me alegra verte. ¿Quieres registrar cómo te sientes hoy?`,
                             `${greetEs} ${userName} 💜 Recuerda: pequeños pasos cada día marcan la diferencia. ¿Cómo estás hoy?`,
-                            `${greetEs} ${userName} 🌸 Tu cuerpo hace algo increíble cada día. ¿Cómo te sientes esta mañana?`,
+                            `${greetEs} ${userName} 🌸 Tu cuerpo hace algo increíble cada día. ¿Cómo te sientes ${new Date().getHours() < 12 ? "esta mañana" : new Date().getHours() < 20 ? "esta tarde" : "esta noche"}?`,
                         ]
                         : [
                             `${greetEn} ${userName} 💜 I'm here for you today. How are you feeling?`,
                             `${greetEn} ${userName} 🌿 A new day to take care of yourself. How did you sleep last night?`,
                             `${greetEn} ${userName} ✨ Good to see you. Would you like to log how you're feeling today?`,
                             `${greetEn} ${userName} 💜 Remember: small steps every day make a big difference. How are you today?`,
-                            `${greetEn} ${userName} 🌸 Your body does something incredible every day. How are you feeling this morning?`,
+                            `${greetEn} ${userName} 🌸 Your body does something incredible every day. How are you feeling ${new Date().getHours() < 12 ? "this morning" : new Date().getHours() < 20 ? "this afternoon" : "tonight"}?`,
                         ];
 
                     const dayOfWeek = new Date().getDay();
@@ -3883,10 +3890,13 @@ query = query.eq('region', region.toUpperCase());
 
                         {/* ── CÓMO USAR LUMERA ── */}
                         <div style={{background: bgCard, borderRadius: '1.25rem', padding: '1.5rem', border: `1px solid ${borderSoft}`, boxShadow: '0 2px 16px rgba(0,0,0,0.05)'}}>
-                            <h2 style={{fontFamily: "'Cormorant', serif", fontSize: '1.45rem', fontWeight: 500, color: textMain, marginBottom: '1rem'}}>
-                                {language === 'es' ? '¿Cómo sacar el máximo a Lumera?' : 'How to get the most from Lumera?'}
-                            </h2>
-                            <div style={{display: 'flex', flexDirection: 'column', gap: '0.85rem'}}>
+                            <div onClick={() => setShowHowTo(prev => !prev)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer',marginBottom: showHowTo ? '1rem' : 0}}>
+                                <h2 style={{fontFamily: "'Cormorant', serif", fontSize: '1.45rem', fontWeight: 500, color: textMain, margin:0}}>
+                                    {language === 'es' ? '¿Cómo sacar el máximo a Lumera?' : 'How to get the most from Lumera?'}
+                                </h2>
+                                <span style={{fontSize:'1.2rem', color: textSub}}>{showHowTo ? '⌃' : '⌄'}</span>
+                            </div>
+                            {showHowTo && <div style={{display: 'flex', flexDirection: 'column', gap: '0.85rem'}}>
                                 {[
                                     { step: '1', icon: '📝', es: 'Registra cómo te sientes cada día — sueño, energía, ánimo, sofocos', en: 'Log how you feel each day — sleep, energy, mood, hot flashes' },
                                     { step: '2', icon: '🍽️', es: 'Revisa tu plan de nutrición adaptado a tus síntomas de hoy', en: 'Check your nutrition plan adapted to today\'s symptoms' },
@@ -3907,8 +3917,9 @@ query = query.eq('region', region.toUpperCase());
                                         </p>
                                     </div>
                                 ))}
-                            </div>
+                            </div>}
                         </div>
+        
 
                         
                         {/* ── BANNER CHALLENGE SUELO PÉLVICO ── */}
@@ -6751,7 +6762,7 @@ query = query.eq('region', region.toUpperCase());
 
                                             {/* Texto del mensaje */}
                                             <p className={`text-sm leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                                {msg.message_text}
+                                                {language === "es" ? msg.message_text : (msg.message_type === "greeting" ? "Good morning! I am here to support you today. How are you feeling?" : msg.message_type === "encouragement" ? "You are doing great. Every small step counts towards your wellbeing." : msg.message_type === "check_in" ? "How are you feeling today? I am here to listen." : msg.message_type === "pattern_detected" ? "I have detected some patterns in your symptoms. Let's review them together." : msg.message_text)}
                                             </p>
 
                                             {/* Timestamp */}
