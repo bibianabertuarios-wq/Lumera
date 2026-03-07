@@ -2644,12 +2644,12 @@ query = query.eq('region', region.toUpperCase());
                                 {/* 3 bullets rápidos */}
                                 <div style={{display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '2rem'}}>
                                     {[
-                                        {icon: '🧠', text: language === 'es' ? 'LUMI recuerda cómo te sientes cada día' : 'LUMI remembers how you feel each day'},
-                                        {icon: '🥗', text: language === 'es' ? 'Menús adaptados a tus síntomas' : 'Menus adapted to your symptoms'},
-                                        {icon: '✨', text: language === 'es' ? 'Ejercicio según tu energía real' : 'Exercise based on your real energy'},
+                                        {icon: '/images/lumi.png', text: language === 'es' ? 'LUMI recuerda como te sientes cada dia' : 'LUMI remembers how you feel each day'},
+                                        {icon: '/images/menu.png', text: language === 'es' ? 'Menus adaptados a tus sintomas' : 'Menus adapted to your symptoms'},
+                                        {icon: '/images/ejercicio.png', text: language === 'es' ? 'Ejercicio segun tu energia real' : 'Exercise based on your real energy'},
                                     ].map((item, i) => (
                                         <div key={i} style={{display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(124,58,237,0.06)', borderRadius: '0.75rem', padding: '0.75rem 1rem'}}>
-                                            <span style={{fontSize: '1.2rem'}}>{item.icon}</span>
+                                            <img src={item.icon} style={{width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', flexShrink: 0}} />
                                             <span style={{fontSize: '0.85rem', color: '#44403c'}}>{item.text}</span>
                                         </div>
                                     ))}
