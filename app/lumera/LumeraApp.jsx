@@ -3841,7 +3841,9 @@ query = query.eq('region', region.toUpperCase());
                 const borderSoft = darkMode ? 'rgba(167,139,250,0.18)' : 'rgba(167,139,250,0.15)';
 
                 return (
-                    <div className="pb-32 space-y-6" key={language} style={{background: bgPage}}>
+                    <div className="pb-32 space-y-6" key={language} style={{background: bgPage, position: 'relative'}}>
+                        <video autoPlay loop muted playsInline src="/videos/Dashboard.mp4" style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none', opacity: 0.18}} />
+                        <video autoPlay loop muted playsInline src="/videos/Dashboard.mp4" style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none', opacity: 0.18}} />
 
                         {/* ── HERO TRIAL ── */}
                         <div style={{
@@ -4280,7 +4282,9 @@ query = query.eq('region', region.toUpperCase());
                 }
 
                 return (
-                    <div className="pb-32 space-y-8" key={`nutrition-${language}`}>
+                    <div className="pb-32 space-y-8" key={`nutrition-${language}`} style={{position: 'relative'}}>
+                        <video autoPlay loop muted playsInline src="/videos/menu.mp4"
+                            style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none', opacity: 0.18}} />
                         <h2 className="text-3xl font-light gradient-text">{t[language].nutrition}</h2>
 
                         <div className={`${darkMode ? 'bg-rose-900' : 'bg-amber-50'} rounded-xl shadow p-5 border-l-4 border-rose-400`}>
@@ -4848,7 +4852,9 @@ query = query.eq('region', region.toUpperCase());
                 const exercises = getFiltered();
 
                 return (
-                    <div className="pb-32 space-y-8" key={`exercise-${language}`}>
+                    <div className="pb-32 space-y-8" key={`exercise-${language}`} style={{position: 'relative'}}>
+                        <video autoPlay loop muted playsInline src="/videos/ejercicio.mp4"
+                            style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none', opacity: 0.18}} />
                         <div>
                             <h2 className="text-3xl font-light gradient-text">{t[language].exercise}</h2>
                             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{objectives[exerciseGoal]}</p>
