@@ -2612,68 +2612,64 @@ query = query.eq('region', region.toUpperCase());
             const renderQuiz = () => {
                 if (quizStep === 1) {
                     return (
-                        <div className="min-h-screen bg-gradient-to-br from-amber-50 via-rose-50 to-amber-50 flex items-center justify-center p-4" style={{backgroundImage: "url('data:image/svg+xml,%3Csvg width=\"120\" height=\"120\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 120\"%3E%3Cg opacity=\"0.12\"%3E%3Cpath d=\"M60 85 Q50 75, 45 60 Q50 50, 60 55 Q65 60, 60 85\" fill=\"%23fb7185\" /%3E%3Cpath d=\"M60 55 Q55 45, 52 35 Q58 28, 65 35 Q68 45, 60 55\" fill=\"%23fcd34d\" /%3E%3Cpath d=\"M65 35 Q70 25, 75 18 Q82 20, 80 30 Q75 40, 65 35\" fill=\"%23fb7185\" /%3E%3Cpath d=\"M80 30 Q88 22, 95 18 Q100 25, 95 35 Q88 40, 80 30\" fill=\"%23fed7aa\" /%3E%3Ccircle cx=\"68\" cy=\"45\" r=\"4\" fill=\"%23fcd34d\" opacity=\"0.6\"/%3E%3C/g%3E%3C/svg%3E')", backgroundSize: '150px 150px'}}>
-                            <div className="bg-white/80 rounded-3xl shadow-xl p-10 max-w-3xl w-full">
-                                <div className="flex justify-end mb-6">
-                                    <select value={language} onChange={(e) => setLanguage(e.target.value)} className="px-4 py-2 rounded-lg border border-gray-300 font-semibold text-sm bg-white focus:outline-none focus:ring-2 focus:ring-amber-300">
-                                        <option value="es">🇪🇸 Español</option>
-                                        <option value="en">🇬🇧 English</option>
+                        <div style={{minHeight: '100vh', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', background: '#1a0a2e', overflow: 'hidden'}}>
+                            {/* Video fondo */}
+                            <video autoPlay loop muted playsInline
+                                style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.25, zIndex: 0}}
+                                src="/videos/Dashboard.mp4" />
+                            {/* Overlay gradiente */}
+                            <div style={{position: 'fixed', inset: 0, background: 'linear-gradient(135deg, rgba(124,58,237,0.7) 0%, rgba(236,72,153,0.4) 100%)', zIndex: 1}} />
+                            {/* Tarjeta glassmorphism */}
+                            <div style={{position: 'relative', zIndex: 2, width: '100%', maxWidth: '480px', background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: '2rem', padding: '2.5rem 2rem', boxShadow: '0 8px 64px rgba(0,0,0,0.3)'}}>
+                                {/* Selector idioma */}
+                                <div style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '1.5rem'}}>
+                                    <select value={language} onChange={(e) => setLanguage(e.target.value)}
+                                        style={{padding: '0.4rem 0.75rem', borderRadius: '9999px', border: '1px solid rgba(255,255,255,0.3)', background: 'rgba(255,255,255,0.15)', color: 'white', fontSize: '0.82rem', cursor: 'pointer'}}>
+                                        <option value="es" style={{color: '#333'}}>🇪🇸 Español</option>
+                                        <option value="en" style={{color: '#333'}}>🇬🇧 English</option>
                                     </select>
                                 </div>
-
-                                <div className="text-center mb-8">
-                                    <h1 className="text-5xl font-light gradient-text mb-4">✨ Lumera</h1>
-                                    <p className="text-2xl font-light text-gray-700 mb-4">{language === 'es' ? 'Tu Compañera Personalizada' : 'Your Personalized Companion'}</p>
-                                    <p className="text-base text-gray-600 leading-relaxed max-w-2xl mx-auto">
-                                        {language === 'es' 
-                                            ? 'Entre los 40 y 55 años, tu cuerpo vive una transformación profunda. Cada cambio es natural, cada síntoma válido. Tu transformación es un acto de gracia y fortaleza que merece ser acompañado.'
-                                            : 'Between 40 and 55, your body undergoes a profound transformation. Every change is natural, every symptom is valid. Your transformation is an act of grace and strength that deserves to be supported.'}
+                                {/* Logo y headline */}
+                                <div style={{textAlign: 'center', marginBottom: '2rem'}}>
+                                    <p style={{fontSize: '0.72rem', fontWeight: 700, color: 'rgba(255,255,255,0.7)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '0.75rem'}}>✦ LUMERA</p>
+                                    <h1 style={{fontFamily: "'Cormorant', Georgia, serif", fontSize: '2.4rem', fontWeight: 300, color: 'white', lineHeight: 1.15, marginBottom: '1rem'}}>
+                                        {language === 'es' ? 'Tu nuevo capítulo
+comienza ahora' : 'Your new chapter
+begins now'}
+                                    </h1>
+                                    <p style={{fontSize: '0.9rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.7}}>
+                                        {language === 'es'
+                                            ? 'Ciencia y cuidado diseñados para ti. Para que esta etapa sea la más poderosa de tu vida.'
+                                            : 'Science and care designed for you. So this stage becomes the most powerful of your life.'}
                                     </p>
                                 </div>
-
-                                <div className="bg-amber-50/70 rounded-2xl p-8 space-y-4 border border-purple-100 mb-8">
-                                    <h3 className="font-bold text-lg text-rose-900 mb-4">{language === 'es' ? '💜 Conoce a LUMI - Tu Coach Personal' : '💜 Meet LUMI - Your Personal Coach'}</h3>
-                                    <p className="text-sm text-gray-700 mb-4">
-                                        {language === 'es' 
-                                            ? 'No es un chatbot. LUMI te conoce, recuerda cómo dormiste, y ajusta tus planes cada día según cómo te sientes.'
-                                            : 'Not a chatbot. LUMI knows you, remembers how you slept, and adjusts your plans every day based on how you feel.'}
-                                    </p>
-                                    <div className="grid md:grid-cols-2 gap-3 text-sm text-gray-700">
-                                        <p className="flex items-start gap-2">
-                                            <span className="text-purple-600 mt-0.5">🧠</span>
-                                            <span><strong>{language === 'es' ? 'Recuerda tu contexto' : 'Remembers your context'}:</strong> {language === 'es' ? 'Síntomas, objetivos, qué te funciona' : 'Symptoms, goals, what works for you'}</span>
-                                        </p>
-                                        <p className="flex items-start gap-2">
-                                            <span className="text-purple-600 mt-0.5">🔄</span>
-                                            <span><strong>{language === 'es' ? 'Planes adaptativos' : 'Adaptive plans'}:</strong> {language === 'es' ? 'Sofocos anoche → Recetas antiinflamatorias hoy' : 'Hot flashes last night → Anti-inflammatory recipes today'}</span>
-                                        </p>
-                                        <p className="flex items-start gap-2">
-                                            <span className="text-purple-600 mt-0.5">🍽️</span>
-                                            <span><strong>{language === 'es' ? 'Menús personalizados' : 'Personalized menus'}:</strong> {language === 'es' ? 'Recetas adaptadas a tus necesidades' : 'Recipes adapted to your needs'}</span>
-                                        </p>
-                                        <p className="flex items-start gap-2">
-                                            <span className="text-purple-600 mt-0.5">💪</span>
-                                            <span><strong>{language === 'es' ? 'Ejercicios por energía' : 'Exercise by energy'}:</strong> {language === 'es' ? 'Según cómo amaneciste' : 'Based on how you woke up'}</span>
-                                        </p>
-                                        <p className="flex items-start gap-2">
-                                            <span className="text-purple-600 mt-0.5">📊</span>
-                                            <span><strong>{language === 'es' ? 'Insights reales' : 'Real insights'}:</strong> {language === 'es' ? 'Descubre qué afecta tus síntomas' : 'Discover what affects your symptoms'}</span>
-                                        </p>
-                                        <p className="flex items-start gap-2">
-                                            <span className="text-purple-600 mt-0.5">🔬</span>
-                                            <span><strong>{language === 'es' ? 'Con evidencia' : 'Evidence-based'}:</strong> {language === 'es' ? 'Cada recomendación respaldada' : 'Every recommendation backed'}</span>
-                                        </p>
-                                    </div>
+                                {/* 3 bullets rápidos */}
+                                <div style={{display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '2rem'}}>
+                                    {[
+                                        {icon: '🧠', text: language === 'es' ? 'LUMI recuerda cómo te sientes cada día' : 'LUMI remembers how you feel each day'},
+                                        {icon: '🥗', text: language === 'es' ? 'Menús adaptados a tus síntomas' : 'Menus adapted to your symptoms'},
+                                        {icon: '✨', text: language === 'es' ? 'Ejercicio según tu energía real' : 'Exercise based on your real energy'},
+                                    ].map((item, i) => (
+                                        <div key={i} style={{display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(255,255,255,0.1)', borderRadius: '0.75rem', padding: '0.75rem 1rem'}}>
+                                            <span style={{fontSize: '1.2rem'}}>{item.icon}</span>
+                                            <span style={{fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)'}}>{item.text}</span>
+                                        </div>
+                                    ))}
                                 </div>
-
-                                <button onClick={() => setQuizStep(2)} className="w-full bg-gradient-to-r from-rose-400 to-amber-300 text-white py-4 rounded-xl font-semibold hover:shadow-lg text-lg transition">
-                                    {language === 'es' ? 'Comencemos' : "Let's begin"} →
+                                {/* CTA */}
+                                <button
+                                    onClick={() => setQuizStep(2)}
+                                    style={{width: '100%', background: 'linear-gradient(135deg, #7c3aed, #ec4899)', border: 'none', borderRadius: '9999px', padding: '1rem', color: 'white', fontSize: '1rem', fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 24px rgba(124,58,237,0.5)', letterSpacing: '0.02em', marginBottom: '0.75rem'}}
+                                >
+                                    {language === 'es' ? '✨ Comenzar mi transformación' : '✨ Start my transformation'}
                                 </button>
+                                <p style={{textAlign: 'center', fontSize: '0.75rem', color: 'rgba(255,255,255,0.55)'}}>
+                                    {language === 'es' ? 'Gratis · Sin tarjeta · 2 minutos' : 'Free · No card · 2 minutes'}
+                                </p>
                             </div>
                         </div>
                     );
                 }
-
                 if (quizStep === 2) {
                     return (
                         <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-purple-100 to-pink-100'} flex items-center justify-center p-4`}>
