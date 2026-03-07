@@ -5930,7 +5930,6 @@ query = query.eq('region', region.toUpperCase());
                                     <div style={{textAlign: "center", marginBottom: "1.5rem"}}>
                                         <div style={{fontSize: "1.75rem", marginBottom: "0.25rem"}}>🌙</div>
                                         <h3 style={{fontFamily: "'Cormorant', serif", fontSize: "1.6rem", fontWeight: 400, color: "#292524", marginBottom: "0.25rem"}}>
-                                        <h3 className="text-2xl md:text-3xl font-light mb-2" style={{color: '#44403c', fontFamily: 'Cormorant, serif'}}>
                                             {language === 'es' ? 'Empieza tu prueba gratuita' : 'Start your free trial'}
                                         </h3>
                                         <p className="text-sm" style={{color: '#78716c'}}>
