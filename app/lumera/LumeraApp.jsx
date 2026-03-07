@@ -5941,15 +5941,12 @@ query = query.eq('region', region.toUpperCase());
                                         <button
                                             onClick={() => setAuthMode('register')}
                                             style={{flex: 1, padding: "0.6rem", borderRadius: "9999px", border: "none", fontWeight: 600, fontSize: "0.88rem", cursor: "pointer", background: authMode === "register" ? "linear-gradient(135deg, #7c3aed, #ec4899)" : "transparent", color: authMode === "register" ? "white" : "#78716c", boxShadow: authMode === "register" ? "0 2px 8px rgba(124,58,237,0.3)" : "none"}}
-                                            className={`flex-1 py-2.5 rounded-xl font-semibold transition text-sm md:text-base ${authMode === 'register' ? 'btn-cta-elegant' : ''}`}
-                                            style={authMode !== 'register' ? {background: 'rgba(120, 113, 108, 0.08)', color: '#78716c'} : {}}
                                         >
                                             {language === 'es' ? 'Crear Cuenta' : 'Sign Up'}
                                         </button>
                                         <button 
                                             onClick={() => setAuthMode('login')} 
                                             style={{flex: 1, padding: "0.6rem", borderRadius: "9999px", border: "none", fontWeight: 600, fontSize: "0.88rem", cursor: "pointer", background: authMode === "login" ? "linear-gradient(135deg, #7c3aed, #ec4899)" : "transparent", color: authMode === "login" ? "white" : "#78716c", boxShadow: authMode === "login" ? "0 2px 8px rgba(124,58,237,0.3)" : "none"}}
-                                            style={authMode !== 'login' ? {background: 'rgba(120, 113, 108, 0.08)', color: '#78716c'} : {}}
                                         >
                                             {language === 'es' ? 'Iniciar Sesión' : 'Login'}
                                         </button>
