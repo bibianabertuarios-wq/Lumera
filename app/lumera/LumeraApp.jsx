@@ -5926,9 +5926,10 @@ query = query.eq('region', region.toUpperCase());
                                     </div>
                                 </div>
 
-                                {/* FORMULARIO DERECHO - COMPACTO */}
-                                <div className="card-elegant" style={{animation: 'float 6s ease-in-out infinite'}}>
-                                    <div className="text-center mb-6">
+                                <div style={{background: "rgba(255,255,255,0.65)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", border: "1px solid rgba(255,255,255,0.85)", borderRadius: "2rem", padding: "2rem 1.75rem", boxShadow: "0 8px 48px rgba(124,58,237,0.12)"}}>
+                                    <div style={{textAlign: "center", marginBottom: "1.5rem"}}>
+                                        <div style={{fontSize: "1.75rem", marginBottom: "0.25rem"}}>🌙</div>
+                                        <h3 style={{fontFamily: "'Cormorant', serif", fontSize: "1.6rem", fontWeight: 400, color: "#292524", marginBottom: "0.25rem"}}>
                                         <h3 className="text-2xl md:text-3xl font-light mb-2" style={{color: '#44403c', fontFamily: 'Cormorant, serif'}}>
                                             {language === 'es' ? 'Empieza tu prueba gratuita' : 'Start your free trial'}
                                         </h3>
@@ -5936,10 +5937,10 @@ query = query.eq('region', region.toUpperCase());
                                             {language === 'es' ? '3 días para descubrir Lumera' : '3 days to discover Lumera'}
                                         </p>
                                     </div>
-
-                                    <div className="flex gap-2 mb-4">
-                                        <button 
-                                            onClick={() => setAuthMode('register')} 
+                                    <div style={{display: "flex", gap: "0.5rem", marginBottom: "1.25rem", background: "rgba(124,58,237,0.06)", borderRadius: "9999px", padding: "0.25rem"}}>
+                                        <button
+                                            onClick={() => setAuthMode('register')}
+                                            style={{flex: 1, padding: "0.6rem", borderRadius: "9999px", border: "none", fontWeight: 600, fontSize: "0.88rem", cursor: "pointer", background: authMode === "register" ? "linear-gradient(135deg, #7c3aed, #ec4899)" : "transparent", color: authMode === "register" ? "white" : "#78716c", boxShadow: authMode === "register" ? "0 2px 8px rgba(124,58,237,0.3)" : "none"}}
                                             className={`flex-1 py-2.5 rounded-xl font-semibold transition text-sm md:text-base ${authMode === 'register' ? 'btn-cta-elegant' : ''}`}
                                             style={authMode !== 'register' ? {background: 'rgba(120, 113, 108, 0.08)', color: '#78716c'} : {}}
                                         >
@@ -5947,7 +5948,7 @@ query = query.eq('region', region.toUpperCase());
                                         </button>
                                         <button 
                                             onClick={() => setAuthMode('login')} 
-                                            className={`flex-1 py-2.5 rounded-xl font-semibold transition text-sm md:text-base ${authMode === 'login' ? 'btn-cta-elegant' : ''}`}
+                                            style={{flex: 1, padding: "0.6rem", borderRadius: "9999px", border: "none", fontWeight: 600, fontSize: "0.88rem", cursor: "pointer", background: authMode === "login" ? "linear-gradient(135deg, #7c3aed, #ec4899)" : "transparent", color: authMode === "login" ? "white" : "#78716c", boxShadow: authMode === "login" ? "0 2px 8px rgba(124,58,237,0.3)" : "none"}}
                                             style={authMode !== 'login' ? {background: 'rgba(120, 113, 108, 0.08)', color: '#78716c'} : {}}
                                         >
                                             {language === 'es' ? 'Iniciar Sesión' : 'Login'}
