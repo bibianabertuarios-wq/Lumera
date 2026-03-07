@@ -2634,9 +2634,7 @@ query = query.eq('region', region.toUpperCase());
                                     <p style={{fontSize: '0.72rem', fontWeight: 700, color: 'rgba(255,255,255,0.7)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '0.75rem'}}>✦ LUMERA</p>
                                     <h1 style={{fontFamily: "'Cormorant', Georgia, serif", fontSize: '2.4rem', fontWeight: 300, color: 'white', lineHeight: 1.15, marginBottom: '1rem'}}>
                                         {language === 'es' ? 'Tu nuevo capítulo
-comienza ahora' : 'Your new chapter
-begins now'}
-                                    </h1>
+                                        {language === 'es' ? 'Tu nuevo capítulo — comienza ahora' : 'Your new chapter — begins now'}
                                     <p style={{fontSize: '0.9rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.7}}>
                                         {language === 'es'
                                             ? 'Ciencia y cuidado diseñados para ti. Para que esta etapa sea la más poderosa de tu vida.'
