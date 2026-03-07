@@ -101,7 +101,7 @@ const t = {
 
 export default function OnboardingFlow({ onComplete }) {
   const [lang, setLang] = useState('es')
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -374,6 +374,54 @@ export default function OnboardingFlow({ onComplete }) {
         )}
 
         {/* ── STEP 1: Auth + Legal ── */}
+        {step === 0 && (
+          <div style={{ textAlign: 'center' }}>
+            {/* Video decorativo esquina */}
+            <div style={{
+              width: '120px', height: '120px', borderRadius: '9999px',
+              overflow: 'hidden', margin: '0 auto 1.5rem',
+              border: '1px solid rgba(255,255,255,0.6)',
+              boxShadow: '0 4px 24px rgba(124,58,237,0.15)',
+            }}>
+              <video src="/videos/menu.mp4" autoPlay loop muted playsInline
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            </div>
+            <p style={{ fontSize: '0.72rem', fontWeight: 700, color: '#a855f7', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+              ✦ LUMERA
+            </p>
+            <h2 style={{
+              fontFamily: "'Cormorant', Georgia, serif",
+              fontSize: '2rem', fontWeight: 400, color: '#292524',
+              lineHeight: 1.2, marginBottom: '1rem',
+            }}>
+              {lang === 'es' ? 'Tu nuevo capítulo
+comienza ahora' : 'Your new chapter
+begins now'}
+            </h2>
+            <p style={{ fontSize: '0.88rem', color: '#78716c', lineHeight: 1.7, marginBottom: '2rem', padding: '0 0.5rem' }}>
+              {lang === 'es'
+                ? 'Lumera te acompaña a redescubrir la vitalidad en esta etapa. Ciencia y cuidado diseñados para ti.'
+                : 'Lumera guides you to rediscover vitality at this stage. Science and care designed for you.'}
+            </p>
+            <button
+              onClick={() => setStep(1)}
+              style={{
+                width: '100%',
+                background: 'linear-gradient(135deg, #7c3aed, #a855f7 55%, #ec4899)',
+                border: 'none', borderRadius: '9999px', padding: '16px',
+                color: 'white', fontSize: '15px', fontWeight: '700',
+                cursor: 'pointer', boxShadow: '0 4px 24px rgba(124,58,237,0.4)',
+                letterSpacing: '0.02em', marginBottom: '1rem',
+              }}
+            >
+              {lang === 'es' ? '✨ Abrazar mi transformación' : '✨ Embrace my transformation'}
+            </button>
+            <p style={{ fontSize: '0.75rem', color: '#a8a29e' }}>
+              {lang === 'es' ? 'Gratis · Sin tarjeta · Cancela cuando quieras' : 'Free · No card · Cancel anytime'}
+            </p>
+          </div>
+        )}
+
         {step === 1 && (
           <div>
             {/* Headline de bienvenida */}
