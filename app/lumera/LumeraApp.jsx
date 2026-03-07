@@ -3890,36 +3890,30 @@ query = query.eq('region', region.toUpperCase());
                             </div>
                         </div>
 
-                        {/* ── CÓMO USAR LUMERA ── */}
-                        <div style={{background: bgCard, borderRadius: '1.25rem', padding: '1.5rem', border: `1px solid ${borderSoft}`, boxShadow: '0 2px 16px rgba(0,0,0,0.05)'}}>
-                            <div onClick={() => setShowHowTo(prev => !prev)} style={{display:'flex',alignItems:'center',justifyContent:'space-between',cursor:'pointer',marginBottom: showHowTo ? '1rem' : 0}}>
-                                <h2 style={{fontFamily: "'Cormorant', serif", fontSize: '1.45rem', fontWeight: 500, color: textMain, margin:0}}>
-                                    {language === 'es' ? '¿Cómo sacar el máximo a Lumera?' : 'How to get the most from Lumera?'}
-                                </h2>
-                                <span style={{fontSize:'1.2rem', color: textSub}}>{showHowTo ? '⌃' : '⌄'}</span>
-                            </div>
-                            {showHowTo && <div style={{display: 'flex', flexDirection: 'column', gap: '0.85rem'}}>
-                                {[
-                                    { step: '1', icon: '📝', es: 'Registra cómo te sientes cada día — sueño, energía, ánimo, sofocos', en: 'Log how you feel each day — sleep, energy, mood, hot flashes' },
-                                    { step: '2', icon: '🍽️', es: 'Revisa tu plan de nutrición adaptado a tus síntomas de hoy', en: 'Check your nutrition plan adapted to today\'s symptoms' },
-                                    { step: '3', icon: '💪', es: 'Sigue tu rutina de ejercicios personalizada para esta etapa', en: 'Follow your personalized exercise routine for this stage' },
-                                    { step: '4', icon: '🧠', es: 'Habla con LUMI — te escucha, analiza tus patrones y te orienta', en: 'Talk to LUMI — she listens, analyzes your patterns and guides you' },
-                                    { step: '5', icon: '📊', es: 'Al día 3 verás tu primer patrón real. Datos de tu cuerpo, no suposiciones', en: 'On day 3 you\'ll see your first real pattern. Data from your body, not guesses' },
-                                ].map(item => (
-                                    <div key={item.step} style={{display: 'flex', alignItems: 'flex-start', gap: '0.85rem'}}>
-                                        <div style={{
-                                            minWidth: '2rem', height: '2rem', borderRadius: '9999px',
-                                            background: 'linear-gradient(135deg, #7c3aed, #a855f7)',
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                            color: 'white', fontWeight: 700, fontSize: '0.8rem', flexShrink: 0
-                                        }}>{item.step}</div>
-                                        <p style={{fontSize: '0.88rem', color: textSub, lineHeight: 1.55, paddingTop: '0.25rem'}}>
-                                            <span style={{fontSize: '1rem', marginRight: '0.4rem'}}>{item.icon}</span>
-                                            {language === 'es' ? item.es : item.en}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>}
+                        {/* ── ACCIONES RÁPIDAS 2x2 GLASSMORPHISM ── */}
+                        <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0.85rem'}}>
+                            {[
+                                {icon:'📝',es:'Síntomas',en:'Symptoms',desc_es:'Registra cómo te sientes hoy',desc_en:'Log how you feel today',page:'symptoms',accent:'rgba(124,58,237,0.85)'},
+                                {icon:'🍽️',es:'Nutrición',en:'Nutrition',desc_es:'Menú adaptado a ti',desc_en:'Menu adapted to you',page:'nutrition',accent:'rgba(236,72,153,0.85)'},
+                                {icon:'💪',es:'Ejercicio',en:'Exercise',desc_es:'Rutina para esta etapa',desc_en:'Routine for this stage',page:'exercise',accent:'rgba(168,85,247,0.85)'},
+                                {icon:'🧠',es:'LUMI',en:'LUMI',desc_es:'Tu coach personal',desc_en:'Your personal coach',page:'chat',accent:'rgba(244,63,94,0.85)'}
+                            ].map((action,i) => (
+                                <div key={i} onClick={() => setCurrentPage(action.page)}
+                                    style={{position:'relative',borderRadius:'1.25rem',padding:'1.25rem 1rem',cursor:'pointer',overflow:'hidden',
+                                        background: darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.72)',
+                                        backdropFilter:'blur(16px)',WebkitBackdropFilter:'blur(16px)',
+                                        border: darkMode ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255,255,255,0.9)',
+                                        boxShadow: darkMode ? '0 4px 24px rgba(0,0,0,0.3)' : '0 4px 24px rgba(124,58,237,0.1)',
+                                        transition:'transform 0.15s'}}
+                                    onMouseEnter={e=>{e.currentTarget.style.transform='scale(1.03)'}}
+                                    onMouseLeave={e=>{e.currentTarget.style.transform='scale(1)'}}>
+                                    <div style={{position:'absolute',top:'-1rem',right:'-1rem',width:'4rem',height:'4rem',borderRadius:'9999px',background:action.accent,filter:'blur(20px)',opacity:0.5,pointerEvents:'none'}}/>
+                                    <div style={{fontSize:'1.75rem',marginBottom:'0.5rem'}}>{action.icon}</div>
+                                    <p style={{fontFamily:"'Cormorant', serif",fontSize:'1.2rem',fontWeight:600,color:textMain,marginBottom:'0.2rem',lineHeight:1.2}}>{language==='es'?action.es:action.en}</p>
+                                    <p style={{fontSize:'0.75rem',color:textSub,lineHeight:1.4}}>{language==='es'?action.desc_es:action.desc_en}</p>
+                                    <div style={{position:'absolute',bottom:'0.75rem',right:'0.85rem',fontSize:'0.8rem',color:textSub,opacity:0.6}}>→</div>
+                                </div>
+                            ))}
                         </div>
         
 
