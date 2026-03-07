@@ -2670,7 +2670,7 @@ query = query.eq('region', region.toUpperCase());
                 }
                 if (quizStep === 2) {
                     return (
-                        <div style={{minHeight:'100vh', background:'linear-gradient(135deg, #fdf8f3 0%, #f5ede4 100%)', display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem'}}>
+                        <div style={{minHeight:'100vh', background:'#f5ede4', display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem'}}>
                             <div style={{background:'rgba(255,255,255,0.85)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderRadius:'1.5rem', padding:'2rem 1.75rem', maxWidth:'520px', width:'100%', border:'1px solid rgba(255,255,255,0.9)', boxShadow:'0 8px 40px rgba(180,140,120,0.12)'}}>
                                 <h2 style={{fontFamily:"'Cormorant', serif", fontSize:"1.8rem", fontWeight:400, color:"#292524", marginBottom:"1.5rem", textAlign:"center"}}>{language === 'es' ? 'Tu Perfil' : 'Your Profile'}</h2>
 
@@ -2733,7 +2733,7 @@ query = query.eq('region', region.toUpperCase());
                         : ['Diabetes', 'Hypertension', 'Gluten-free', 'Lactose-free', 'Vegetarian', 'Vegetarian no eggs', 'Vegan', 'Arthritis'];
 
                     return (
-                        <div style={{minHeight:'100vh', background:'linear-gradient(135deg, #fdf8f3 0%, #f5ede4 100%)', display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem'}}>
+                        <div style={{minHeight:'100vh', background:'#f5ede4', display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem'}}>
                             <div style={{background:'rgba(255,255,255,0.85)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderRadius:'1.5rem', padding:'2rem 1.75rem', maxWidth:'520px', width:'100%', border:'1px solid rgba(255,255,255,0.9)', boxShadow:'0 8px 40px rgba(180,140,120,0.12)'}}>
                                 <h2 style={{fontFamily:"'Cormorant', serif", fontSize:"1.8rem", fontWeight:400, color:"#292524", marginBottom:"1.5rem", textAlign:"center"}}>{language === 'es' ? 'Restricciones' : 'Restrictions'}</h2>
 
@@ -2775,7 +2775,7 @@ query = query.eq('region', region.toUpperCase());
                     ];
 
                     return (
-                        <div style={{minHeight:'100vh', background:'linear-gradient(135deg, #fdf8f3 0%, #f5ede4 100%)', display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem'}}>
+                        <div style={{minHeight:'100vh', background:'#f5ede4', display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem'}}>
                             <div style={{background:'rgba(255,255,255,0.85)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderRadius:'1.5rem', padding:'2rem 1.75rem', maxWidth:'520px', width:'100%', border:'1px solid rgba(255,255,255,0.9)', boxShadow:'0 8px 40px rgba(180,140,120,0.12)'}}>
                                 <h2 style={{fontFamily:"'Cormorant', serif", fontSize:"2rem", fontWeight:400, color:"#292524", marginBottom:"1.5rem"}}>{language === 'es' ? '¿Cuál es tu objetivo?' : 'What\'s Your Goal?'}</h2>
 
@@ -2811,7 +2811,7 @@ query = query.eq('region', region.toUpperCase());
                     ];
 
                     return (
-                        <div style={{minHeight:'100vh', background:'linear-gradient(135deg, #fdf8f3 0%, #f5ede4 100%)', display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem'}}>
+                        <div style={{minHeight:'100vh', background:'#f5ede4', display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem'}}>
                             <div style={{background:'rgba(255,255,255,0.85)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderRadius:'1.5rem', padding:'2rem 1.75rem', maxWidth:'520px', width:'100%', border:'1px solid rgba(255,255,255,0.9)', boxShadow:'0 8px 40px rgba(180,140,120,0.12)'}}>
                                 <h2 style={{fontFamily:"'Cormorant', serif", fontSize:"2rem", fontWeight:400, color:"#292524", marginBottom:"1rem"}}>{language === 'es' ? '¿Dónde estás?' : 'Where are you?'}</h2>
                                 <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-8`}>
