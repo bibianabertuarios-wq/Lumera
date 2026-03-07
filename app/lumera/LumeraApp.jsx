@@ -2612,15 +2612,15 @@ query = query.eq('region', region.toUpperCase());
             const renderQuiz = () => {
                 if (quizStep === 1) {
                     return (
-                        <div style={{minHeight: '100vh', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', background: '#1a0a2e', overflow: 'hidden'}}>
+                        <div style={{minHeight: '100vh', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', background: '#f5f0eb', overflow: 'hidden'}}>
                             {/* Video fondo */}
                             <video autoPlay loop muted playsInline
                                 style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: 0.25, zIndex: 0}}
                                 src="/videos/Dashboard.mp4" />
                             {/* Overlay gradiente */}
-                            <div style={{position: 'fixed', inset: 0, background: 'linear-gradient(135deg, rgba(124,58,237,0.7) 0%, rgba(236,72,153,0.4) 100%)', zIndex: 1}} />
+                            <div style={{position: 'fixed', inset: 0, background: 'linear-gradient(135deg, rgba(245,240,235,0.6) 0%, rgba(236,220,200,0.5) 100%)', zIndex: 1}} />
                             {/* Tarjeta glassmorphism */}
-                            <div style={{position: 'relative', zIndex: 2, width: '100%', maxWidth: '480px', background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)', border: '1px solid rgba(255,255,255,0.25)', borderRadius: '2rem', padding: '2.5rem 2rem', boxShadow: '0 8px 64px rgba(0,0,0,0.3)'}}>
+                            <div style={{position: 'relative', zIndex: 2, width: '100%', maxWidth: '480px', background: 'rgba(255,255,255,0.75)', backdropFilter: 'blur(32px)', WebkitBackdropFilter: 'blur(32px)', border: '1px solid rgba(255,255,255,0.9)', borderRadius: '2rem', padding: '2.5rem 2rem', boxShadow: '0 8px 64px rgba(0,0,0,0.1)'}}>
                                 {/* Selector idioma */}
                                 <div style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '1.5rem'}}>
                                     <select value={language} onChange={(e) => setLanguage(e.target.value)}
@@ -2631,11 +2631,11 @@ query = query.eq('region', region.toUpperCase());
                                 </div>
                                 {/* Logo y headline */}
                                 <div style={{textAlign: 'center', marginBottom: '2rem'}}>
-                                    <p style={{fontSize: '0.72rem', fontWeight: 700, color: 'rgba(255,255,255,0.7)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '0.75rem'}}>✦ LUMERA</p>
-                                    <h1 style={{fontFamily: "'Cormorant', Georgia, serif", fontSize: '2.4rem', fontWeight: 300, color: 'white', lineHeight: 1.15, marginBottom: '1rem'}}>
+                                    <p style={{fontSize: '0.72rem', fontWeight: 700, color: '#a855f7', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '0.75rem'}}>✦ LUMERA</p>
+                                    <h1 style={{fontFamily: "'Cormorant', Georgia, serif", fontSize: '2.4rem', fontWeight: 300, color: '#292524', lineHeight: 1.15, marginBottom: '1rem'}}>
                                         {language === 'es' ? 'Tu nuevo capítulo — comienza ahora' : 'Your new chapter — begins now'}
                                     </h1>
-                                    <p style={{fontSize: '0.9rem', color: 'rgba(255,255,255,0.8)', lineHeight: 1.7}}>
+                                    <p style={{fontSize: '0.9rem', color: '#78716c', lineHeight: 1.7}}>
                                         {language === 'es'
                                             ? 'Ciencia y cuidado diseñados para ti. Para que esta etapa sea la más poderosa de tu vida.'
                                             : 'Science and care designed for you. So this stage becomes the most powerful of your life.'}
@@ -2648,9 +2648,9 @@ query = query.eq('region', region.toUpperCase());
                                         {icon: '🥗', text: language === 'es' ? 'Menús adaptados a tus síntomas' : 'Menus adapted to your symptoms'},
                                         {icon: '✨', text: language === 'es' ? 'Ejercicio según tu energía real' : 'Exercise based on your real energy'},
                                     ].map((item, i) => (
-                                        <div key={i} style={{display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(255,255,255,0.1)', borderRadius: '0.75rem', padding: '0.75rem 1rem'}}>
+                                        <div key={i} style={{display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(124,58,237,0.06)', borderRadius: '0.75rem', padding: '0.75rem 1rem'}}>
                                             <span style={{fontSize: '1.2rem'}}>{item.icon}</span>
-                                            <span style={{fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)'}}>{item.text}</span>
+                                            <span style={{fontSize: '0.85rem', color: '#44403c'}}>{item.text}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -2661,7 +2661,7 @@ query = query.eq('region', region.toUpperCase());
                                 >
                                     {language === 'es' ? '✨ Comenzar mi transformación' : '✨ Start my transformation'}
                                 </button>
-                                <p style={{textAlign: 'center', fontSize: '0.75rem', color: 'rgba(255,255,255,0.55)'}}>
+                                <p style={{textAlign: 'center', fontSize: '0.75rem', color: '#a8a29e'}}>
                                     {language === 'es' ? 'Gratis · Sin tarjeta · 2 minutos' : 'Free · No card · 2 minutes'}
                                 </p>
                             </div>
@@ -2670,29 +2670,29 @@ query = query.eq('region', region.toUpperCase());
                 }
                 if (quizStep === 2) {
                     return (
-                        <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-purple-100 to-pink-100'} flex items-center justify-center p-4`}>
-                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl p-6 md:p-12 max-w-2xl w-full`}>
-                                <h2 className="text-2xl md:text-3xl font-light gradient-text mb-6 text-center">{language === 'es' ? 'Tu Perfil' : 'Your Profile'}</h2>
+                        <div style={{minHeight:'100vh', background:'linear-gradient(135deg, #fdf8f3 0%, #f5ede4 100%)', display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem'}}>
+                            <div style={{background:'rgba(255,255,255,0.85)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderRadius:'1.5rem', padding:'2rem 1.75rem', maxWidth:'520px', width:'100%', border:'1px solid rgba(255,255,255,0.9)', boxShadow:'0 8px 40px rgba(180,140,120,0.12)'}}>
+                                <h2 style={{fontFamily:"'Cormorant', serif", fontSize:"1.8rem", fontWeight:400, color:"#292524", marginBottom:"1.5rem", textAlign:"center"}}>{language === 'es' ? 'Tu Perfil' : 'Your Profile'}</h2>
 
                                 <div className="space-y-4 mb-6">
                                     <input type="text" placeholder={language === 'es' ? 'Tu nombre' : 'Your name'} 
                                         value={formData.profileName}
                                         onChange={(e) => setFormData({...formData, profileName: e.target.value})}
-                                        className={`w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-400 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : ''}`}/>
+                                        style={{width:"100%", padding:"0.75rem 1rem", border:"1px solid rgba(124,58,237,0.2)", borderRadius:"0.75rem", fontSize:"0.95rem", background:"rgba(255,255,255,0.8)", color:"#292524", outline:"none", boxSizing:"border-box"}}/>
 
                                     <div className="grid grid-cols-3 gap-3">
                                         <input type="number" placeholder={language === 'es' ? 'Edad' : 'Age'} 
                                             value={formData.age}
                                             onChange={(e) => setFormData({...formData, age: e.target.value})}
-                                            className={`px-4 py-3 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}/>
+                                            style={{padding:"0.75rem 1rem", border:"1px solid rgba(124,58,237,0.2)", borderRadius:"0.75rem", fontSize:"0.95rem", background:"rgba(255,255,255,0.8)", color:"#292524", outline:"none", width:"100%"}}/>
                                         <input type="number" placeholder={language === 'es' ? 'Altura (cm)' : 'Height (cm)'} 
                                             value={formData.height}
                                             onChange={(e) => setFormData({...formData, height: e.target.value})}
-                                            className={`px-4 py-3 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}/>
+                                            style={{padding:"0.75rem 1rem", border:"1px solid rgba(124,58,237,0.2)", borderRadius:"0.75rem", fontSize:"0.95rem", background:"rgba(255,255,255,0.8)", color:"#292524", outline:"none", width:"100%"}}/>
                                         <input type="number" placeholder={language === 'es' ? 'Peso (kg)' : 'Weight (kg)'} 
                                             value={formData.weight}
                                             onChange={(e) => setFormData({...formData, weight: e.target.value})}
-                                            className={`px-4 py-3 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}/>
+                                            style={{padding:"0.75rem 1rem", border:"1px solid rgba(124,58,237,0.2)", borderRadius:"0.75rem", fontSize:"0.95rem", background:"rgba(255,255,255,0.8)", color:"#292524", outline:"none", width:"100%"}}/>
                                     </div>
 
                                     {/* NIVEL DE ACTIVIDAD FÍSICA */}
@@ -2703,7 +2703,7 @@ query = query.eq('region', region.toUpperCase());
                                         <select 
                                             value={formData.activity_level}
                                             onChange={(e) => setFormData({...formData, activity_level: e.target.value})}
-                                            className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-rose-400 ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}
+                                            style={{width:"100%", padding:"0.75rem 1rem", border:"1px solid rgba(124,58,237,0.2)", borderRadius:"0.75rem", fontSize:"0.95rem", background:"rgba(255,255,255,0.8)", color:"#292524", outline:"none"}}
                                         >
                                             <option value="sedentary">{language === 'es' ? 'Sedentario (poco o ningún ejercicio)' : 'Sedentary (little to no exercise)'}</option>
                                             <option value="light">{language === 'es' ? 'Ligero (ejercicio 1-3 días/semana)' : 'Light (exercise 1-3 days/week)'}</option>
@@ -2719,7 +2719,7 @@ query = query.eq('region', region.toUpperCase());
                                     </div>
                                 </div>
 
-                                <button onClick={() => setQuizStep(3)} className="w-full bg-gradient-to-r from-rose-400 to-amber-300 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition">
+                                <button onClick={() => setQuizStep(3)} style={{width:"100%", background:"linear-gradient(135deg, #7c3aed, #ec4899)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(124,58,237,0.3)"}}>
                                     {language === 'es' ? 'Siguiente' : 'Next'} →
                                 </button>
                             </div>
@@ -2733,15 +2733,15 @@ query = query.eq('region', region.toUpperCase());
                         : ['Diabetes', 'Hypertension', 'Gluten-free', 'Lactose-free', 'Vegetarian', 'Vegetarian no eggs', 'Vegan', 'Arthritis'];
 
                     return (
-                        <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-purple-100 to-pink-100'} flex items-center justify-center p-4`}>
-                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl p-6 md:p-12 max-w-2xl w-full`}>
-                                <h2 className="text-2xl md:text-3xl font-light gradient-text mb-6 text-center">{language === 'es' ? 'Restricciones' : 'Restrictions'}</h2>
+                        <div style={{minHeight:'100vh', background:'linear-gradient(135deg, #fdf8f3 0%, #f5ede4 100%)', display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem'}}>
+                            <div style={{background:'rgba(255,255,255,0.85)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderRadius:'1.5rem', padding:'2rem 1.75rem', maxWidth:'520px', width:'100%', border:'1px solid rgba(255,255,255,0.9)', boxShadow:'0 8px 40px rgba(180,140,120,0.12)'}}>
+                                <h2 style={{fontFamily:"'Cormorant', serif", fontSize:"1.8rem", fontWeight:400, color:"#292524", marginBottom:"1.5rem", textAlign:"center"}}>{language === 'es' ? 'Restricciones' : 'Restrictions'}</h2>
 
                                 <div className="grid grid-cols-2 gap-3 mb-8">
                                     {conditions.map((cond, idx) => (
                                         <label key={idx} className={`flex items-center justify-center p-3 md:p-4 border rounded-lg cursor-pointer transition min-h-[60px] ${
                                             formData.conditions.includes(cond)
-                                                ? darkMode ? 'bg-rose-900 border-rose-400' : 'bg-orange-50 border-rose-400'
+                                                ? darkMode ? 'bg-purple-900 border-purple-400' : 'bg-purple-50 border-purple-400'
                                                 : darkMode ? 'border-gray-600' : 'border-gray-300'
                                         }`}>
                                             <input type="checkbox" 
@@ -2759,7 +2759,7 @@ query = query.eq('region', region.toUpperCase());
                                     ))}
                                 </div>
 
-                                <button onClick={() => setQuizStep(4)} className="w-full bg-gradient-to-r from-rose-400 to-amber-300 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition">
+                                <button onClick={() => setQuizStep(4)} style={{width:"100%", background:"linear-gradient(135deg, #7c3aed, #ec4899)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(124,58,237,0.3)"}}>
                                     {language === 'es' ? 'Siguiente' : 'Next'} →
                                 </button>
                             </div>
@@ -2775,15 +2775,15 @@ query = query.eq('region', region.toUpperCase());
                     ];
 
                     return (
-                        <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-purple-100 to-pink-100'} flex items-center justify-center p-4`}>
-                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl p-12 max-w-2xl w-full`}>
-                                <h2 className="text-3xl font-light gradient-text mb-8">{language === 'es' ? '¿Cuál es tu objetivo?' : 'What\'s Your Goal?'}</h2>
+                        <div style={{minHeight:'100vh', background:'linear-gradient(135deg, #fdf8f3 0%, #f5ede4 100%)', display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem'}}>
+                            <div style={{background:'rgba(255,255,255,0.85)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderRadius:'1.5rem', padding:'2rem 1.75rem', maxWidth:'520px', width:'100%', border:'1px solid rgba(255,255,255,0.9)', boxShadow:'0 8px 40px rgba(180,140,120,0.12)'}}>
+                                <h2 style={{fontFamily:"'Cormorant', serif", fontSize:"2rem", fontWeight:400, color:"#292524", marginBottom:"1.5rem"}}>{language === 'es' ? '¿Cuál es tu objetivo?' : 'What\'s Your Goal?'}</h2>
 
                                 <div className="space-y-4 mb-8">
                                     {goals.map((goal) => (
                                         <label key={goal.value} className={`flex items-center p-6 border-2 rounded-xl cursor-pointer transition ${
                                             exerciseGoal === goal.value
-                                                ? darkMode ? 'bg-rose-900 border-rose-400' : 'bg-orange-50 border-rose-400'
+                                                ? darkMode ? 'bg-purple-900 border-purple-400' : 'bg-purple-50 border-purple-400'
                                                 : darkMode ? 'border-gray-600' : 'border-gray-300'
                                         }`}>
                                             <input type="radio" name="goal" value={goal.value}
@@ -2795,7 +2795,7 @@ query = query.eq('region', region.toUpperCase());
                                     ))}
                                 </div>
 
-                                <button onClick={() => setQuizStep(5)} className="w-full bg-gradient-to-r from-rose-400 to-amber-300 text-white py-3 rounded-lg font-semibold hover:shadow-lg">
+                                <button onClick={() => setQuizStep(5)} style={{width:"100%", background:"linear-gradient(135deg, #7c3aed, #ec4899)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(124,58,237,0.3)"}}>
                                     {language === 'es' ? 'Siguiente' : 'Next'} →
                                 </button>
                             </div>
@@ -2811,9 +2811,9 @@ query = query.eq('region', region.toUpperCase());
                     ];
 
                     return (
-                        <div className={`min-h-screen ${darkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-purple-100 to-pink-100'} flex items-center justify-center p-4`}>
-                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl p-12 max-w-2xl w-full`}>
-                                <h2 className="text-3xl font-light gradient-text mb-4">{language === 'es' ? '¿Dónde estás?' : 'Where are you?'}</h2>
+                        <div style={{minHeight:'100vh', background:'linear-gradient(135deg, #fdf8f3 0%, #f5ede4 100%)', display:'flex', alignItems:'center', justifyContent:'center', padding:'1rem'}}>
+                            <div style={{background:'rgba(255,255,255,0.85)', backdropFilter:'blur(20px)', WebkitBackdropFilter:'blur(20px)', borderRadius:'1.5rem', padding:'2rem 1.75rem', maxWidth:'520px', width:'100%', border:'1px solid rgba(255,255,255,0.9)', boxShadow:'0 8px 40px rgba(180,140,120,0.12)'}}>
+                                <h2 style={{fontFamily:"'Cormorant', serif", fontSize:"2rem", fontWeight:400, color:"#292524", marginBottom:"1rem"}}>{language === 'es' ? '¿Dónde estás?' : 'Where are you?'}</h2>
                                 <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-8`}>
                                     {language === 'es' 
                                         ? 'Esto nos ayuda a personalizar ingredientes locales según tu región'
@@ -2824,7 +2824,7 @@ query = query.eq('region', region.toUpperCase());
                                     {regions.map((region) => (
                                         <label key={region.value} className={`flex items-center p-6 border-2 rounded-xl cursor-pointer transition ${
                                             userRegion === region.value
-                                                ? darkMode ? 'bg-rose-900 border-rose-400' : 'bg-orange-50 border-rose-400'
+                                                ? darkMode ? 'bg-purple-900 border-purple-400' : 'bg-purple-50 border-purple-400'
                                                 : darkMode ? 'border-gray-600' : 'border-gray-300'
                                         }`}>
                                             <input type="radio" name="region" value={region.value}
@@ -2893,7 +2893,7 @@ query = query.eq('region', region.toUpperCase());
                                     });
                                     setShowQuiz(false);
                                     setCurrentPage('home');
-                                }} className="w-full bg-gradient-to-r from-rose-400 to-amber-300 text-white py-3 rounded-lg font-semibold hover:shadow-lg">
+                                }} style={{width:"100%", background:"linear-gradient(135deg, #7c3aed, #ec4899)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(124,58,237,0.3)"}}>
                                     {language === 'es' ? '¡Comenzar!' : 'Let\'s Go!'} ✨
                                 </button>
                             </div>
@@ -5129,7 +5129,7 @@ query = query.eq('region', region.toUpperCase());
                                 `;
                                 document.body.appendChild(notification);
                                 setTimeout(() => notification.remove(), 5000);
-                            }} className="w-full bg-gradient-to-r from-rose-400 to-amber-300 text-white py-3 rounded-lg font-semibold hover:shadow-lg">
+                            }} style={{width:"100%", background:"linear-gradient(135deg, #7c3aed, #ec4899)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(124,58,237,0.3)"}}>
                                 {t[language].addRecord}
                             </button>
                         </div>
@@ -5277,7 +5277,7 @@ query = query.eq('region', region.toUpperCase());
                                 } finally {
                                     setPeriodGuidanceLoading(false);
                                 }
-                            }} className="w-full bg-gradient-to-r from-rose-400 to-amber-300 text-white py-3 rounded-lg font-semibold hover:shadow-lg">
+                            }} style={{width:"100%", background:"linear-gradient(135deg, #7c3aed, #ec4899)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(124,58,237,0.3)"}}>
                                 {language === 'es' ? 'Registrar y recibir guía de LUMI' : 'Record and get LUMI guidance'}
                             </button>
                         </div>
