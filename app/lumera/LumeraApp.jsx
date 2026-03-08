@@ -5806,16 +5806,7 @@ query = query.eq('region', region.toUpperCase());
                     <nav className="navbar-elegant fixed top-0 w-full z-50">
                         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                <svg width="32" height="32" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                    <defs>
-                                        <linearGradient id="flameGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%" style={{stopColor:'#d4af7f',stopOpacity:1}} />
-                                            <stop offset="100%" style={{stopColor:'#e8c89f',stopOpacity:1}} />
-                                        </linearGradient>
-                                    </defs>
-                                    <path d="M 32 12 A 20 20 0 0 0 32 52 A 16 16 0 0 1 32 16 Z" fill="#b8a8d8"/>
-                                    <path d="M 40 32 Q 40 26 42 22 Q 42 28 40 35 Q 38 28 38 22 Q 40 26 40 32" fill="url(#flameGrad)"/>
-                                </svg>
+                                <img src="/images/lumera_icon_nobg.png" style={{width:'36px',height:'36px',objectFit:'contain'}} alt="Lumera" />
                                 <h1 className="text-2xl font-medium tracking-tight" style={{color: '#78716c', fontFamily: 'Cormorant, serif'}}>
                                     LUMERA
                                 </h1>
@@ -6380,16 +6371,7 @@ query = query.eq('region', region.toUpperCase());
                     <header className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} shadow sticky top-0 z-40 border-b`}>
                         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                <svg width="32" height="32" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                                    <defs>
-                                        <linearGradient id="flameGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                                            <stop offset="0%" style={{stopColor:'#d4af7f',stopOpacity:1}} />
-                                            <stop offset="100%" style={{stopColor:'#e8c89f',stopOpacity:1}} />
-                                        </linearGradient>
-                                    </defs>
-                                    <path d="M 32 12 A 20 20 0 0 0 32 52 A 16 16 0 0 1 32 16 Z" fill="#b8a8d8"/>
-                                    <path d="M 40 32 Q 40 26 42 22 Q 42 28 40 35 Q 38 28 38 22 Q 40 26 40 32" fill="url(#flameGrad)"/>
-                                </svg>
+                                <img src="/images/lumera_icon_nobg.png" style={{width:'36px',height:'36px',objectFit:'contain'}} alt="Lumera" />
                                 <h1 className="text-2xl font-light gradient-text">Lumera</h1>
                             </div>
                             <div className="flex items-center gap-3">
@@ -6405,8 +6387,8 @@ query = query.eq('region', region.toUpperCase());
                                         <span className="text-white text-sm font-semibold">✦ Premium</span>
                                     </div>
                                 ) : (
-                                    <button onClick={() => setShowPlanModal(true)} className="px-4 py-2 rounded text-sm font-semibold bg-gradient-to-r from-rose-400 to-amber-300 text-white hover:opacity-90 transition">
-                                        💎 {language === 'es' ? 'Hazte Premium' : 'Go Premium'}
+                                    <button onClick={() => setShowPlanModal(true)} style={{padding:'0.4rem 1rem',borderRadius:'9999px',fontSize:'0.8rem',fontWeight:600,background:'linear-gradient(135deg,#C9935A,#e8c89f)',color:'white',border:'none',cursor:'pointer',letterSpacing:'0.03em'}}>
+                                        ✦ {language === 'es' ? 'Hazte Premium' : 'Go Premium'}
                                     </button>
                                 )}
                                 <button onClick={handleLogout} className="text-sm text-gray-600 dark:text-gray-400">{language === 'es' ? 'Salir' : 'Exit'}</button>
