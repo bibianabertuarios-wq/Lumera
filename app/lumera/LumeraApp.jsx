@@ -4587,82 +4587,60 @@ query = query.eq('region', region.toUpperCase());
                                             </p>
                                         </div>
 
-                                        {/* INGREDIENTES CON DETALLES CIENTÍFICOS */}
-                                        <div>
-                                            <h5 className="text-lg font-bold mb-4 flex items-center gap-2">
-                                                <span>🥗</span>
-                                                {t[language].ingredients}
-                                            </h5>
-                                            <div className="space-y-4">
+                                        {/* INGREDIENTES — ACORDEON */}
+                                        <details style={{borderRadius:'0.85rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)'}}>
+                                            <summary style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0.9rem 1.1rem',cursor:'pointer',background:darkMode?'rgba(201,147,90,0.1)':'rgba(201,147,90,0.07)',listStyle:'none',userSelect:'none'}}>
+                                                <span style={{fontFamily:"'Cormorant', serif",fontSize:'1.05rem',fontWeight:600,color:darkMode?'#e8c89f':'#92580a',display:'flex',alignItems:'center',gap:'0.5rem'}}>
+                                                    <span style={{color:'#C9935A'}}>&#10022;</span> {t[language].ingredients}
+                                                </span>
+                                                <span style={{color:'#C9935A',fontSize:'0.85rem'}}>&#9662;</span>
+                                            </summary>
+                                            <div style={{padding:'0.75rem 1rem 1rem',display:'flex',flexDirection:'column',gap:'0.6rem'}}>
                                                 {recipe.ingredients.map((ing, i) => {
-                                                    // Detectar si es string (Supabase sin parsear) u objeto (parseado o fallback)
                                                     const isString = typeof ing === 'string';
                                                     const ingredientName = isString ? ing : (ing.ingredient || ing.name);
                                                     const hasDetails = !isString && (ing.qty || ing.why);
-
                                                     return (
-                                                        <div key={i} className={`${darkMode ? 'bg-gray-600' : 'bg-white'} p-4 rounded-lg border-l-4 border-amber-500`}>
-                                                            {/* Nombre y cantidad */}
-                                                            <div className="flex justify-between items-center mb-2">
-                                                                <p className={`font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                                                                    {ingredientName}
-                                                                </p>
+                                                        <div key={i} style={{background:darkMode?'rgba(255,255,255,0.04)':'rgba(255,255,255,0.9)',borderRadius:'0.65rem',padding:'0.65rem 0.85rem',borderLeft:'3px solid #C9935A'}}>
+                                                            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:hasDetails&&ing.why?'0.35rem':0}}>
+                                                                <span style={{fontWeight:600,fontSize:'0.88rem',color:darkMode?'#f5f0eb':'#292524'}}>{ingredientName}</span>
                                                                 {hasDetails && ing.qty && (
-                                                                    <span className={`${darkMode ? 'bg-amber-800' : 'bg-amber-200'} text-amber-900 px-3 py-1 rounded-full text-sm font-bold`}>
-                                                                        {ing.qty}{ing.unit || ''}
+                                                                    <span style={{background:'rgba(201,147,90,0.15)',color:'#92580a',padding:'0.15rem 0.6rem',borderRadius:'9999px',fontSize:'0.75rem',fontWeight:700}}>
+                                                                        {ing.qty}{ing.unit||''}
                                                                     </span>
                                                                 )}
                                                             </div>
-
-                                                            {/* Por qué este ingrediente - CIENCIA (solo si hay) */}
                                                             {hasDetails && ing.why && (
-                                                                <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-3 leading-relaxed`}>
-                                                                    <strong className="text-green-600">💡 {language === 'es' ? 'Beneficio' : 'Benefit'}:</strong> {ing.why}
-                                                                </p>
+                                                                <p style={{fontSize:'0.78rem',color:darkMode?'#a8a29e':'#78716c',lineHeight:1.45,margin:0}}>{ing.why}</p>
                                                             )}
-
-                                                        {/* Versiones: asequible y gourmet (solo si hay) */}
-                                                        {hasDetails && (ing.eco || ing.gourmet) && (
-                                                            <div className="flex gap-2 text-xs flex-wrap mt-2">
-                                                                {ing.eco && (
-                                                                    <div className={`${darkMode ? 'bg-blue-800' : 'bg-blue-100'} px-3 py-1 rounded-full`}>
-                                                                        <span className={`${darkMode ? 'text-blue-200' : 'text-blue-900'} font-semibold`}>
-                                                                            💰 {language === 'es' ? 'Asequible' : 'Budget'}: {ing.eco}
-                                                                        </span>
-                                                                    </div>
-                                                                )}
-                                                                {ing.gourmet && (
-                                                                    <div className={`${darkMode ? 'bg-amber-800' : 'bg-amber-100'} px-3 py-1 rounded-full`}>
-                                                                        <span className={`${darkMode ? 'text-amber-200' : 'text-amber-900'} font-semibold`}>
-                                                                            ✨ Gourmet: {ing.gourmet}
-                                                                        </span>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        )}
-                                                    </div>
+                                                            {hasDetails && (ing.eco || ing.gourmet) && (
+                                                                <div style={{display:'flex',gap:'0.4rem',flexWrap:'wrap',marginTop:'0.4rem'}}>
+                                                                    {ing.eco && <span style={{background:'rgba(201,147,90,0.1)',color:'#92580a',padding:'0.1rem 0.5rem',borderRadius:'9999px',fontSize:'0.7rem',fontWeight:600}}>{language==='es'?'Asequible':'Budget'}: {ing.eco}</span>}
+                                                                    {ing.gourmet && <span style={{background:'rgba(201,147,90,0.1)',color:'#92580a',padding:'0.1rem 0.5rem',borderRadius:'9999px',fontSize:'0.7rem',fontWeight:600}}>Gourmet: {ing.gourmet}</span>}
+                                                                </div>
+                                                            )}
+                                                        </div>
                                                     );
                                                 })}
                                             </div>
-                                        </div>
-
-                                        {/* PREPARACIÓN */}
-                                        <div>
-                                            <h5 className="text-lg font-bold mb-4 flex items-center gap-2">
-                                                <span>👨‍🍳</span>
-                                                {t[language].preparation}
-                                            </h5>
-                                            <ol className={`space-y-3 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                        </details>
+                                        {/* PREPARACION — ACORDEON */}
+                                        <details style={{borderRadius:'0.85rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)'}}>
+                                            <summary style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0.9rem 1.1rem',cursor:'pointer',background:darkMode?'rgba(201,147,90,0.1)':'rgba(201,147,90,0.07)',listStyle:'none',userSelect:'none'}}>
+                                                <span style={{fontFamily:"'Cormorant', serif",fontSize:'1.05rem',fontWeight:600,color:darkMode?'#e8c89f':'#92580a',display:'flex',alignItems:'center',gap:'0.5rem'}}>
+                                                    <span style={{color:'#C9935A'}}>&#10022;</span> {t[language].preparation}
+                                                </span>
+                                                <span style={{color:'#C9935A',fontSize:'0.85rem'}}>&#9662;</span>
+                                            </summary>
+                                            <ol style={{padding:'0.75rem 1rem 1rem',display:'flex',flexDirection:'column',gap:'0.55rem',margin:0,listStyle:'none'}}>
                                                 {recipe.steps.map((step, i) => (
-                                                    <li key={i} className="flex gap-3">
-                                                        <span className="flex-shrink-0 w-6 h-6 bg-gradient-to-r from-rose-400 to-amber-300 text-white rounded-full flex items-center justify-center text-sm font-bold">
-                                                            {i + 1}
-                                                        </span>
-                                                        <span className="flex-1 leading-relaxed">{step}</span>
+                                                    <li key={i} style={{display:'flex',gap:'0.65rem',alignItems:'flex-start'}}>
+                                                        <span style={{flexShrink:0,width:'1.4rem',height:'1.4rem',background:'linear-gradient(135deg,#C9935A,#e8c89f)',color:'white',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.7rem',fontWeight:700,marginTop:'0.1rem'}}>{i+1}</span>
+                                                        <span style={{fontSize:'0.85rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.5}}>{step}</span>
                                                     </li>
                                                 ))}
                                             </ol>
-                                        </div>
+                                        </details>
 
                                         {/* COOKING TIPS - IA para trial y premium */}
                                         {getUserTier() !== 'free' && (
