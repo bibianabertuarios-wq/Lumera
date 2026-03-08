@@ -6540,23 +6540,30 @@ query = query.eq('region', region.toUpperCase());
                     <nav className={`fixed bottom-0 left-0 right-0 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-t shadow-lg`}>
                         <div className="max-w-6xl mx-auto flex justify-around overflow-x-auto">
                             {[
-                                { page: 'home', label: t[language].home, emoji: '📊', premium: false },
-                                { page: 'nutrition', label: t[language].nutrition, emoji: '🥗', premium: true },
-                                { page: 'exercise', label: t[language].exercise, emoji: '💪', premium: true },
-                                { page: 'symptoms', label: t[language].symptoms, emoji: '📝', premium: true },
-                                { page: 'period', label: t[language].period, emoji: '📅', premium: true },
-                                { page: 'myths', label: t[language].myths, emoji: '❌', premium: false },
-                                { page: 'tips', label: t[language].tips, emoji: '✨', premium: false },
-                                { page: 'community', label: t[language].community, emoji: '💜', premium: true }
+                                { page: 'home', label: t[language].home, img: '/images/sintomas.png', premium: false },
+                                { page: 'nutrition', label: t[language].nutrition, img: '/images/menu.png', premium: true },
+                                { page: 'exercise', label: t[language].exercise, img: '/images/ejercicio.png', premium: true },
+                                { page: 'symptoms', label: t[language].symptoms, img: '/images/sintomas.png', premium: true },
+                                { page: 'period', label: t[language].period, img: '/images/periodo.png', premium: true },
+                                { page: 'myths', label: t[language].myths, img: '/images/mitos.png', premium: false },
+                                { page: 'tips', label: t[language].tips, img: '/images/consejos.png', premium: false },
+                                { page: 'community', label: t[language].community, img: '/images/comunidad.png', premium: true }
                             ].map((item) => (
                                 <button key={item.page} onClick={() => setCurrentPage(item.page)}
-                                    className={`py-4 px-3 text-xs sm:text-sm border-t-4 transition whitespace-nowrap ${
-                                        currentPage === item.page
-                                            ? ('border-rose-400 ' + (darkMode ? 'bg-gray-700' : 'bg-amber-50') + ' text-amber-700')
-                                            : (darkMode ? 'border-gray-700 text-gray-400' : 'border-gray-200 text-gray-600')
-                                    }`}>
-                                    <div>{item.emoji}{item.premium && !isPremium() && ' 🔒'}</div>
-                                    <div className="text-xs">{item.label}</div>
+                                    style={{
+                                        padding: '0.5rem 0.6rem',
+                                        borderTop: currentPage === item.page ? '2px solid #C9935A' : '2px solid transparent',
+                                        background: currentPage === item.page ? 'rgba(201,147,90,0.08)' : 'transparent',
+                                        border: 'none',
+                                        borderTop: currentPage === item.page ? '2px solid #C9935A' : '2px solid transparent',
+                                        cursor: 'pointer', whiteSpace: 'nowrap', minWidth: '56px',
+                                        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px'
+                                    }}>
+                                    <div style={{position: 'relative'}}>
+                                        <img src={item.img} style={{width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover', opacity: currentPage === item.page ? 1 : 0.6}} />
+                                        {item.premium && !isPremium() && <span style={{position: 'absolute', top: -4, right: -4, fontSize: '0.55rem', background: '#C9935A', color: 'white', borderRadius: '9999px', padding: '0 3px'}}>PRO</span>}
+                                    </div>
+                                    <div style={{fontSize: '0.6rem', color: currentPage === item.page ? '#C9935A' : '#78716c', fontWeight: currentPage === item.page ? 600 : 400}}>{item.label}</div>
                                 </button>
                             ))}
                         </div>
