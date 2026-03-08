@@ -5772,7 +5772,7 @@ query = query.eq('region', region.toUpperCase());
                     <nav className="navbar-elegant fixed top-0 w-full z-50">
                         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                <img src="/images/lumera_icon_nobg.png" style={{width:'36px',height:'36px',objectFit:'contain'}} alt="Lumera" />
+                                <img src="/images/lumera_icon_nobg.png" style={{width:'36px',height:'36px',objectFit:'contain',mixBlendMode:'multiply'}} alt="Lumera" />
                                 <h1 className="text-2xl font-medium tracking-tight" style={{color: '#78716c', fontFamily: 'Cormorant, serif'}}>
                                     LUMERA
                                 </h1>
@@ -6337,8 +6337,8 @@ query = query.eq('region', region.toUpperCase());
                     <header className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} shadow sticky top-0 z-40 border-b`}>
                         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                <img src="/images/lumera_icon_nobg.png" style={{width:'36px',height:'36px',objectFit:'contain'}} alt="Lumera" />
-                                <h1 className="text-2xl font-light gradient-text">Lumera</h1>
+                                <img src="/images/lumera_icon_nobg.png" style={{width:'36px',height:'36px',objectFit:'contain',mixBlendMode:'multiply'}} alt="Lumera" />
+                                <h1 style={{fontFamily:"'Cormorant',serif",fontSize:"1.3rem",fontWeight:400,background:"linear-gradient(135deg,#C9935A,#e8c89f)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Lumera</h1>
                             </div>
                             <div className="flex items-center gap-3">
                                 <select value={language} onChange={(e) => setLanguage(e.target.value)} className={`px-3 py-2 rounded text-sm border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-100 border-gray-300'}`}>
