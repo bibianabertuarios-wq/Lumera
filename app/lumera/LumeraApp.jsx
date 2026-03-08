@@ -5034,22 +5034,27 @@ query = query.eq('region', region.toUpperCase());
                             <h3 className="font-semibold text-lg">{language === 'es' ? 'Registra tu día' : 'Track your day'}</h3>
 
                             <div className="space-y-4">
+                                <style>{`.lumera-slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:9999px;outline:none;cursor:pointer;background:linear-gradient(to right,#C9935A calc(var(--val,5)*10%),#e8d5c0 calc(var(--val,5)*10%))}.lumera-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#C9935A,#e8c89f);cursor:pointer;box-shadow:0 1px 6px rgba(201,147,90,0.4)}.lumera-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#C9935A,#e8c89f);cursor:pointer;border:none}`}</style>
                                 {[
-                                    { key: 'sleep', label: language === 'es' ? 'Calidad del sueño' : 'Sleep quality', emoji: '😴' },
-                                    { key: 'energy', label: language === 'es' ? 'Nivel de energía' : 'Energy level', emoji: '⚡' },
-                                    { key: 'mood', label: language === 'es' ? 'Ánimo' : 'Mood', emoji: '😊' },
-                                    { key: 'hotFlashes', label: language === 'es' ? 'Sofocos' : 'Hot flashes', emoji: '🔥' },
-                                    { key: 'anxiety', label: language === 'es' ? 'Ansiedad' : 'Anxiety', emoji: '😰' },
-                                    { key: 'vaginalDryness', label: language === 'es' ? 'Sequedad vaginal' : 'Vaginal dryness', emoji: '💧' },
-                                    { key: 'brainFog', label: language === 'es' ? 'Niebla mental' : 'Brain fog', emoji: '🌫️' },
-                                    { key: 'memory', label: language === 'es' ? 'Memoria/Claridad' : 'Memory/Clarity', emoji: '🧠' }
+                                    { key: 'sleep', label: language === 'es' ? 'Calidad del sueño' : 'Sleep quality' },
+                                    { key: 'energy', label: language === 'es' ? 'Nivel de energía' : 'Energy level' },
+                                    { key: 'mood', label: language === 'es' ? 'Ánimo' : 'Mood' },
+                                    { key: 'hotFlashes', label: language === 'es' ? 'Sofocos' : 'Hot flashes' },
+                                    { key: 'anxiety', label: language === 'es' ? 'Ansiedad' : 'Anxiety' },
+                                    { key: 'vaginalDryness', label: language === 'es' ? 'Sequedad vaginal' : 'Vaginal dryness' },
+                                    { key: 'brainFog', label: language === 'es' ? 'Niebla mental' : 'Brain fog' },
+                                    { key: 'memory', label: language === 'es' ? 'Memoria/Claridad' : 'Memory/Clarity' }
                                 ].map((item) => (
                                     <div key={item.key}>
-                                        <div className="flex justify-between mb-2">
-                                            <label className="text-sm font-semibold">{item.emoji} {item.label}</label>
-                                            <span className="text-amber-700 font-bold">{symptomForm[item.key]}/10</span>
+                                        <div style={{display:'flex',justifyContent:'space-between',marginBottom:'0.4rem'}}>
+                                            <label style={{fontSize:'0.875rem',fontWeight:600,color:darkMode?'#e8d5c0':'#57534e',display:'flex',alignItems:'center',gap:'0.4rem'}}>
+                                                <span style={{color:'#C9935A',fontSize:'0.65rem'}}>✦</span>{item.label}
+                                            </label>
+                                            <span style={{color:'#C9935A',fontWeight:700,fontSize:'0.875rem'}}>{symptomForm[item.key]}/10</span>
                                         </div>
-                                        <input type="range" min="0" max="10" value={symptomForm[item.key]} onChange={(e) => setSymptomForm({...symptomForm, [item.key]: parseInt(e.target.value)})} className="w-full accent-rose-500"/>
+                                        <input type="range" min="0" max="10" value={symptomForm[item.key]} onChange={(e) => setSymptomForm({...symptomForm, [item.key]: parseInt(e.target.value)})} className="lumera-slider" style={{'--val':symptomForm[item.key]}}/>
+                                    </div>
+                                ))}
                                     </div>
                                 ))}
 
