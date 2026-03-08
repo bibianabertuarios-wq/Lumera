@@ -3922,35 +3922,44 @@ query = query.eq('region', region.toUpperCase());
                             </div>
                         </div>
 
-{/* ── SI TE SIENTES ASÍ, USA LUMERA ── */}
-                        <div style={{background: bgCard, borderRadius: '1.25rem', padding: '1.5rem', border: `1px solid ${borderSoft}`, boxShadow: '0 2px 16px rgba(0,0,0,0.05)'}}>
-                            <h2 style={{fontFamily: "'Cormorant', serif", fontSize: '1.45rem', fontWeight: 500, color: textMain, marginBottom: '0.25rem'}}>
-                                {language === 'es' ? 'Si te sientes así, Lumera es para ti' : 'If you feel this way, Lumera is for you'}
-                            </h2>
-                            <p style={{fontSize: '0.82rem', color: textSub, marginBottom: '1rem'}}>
-                                {language === 'es' ? 'Síntomas comunes que Lumera ayuda a gestionar' : 'Common symptoms Lumera helps you manage'}
-                            </p>
-                            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.65rem'}}>
-                                {[
-                                    { icon: '🔥', es: 'Sofocos y calores', en: 'Hot flashes' },
-                                    { icon: '😴', es: 'Dormir mal o poco', en: 'Poor sleep' },
-                                    { icon: '⚡', es: 'Fatiga constante', en: 'Constant fatigue' },
-                                    { icon: '🌀', es: 'Niebla mental', en: 'Brain fog' },
-                                    { icon: '💧', es: 'Retención de líquidos', en: 'Water retention' },
-                                    { icon: '😟', es: 'Ansiedad o irritabilidad', en: 'Anxiety or irritability' },
-                                    { icon: '⚖️', es: 'Cambios de peso', en: 'Weight changes' },
-                                    { icon: '💜', es: 'Cambios de humor', en: 'Mood swings' },
-                                ].map((item, i) => (
-                                    <div key={i} style={{
-                                        display: 'flex', alignItems: 'center', gap: '0.6rem',
-                                        background: darkMode ? 'rgba(124,58,237,0.12)' : 'rgba(124,58,237,0.05)',
-                                        borderRadius: '0.75rem', padding: '0.65rem 0.85rem',
-                                        border: '1px solid rgba(124,58,237,0.12)'
-                                    }}>
-                                        <span style={{fontSize: '1.1rem'}}>{item.icon}</span>
-                                        <span style={{fontSize: '0.82rem', color: textSub, fontWeight: 500}}>{language === 'es' ? item.es : item.en}</span>
-                                    </div>
-                                ))}
+{/* ── SI TE SIENTES ASÍ — ACORDEÓN ── */}
+                        <div style={{background: bgCard, borderRadius: '1.25rem', border: `1px solid ${borderSoft}`, boxShadow: '0 2px 16px rgba(0,0,0,0.05)', overflow: 'hidden'}}>
+                            <button onClick={() => setShowSymptomsAccordion && setShowSymptomsAccordion(v => !v)}
+                                style={{width:'100%', display:'flex', alignItems:'center', justifyContent:'space-between', padding:'1.25rem 1.5rem', background:'none', border:'none', cursor:'pointer'}}
+                                onClick={(e) => { e.currentTarget.parentElement.querySelector('.accordion-body').style.display === 'none' ? e.currentTarget.parentElement.querySelector('.accordion-body').style.display = 'block' : e.currentTarget.parentElement.querySelector('.accordion-body').style.display = 'none'; e.currentTarget.querySelector('.acc-arrow').style.transform = e.currentTarget.parentElement.querySelector('.accordion-body').style.display === 'none' ? 'rotate(0deg)' : 'rotate(180deg)' }}>
+                                <div style={{textAlign:'left'}}>
+                                    <h2 style={{fontFamily:"'Cormorant', serif", fontSize:'1.45rem', fontWeight:500, color:textMain, marginBottom:'0.1rem'}}>
+                                        {language === 'es' ? 'Si te sientes así, Lumera es para ti' : 'If you feel this way, Lumera is for you'}
+                                    </h2>
+                                    <p style={{fontSize:'0.78rem', color:textSub}}>
+                                        {language === 'es' ? 'Síntomas comunes que Lumera ayuda a gestionar' : 'Common symptoms Lumera helps you manage'}
+                                    </p>
+                                </div>
+                                <span className="acc-arrow" style={{fontSize:'1rem', color:'#C9935A', transition:'transform 0.3s', display:'inline-block'}}>▾</span>
+                            </button>
+                            <div className="accordion-body" style={{display:'none', padding:'0 1.5rem 1.25rem'}}>
+                                <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0.55rem'}}>
+                                    {[
+                                        {es:'Sofocos y calores', en:'Hot flashes'},
+                                        {es:'Dormir mal o poco', en:'Poor sleep'},
+                                        {es:'Fatiga constante', en:'Constant fatigue'},
+                                        {es:'Niebla mental', en:'Brain fog'},
+                                        {es:'Retención de líquidos', en:'Water retention'},
+                                        {es:'Ansiedad o irritabilidad', en:'Anxiety or irritability'},
+                                        {es:'Cambios de peso', en:'Weight changes'},
+                                        {es:'Cambios de humor', en:'Mood swings'},
+                                    ].map((item, i) => (
+                                        <div key={i} style={{
+                                            display:'flex', alignItems:'center', gap:'0.5rem',
+                                            background: darkMode ? 'rgba(201,147,90,0.08)' : 'rgba(201,147,90,0.06)',
+                                            borderRadius:'0.75rem', padding:'0.6rem 0.8rem',
+                                            border:'1px solid rgba(201,147,90,0.18)'
+                                        }}>
+                                            <span style={{color:'#C9935A', fontSize:'0.9rem', flexShrink:0}}>✦</span>
+                                            <span style={{fontSize:'0.8rem', color:textSub, fontWeight:500, lineHeight:1.3}}>{language === 'es' ? item.es : item.en}</span>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         </div>
 
@@ -4025,7 +4034,7 @@ query = query.eq('region', region.toUpperCase());
                                             {language === 'es' ? 'Gratis' : 'Free'}
                                         </th>
                                         <th style={{padding: '0.75rem 1rem', textAlign: 'center', color: '#7c3aed', fontWeight: 700}}>
-                                            💎 Premium
+                                            ✦ Premium
                                         </th>
                                     </tr>
                                 </thead>
@@ -4065,7 +4074,7 @@ query = query.eq('region', region.toUpperCase());
                             color: 'white',
                             boxShadow: '0 8px 32px rgba(124,58,237,0.25)'
                         }}>
-                            <div style={{fontSize: '2.5rem', marginBottom: '0.75rem'}}>💎</div>
+                            <div style={{fontSize: '2.5rem', marginBottom: '0.75rem'}}>✦</div>
                             <h2 style={{fontFamily: "'Cormorant', serif", fontSize: '1.8rem', fontWeight: 500, marginBottom: '0.5rem', lineHeight: 1.2}}>
                                 {language === 'es' ? '¿Te gusta lo que ves?' : 'Liking what you see?'}
                             </h2>
@@ -4484,7 +4493,7 @@ query = query.eq('region', region.toUpperCase());
                                         📊 {language === 'es' ? 'Tus Tendencias' : 'Your Trends'}
                                     </h3>
                                     <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full font-semibold">
-                                        {language === 'es' ? '💎 Premium' : '💎 Premium'}
+                                        {language === 'es' ? '✦ Premium' : '✦ Premium'}
                                     </span>
                                 </div>
 
@@ -4518,7 +4527,7 @@ query = query.eq('region', region.toUpperCase());
                                             onClick={() => setCurrentPage('premium')}
                                             className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition"
                                         >
-                                            {language === 'es' ? '💎 Desbloquear tendencias' : '💎 Unlock trends'}
+                                            {language === 'es' ? '✦ Desbloquear tendencias' : '✦ Unlock trends'}
                                         </button>
                                     </div>
                                 </div>
@@ -5922,7 +5931,7 @@ query = query.eq('region', region.toUpperCase());
 
                                 <div style={{background: "rgba(255,255,255,0.65)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", border: "1px solid rgba(255,255,255,0.85)", borderRadius: "2rem", padding: "2rem 1.75rem", boxShadow: "0 8px 48px rgba(124,58,237,0.12)"}}>
                                     <div style={{textAlign: "center", marginBottom: "1.5rem"}}>
-                                        <div style={{fontSize: "1.75rem", marginBottom: "0.25rem"}}>🌙</div>
+                                        <div style={{fontFamily:"'Cormorant', serif", fontSize:"1.2rem", color:"#C9935A", letterSpacing:"0.15em", marginBottom:"0.5rem"}}>✦ LUMERA</div>
                                         <h3 style={{fontFamily: "'Cormorant', serif", fontSize: "1.6rem", fontWeight: 400, color: "#292524", marginBottom: "0.25rem"}}>
                                             {language === 'es' ? 'Empieza tu prueba gratuita' : 'Start your free trial'}
                                         </h3>
@@ -6415,7 +6424,7 @@ query = query.eq('region', region.toUpperCase());
                                 </button>
                                 {getUserTier() === 'premium' ? (
                                     <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full">
-                                        <span className="text-white text-sm font-semibold">💎 Premium</span>
+                                        <span className="text-white text-sm font-semibold">✦ Premium</span>
                                     </div>
                                 ) : (
                                     <button onClick={() => setShowPlanModal(true)} className="px-4 py-2 rounded text-sm font-semibold bg-gradient-to-r from-rose-400 to-amber-300 text-white hover:opacity-90 transition">
