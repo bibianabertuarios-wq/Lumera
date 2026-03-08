@@ -5066,7 +5066,6 @@ query = query.eq('region', region.toUpperCase());
                                         <input type="range" min="0" max="10" value={symptomForm[item.key]} onChange={(e) => setSymptomForm({...symptomForm, [item.key]: parseInt(e.target.value)})} className="lumera-slider" style={{'--val':symptomForm[item.key]}}/>
                                     </div>
                                 ))}
-                                    </div>
                                 ))}
 
                                 <div>
