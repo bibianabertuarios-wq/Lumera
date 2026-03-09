@@ -4033,7 +4033,7 @@ query = query.eq('region', region.toUpperCase());
                                         <th style={{padding: '0.75rem 0.5rem', textAlign: 'center', color: textSub, fontWeight: 600}}>
                                             {language === 'es' ? 'Gratis' : 'Free'}
                                         </th>
-                                        <th style={{padding: '0.75rem 1rem', textAlign: 'center', color: '#7c3aed', fontWeight: 700}}>
+                                        <th style={{padding: '0.75rem 1rem', textAlign: 'center', color: '#C9935A', fontWeight: 700}}>
                                             ✦ Premium
                                         </th>
                                     </tr>
@@ -4067,12 +4067,12 @@ query = query.eq('region', region.toUpperCase());
 
                         {/* ── CTA PREMIUM ── */}
                         <div style={{
-                            background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 55%, #ec4899 100%)',
+                            background: 'linear-gradient(135deg, #C9935A 0%, #e8c89f 100%)',
                             borderRadius: '1.5rem',
                             padding: '2rem 1.75rem',
                             textAlign: 'center',
                             color: 'white',
-                            boxShadow: '0 8px 32px rgba(124,58,237,0.25)'
+                            boxShadow: '0 8px 32px rgba(201,147,90,0.25)'
                         }}>
                             <div style={{fontSize: '2.5rem', marginBottom: '0.75rem'}}>✦</div>
                             <h2 style={{fontFamily: "'Cormorant', serif", fontSize: '1.8rem', fontWeight: 500, marginBottom: '0.5rem', lineHeight: 1.2}}>
@@ -5069,7 +5069,7 @@ query = query.eq('region', region.toUpperCase());
 
                                 <div>
                                     <label className="block text-sm font-semibold mb-2">{language === 'es' ? 'Fecha' : 'Date'}</label>
-                                    <input type="date" value={symptomForm.date} onChange={(e) => setSymptomForm({...symptomForm, date: e.target.value})} className={`w-full px-4 py-2 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}/>
+                                    <input type="date" value={symptomForm.date} onChange={(e) => setSymptomForm({...symptomForm, date: e.target.value})} style={{width:'100%',padding:'0.5rem 1rem',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.6rem',background:darkMode?'rgba(255,255,255,0.05)':'white',color:darkMode?'white':'#292524',outline:'none'}}/>
                                 </div>
                             </div>
 
@@ -5242,12 +5242,12 @@ query = query.eq('region', region.toUpperCase());
 
                                 <div>
                                     <label className="block text-sm font-semibold mb-2">{language === 'es' ? 'Síntomas' : 'Symptoms'}</label>
-                                    <input type="text" placeholder={language === 'es' ? 'Ej: cólicos, hinchazón' : 'E.g: cramps, bloating'} value={periodForm.symptoms} onChange={(e) => setPeriodForm({...periodForm, symptoms: e.target.value})} className={`w-full px-4 py-2 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}/>
+                                    <input type="text" placeholder={language === 'es' ? 'Ej: cólicos, hinchazón' : 'E.g: cramps, bloating'} value={periodForm.symptoms} onChange={(e) => setPeriodForm({...periodForm, symptoms: e.target.value})} style={{width:'100%',padding:'0.5rem 1rem',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.6rem',background:darkMode?'rgba(255,255,255,0.05)':'white',color:darkMode?'white':'#292524',outline:'none'}}/>
                                 </div>
 
                                 <div>
                                     <label className="block text-sm font-semibold mb-2">{language === 'es' ? 'Fecha' : 'Date'}</label>
-                                    <input type="date" value={periodForm.date} onChange={(e) => setPeriodForm({...periodForm, date: e.target.value})} className={`w-full px-4 py-2 border rounded-lg ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'border-gray-300'}`}/>
+                                    <input type="date" value={periodForm.date} onChange={(e) => setPeriodForm({...periodForm, date: e.target.value})} style={{width:'100%',padding:'0.5rem 1rem',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.6rem',background:darkMode?'rgba(255,255,255,0.05)':'white',color:darkMode?'white':'#292524',outline:'none'}}/>
                                 </div>
                             </div>
 
@@ -5815,7 +5815,7 @@ query = query.eq('region', region.toUpperCase());
                     <nav className="navbar-elegant fixed top-0 w-full z-50">
                         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                <img src="/images/lumera_icon_nobg.png" style={{width:'36px',height:'36px',objectFit:'contain',mixBlendMode:'multiply'}} alt="Lumera" />
+                                <img src="/images/lumera_icon_nobg.png" style={{width:'36px',height:'36px',objectFit:'contain',filter:'invert(1) sepia(1) saturate(2) hue-rotate(5deg) brightness(0.85)'}} alt="Lumera" />
                                 <h1 className="text-2xl font-medium tracking-tight" style={{color: '#78716c', fontFamily: 'Cormorant, serif'}}>
                                     LUMERA
                                 </h1>
@@ -6380,7 +6380,7 @@ query = query.eq('region', region.toUpperCase());
                     <header className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} shadow sticky top-0 z-40 border-b`}>
                         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                <img src="/images/lumera_icon_nobg.png" style={{width:'36px',height:'36px',objectFit:'contain',mixBlendMode:'multiply'}} alt="Lumera" />
+                                <img src="/images/lumera_icon_nobg.png" style={{width:'36px',height:'36px',objectFit:'contain',filter:'invert(1) sepia(1) saturate(2) hue-rotate(5deg) brightness(0.85)'}} alt="Lumera" />
                                 <h1 style={{fontFamily:"'Cormorant',serif",fontSize:"1.3rem",fontWeight:400,background:"linear-gradient(135deg,#C9935A,#e8c89f)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Lumera</h1>
                             </div>
                             <div className="flex items-center gap-3">
@@ -6392,8 +6392,8 @@ query = query.eq('region', region.toUpperCase());
                                     {darkMode ? '☀️' : '🌙'}
                                 </button>
                                 {getUserTier() === 'premium' ? (
-                                    <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full">
-                                        <span className="text-white text-sm font-semibold">✦ Premium</span>
+                                    <div style={{display:'flex',alignItems:'center',gap:'0.4rem',padding:'0.4rem 1rem',borderRadius:'9999px',background:'linear-gradient(135deg,#C9935A,#e8c89f)'}}>
+                                        <span style={{color:'white',fontSize:'0.8rem',fontWeight:600}}>✦ Premium</span>
                                     </div>
                                 ) : (
                                     <button onClick={() => setShowPlanModal(true)} style={{padding:'0.4rem 1rem',borderRadius:'9999px',fontSize:'0.8rem',fontWeight:600,background:'linear-gradient(135deg,#C9935A,#e8c89f)',color:'white',border:'none',cursor:'pointer',letterSpacing:'0.03em'}}>
