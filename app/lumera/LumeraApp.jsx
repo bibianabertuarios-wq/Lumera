@@ -6379,6 +6379,7 @@ query = query.eq('region', region.toUpperCase());
 
             return (
                 <div className={darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50'}>
+                    <style>{`.lumera-slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:9999px;outline:none;cursor:pointer;background:linear-gradient(to right,#C9935A calc(var(--val,5)*10%),#e8d5c0 calc(var(--val,5)*10%))}.lumera-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#C9935A,#e8c89f);cursor:pointer;box-shadow:0 1px 6px rgba(201,147,90,0.4)}.lumera-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#C9935A,#e8c89f);cursor:pointer;border:none}`}</style>
                     <header className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} shadow sticky top-0 z-40 border-b`}>
                         <div className="max-w-6xl mx-auto px-3 py-3 flex justify-between items-center" style={{gap:'0.5rem'}}>
                             <div className="flex items-center gap-3">
