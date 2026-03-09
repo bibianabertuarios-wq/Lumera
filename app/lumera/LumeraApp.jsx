@@ -4024,6 +4024,7 @@ query = query.eq('region', region.toUpperCase());
                                 <h2 style={{color: 'white', fontFamily: "'Cormorant', serif", fontSize: '1.4rem', fontWeight: 500, margin: 0}}>
                                     {language === 'es' ? '¿Qué incluye cada plan?' : 'What does each plan include?'}
                                 </h2>
+                        </summary>
                             </div>
                             <table style={{width: '100%', borderCollapse: 'collapse', fontSize: '0.83rem'}}>
                                 <thead>
