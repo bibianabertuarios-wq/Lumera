@@ -6382,15 +6382,18 @@ query = query.eq('region', region.toUpperCase());
                     <header className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} shadow sticky top-0 z-40 border-b`}>
                         <div className="max-w-6xl mx-auto px-3 py-3 flex justify-between items-center" style={{gap:'0.5rem'}}>
                             <div className="flex items-center gap-3">
-                                <img src="/images/lumera_icon_nobg.png" style={{width:'36px',height:'36px',objectFit:'contain',filter:'none',mixBlendMode:'multiply'}} alt="Lumera" />
-                                <h1 style={{fontFamily:"'Cormorant',serif",fontSize:"1.3rem",fontWeight:400,background:"linear-gradient(135deg,#C9935A,#e8c89f)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Lumera</h1>
+                                <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M50 5 C25 5 5 25 5 50 C5 75 25 95 50 95 C35 85 25 68 25 50 C25 32 35 15 50 5Z" fill="#9b8ec4" opacity="0.85"/>
+                                    <path d="M50 22 L56 45 L50 78 L44 45 Z" fill="#C9935A"/>
+                                </svg>
+                                <h1 style={{fontFamily:"'Cormorant',serif",fontSize:"1.25rem",fontWeight:500,background:"linear-gradient(135deg,#C9935A,#c4a882)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",whiteSpace:"nowrap"}}>Lumera</h1>
                             </div>
                             <div className="flex items-center gap-3">
-                                <select value={language} onChange={(e) => setLanguage(e.target.value)} className={`px-3 py-2 rounded text-sm border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-100 border-gray-300'}`}>
+                                <select value={language} onChange={(e) => setLanguage(e.target.value)} className={`px-2 py-1 rounded text-xs border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-100 border-gray-300'}`}>
                                     <option value="es">🇪🇸</option>
                                     <option value="en">🇬🇧</option>
                                 </select>
-                                <button onClick={() => setDarkMode(!darkMode)} className={`px-3 py-2 rounded text-sm ${darkMode ? 'bg-yellow-500 text-black' : 'bg-gray-200'}`}>
+                                <button onClick={() => setDarkMode(!darkMode)} className={`px-2 py-1 rounded text-xs ${darkMode ? 'bg-yellow-500 text-black' : 'bg-gray-200'}`}>
                                     {darkMode ? '☀️' : '🌙'}
                                 </button>
                                 {getUserTier() === 'premium' ? (
