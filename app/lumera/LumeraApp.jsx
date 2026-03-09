@@ -4018,15 +4018,16 @@ query = query.eq('region', region.toUpperCase());
                         )}
 
                         {/* ── TABLA FREE vs PREMIUM ── */}
-                        <div style={{background: bgCard, borderRadius: '1.25rem', overflow: 'hidden', border: `1px solid ${borderSoft}`, boxShadow: '0 2px 16px rgba(0,0,0,0.05)'}}>
-                            <div style={{background: 'linear-gradient(135deg, #7c3aed, #a855f7)', padding: '1.1rem 1.5rem'}}>
+                        <details style={{background: bgCard, borderRadius: '1.25rem', overflow: 'hidden', border: '1px solid rgba(201,147,90,0.2)', boxShadow: '0 2px 16px rgba(0,0,0,0.05)'}}>
+                        <summary style={{listStyle:'none',cursor:'pointer'}}>
+                            <div style={{background: 'linear-gradient(135deg, #C9935A, #e8c89f)', padding: '1.1rem 1.5rem'}}>
                                 <h2 style={{color: 'white', fontFamily: "'Cormorant', serif", fontSize: '1.4rem', fontWeight: 500, margin: 0}}>
                                     {language === 'es' ? '¿Qué incluye cada plan?' : 'What does each plan include?'}
                                 </h2>
                             </div>
                             <table style={{width: '100%', borderCollapse: 'collapse', fontSize: '0.83rem'}}>
                                 <thead>
-                                    <tr style={{background: darkMode ? 'rgba(124,58,237,0.15)' : 'rgba(201,147,90,0.06)'}}>
+                                    <tr style={{background: 'rgba(201,147,90,0.1)'}}>
                                         <th style={{padding: '0.75rem 1rem', textAlign: 'left', color: textSub, fontWeight: 600}}>
                                             {language === 'es' ? 'Función' : 'Feature'}
                                         </th>
@@ -5815,7 +5816,7 @@ query = query.eq('region', region.toUpperCase());
                     <nav className="navbar-elegant fixed top-0 w-full z-50">
                         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                <img src="/images/lumera_icon_nobg.png" style={{width:'36px',height:'36px',objectFit:'contain',filter:'invert(1) sepia(1) saturate(2) hue-rotate(5deg) brightness(0.85)'}} alt="Lumera" />
+                                <img src="/images/lumera_icon_nobg.png" style={{width:'36px',height:'36px',objectFit:'contain',filter:'none',mixBlendMode:'multiply'}} alt="Lumera" />
                                 <h1 className="text-2xl font-medium tracking-tight" style={{color: '#78716c', fontFamily: 'Cormorant, serif'}}>
                                     LUMERA
                                 </h1>
@@ -6378,9 +6379,9 @@ query = query.eq('region', region.toUpperCase());
             return (
                 <div className={darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50'}>
                     <header className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} shadow sticky top-0 z-40 border-b`}>
-                        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+                        <div className="max-w-6xl mx-auto px-3 py-3 flex justify-between items-center" style={{gap:'0.5rem'}}>
                             <div className="flex items-center gap-3">
-                                <img src="/images/lumera_icon_nobg.png" style={{width:'36px',height:'36px',objectFit:'contain',filter:'invert(1) sepia(1) saturate(2) hue-rotate(5deg) brightness(0.85)'}} alt="Lumera" />
+                                <img src="/images/lumera_icon_nobg.png" style={{width:'36px',height:'36px',objectFit:'contain',filter:'none',mixBlendMode:'multiply'}} alt="Lumera" />
                                 <h1 style={{fontFamily:"'Cormorant',serif",fontSize:"1.3rem",fontWeight:400,background:"linear-gradient(135deg,#C9935A,#e8c89f)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent"}}>Lumera</h1>
                             </div>
                             <div className="flex items-center gap-3">
