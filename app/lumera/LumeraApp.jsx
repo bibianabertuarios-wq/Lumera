@@ -2648,7 +2648,7 @@ query = query.eq('region', region.toUpperCase());
                                         {icon: '/images/menu.png', text: language === 'es' ? 'Menus adaptados a tus sintomas' : 'Menus adapted to your symptoms'},
                                         {icon: '/images/ejercicio.png', text: language === 'es' ? 'Ejercicio segun tu energia real' : 'Exercise based on your real energy'},
                                     ].map((item, i) => (
-                                        <div key={i} style={{display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(124,58,237,0.06)', borderRadius: '0.75rem', padding: '0.75rem 1rem'}}>
+                                        <div key={i} style={{display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(201,147,90,0.06)', borderRadius: '0.75rem', padding: '0.75rem 1rem'}}>
                                             <img src={item.icon} style={{width: '36px', height: '36px', borderRadius: '50%', objectFit: 'cover', flexShrink: 0}} />
                                             <span style={{fontSize: '0.85rem', color: '#44403c'}}>{item.text}</span>
                                         </div>
@@ -2657,7 +2657,7 @@ query = query.eq('region', region.toUpperCase());
                                 {/* CTA */}
                                 <button
                                     onClick={() => setQuizStep(2)}
-                                    style={{width: '100%', background: 'linear-gradient(135deg, #7c3aed, #ec4899)', border: 'none', borderRadius: '9999px', padding: '1rem', color: 'white', fontSize: '1rem', fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 24px rgba(124,58,237,0.5)', letterSpacing: '0.02em', marginBottom: '0.75rem'}}
+                                    style={{width: '100%', background: 'linear-gradient(135deg, #C9935A, #e8c89f)', border: 'none', borderRadius: '9999px', padding: '1rem', color: 'white', fontSize: '1rem', fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 24px rgba(124,58,237,0.5)', letterSpacing: '0.02em', marginBottom: '0.75rem'}}
                                 >
                                     {language === 'es' ? '✨ Comenzar mi transformación' : '✨ Start my transformation'}
                                 </button>
@@ -2678,21 +2678,21 @@ query = query.eq('region', region.toUpperCase());
                                     <input type="text" placeholder={language === 'es' ? 'Tu nombre' : 'Your name'} 
                                         value={formData.profileName}
                                         onChange={(e) => setFormData({...formData, profileName: e.target.value})}
-                                        style={{width:"100%", padding:"0.75rem 1rem", border:"1px solid rgba(124,58,237,0.2)", borderRadius:"0.75rem", fontSize:"0.95rem", background:"rgba(255,255,255,0.8)", color:"#292524", outline:"none", boxSizing:"border-box"}}/>
+                                        style={{width:"100%", padding:"0.75rem 1rem", border:"1px solid rgba(201,147,90,0.25)", borderRadius:"0.75rem", fontSize:"0.95rem", background:"rgba(255,255,255,0.8)", color:"#292524", outline:"none", boxSizing:"border-box"}}/>
 
                                     <div className="grid grid-cols-3 gap-3">
                                         <input type="number" placeholder={language === 'es' ? 'Edad' : 'Age'} 
                                             value={formData.age}
                                             onChange={(e) => setFormData({...formData, age: e.target.value})}
-                                            style={{padding:"0.75rem 1rem", border:"1px solid rgba(124,58,237,0.2)", borderRadius:"0.75rem", fontSize:"0.95rem", background:"rgba(255,255,255,0.8)", color:"#292524", outline:"none", width:"100%"}}/>
+                                            style={{padding:"0.75rem 1rem", border:"1px solid rgba(201,147,90,0.25)", borderRadius:"0.75rem", fontSize:"0.95rem", background:"rgba(255,255,255,0.8)", color:"#292524", outline:"none", width:"100%"}}/>
                                         <input type="number" placeholder={language === 'es' ? 'Altura (cm)' : 'Height (cm)'} 
                                             value={formData.height}
                                             onChange={(e) => setFormData({...formData, height: e.target.value})}
-                                            style={{padding:"0.75rem 1rem", border:"1px solid rgba(124,58,237,0.2)", borderRadius:"0.75rem", fontSize:"0.95rem", background:"rgba(255,255,255,0.8)", color:"#292524", outline:"none", width:"100%"}}/>
+                                            style={{padding:"0.75rem 1rem", border:"1px solid rgba(201,147,90,0.25)", borderRadius:"0.75rem", fontSize:"0.95rem", background:"rgba(255,255,255,0.8)", color:"#292524", outline:"none", width:"100%"}}/>
                                         <input type="number" placeholder={language === 'es' ? 'Peso (kg)' : 'Weight (kg)'} 
                                             value={formData.weight}
                                             onChange={(e) => setFormData({...formData, weight: e.target.value})}
-                                            style={{padding:"0.75rem 1rem", border:"1px solid rgba(124,58,237,0.2)", borderRadius:"0.75rem", fontSize:"0.95rem", background:"rgba(255,255,255,0.8)", color:"#292524", outline:"none", width:"100%"}}/>
+                                            style={{padding:"0.75rem 1rem", border:"1px solid rgba(201,147,90,0.25)", borderRadius:"0.75rem", fontSize:"0.95rem", background:"rgba(255,255,255,0.8)", color:"#292524", outline:"none", width:"100%"}}/>
                                     </div>
 
                                     {/* NIVEL DE ACTIVIDAD FÍSICA */}
@@ -2703,7 +2703,7 @@ query = query.eq('region', region.toUpperCase());
                                         <select 
                                             value={formData.activity_level}
                                             onChange={(e) => setFormData({...formData, activity_level: e.target.value})}
-                                            style={{width:"100%", padding:"0.75rem 1rem", border:"1px solid rgba(124,58,237,0.2)", borderRadius:"0.75rem", fontSize:"0.95rem", background:"rgba(255,255,255,0.8)", color:"#292524", outline:"none"}}
+                                            style={{width:"100%", padding:"0.75rem 1rem", border:"1px solid rgba(201,147,90,0.25)", borderRadius:"0.75rem", fontSize:"0.95rem", background:"rgba(255,255,255,0.8)", color:"#292524", outline:"none"}}
                                         >
                                             <option value="sedentary">{language === 'es' ? 'Sedentario (poco o ningún ejercicio)' : 'Sedentary (little to no exercise)'}</option>
                                             <option value="light">{language === 'es' ? 'Ligero (ejercicio 1-3 días/semana)' : 'Light (exercise 1-3 days/week)'}</option>
@@ -2719,7 +2719,7 @@ query = query.eq('region', region.toUpperCase());
                                     </div>
                                 </div>
 
-                                <button onClick={() => setQuizStep(3)} style={{width:"100%", background:"linear-gradient(135deg, #7c3aed, #ec4899)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(124,58,237,0.3)"}}>
+                                <button onClick={() => setQuizStep(3)} style={{width:"100%", background:"linear-gradient(135deg, #C9935A, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
                                     {language === 'es' ? 'Siguiente' : 'Next'} →
                                 </button>
                             </div>
@@ -2741,7 +2741,7 @@ query = query.eq('region', region.toUpperCase());
                                     {conditions.map((cond, idx) => (
                                         <label key={idx} className={`flex items-center justify-center p-3 md:p-4 border rounded-lg cursor-pointer transition min-h-[60px] ${
                                             formData.conditions.includes(cond)
-                                                ? darkMode ? 'bg-purple-900 border-purple-400' : 'bg-purple-50 border-purple-400'
+                                                ? darkMode ? 'bg-amber-900 border-amber-400' : 'bg-amber-50 border-amber-400'
                                                 : darkMode ? 'border-gray-600' : 'border-gray-300'
                                         }`}>
                                             <input type="checkbox" 
@@ -2759,7 +2759,7 @@ query = query.eq('region', region.toUpperCase());
                                     ))}
                                 </div>
 
-                                <button onClick={() => setQuizStep(4)} style={{width:"100%", background:"linear-gradient(135deg, #7c3aed, #ec4899)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(124,58,237,0.3)"}}>
+                                <button onClick={() => setQuizStep(4)} style={{width:"100%", background:"linear-gradient(135deg, #C9935A, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
                                     {language === 'es' ? 'Siguiente' : 'Next'} →
                                 </button>
                             </div>
@@ -2783,7 +2783,7 @@ query = query.eq('region', region.toUpperCase());
                                     {goals.map((goal) => (
                                         <label key={goal.value} className={`flex items-center p-6 border-2 rounded-xl cursor-pointer transition ${
                                             exerciseGoal === goal.value
-                                                ? darkMode ? 'bg-purple-900 border-purple-400' : 'bg-purple-50 border-purple-400'
+                                                ? darkMode ? 'bg-amber-900 border-amber-400' : 'bg-amber-50 border-amber-400'
                                                 : darkMode ? 'border-gray-600' : 'border-gray-300'
                                         }`}>
                                             <input type="radio" name="goal" value={goal.value}
@@ -2795,7 +2795,7 @@ query = query.eq('region', region.toUpperCase());
                                     ))}
                                 </div>
 
-                                <button onClick={() => setQuizStep(5)} style={{width:"100%", background:"linear-gradient(135deg, #7c3aed, #ec4899)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(124,58,237,0.3)"}}>
+                                <button onClick={() => setQuizStep(5)} style={{width:"100%", background:"linear-gradient(135deg, #C9935A, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
                                     {language === 'es' ? 'Siguiente' : 'Next'} →
                                 </button>
                             </div>
@@ -2824,7 +2824,7 @@ query = query.eq('region', region.toUpperCase());
                                     {regions.map((region) => (
                                         <label key={region.value} className={`flex items-center p-6 border-2 rounded-xl cursor-pointer transition ${
                                             userRegion === region.value
-                                                ? darkMode ? 'bg-purple-900 border-purple-400' : 'bg-purple-50 border-purple-400'
+                                                ? darkMode ? 'bg-amber-900 border-amber-400' : 'bg-amber-50 border-amber-400'
                                                 : darkMode ? 'border-gray-600' : 'border-gray-300'
                                         }`}>
                                             <input type="radio" name="region" value={region.value}
@@ -2893,7 +2893,7 @@ query = query.eq('region', region.toUpperCase());
                                     });
                                     setShowQuiz(false);
                                     setCurrentPage('home');
-                                }} style={{width:"100%", background:"linear-gradient(135deg, #7c3aed, #ec4899)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(124,58,237,0.3)"}}>
+                                }} style={{width:"100%", background:"linear-gradient(135deg, #C9935A, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
                                     {language === 'es' ? '¡Comenzar!' : 'Let\'s Go!'} ✨
                                 </button>
                             </div>
@@ -4026,7 +4026,7 @@ query = query.eq('region', region.toUpperCase());
                             </div>
                             <table style={{width: '100%', borderCollapse: 'collapse', fontSize: '0.83rem'}}>
                                 <thead>
-                                    <tr style={{background: darkMode ? 'rgba(124,58,237,0.15)' : 'rgba(124,58,237,0.06)'}}>
+                                    <tr style={{background: darkMode ? 'rgba(124,58,237,0.15)' : 'rgba(201,147,90,0.06)'}}>
                                         <th style={{padding: '0.75rem 1rem', textAlign: 'left', color: textSub, fontWeight: 600}}>
                                             {language === 'es' ? 'Función' : 'Feature'}
                                         </th>
@@ -5130,7 +5130,7 @@ query = query.eq('region', region.toUpperCase());
                                 `;
                                 document.body.appendChild(notification);
                                 setTimeout(() => notification.remove(), 5000);
-                            }} style={{width:"100%", background:"linear-gradient(135deg, #7c3aed, #ec4899)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(124,58,237,0.3)"}}>
+                            }} style={{width:"100%", background:"linear-gradient(135deg, #C9935A, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
                                 {t[language].addRecord}
                             </button>
                         </div>
@@ -5286,7 +5286,7 @@ query = query.eq('region', region.toUpperCase());
                                 } finally {
                                     setPeriodGuidanceLoading(false);
                                 }
-                            }} style={{width:"100%", background:"linear-gradient(135deg, #7c3aed, #ec4899)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(124,58,237,0.3)"}}>
+                            }} style={{width:"100%", background:"linear-gradient(135deg, #C9935A, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
                                 {language === 'es' ? 'Registrar y recibir guía de LUMI' : 'Record and get LUMI guidance'}
                             </button>
                         </div>
@@ -5917,16 +5917,16 @@ query = query.eq('region', region.toUpperCase());
                                             {language === 'es' ? '3 días para descubrir Lumera' : '3 days to discover Lumera'}
                                         </p>
                                     </div>
-                                    <div style={{display: "flex", gap: "0.5rem", marginBottom: "1.25rem", background: "rgba(124,58,237,0.06)", borderRadius: "9999px", padding: "0.25rem"}}>
+                                    <div style={{display: "flex", gap: "0.5rem", marginBottom: "1.25rem", background: "rgba(201,147,90,0.06)", borderRadius: "9999px", padding: "0.25rem"}}>
                                         <button
                                             onClick={() => setAuthMode('register')}
-                                            style={{flex: 1, padding: "0.6rem", borderRadius: "9999px", border: "none", fontWeight: 600, fontSize: "0.88rem", cursor: "pointer", background: authMode === "register" ? "linear-gradient(135deg, #7c3aed, #ec4899)" : "transparent", color: authMode === "register" ? "white" : "#78716c", boxShadow: authMode === "register" ? "0 2px 8px rgba(124,58,237,0.3)" : "none"}}
+                                            style={{flex: 1, padding: "0.6rem", borderRadius: "9999px", border: "none", fontWeight: 600, fontSize: "0.88rem", cursor: "pointer", background: authMode === "register" ? "linear-gradient(135deg, #C9935A, #e8c89f)" : "transparent", color: authMode === "register" ? "white" : "#78716c", boxShadow: authMode === "register" ? "0 2px 8px rgba(124,58,237,0.3)" : "none"}}
                                         >
                                             {language === 'es' ? 'Crear Cuenta' : 'Sign Up'}
                                         </button>
                                         <button 
                                             onClick={() => setAuthMode('login')} 
-                                            style={{flex: 1, padding: "0.6rem", borderRadius: "9999px", border: "none", fontWeight: 600, fontSize: "0.88rem", cursor: "pointer", background: authMode === "login" ? "linear-gradient(135deg, #7c3aed, #ec4899)" : "transparent", color: authMode === "login" ? "white" : "#78716c", boxShadow: authMode === "login" ? "0 2px 8px rgba(124,58,237,0.3)" : "none"}}
+                                            style={{flex: 1, padding: "0.6rem", borderRadius: "9999px", border: "none", fontWeight: 600, fontSize: "0.88rem", cursor: "pointer", background: authMode === "login" ? "linear-gradient(135deg, #C9935A, #e8c89f)" : "transparent", color: authMode === "login" ? "white" : "#78716c", boxShadow: authMode === "login" ? "0 2px 8px rgba(124,58,237,0.3)" : "none"}}
                                         >
                                             {language === 'es' ? 'Iniciar Sesión' : 'Login'}
                                         </button>
