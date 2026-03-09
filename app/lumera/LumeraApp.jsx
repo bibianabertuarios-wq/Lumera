@@ -4064,7 +4064,7 @@ query = query.eq('region', region.toUpperCase());
                                     ))}
                                 </tbody>
                             </table>
-                        </div>
+                        </details>
 
                         {/* ── CTA PREMIUM ── */}
                         <div style={{
