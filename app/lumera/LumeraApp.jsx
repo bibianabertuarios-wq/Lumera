@@ -5817,7 +5817,10 @@ query = query.eq('region', region.toUpperCase());
                     <nav className="navbar-elegant fixed top-0 w-full z-50">
                         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                <img src="/images/lumera_icon_nobg.png" style={{width:'36px',height:'36px',objectFit:'contain',filter:'none',mixBlendMode:'multiply'}} alt="Lumera" />
+                                <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M50 5 C25 5 5 25 5 50 C5 75 25 95 50 95 C35 85 25 68 25 50 C25 32 35 15 50 5Z" fill="#9b8ec4" opacity="0.85"/>
+                                    <path d="M50 22 L56 45 L50 78 L44 45 Z" fill="#C9935A"/>
+                                </svg>
                                 <h1 className="text-2xl font-medium tracking-tight" style={{color: '#78716c', fontFamily: 'Cormorant, serif'}}>
                                     LUMERA
                                 </h1>
