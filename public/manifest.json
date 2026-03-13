@@ -1,0 +1,13 @@
+{
+  "name": "Lumera",
+  "short_name": "Lumera",
+  "description": "Tu santuario de bienestar femenino",
+  "start_url": "/lumera",
+  "display": "standalone",
+  "background_color": "#fdf8f3",
+  "theme_color": "#C9935A",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
