@@ -4913,6 +4913,100 @@ query = query.eq('region', region.toUpperCase());
                             </div>
                         </div>
 
+
+                        {/* ── DESPENSA IMPRESCINDIBLE ── */}
+                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background:darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
+                            <div style={{padding:'1.25rem 1.5rem 0.75rem'}}>
+                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'DESPENSA IMPRESCINDIBLE':'ESSENTIAL PANTRY'}</p>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:textMain,lineHeight:1.2,marginBottom:'0.3rem'}}>{language==='es'?'Lo que siempre debes tener.':'What you should always have.'}</h3>
+                                <p style={{fontSize:'0.78rem',color:textSub,marginBottom:'0.75rem'}}>{language==='es'?'Ingredientes de cualquier super. Para cada síntoma.':'Ingredients from any supermarket. For every symptom.'}</p>
+                            </div>
+                            {[
+                                {
+                                    categoria_es:'Sofocos y calores',categoria_en:'Hot flashes',
+                                    icono:'🌡️',
+                                    items:[
+                                        {nombre_es:'Semillas de lino (linaza)',nombre_en:'Flaxseeds (linaza)',por_es:'Fitoestrógenos naturales que reducen la frecuencia de sofocos',por_en:'Natural phytoestrogens that reduce hot flash frequency',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Soja / tofu / edamame',nombre_en:'Soy / tofu / edamame',por_es:'Las isoflavonas imitan el estrógeno y alivian los sofocos',por_en:'Isoflavones mimic oestrogen and relieve hot flashes',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Salvia fresca o en infusión',nombre_en:'Fresh or infused sage',por_es:'Reduce la sudoración nocturna de forma natural',por_en:'Naturally reduces night sweats',region:'EMEA·LATAM·USA'},
+                                    ]
+                                },
+                                {
+                                    categoria_es:'Huesos y osteoporosis',categoria_en:'Bones & osteoporosis',
+                                    icono:'🦴',
+                                    items:[
+                                        {nombre_es:'Yogur griego natural',nombre_en:'Plain Greek yogurt',por_es:'Alto en calcio y proteína — protege la densidad ósea',por_en:'High in calcium and protein — protects bone density',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Sardinas o caballa en lata',nombre_en:'Canned sardines or mackerel',por_es:'Calcio + vitamina D + omega-3 en un solo alimento',por_en:'Calcium + vitamin D + omega-3 in one food',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Brócoli',nombre_en:'Broccoli',por_es:'Vitamina K imprescindible para fijar el calcio en los huesos',por_en:'Vitamin K essential for fixing calcium in bones',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Almendras',nombre_en:'Almonds',por_es:'Magnesio y calcio vegetal — snack perfecto',por_en:'Magnesium and plant calcium — perfect snack',region:'EMEA·LATAM·USA'},
+                                    ]
+                                },
+                                {
+                                    categoria_es:'Ansiedad y sueño',categoria_en:'Anxiety & sleep',
+                                    icono:'🌙',
+                                    items:[
+                                        {nombre_es:'Plátano / banana',nombre_en:'Banana',por_es:'Triptófano precursor de la serotonina y melatonina',por_en:'Tryptophan precursor to serotonin and melatonin',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Avena',nombre_en:'Oats',por_es:'Magnesio y carbohidratos complejos que calman el sistema nervioso',por_en:'Magnesium and complex carbs that calm the nervous system',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Chocolate negro 85%+',nombre_en:'Dark chocolate 85%+',por_es:'Magnesio + feniletilamina — reduce cortisol y mejora el ánimo',por_en:'Magnesium + phenylethylamine — reduces cortisol and lifts mood',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Manzanilla e infusión de valeriana',nombre_en:'Chamomile & valerian tea',por_es:'Apigenina que activa receptores GABA — efecto calmante real',por_en:'Apigenin activates GABA receptors — real calming effect',region:'EMEA·LATAM·USA'},
+                                    ]
+                                },
+                                {
+                                    categoria_es:'Niebla mental y energía',categoria_en:'Brain fog & energy',
+                                    icono:'⚡',
+                                    items:[
+                                        {nombre_es:'Huevos',nombre_en:'Eggs',por_es:'Colina esencial para la memoria y función cognitiva',por_en:'Essential choline for memory and cognitive function',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Aguacate / palta',nombre_en:'Avocado',por_es:'Grasas monoinsaturadas que nutren el cerebro y reducen inflamación',por_en:'Monounsaturated fats that nourish the brain and reduce inflammation',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Nueces',nombre_en:'Walnuts',por_es:'Omega-3 vegetal — el fruto seco con más beneficios cerebrales',por_en:'Plant omega-3 — the nut with the most brain benefits',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Cúrcuma + pimienta negra',nombre_en:'Turmeric + black pepper',por_es:'La piperina aumenta la absorción de curcumina x20 — antiinflamatorio potente',por_en:'Piperine increases curcumin absorption x20 — potent anti-inflammatory',region:'EMEA·LATAM·USA'},
+                                    ]
+                                },
+                                {
+                                    categoria_es:'Sequedad e hidratación',categoria_en:'Dryness & hydration',
+                                    icono:'💧',
+                                    items:[
+                                        {nombre_es:'Salmón o sardinas frescas',nombre_en:'Fresh salmon or sardines',por_es:'Omega-3 EPA/DHA — mantiene la hidratación de mucosas y piel',por_en:'Omega-3 EPA/DHA — maintains mucosa and skin hydration',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Aceite de oliva virgen extra',nombre_en:'Extra virgin olive oil',por_es:'Oleocantal antiinflamatorio + vitamina E para la piel desde dentro',por_en:'Oleocanthal anti-inflammatory + vitamin E for skin from within',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Pepino',nombre_en:'Cucumber',por_es:'96% agua + silicio para la hidratación celular',por_en:'96% water + silicon for cellular hydration',region:'EMEA·LATAM·USA'},
+                                    ]
+                                },
+                                {
+                                    categoria_es:'Equilibrio hormonal general',categoria_en:'General hormonal balance',
+                                    icono:'⚖️',
+                                    items:[
+                                        {nombre_es:'Lentejas y legumbres',nombre_en:'Lentils and legumes',por_es:'Proteína vegetal + fibra que regula el estrógeno circulante',por_en:'Plant protein + fibre that regulates circulating oestrogen',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Boniato / camote / sweet potato',nombre_en:'Sweet potato',por_es:'Betacaroteno precursor de progesterona + potasio antiinflamatorio',por_en:'Beta-carotene precursor to progesterone + anti-inflammatory potassium',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Ajo y cebolla',nombre_en:'Garlic and onion',por_es:'Prebióticos que cuidan el microbioma — clave para metabolizar el estrógeno',por_en:'Prebiotics that support the microbiome — key for oestrogen metabolism',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Jengibre fresco',nombre_en:'Fresh ginger',por_es:'Antiinflamatorio natural que reduce dolor articular y náuseas hormonales',por_en:'Natural anti-inflammatory that reduces joint pain and hormonal nausea',region:'EMEA·LATAM·USA'},
+                                    ]
+                                },
+                            ].map((cat, ci) => (
+                                <details key={ci} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
+                                    <summary style={{padding:'1rem 1.5rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',listStyle:'none',userSelect:'none'}}>
+                                        <div style={{display:'flex',alignItems:'center',gap:'0.75rem'}}>
+                                            <span style={{fontSize:'1.3rem'}}>{cat.icono}</span>
+                                            <div>
+                                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:textMain}}>{language==='es'?cat.categoria_es:cat.categoria_en}</p>
+                                                <p style={{fontSize:'0.7rem',color:textSub}}>{language==='es'?`${cat.items.length} imprescindibles`:`${cat.items.length} essentials`}</p>
+                                            </div>
+                                        </div>
+                                        <span style={{color:'#C9935A',fontSize:'0.9rem'}}>▾</span>
+                                    </summary>
+                                    <div style={{padding:'0 1.5rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.6rem'}}>
+                                        {cat.items.map((item,ii) => (
+                                            <div key={ii} style={{background:darkMode?'rgba(201,147,90,0.06)':'rgba(253,248,243,0.8)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.12)'}}>
+                                                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'0.5rem'}}>
+                                                    <p style={{fontSize:'0.85rem',fontWeight:600,color:textMain}}>{language==='es'?item.nombre_es:item.nombre_en}</p>
+                                                    <span style={{fontSize:'0.62rem',background:'rgba(201,147,90,0.1)',color:'#C9935A',padding:'0.1rem 0.4rem',borderRadius:'9999px',whiteSpace:'nowrap',flexShrink:0}}>{item.region}</span>
+                                                </div>
+                                                <p style={{fontSize:'0.75rem',color:textSub,marginTop:'0.2rem',fontStyle:'italic'}}>🔬 {language==='es'?item.por_es:item.por_en}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </details>
+                            ))}
+                        </div>
+
                         <div className={`${darkMode ? 'bg-indigo-900' : 'bg-indigo-50'} rounded-xl p-6 border-l-4 border-indigo-500`}>
                             <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                                 {language === 'es'
@@ -5204,6 +5298,100 @@ query = query.eq('region', region.toUpperCase());
                                                 </ol>
                                             </div>
                                         )}
+                                    </div>
+                                </details>
+                            ))}
+                        </div>
+
+
+                        {/* ── DESPENSA IMPRESCINDIBLE ── */}
+                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background:darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
+                            <div style={{padding:'1.25rem 1.5rem 0.75rem'}}>
+                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'DESPENSA IMPRESCINDIBLE':'ESSENTIAL PANTRY'}</p>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:textMain,lineHeight:1.2,marginBottom:'0.3rem'}}>{language==='es'?'Lo que siempre debes tener.':'What you should always have.'}</h3>
+                                <p style={{fontSize:'0.78rem',color:textSub,marginBottom:'0.75rem'}}>{language==='es'?'Ingredientes de cualquier super. Para cada síntoma.':'Ingredients from any supermarket. For every symptom.'}</p>
+                            </div>
+                            {[
+                                {
+                                    categoria_es:'Sofocos y calores',categoria_en:'Hot flashes',
+                                    icono:'🌡️',
+                                    items:[
+                                        {nombre_es:'Semillas de lino (linaza)',nombre_en:'Flaxseeds (linaza)',por_es:'Fitoestrógenos naturales que reducen la frecuencia de sofocos',por_en:'Natural phytoestrogens that reduce hot flash frequency',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Soja / tofu / edamame',nombre_en:'Soy / tofu / edamame',por_es:'Las isoflavonas imitan el estrógeno y alivian los sofocos',por_en:'Isoflavones mimic oestrogen and relieve hot flashes',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Salvia fresca o en infusión',nombre_en:'Fresh or infused sage',por_es:'Reduce la sudoración nocturna de forma natural',por_en:'Naturally reduces night sweats',region:'EMEA·LATAM·USA'},
+                                    ]
+                                },
+                                {
+                                    categoria_es:'Huesos y osteoporosis',categoria_en:'Bones & osteoporosis',
+                                    icono:'🦴',
+                                    items:[
+                                        {nombre_es:'Yogur griego natural',nombre_en:'Plain Greek yogurt',por_es:'Alto en calcio y proteína — protege la densidad ósea',por_en:'High in calcium and protein — protects bone density',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Sardinas o caballa en lata',nombre_en:'Canned sardines or mackerel',por_es:'Calcio + vitamina D + omega-3 en un solo alimento',por_en:'Calcium + vitamin D + omega-3 in one food',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Brócoli',nombre_en:'Broccoli',por_es:'Vitamina K imprescindible para fijar el calcio en los huesos',por_en:'Vitamin K essential for fixing calcium in bones',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Almendras',nombre_en:'Almonds',por_es:'Magnesio y calcio vegetal — snack perfecto',por_en:'Magnesium and plant calcium — perfect snack',region:'EMEA·LATAM·USA'},
+                                    ]
+                                },
+                                {
+                                    categoria_es:'Ansiedad y sueño',categoria_en:'Anxiety & sleep',
+                                    icono:'🌙',
+                                    items:[
+                                        {nombre_es:'Plátano / banana',nombre_en:'Banana',por_es:'Triptófano precursor de la serotonina y melatonina',por_en:'Tryptophan precursor to serotonin and melatonin',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Avena',nombre_en:'Oats',por_es:'Magnesio y carbohidratos complejos que calman el sistema nervioso',por_en:'Magnesium and complex carbs that calm the nervous system',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Chocolate negro 85%+',nombre_en:'Dark chocolate 85%+',por_es:'Magnesio + feniletilamina — reduce cortisol y mejora el ánimo',por_en:'Magnesium + phenylethylamine — reduces cortisol and lifts mood',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Manzanilla e infusión de valeriana',nombre_en:'Chamomile & valerian tea',por_es:'Apigenina que activa receptores GABA — efecto calmante real',por_en:'Apigenin activates GABA receptors — real calming effect',region:'EMEA·LATAM·USA'},
+                                    ]
+                                },
+                                {
+                                    categoria_es:'Niebla mental y energía',categoria_en:'Brain fog & energy',
+                                    icono:'⚡',
+                                    items:[
+                                        {nombre_es:'Huevos',nombre_en:'Eggs',por_es:'Colina esencial para la memoria y función cognitiva',por_en:'Essential choline for memory and cognitive function',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Aguacate / palta',nombre_en:'Avocado',por_es:'Grasas monoinsaturadas que nutren el cerebro y reducen inflamación',por_en:'Monounsaturated fats that nourish the brain and reduce inflammation',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Nueces',nombre_en:'Walnuts',por_es:'Omega-3 vegetal — el fruto seco con más beneficios cerebrales',por_en:'Plant omega-3 — the nut with the most brain benefits',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Cúrcuma + pimienta negra',nombre_en:'Turmeric + black pepper',por_es:'La piperina aumenta la absorción de curcumina x20 — antiinflamatorio potente',por_en:'Piperine increases curcumin absorption x20 — potent anti-inflammatory',region:'EMEA·LATAM·USA'},
+                                    ]
+                                },
+                                {
+                                    categoria_es:'Sequedad e hidratación',categoria_en:'Dryness & hydration',
+                                    icono:'💧',
+                                    items:[
+                                        {nombre_es:'Salmón o sardinas frescas',nombre_en:'Fresh salmon or sardines',por_es:'Omega-3 EPA/DHA — mantiene la hidratación de mucosas y piel',por_en:'Omega-3 EPA/DHA — maintains mucosa and skin hydration',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Aceite de oliva virgen extra',nombre_en:'Extra virgin olive oil',por_es:'Oleocantal antiinflamatorio + vitamina E para la piel desde dentro',por_en:'Oleocanthal anti-inflammatory + vitamin E for skin from within',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Pepino',nombre_en:'Cucumber',por_es:'96% agua + silicio para la hidratación celular',por_en:'96% water + silicon for cellular hydration',region:'EMEA·LATAM·USA'},
+                                    ]
+                                },
+                                {
+                                    categoria_es:'Equilibrio hormonal general',categoria_en:'General hormonal balance',
+                                    icono:'⚖️',
+                                    items:[
+                                        {nombre_es:'Lentejas y legumbres',nombre_en:'Lentils and legumes',por_es:'Proteína vegetal + fibra que regula el estrógeno circulante',por_en:'Plant protein + fibre that regulates circulating oestrogen',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Boniato / camote / sweet potato',nombre_en:'Sweet potato',por_es:'Betacaroteno precursor de progesterona + potasio antiinflamatorio',por_en:'Beta-carotene precursor to progesterone + anti-inflammatory potassium',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Ajo y cebolla',nombre_en:'Garlic and onion',por_es:'Prebióticos que cuidan el microbioma — clave para metabolizar el estrógeno',por_en:'Prebiotics that support the microbiome — key for oestrogen metabolism',region:'EMEA·LATAM·USA'},
+                                        {nombre_es:'Jengibre fresco',nombre_en:'Fresh ginger',por_es:'Antiinflamatorio natural que reduce dolor articular y náuseas hormonales',por_en:'Natural anti-inflammatory that reduces joint pain and hormonal nausea',region:'EMEA·LATAM·USA'},
+                                    ]
+                                },
+                            ].map((cat, ci) => (
+                                <details key={ci} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
+                                    <summary style={{padding:'1rem 1.5rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',listStyle:'none',userSelect:'none'}}>
+                                        <div style={{display:'flex',alignItems:'center',gap:'0.75rem'}}>
+                                            <span style={{fontSize:'1.3rem'}}>{cat.icono}</span>
+                                            <div>
+                                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:textMain}}>{language==='es'?cat.categoria_es:cat.categoria_en}</p>
+                                                <p style={{fontSize:'0.7rem',color:textSub}}>{language==='es'?`${cat.items.length} imprescindibles`:`${cat.items.length} essentials`}</p>
+                                            </div>
+                                        </div>
+                                        <span style={{color:'#C9935A',fontSize:'0.9rem'}}>▾</span>
+                                    </summary>
+                                    <div style={{padding:'0 1.5rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.6rem'}}>
+                                        {cat.items.map((item,ii) => (
+                                            <div key={ii} style={{background:darkMode?'rgba(201,147,90,0.06)':'rgba(253,248,243,0.8)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.12)'}}>
+                                                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'0.5rem'}}>
+                                                    <p style={{fontSize:'0.85rem',fontWeight:600,color:textMain}}>{language==='es'?item.nombre_es:item.nombre_en}</p>
+                                                    <span style={{fontSize:'0.62rem',background:'rgba(201,147,90,0.1)',color:'#C9935A',padding:'0.1rem 0.4rem',borderRadius:'9999px',whiteSpace:'nowrap',flexShrink:0}}>{item.region}</span>
+                                                </div>
+                                                <p style={{fontSize:'0.75rem',color:textSub,marginTop:'0.2rem',fontStyle:'italic'}}>🔬 {language==='es'?item.por_es:item.por_en}</p>
+                                            </div>
+                                        ))}
                                     </div>
                                 </details>
                             ))}
