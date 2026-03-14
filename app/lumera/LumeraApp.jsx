@@ -3956,9 +3956,7 @@ query = query.eq('region', region.toUpperCase());
                         <div onClick={()=>setCurrentPage('nutrition')} style={{borderRadius:'1.25rem',overflow:'hidden',background:'linear-gradient(135deg,#fdf8f3,#fef3e8)',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)',cursor:'pointer',padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
                             <div>
                                 <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.3rem'}}>✦ {language==='es'?'COCINA EL DOMINGO':'COOK SUNDAY'}</p>
-                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.3rem',fontWeight:500,color:'#1c1917',lineHeight:1.2}}>{language==='es'?'4 semanas de menús.
-Come bien toda la semana.':'4 weeks of menus.
-Eat well all week.'}</h3>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.3rem',fontWeight:500,color:'#1c1917',lineHeight:1.2}}>{language==='es'?'4 semanas de menús. Come bien toda la semana.':'4 weeks of menus. Eat well all week.'}</h3>
                                 <p style={{fontSize:'0.75rem',color:'#78716c',marginTop:'0.3rem'}}>{language==='es'?'~60 min el domingo · Ver en Nutrición →':'~60 min Sunday · See in Nutrition →'}</p>
                             </div>
                             <span style={{fontSize:'2rem',flexShrink:0}}>🍳</span>
