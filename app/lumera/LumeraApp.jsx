@@ -3951,6 +3951,146 @@ query = query.eq('region', region.toUpperCase());
                             </div>
                         </div>
 
+
+                        {/* ── BATCH COOKING DOMINICAL ── */}
+                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background: darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
+                            <div style={{padding:'1.25rem 1.5rem 0.75rem'}}>
+                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'COCINA EL DOMINGO, COME TODA LA SEMANA':'COOK SUNDAY, EAT ALL WEEK'}</p>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:textMain,lineHeight:1.2,marginBottom:'0.4rem'}}>{language==='es'?'Tu mes completo de comidas.':'Your complete month of meals.'}</h3>
+                                <p style={{fontSize:'0.78rem',color:textSub,marginBottom:'1rem'}}>{language==='es'?'~60 min el domingo. Varía cada día combinando las bases.':'~60 min on Sunday. Vary each day by combining the bases.'}</p>
+                            </div>
+                            {[
+                                {
+                                    semana_es:'Semana 1 · Antiinflamatoria',semana_en:'Week 1 · Anti-inflammatory',
+                                    objetivo_es:'Sofocos · Inflamación · Energía',objetivo_en:'Hot flashes · Inflammation · Energy',
+                                    tiempo:'55 min',kcal:'~1500-1700 kcal/día',
+                                    bases_es:[
+                                        {tipo:'Proteína',item:'Pollo al horno con limón y romero',opciones:'pavo · garbanzos'},
+                                        {tipo:'Hidrato',item:'Arroz integral',opciones:'quinoa · boniato (camote)'},
+                                        {tipo:'Verdura',item:'Pimientos + berenjena + calabacín asados',opciones:'con aceite de oliva'},
+                                        {tipo:'Extra',item:'Hummus casero',opciones:''},
+                                    ],
+                                    bases_en:[
+                                        {tipo:'Protein',item:'Lemon & rosemary baked chicken',opciones:'turkey · chickpeas'},
+                                        {tipo:'Carbs',item:'Brown rice',opciones:'quinoa · sweet potato'},
+                                        {tipo:'Veggies',item:'Roasted peppers + aubergine + courgette',opciones:'with olive oil'},
+                                        {tipo:'Extra',item:'Homemade hummus',opciones:''},
+                                    ],
+                                    combinaciones_es:['L: pollo + arroz + verduras','M: wrap de pollo + hummus','X: arroz salteado con huevo y verduras','J: ensalada garbanzos + aguacate (palta)','V: pasta integral + verduras + pesto'],
+                                    combinaciones_en:['M: chicken + rice + veggies','T: chicken wrap + hummus','W: fried rice with egg','T: chickpea salad + avocado','F: wholegrain pasta + veggies + pesto'],
+                                    ciencia_es:'Los polifenoles del aceite de oliva y los carotenoides del pimiento reducen la inflamación sistémica. La proteína magra estabiliza el cortisol.',
+                                    ciencia_en:'Olive oil polyphenols and pepper carotenoids reduce systemic inflammation. Lean protein stabilises cortisol.',
+                                    capricho_es:'🍫 Onza de chocolate negro 85%',capricho_en:'🍫 Square of 85% dark chocolate',
+                                },
+                                {
+                                    semana_es:'Semana 2 · Reconfortante',semana_en:'Week 2 · Comforting',
+                                    objetivo_es:'Sueño · Ansiedad · Cambios de humor',objetivo_en:'Sleep · Anxiety · Mood swings',
+                                    tiempo:'60 min',kcal:'~1550-1750 kcal/día',
+                                    bases_es:[
+                                        {tipo:'Proteína',item:'Salmón al horno con eneldo',opciones:'sardinas · lentejas rojas'},
+                                        {tipo:'Hidrato',item:'Boniato (camote) asado + avena',opciones:''},
+                                        {tipo:'Verdura',item:'Espinacas salteadas + brócoli al vapor',opciones:'con ajo y aceite de oliva'},
+                                        {tipo:'Extra',item:'Caldo de verduras casero',opciones:'20 min, vale toda la semana'},
+                                    ],
+                                    bases_en:[
+                                        {tipo:'Protein',item:'Dill baked salmon',opciones:'sardines · red lentils'},
+                                        {tipo:'Carbs',item:'Roasted sweet potato + oats',opciones:''},
+                                        {tipo:'Veggies',item:'Sautéed spinach + steamed broccoli',opciones:'with garlic and olive oil'},
+                                        {tipo:'Extra',item:'Homemade vegetable broth',opciones:'20 min, lasts all week'},
+                                    ],
+                                    combinaciones_es:['L: salmón + boniato + espinacas','M: crema de boniato con caldo','X: lentejas rojas con brócoli','J: bowl de avena + huevo + espinacas','V: pasta con sardinas + limón'],
+                                    combinaciones_en:['M: salmon + sweet potato + spinach','T: sweet potato cream with broth','W: red lentils with broccoli','T: oat bowl + egg + spinach','F: pasta with sardines + lemon'],
+                                    ciencia_es:'El omega-3 del salmón mejora el sueño y reduce la inflamación neurológica. El magnesio del boniato regula el cortisol nocturno.',
+                                    ciencia_en:'Salmon omega-3 improves sleep and reduces neurological inflammation. Sweet potato magnesium regulates night cortisol.',
+                                    capricho_es:'🍫 Trufas de dátil + cacao puro (5 min)',capricho_en:'🍫 Date truffles + raw cacao (5 min)',
+                                },
+                                {
+                                    semana_es:'Semana 3 · Ligera y fresca',semana_en:'Week 3 · Light & fresh',
+                                    objetivo_es:'Retención · Niebla mental · Peso',objetivo_en:'Bloating · Brain fog · Weight',
+                                    tiempo:'50 min',kcal:'~1450-1650 kcal/día',
+                                    bases_es:[
+                                        {tipo:'Proteína',item:'Atún/bonito al horno',opciones:'pechuga · tofu'},
+                                        {tipo:'Hidrato',item:'Pasta integral + arroz basmati',opciones:''},
+                                        {tipo:'Verdura',item:'Tomate + pepino + zanahoria + rúcula',opciones:'bases de ensalada'},
+                                        {tipo:'Extra',item:'Vinagreta de limón y mostaza + aguacate (palta)',opciones:''},
+                                    ],
+                                    bases_en:[
+                                        {tipo:'Protein',item:'Baked tuna/bonito',opciones:'chicken breast · tofu'},
+                                        {tipo:'Carbs',item:'Wholegrain pasta + basmati rice',opciones:''},
+                                        {tipo:'Veggies',item:'Tomato + cucumber + carrot + rocket',opciones:'salad bases'},
+                                        {tipo:'Extra',item:'Lemon mustard dressing + avocado',opciones:''},
+                                    ],
+                                    combinaciones_es:['L: atún + pasta integral + rúcula','M: bowl arroz + aguacate (palta) + zanahoria','X: ensalada grande + atún + huevo duro','J: wrap integral + tofu + verduras','V: pasta fría + atún + pepino + limón'],
+                                    combinaciones_en:['M: tuna + wholegrain pasta + rocket','T: rice bowl + avocado + carrot','W: big salad + tuna + boiled egg','T: wholegrain wrap + tofu + veggies','F: cold pasta + tuna + cucumber + lemon'],
+                                    ciencia_es:'El potasio del aguacate/palta y el pepino reducen la retención. Los hidratos de bajo índice glucémico evitan los picos de insulina que disparan los sofocos.',
+                                    ciencia_en:'Avocado potassium and cucumber reduce bloating. Low GI carbs prevent insulin spikes that trigger hot flashes.',
+                                    capricho_es:'🍪 Galletas de avena y plátano (10 min, sin azúcar)',capricho_en:'🍪 Oat & banana cookies (10 min, no sugar)',
+                                },
+                                {
+                                    semana_es:'Semana 4 · Equilibrio hormonal',semana_en:'Week 4 · Hormonal balance',
+                                    objetivo_es:'Humor · Sequedad · Huesos · Vitalidad',objetivo_en:'Mood · Dryness · Bones · Vitality',
+                                    tiempo:'55 min',kcal:'~1500-1700 kcal/día',
+                                    bases_es:[
+                                        {tipo:'Proteína',item:'Huevos + lentejas o alubias',opciones:'pollo · merluza/pescado blanco'},
+                                        {tipo:'Hidrato',item:'Mijo o arroz integral',opciones:''},
+                                        {tipo:'Verdura',item:'Coliflor gratinada + puerro salteado',opciones:'con aceite de oliva'},
+                                        {tipo:'Extra',item:'Yogur griego con semillas de lino molidas',opciones:''},
+                                    ],
+                                    bases_en:[
+                                        {tipo:'Protein',item:'Eggs + lentils or beans',opciones:'chicken · white fish'},
+                                        {tipo:'Carbs',item:'Millet or brown rice',opciones:''},
+                                        {tipo:'Veggies',item:'Gratinated cauliflower + sautéed leek',opciones:'with olive oil'},
+                                        {tipo:'Extra',item:'Greek yogurt with ground flaxseeds',opciones:''},
+                                    ],
+                                    combinaciones_es:['L: lentejas + puerro + mijo','M: tortilla de espinacas + pan integral','X: coliflor gratinada + huevo pochado','J: bowl arroz + alubias + aguacate (palta)','V: merluza al horno + puerro + patata'],
+                                    combinaciones_en:['M: lentils + leek + millet','T: spinach omelette + wholegrain bread','W: gratinated cauliflower + poached egg','T: rice bowl + beans + avocado','F: baked white fish + leek + potato'],
+                                    ciencia_es:'Las semillas de lino son fitoestrógenos naturales que reducen sofocos y sequedad. El calcio del yogur griego y la vitamina K del puerro protegen los huesos.',
+                                    ciencia_en:'Flaxseeds are natural phytoestrogens that reduce hot flashes and dryness. Greek yogurt calcium and leek vitamin K protect bones.',
+                                    capricho_es:'🍫 Brownie de alubias negras y cacao (15 min, sin harina)',capricho_en:'🍫 Black bean & cacao brownie (15 min, no flour)',
+                                },
+                            ].map((semana, si) => (
+                                <details key={si} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
+                                    <summary style={{padding:'1rem 1.5rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',listStyle:'none',userSelect:'none'}}>
+                                        <div>
+                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:textMain}}>{language==='es'?semana.semana_es:semana.semana_en}</p>
+                                            <p style={{fontSize:'0.72rem',color:'#C9935A',marginTop:'0.1rem'}}>{language==='es'?semana.objetivo_es:semana.objetivo_en}</p>
+                                        </div>
+                                        <div style={{display:'flex',alignItems:'center',gap:'0.5rem'}}>
+                                            <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px'}}>⏱ {semana.tiempo}</span>
+                                            <span style={{color:'#C9935A',fontSize:'0.9rem'}}>▾</span>
+                                        </div>
+                                    </summary>
+                                    <div style={{padding:'0 1.5rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+                                        <div style={{display:'flex',flexWrap:'wrap',gap:'0.4rem'}}>
+                                            {(language==='es'?semana.bases_es:semana.bases_en).map((b,bi) => (
+                                                <div key={bi} style={{background:'rgba(201,147,90,0.07)',borderRadius:'0.75rem',padding:'0.5rem 0.75rem',border:'1px solid rgba(201,147,90,0.15)',flex:'1',minWidth:'140px'}}>
+                                                    <p style={{fontSize:'0.65rem',color:'#C9935A',fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:'0.2rem'}}>{b.tipo}</p>
+                                                    <p style={{fontSize:'0.78rem',color:textMain,fontWeight:500}}>{b.item}</p>
+                                                    {b.opciones?<p style={{fontSize:'0.68rem',color:textSub,marginTop:'0.15rem'}}>✦ {b.opciones}</p>:null}
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div style={{background: darkMode?'rgba(255,255,255,0.04)':'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
+                                            <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.4rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>{language==='es'?'Combina así':'Combine like this'}</p>
+                                            {(language==='es'?semana.combinaciones_es:semana.combinaciones_en).map((c,ci) => (
+                                                <p key={ci} style={{fontSize:'0.76rem',color:textSub,lineHeight:1.6}}>✦ {c}</p>
+                                            ))}
+                                        </div>
+                                        <div style={{background:'rgba(155,142,196,0.08)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(155,142,196,0.15)'}}>
+                                            <p style={{fontSize:'0.72rem',fontStyle:'italic',color:'#78716c'}}>🔬 {language==='es'?semana.ciencia_es:semana.ciencia_en}</p>
+                                        </div>
+                                        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                                            <p style={{fontSize:'0.78rem',color:textSub}}>{language==='es'?semana.capricho_es:semana.capricho_en}</p>
+                                            <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px'}}>⚡ {semana.kcal}</span>
+                                        </div>
+                                        <div onClick={()=>setCurrentPage('nutrition')} style={{textAlign:'center',padding:'0.6rem',borderRadius:'0.75rem',border:'1px solid rgba(201,147,90,0.3)',cursor:'pointer'}}>
+                                            <p style={{fontSize:'0.78rem',color:'#C9935A',fontWeight:600}}>{language==='es'?'Ver tu menú personalizado completo →':'See your full personalised menu →'}</p>
+                                        </div>
+                                    </div>
+                                </details>
+                            ))}
+                        </div>
+
 {/* ── BANNER CHALLENGE SUELO PÉLVICO ── */}
                         <div onClick={() => setCurrentPage('exercise')} style={{position:'relative',borderRadius:'1.25rem',overflow:'hidden',cursor:'pointer',minHeight:'160px'}}>
                             <video autoPlay loop muted playsInline style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}} src="/videos/pelvic-floor-hero.mp4" />
