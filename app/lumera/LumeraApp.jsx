@@ -3980,7 +3980,7 @@ query = query.eq('region', region.toUpperCase());
                                     combinaciones_en:['M: chicken + rice + veggies','T: chicken wrap + hummus','W: fried rice with egg','T: chickpea salad + avocado','F: wholegrain pasta + veggies + pesto'],
                                     ciencia_es:'Los polifenoles del aceite de oliva y los carotenoides del pimiento reducen la inflamación sistémica. La proteína magra estabiliza el cortisol.',
                                     ciencia_en:'Olive oil polyphenols and pepper carotenoids reduce systemic inflammation. Lean protein stabilises cortisol.',
-                                    capricho_es:'🍫 Onza de chocolate negro 85%',capricho_en:'🍫 Square of 85% dark chocolate',
+                                    ejercicio_es:'15 elevaciones de talones mientras esperas el arroz',ejercicio_en:'15 heel raises while waiting for the rice',ejercicio_ciencia_es:'Mejora el retorno venoso, clave si sientes pesadez en las piernas.',ejercicio_ciencia_en:'Improves venous return, key if you feel heaviness in your legs.',capricho_es:'🍫 Onza de chocolate negro 85%',capricho_en:'🍫 Square of 85% dark chocolate',
                                 },
                                 {
                                     semana_es:'Semana 2 · Reconfortante',semana_en:'Week 2 · Comforting',
@@ -4002,7 +4002,7 @@ query = query.eq('region', region.toUpperCase());
                                     combinaciones_en:['M: salmon + sweet potato + spinach','T: sweet potato cream with broth','W: red lentils with broccoli','T: oat bowl + egg + spinach','F: pasta with sardines + lemon'],
                                     ciencia_es:'El omega-3 del salmón mejora el sueño y reduce la inflamación neurológica. El magnesio del boniato regula el cortisol nocturno.',
                                     ciencia_en:'Salmon omega-3 improves sleep and reduces neurological inflammation. Sweet potato magnesium regulates night cortisol.',
-                                    capricho_es:'🍫 Trufas de dátil + cacao puro (5 min)',capricho_en:'🍫 Date truffles + raw cacao (5 min)',
+                                    ejercicio_es:'Estiramiento de apertura de pecho en el marco de la puerta',ejercicio_en:'Chest opening stretch in the doorframe',ejercicio_ciencia_es:'Abre la caja torácica para facilitar la respiración profunda, reduciendo la ansiedad.',ejercicio_ciencia_en:'Opens the chest to facilitate deep breathing, reducing anxiety.',capricho_es:'🍫 Trufas de dátil + cacao puro (5 min)',capricho_en:'🍫 Date truffles + raw cacao (5 min)',
                                 },
                                 {
                                     semana_es:'Semana 3 · Ligera y fresca',semana_en:'Week 3 · Light & fresh',
@@ -4024,7 +4024,7 @@ query = query.eq('region', region.toUpperCase());
                                     combinaciones_en:['M: tuna + wholegrain pasta + rocket','T: rice bowl + avocado + carrot','W: big salad + tuna + boiled egg','T: wholegrain wrap + tofu + veggies','F: cold pasta + tuna + cucumber + lemon'],
                                     ciencia_es:'El potasio del aguacate/palta y el pepino reducen la retención. Los hidratos de bajo índice glucémico evitan los picos de insulina que disparan los sofocos.',
                                     ciencia_en:'Avocado potassium and cucumber reduce bloating. Low GI carbs prevent insulin spikes that trigger hot flashes.',
-                                    capricho_es:'🍪 Galletas de avena y plátano (10 min, sin azúcar)',capricho_en:'🍪 Oat & banana cookies (10 min, no sugar)',
+                                    ejercicio_es:'Kegel mientras cortas las verduras, siguiendo el ritmo de la respiración',ejercicio_en:'Kegel exercises while chopping vegetables, following your breathing rhythm',ejercicio_ciencia_es:'Fortalece la faja abdominal interna de forma invisible mientras te mueves.',ejercicio_ciencia_en:'Strengthens the inner abdominal belt invisibly while you move.',capricho_es:'🍪 Galletas de avena y plátano (10 min, sin azúcar)',capricho_en:'🍪 Oat & banana cookies (10 min, no sugar)',
                                 },
                                 {
                                     semana_es:'Semana 4 · Equilibrio hormonal',semana_en:'Week 4 · Hormonal balance',
@@ -4046,7 +4046,7 @@ query = query.eq('region', region.toUpperCase());
                                     combinaciones_en:['M: lentils + leek + millet','T: spinach omelette + wholegrain bread','W: gratinated cauliflower + poached egg','T: rice bowl + beans + avocado','F: baked white fish + leek + potato'],
                                     ciencia_es:'Las semillas de lino son fitoestrógenos naturales que reducen sofocos y sequedad. El calcio del yogur griego y la vitamina K del puerro protegen los huesos.',
                                     ciencia_en:'Flaxseeds are natural phytoestrogens that reduce hot flashes and dryness. Greek yogurt calcium and leek vitamin K protect bones.',
-                                    capricho_es:'🍫 Brownie de alubias negras y cacao (15 min, sin harina)',capricho_en:'🍫 Black bean & cacao brownie (15 min, no flour)',
+                                    ejercicio_es:'Rotación circular de hombros y cuello mientras preparas el yogur',ejercicio_en:'Circular shoulder and neck rotation while preparing the yogurt',ejercicio_ciencia_es:'Libera la tensión del trapecio, donde acumulamos el estrés hormonal del día.',ejercicio_ciencia_en:'Releases trapezius tension, where we accumulate hormonal stress.',capricho_es:'🍫 Brownie de alubias negras y cacao (15 min, sin harina)',capricho_en:'🍫 Black bean & cacao brownie (15 min, no flour)',
                                 },
                             ].map((semana, si) => (
                                 <details key={si} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
@@ -4079,6 +4079,13 @@ query = query.eq('region', region.toUpperCase());
                                         <div style={{background:'rgba(155,142,196,0.08)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(155,142,196,0.15)'}}>
                                             <p style={{fontSize:'0.72rem',fontStyle:'italic',color:'#78716c'}}>🔬 {language==='es'?semana.ciencia_es:semana.ciencia_en}</p>
                                         </div>
+                                        {semana.ejercicio_es && (
+                                        <div style={{background:'rgba(201,147,90,0.06)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.15)'}}>
+                                            <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.3rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>💪 {language==='es'?'Mientras tanto':'Meanwhile'}</p>
+                                            <p style={{fontSize:'0.78rem',color:textMain,fontWeight:500,marginBottom:'0.25rem'}}>{language==='es'?semana.ejercicio_es:semana.ejercicio_en}</p>
+                                            <p style={{fontSize:'0.72rem',color:textSub,fontStyle:'italic'}}>🔬 {language==='es'?semana.ejercicio_ciencia_es:semana.ejercicio_ciencia_en}</p>
+                                        </div>
+                                        )}
                                         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
                                             <p style={{fontSize:'0.78rem',color:textSub}}>{language==='es'?semana.capricho_es:semana.capricho_en}</p>
                                             <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px'}}>⚡ {semana.kcal}</span>
