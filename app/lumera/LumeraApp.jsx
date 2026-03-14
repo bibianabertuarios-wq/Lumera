@@ -4779,11 +4779,11 @@ query = query.eq('region', region.toUpperCase());
 
 
                         {/* ── BATCH COOKING DOMINICAL ── */}
-                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background: darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
+                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background:darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
                             <div style={{padding:'1.25rem 1.5rem 0.75rem'}}>
                                 <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'COCINA EL DOMINGO, COME TODA LA SEMANA':'COOK SUNDAY, EAT ALL WEEK'}</p>
-                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:textMain,lineHeight:1.2,marginBottom:'0.4rem'}}>{language==='es'?'Tu mes completo de comidas.':'Your complete month of meals.'}</h3>
-                                <p style={{fontSize:'0.78rem',color:textSub,marginBottom:'1rem'}}>{language==='es'?'~60 min el domingo. Varía cada día combinando las bases.':'~60 min on Sunday. Vary each day by combining the bases.'}</p>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:darkMode?'#e7e5e4':'#292524',lineHeight:1.2,marginBottom:'0.4rem'}}>{language==='es'?'Tu mes completo de comidas.':'Your complete month of meals.'}</h3>
+                                <p style={{fontSize:'0.78rem',color:darkMode?'#a8a29e':'#78716c',marginBottom:'1rem'}}>{language==='es'?'~60 min el domingo. Varía cada día combinando las bases.':'~60 min on Sunday. Vary each day by combining the bases.'}</p>
                             </div>
                             {[
                                 {
@@ -4878,7 +4878,7 @@ query = query.eq('region', region.toUpperCase());
                                 <details key={si} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
                                     <summary style={{padding:'1rem 1.5rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',listStyle:'none',userSelect:'none'}}>
                                         <div>
-                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:textMain}}>{language==='es'?semana.semana_es:semana.semana_en}</p>
+                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:darkMode?'#e7e5e4':'#292524'}}>{language==='es'?semana.semana_es:semana.semana_en}</p>
                                             <p style={{fontSize:'0.72rem',color:'#C9935A',marginTop:'0.1rem'}}>{language==='es'?semana.objetivo_es:semana.objetivo_en}</p>
                                         </div>
                                         <div style={{display:'flex',alignItems:'center',gap:'0.5rem'}}>
@@ -4891,15 +4891,15 @@ query = query.eq('region', region.toUpperCase());
                                             {(language==='es'?semana.bases_es:semana.bases_en).map((b,bi) => (
                                                 <div key={bi} style={{background:'rgba(201,147,90,0.07)',borderRadius:'0.75rem',padding:'0.5rem 0.75rem',border:'1px solid rgba(201,147,90,0.15)',flex:'1',minWidth:'140px'}}>
                                                     <p style={{fontSize:'0.65rem',color:'#C9935A',fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:'0.2rem'}}>{b.tipo}</p>
-                                                    <p style={{fontSize:'0.78rem',color:textMain,fontWeight:500}}>{b.item}</p>
-                                                    {b.opciones?<p style={{fontSize:'0.68rem',color:textSub,marginTop:'0.15rem'}}>✦ {b.opciones}</p>:null}
+                                                    <p style={{fontSize:'0.78rem',color:darkMode?'#e7e5e4':'#292524',fontWeight:500}}>{b.item}</p>
+                                                    {b.opciones?<p style={{fontSize:'0.68rem',color:darkMode?'#a8a29e':'#78716c',marginTop:'0.15rem'}}>✦ {b.opciones}</p>:null}
                                                 </div>
                                             ))}
                                         </div>
-                                        <div style={{background: darkMode?'rgba(255,255,255,0.04)':'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
+                                        <div style={{background:darkMode?'rgba(255,255,255,0.04)':'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
                                             <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.4rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>{language==='es'?'Combina así':'Combine like this'}</p>
                                             {(language==='es'?semana.combinaciones_es:semana.combinaciones_en).map((c,ci) => (
-                                                <p key={ci} style={{fontSize:'0.76rem',color:textSub,lineHeight:1.6}}>✦ {c}</p>
+                                                <p key={ci} style={{fontSize:'0.76rem',color:darkMode?'#a8a29e':'#78716c',lineHeight:1.6}}>✦ {c}</p>
                                             ))}
                                         </div>
                                         <div style={{background:'rgba(155,142,196,0.08)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(155,142,196,0.15)'}}>
@@ -4908,12 +4908,12 @@ query = query.eq('region', region.toUpperCase());
                                         {semana.ejercicio_es && (
                                         <div style={{background:'rgba(201,147,90,0.06)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.15)'}}>
                                             <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.3rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>💪 {language==='es'?'Mientras tanto':'Meanwhile'}</p>
-                                            <p style={{fontSize:'0.78rem',color:textMain,fontWeight:500,marginBottom:'0.25rem'}}>{language==='es'?semana.ejercicio_es:semana.ejercicio_en}</p>
-                                            <p style={{fontSize:'0.72rem',color:textSub,fontStyle:'italic'}}>🔬 {language==='es'?semana.ejercicio_ciencia_es:semana.ejercicio_ciencia_en}</p>
+                                            <p style={{fontSize:'0.78rem',color:darkMode?'#e7e5e4':'#292524',fontWeight:500,marginBottom:'0.25rem'}}>{language==='es'?semana.ejercicio_es:semana.ejercicio_en}</p>
+                                            <p style={{fontSize:'0.72rem',color:darkMode?'#a8a29e':'#78716c',fontStyle:'italic'}}>🔬 {language==='es'?semana.ejercicio_ciencia_es:semana.ejercicio_ciencia_en}</p>
                                         </div>
                                         )}
                                         <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                                            <p style={{fontSize:'0.78rem',color:textSub}}>{language==='es'?semana.capricho_es:semana.capricho_en}</p>
+                                            <p style={{fontSize:'0.78rem',color:darkMode?'#a8a29e':'#78716c'}}>{language==='es'?semana.capricho_es:semana.capricho_en}</p>
                                             <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px'}}>⚡ {semana.kcal}</span>
                                         </div>
                                         <div onClick={()=>setCurrentPage('nutrition')} style={{textAlign:'center',padding:'0.6rem',borderRadius:'0.75rem',border:'1px solid rgba(201,147,90,0.3)',cursor:'pointer'}}>
