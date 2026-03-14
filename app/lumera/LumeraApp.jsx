@@ -3924,6 +3924,7 @@ query = query.eq('region', region.toUpperCase());
                                 </div>
                                 <span style={{color:'#C9935A',fontSize:'1rem',flexShrink:0,marginLeft:'1rem'}}>▾</span>
                             </div>
+                            </div>
                             </summary>
                             <div style={{padding:'0 1.5rem 1.25rem'}}>
                                 <div style={{display:'flex',flexDirection:'column',gap:'0.75rem'}}>
@@ -3957,6 +3958,7 @@ query = query.eq('region', region.toUpperCase());
                                     ))}
                                 </div>
                             </div>
+                        </div>
                         </details>
 
 {/* ── BANNER CHALLENGE SUELO PÉLVICO ── */}
