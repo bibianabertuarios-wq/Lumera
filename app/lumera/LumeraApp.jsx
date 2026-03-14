@@ -3914,8 +3914,8 @@ query = query.eq('region', region.toUpperCase());
                         
                         
                         {/* ── AUNQUE NO TENGAS TIEMPO ── */}
-                        <details style={{borderRadius:'1.25rem',overflow:'hidden',position:'relative',background:'linear-gradient(135deg,#fdf8f3,#fef3e8)',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.1)'}}>
-                            <summary style={{listStyle:'none',cursor:'pointer',userSelect:'none'}}>
+                        <div style={{borderRadius:'1.25rem',overflow:'hidden',position:'relative',background:'linear-gradient(135deg,#fdf8f3,#fef3e8)',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.1)'}}>
+                            <div onClick={(e)=>{const b=e.currentTarget.nextSibling;b.style.display=b.style.display==='none'?'block':'none'}} style={{cursor:'pointer'}}>
                             <img src="/images/express.png" style={{width:'100%',height:'140px',objectFit:'cover',objectPosition:'left center',opacity:0.9}} alt="" />
                             <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
                                 <div>
@@ -3925,8 +3925,7 @@ query = query.eq('region', region.toUpperCase());
                                 <span style={{color:'#C9935A',fontSize:'1rem',flexShrink:0,marginLeft:'1rem'}}>▾</span>
                             </div>
                             </div>
-                            </summary>
-                            <div style={{padding:'0 1.5rem 1.25rem'}}>
+                            <div style={{display:'none',padding:'0 1.5rem 1.25rem'}}>
                                 <div style={{display:'flex',flexDirection:'column',gap:'0.75rem'}}>
                                 <div style={{display:'flex',flexDirection:'column',gap:'0.75rem'}}>
                                     {[
