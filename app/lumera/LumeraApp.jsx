@@ -3958,7 +3958,6 @@ query = query.eq('region', region.toUpperCase());
                                 </div>
                             </div>
                         </div>
-                        </details>
 
 {/* ── BANNER CHALLENGE SUELO PÉLVICO ── */}
                         <div onClick={() => setCurrentPage('exercise')} style={{position:'relative',borderRadius:'1.25rem',overflow:'hidden',cursor:'pointer',minHeight:'160px'}}>
