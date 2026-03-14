@@ -3914,11 +3914,19 @@ query = query.eq('region', region.toUpperCase());
                         
                         
                         {/* ── AUNQUE NO TENGAS TIEMPO ── */}
-                        <div style={{borderRadius:'1.25rem',overflow:'hidden',position:'relative',background:'linear-gradient(135deg,#fdf8f3,#fef3e8)',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.1)'}}>
+                        <details style={{borderRadius:'1.25rem',overflow:'hidden',position:'relative',background:'linear-gradient(135deg,#fdf8f3,#fef3e8)',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.1)'}}>
+                            <summary style={{listStyle:'none',cursor:'pointer',userSelect:'none'}}>
                             <img src="/images/express.png" style={{width:'100%',height:'140px',objectFit:'cover',objectPosition:'left center',opacity:0.9}} alt="" />
-                            <div style={{padding:'1.25rem 1.5rem'}}>
+                            <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                                <div>
                                 <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'AUNQUE NO TENGAS TIEMPO':'EVEN WHEN YOU HAVE NO TIME'}</p>
-                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:'#1c1917',lineHeight:1.2,marginBottom:'1rem'}}>{language==='es'?'Pequeños momentos, grandes cambios.':'Small moments, big changes.'}</h3>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:'#1c1917',lineHeight:1.2}}>{language==='es'?'Pequeños momentos, grandes cambios.':'Small moments, big changes.'}</h3>
+                                </div>
+                                <span style={{color:'#C9935A',fontSize:'1rem',flexShrink:0,marginLeft:'1rem'}}>▾</span>
+                            </div>
+                            </summary>
+                            <div style={{padding:'0 1.5rem 1.25rem'}}>
+                                <div style={{display:'flex',flexDirection:'column',gap:'0.75rem'}}>
                                 <div style={{display:'flex',flexDirection:'column',gap:'0.75rem'}}>
                                     {[
                                         {icon:'☀️',momento_es:'Preparando el desayuno',momento_en:'Preparing breakfast',receta_es:'Avena + nueces + canela',receta_en:'Oats + nuts + cinnamon',ejercicio_es:'10 sentadillas',ejercicio_en:'10 squats',ciencia_es:'Estabiliza tu azúcar en sangre 4h',ciencia_en:'Stabilises blood sugar 4h',kcal:'~380 kcal',tiempo:'8 min',sintoma_es:'Energía',sintoma_en:'Energy'},
@@ -3949,7 +3957,7 @@ query = query.eq('region', region.toUpperCase());
                                     ))}
                                 </div>
                             </div>
-                        </div>
+                        </details>
 
 {/* ── BANNER CHALLENGE SUELO PÉLVICO ── */}
                         <div onClick={() => setCurrentPage('exercise')} style={{position:'relative',borderRadius:'1.25rem',overflow:'hidden',cursor:'pointer',minHeight:'160px'}}>
@@ -4321,6 +4329,15 @@ query = query.eq('region', region.toUpperCase());
 
                 return (
                     <div className="pb-32 space-y-8" key={`nutrition-${language}`} style={{position: 'relative'}}>
+                        {symptoms.length === 0 && (
+                            <div onClick={()=>setCurrentPage('symptoms')} style={{borderRadius:'1.25rem',padding:'1.25rem 1.5rem',background:'linear-gradient(135deg,#fdf8f3,#fef3e8)',border:'1px solid rgba(201,147,90,0.3)',cursor:'pointer',display:'flex',alignItems:'center',gap:'1rem'}}>
+                                <span style={{fontSize:'2rem',flexShrink:0}}>🌿</span>
+                                <div>
+                                    <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.1rem',fontWeight:600,color:'#1c1917',marginBottom:'0.2rem'}}>{language==='es'?'Registra tus síntomas primero':'Log your symptoms first'}</p>
+                                    <p style={{fontSize:'0.78rem',color:'#78716c'}}>{language==='es'?'Tu menú personalizado se adapta a cómo te sientes hoy. Toca aquí para registrar →':'Your personalised menu adapts to how you feel today. Tap here to log →'}</p>
+                                </div>
+                            </div>
+                        )}
                         <video autoPlay loop muted playsInline src="/videos/menu.mp4"
                             style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none', opacity: 0.18}} />
                         <h2 className="text-3xl font-light gradient-text">{t[language].nutrition}</h2>
