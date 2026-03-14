@@ -3912,7 +3912,45 @@ query = query.eq('region', region.toUpperCase());
         
 
                         
-                        {/* ── BANNER CHALLENGE SUELO PÉLVICO ── */}
+                        
+                        {/* ── AUNQUE NO TENGAS TIEMPO ── */}
+                        <div style={{borderRadius:'1.25rem',overflow:'hidden',position:'relative',background:'linear-gradient(135deg,#fdf8f3,#fef3e8)',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.1)'}}>
+                            <img src="/images/express.png" style={{width:'100%',height:'140px',objectFit:'cover',objectPosition:'left center',opacity:0.9}} alt="" />
+                            <div style={{padding:'1.25rem 1.5rem'}}>
+                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'AUNQUE NO TENGAS TIEMPO':'EVEN WHEN YOU HAVE NO TIME'}</p>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:'#1c1917',lineHeight:1.2,marginBottom:'1rem'}}>{language==='es'?'Pequeños momentos, grandes cambios.':'Small moments, big changes.'}</h3>
+                                <div style={{display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+                                    {[
+                                        {icon:'☀️',momento_es:'Mientras hierve el agua',momento_en:'While water boils',receta_es:'Avena + nueces + canela',receta_en:'Oats + nuts + cinnamon',ejercicio_es:'10 sentadillas',ejercicio_en:'10 squats',ciencia_es:'Estabiliza tu azúcar en sangre 4h',ciencia_en:'Stabilises blood sugar 4h',kcal:'~380 kcal',tiempo:'8 min',sintoma_es:'Energía',sintoma_en:'Energy'},
+                                        {icon:'🚗',momento_es:'En el coche o metro',momento_en:'In the car or metro',receta_es:'Yogur griego + nueces',receta_en:'Greek yogurt + nuts',ejercicio_es:'Kegel en el semáforo',ejercicio_en:'Kegel at red lights',ciencia_es:'El magnesio reduce el cortisol',ciencia_en:'Magnesium reduces cortisol',kcal:'~180 kcal',tiempo:'2 min',sintoma_es:'Ansiedad',sintoma_en:'Anxiety'},
+                                        {icon:'🌙',momento_es:'Cena en 12 minutos',momento_en:'Dinner in 12 min',receta_es:'Tortilla espinacas + aguacate',receta_en:'Spinach omelette + avocado',ejercicio_es:'Estiramiento cadera 3 min',ejercicio_en:'Hip stretch 3 min',ciencia_es:'El magnesio del aguacate mejora el sueño',ciencia_en:'Avocado magnesium improves sleep',kcal:'~420 kcal',tiempo:'12 min',sintoma_es:'Sueño',sintoma_en:'Sleep'},
+                                    ].map((item,i) => (
+                                        <div key={i} style={{background:'rgba(255,255,255,0.8)',borderRadius:'1rem',padding:'1rem',border:'1px solid rgba(201,147,90,0.15)'}}>
+                                            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'0.6rem'}}>
+                                                <div style={{display:'flex',alignItems:'center',gap:'0.5rem'}}>
+                                                    <span style={{fontSize:'1.1rem'}}>{item.icon}</span>
+                                                    <span style={{fontFamily:"'Cormorant',serif",fontSize:'1rem',fontWeight:600,color:'#1c1917'}}>{language==='es'?item.momento_es:item.momento_en}</span>
+                                                </div>
+                                                <div style={{display:'flex',gap:'0.4rem'}}>
+                                                    <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px',fontWeight:600}}>⏱ {item.tiempo}</span>
+                                                    <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px',fontWeight:600}}>⚡ {item.kcal}</span>
+                                                </div>
+                                            </div>
+                                            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.4rem',marginBottom:'0.5rem'}}>
+                                                <div style={{fontSize:'0.75rem',color:'#57534e'}}><span style={{color:'#C9935A'}}>🍳 </span>{language==='es'?item.receta_es:item.receta_en}</div>
+                                                <div style={{fontSize:'0.75rem',color:'#57534e'}}><span style={{color:'#C9935A'}}>💪 </span>{language==='es'?item.ejercicio_es:item.ejercicio_en}</div>
+                                            </div>
+                                            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                                                <p style={{fontSize:'0.72rem',color:'#78716c',fontStyle:'italic'}}>🔬 {language==='es'?item.ciencia_es:item.ciencia_en}</p>
+                                                <span style={{fontSize:'0.68rem',background:'rgba(155,142,196,0.15)',color:'#9b8ec4',padding:'0.15rem 0.5rem',borderRadius:'9999px',fontWeight:600}}>✦ {language==='es'?item.sintoma_es:item.sintoma_en}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+{/* ── BANNER CHALLENGE SUELO PÉLVICO ── */}
                         <div onClick={() => setCurrentPage('exercise')} style={{position:'relative',borderRadius:'1.25rem',overflow:'hidden',cursor:'pointer',minHeight:'160px'}}>
                             <video autoPlay loop muted playsInline style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}} src="/videos/pelvic-floor-hero.mp4" />
                             <div style={{position:'relative',background:'linear-gradient(135deg,rgba(0,0,0,0.45),rgba(124,58,237,0.6))',padding:'1.5rem 1.75rem'}}>
