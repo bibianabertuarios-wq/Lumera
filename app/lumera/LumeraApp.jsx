@@ -3956,6 +3956,7 @@ query = query.eq('region', region.toUpperCase());
                                         </div>
                                     ))}
                                 </div>
+                                </div>
                             </div>
                         </div>
 
