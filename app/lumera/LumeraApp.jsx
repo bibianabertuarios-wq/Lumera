@@ -3960,6 +3960,16 @@ query = query.eq('region', region.toUpperCase());
                             </div>
                         </div>
 
+                        {/* ── BATCH COOKING — tarjeta dashboard ── */}
+                        <div onClick={()=>setCurrentPage('nutrition')} style={{borderRadius:'1.25rem',background:'linear-gradient(135deg,#fdf8f3,#fef3e8)',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)',cursor:'pointer',padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                            <div>
+                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.3rem'}}>✦ {language==='es'?'COCINA EL DOMINGO':'COOK SUNDAY'}</p>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.3rem',fontWeight:500,color:'#1c1917',lineHeight:1.2,marginBottom:'0.3rem'}}>{language==='es'?'Come bien toda la semana.':'Eat well all week.'}</h3>
+                                <p style={{fontSize:'0.75rem',color:'#78716c'}}>{language==='es'?'4 semanas · ~60 min · Ver en Nutrición →':'4 weeks · ~60 min · See in Nutrition →'}</p>
+                            </div>
+                            <span style={{fontSize:'2rem',flexShrink:0}}>🍳</span>
+                        </div>
+
 {/* ── BANNER CHALLENGE SUELO PÉLVICO ── */}
                         <div onClick={() => setCurrentPage('exercise')} style={{position:'relative',borderRadius:'1.25rem',overflow:'hidden',cursor:'pointer',minHeight:'160px'}}>
                             <video autoPlay loop muted playsInline style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}} src="/videos/pelvic-floor-hero.mp4" />
@@ -4784,6 +4794,234 @@ query = query.eq('region', region.toUpperCase());
                             </div>
                         </div>
 
+
+                        {/* ── BATCH COOKING DOMINICAL ── */}
+                        {(() => {
+                            const tMain = darkMode?'#e7e5e4':'#292524';
+                            const tSub = darkMode?'#a8a29e':'#78716c';
+                            return (
+                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background:darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
+                            <div style={{padding:'1.25rem 1.5rem 0.75rem'}}>
+                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'COCINA EL DOMINGO, COME TODA LA SEMANA':'COOK SUNDAY, EAT ALL WEEK'}</p>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:tMain,lineHeight:1.2,marginBottom:'0.4rem'}}>{language==='es'?'Tu mes completo de comidas.':'Your complete month of meals.'}</h3>
+                                <p style={{fontSize:'0.78rem',color:tSub,marginBottom:'1rem'}}>{language==='es'?'~60 min el domingo. Varía cada día combinando las bases.':'~60 min on Sunday. Vary each day by combining the bases.'}</p>
+                            </div>
+                            {[
+                                {semana_es:'Semana 1 · Antiinflamatoria',semana_en:'Week 1 · Anti-inflammatory',objetivo_es:'Sofocos · Inflamación · Energía',objetivo_en:'Hot flashes · Inflammation · Energy',tiempo:'55 min',kcal:'~1500-1700 kcal/día',bases_es:[{tipo:'Proteína',item:'Pollo al horno con limón y romero',opciones:'pavo · garbanzos'},{tipo:'Hidrato',item:'Arroz integral',opciones:'quinoa · boniato (camote)'},{tipo:'Verdura',item:'Pimientos + berenjena + calabacín asados',opciones:'con aceite de oliva'},{tipo:'Extra',item:'Hummus casero',opciones:''}],bases_en:[{tipo:'Protein',item:'Lemon rosemary chicken',opciones:'turkey · chickpeas'},{tipo:'Carbs',item:'Brown rice',opciones:'quinoa · sweet potato'},{tipo:'Veggies',item:'Roasted peppers + aubergine',opciones:'with olive oil'},{tipo:'Extra',item:'Homemade hummus',opciones:''}],combinaciones_es:['L: pollo + arroz + verduras','M: wrap pollo + hummus','X: arroz + huevo salteado','J: ensalada garbanzos + aguacate (palta)','V: pasta integral + pesto'],combinaciones_en:['M: chicken + rice + veggies','T: chicken wrap + hummus','W: fried rice + egg','T: chickpea salad + avocado','F: wholegrain pasta + pesto'],ciencia_es:'Los polifenoles del aceite de oliva reducen la inflamación sistémica. La proteína magra estabiliza el cortisol.',ciencia_en:'Olive oil polyphenols reduce systemic inflammation. Lean protein stabilises cortisol.',ejercicio_es:'15 elevaciones de talones mientras esperas el arroz',ejercicio_en:'15 heel raises while waiting for the rice',ejercicio_ciencia_es:'Mejora el retorno venoso, clave si sientes pesadez en piernas.',ejercicio_ciencia_en:'Improves venous return, key if you feel leg heaviness.',capricho_es:'🍫 Onza de chocolate negro 85%',capricho_en:'🍫 Square of 85% dark chocolate'},
+                                {semana_es:'Semana 2 · Reconfortante',semana_en:'Week 2 · Comforting',objetivo_es:'Sueño · Ansiedad · Humor',objetivo_en:'Sleep · Anxiety · Mood',tiempo:'60 min',kcal:'~1550-1750 kcal/día',bases_es:[{tipo:'Proteína',item:'Salmón al horno con eneldo',opciones:'sardinas · lentejas rojas'},{tipo:'Hidrato',item:'Boniato (camote) asado + avena',opciones:''},{tipo:'Verdura',item:'Espinacas + brócoli al vapor',opciones:'con ajo y aceite de oliva'},{tipo:'Extra',item:'Caldo de verduras casero',opciones:'20 min, vale toda la semana'}],bases_en:[{tipo:'Protein',item:'Dill baked salmon',opciones:'sardines · red lentils'},{tipo:'Carbs',item:'Roasted sweet potato + oats',opciones:''},{tipo:'Veggies',item:'Spinach + steamed broccoli',opciones:'with garlic and olive oil'},{tipo:'Extra',item:'Homemade vegetable broth',opciones:'20 min, lasts all week'}],combinaciones_es:['L: salmón + boniato + espinacas','M: crema boniato con caldo','X: lentejas + brócoli','J: bowl avena + huevo + espinacas','V: pasta + sardinas + limón'],combinaciones_en:['M: salmon + sweet potato + spinach','T: sweet potato cream with broth','W: red lentils + broccoli','T: oat bowl + egg + spinach','F: pasta + sardines + lemon'],ciencia_es:'El omega-3 del salmón mejora el sueño. El magnesio del boniato regula el cortisol nocturno.',ciencia_en:'Salmon omega-3 improves sleep. Sweet potato magnesium regulates night cortisol.',ejercicio_es:'Estiramiento apertura de pecho en el marco de la puerta',ejercicio_en:'Chest opening stretch in doorframe',ejercicio_ciencia_es:'Abre la caja torácica para respiración profunda, reduciendo la ansiedad.',ejercicio_ciencia_en:'Opens the chest for deep breathing, reducing anxiety.',capricho_es:'🍫 Trufas de dátil + cacao puro (5 min)',capricho_en:'🍫 Date truffles + raw cacao (5 min)'},
+                                {semana_es:'Semana 3 · Ligera y fresca',semana_en:'Week 3 · Light and fresh',objetivo_es:'Retención · Niebla mental · Peso',objetivo_en:'Bloating · Brain fog · Weight',tiempo:'50 min',kcal:'~1450-1650 kcal/día',bases_es:[{tipo:'Proteína',item:'Atún al horno',opciones:'pechuga · tofu'},{tipo:'Hidrato',item:'Pasta integral + arroz basmati',opciones:''},{tipo:'Verdura',item:'Tomate + pepino + zanahoria + rúcula',opciones:'bases ensalada'},{tipo:'Extra',item:'Vinagreta limón mostaza + aguacate (palta)',opciones:''}],bases_en:[{tipo:'Protein',item:'Baked tuna',opciones:'chicken breast · tofu'},{tipo:'Carbs',item:'Wholegrain pasta + basmati rice',opciones:''},{tipo:'Veggies',item:'Tomato + cucumber + carrot + rocket',opciones:'salad bases'},{tipo:'Extra',item:'Lemon mustard dressing + avocado',opciones:''}],combinaciones_es:['L: atún + pasta + rúcula','M: bowl arroz + aguacate (palta) + zanahoria','X: ensalada + atún + huevo duro','J: wrap integral + tofu + verduras','V: pasta fría + atún + pepino'],combinaciones_en:['M: tuna + pasta + rocket','T: rice bowl + avocado + carrot','W: big salad + tuna + boiled egg','T: wholegrain wrap + tofu + veggies','F: cold pasta + tuna + cucumber'],ciencia_es:'El potasio del aguacate/palta reduce la retención. Los hidratos de bajo IG evitan picos de insulina que disparan los sofocos.',ciencia_en:'Avocado potassium reduces bloating. Low GI carbs prevent insulin spikes that trigger hot flashes.',ejercicio_es:'Kegel mientras cortas las verduras, siguiendo el ritmo de la respiración',ejercicio_en:'Kegel exercises while chopping vegetables',ejercicio_ciencia_es:'Fortalece la faja abdominal interna de forma invisible.',ejercicio_ciencia_en:'Strengthens the inner abdominal belt invisibly.',capricho_es:'🍪 Galletas de avena y plátano (10 min)',capricho_en:'🍪 Oat and banana cookies (10 min)'},
+                                {semana_es:'Semana 4 · Equilibrio hormonal',semana_en:'Week 4 · Hormonal balance',objetivo_es:'Humor · Sequedad · Huesos · Vitalidad',objetivo_en:'Mood · Dryness · Bones · Vitality',tiempo:'55 min',kcal:'~1500-1700 kcal/día',bases_es:[{tipo:'Proteína',item:'Huevos + lentejas o alubias',opciones:'pollo · merluza'},{tipo:'Hidrato',item:'Mijo o arroz integral',opciones:''},{tipo:'Verdura',item:'Coliflor gratinada + puerro salteado',opciones:'con aceite de oliva'},{tipo:'Extra',item:'Yogur griego con semillas de lino molidas',opciones:''}],bases_en:[{tipo:'Protein',item:'Eggs + lentils or beans',opciones:'chicken · white fish'},{tipo:'Carbs',item:'Millet or brown rice',opciones:''},{tipo:'Veggies',item:'Gratinated cauliflower + sautéed leek',opciones:'with olive oil'},{tipo:'Extra',item:'Greek yogurt with ground flaxseeds',opciones:''}],combinaciones_es:['L: lentejas + puerro + mijo','M: tortilla espinacas + pan integral','X: coliflor gratinada + huevo pochado','J: bowl arroz + alubias + aguacate (palta)','V: merluza al horno + puerro + patata'],combinaciones_en:['M: lentils + leek + millet','T: spinach omelette + wholegrain bread','W: gratinated cauliflower + poached egg','T: rice bowl + beans + avocado','F: baked white fish + leek + potato'],ciencia_es:'Las semillas de lino son fitoestrógenos naturales que reducen sofocos y sequedad. El yogur griego protege los huesos.',ciencia_en:'Flaxseeds are natural phytoestrogens that reduce hot flashes. Greek yogurt protects bones.',ejercicio_es:'Rotación circular de hombros y cuello mientras preparas el yogur',ejercicio_en:'Circular shoulder and neck rotation while preparing yogurt',ejercicio_ciencia_es:'Libera la tensión del trapecio, donde acumulamos el estrés hormonal.',ejercicio_ciencia_en:'Releases trapezius tension where we accumulate hormonal stress.',capricho_es:'🍫 Brownie de alubias negras y cacao (15 min)',capricho_en:'🍫 Black bean and cacao brownie (15 min)'},
+                            ].map((semana,si) => (
+                                <details key={si} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
+                                    <summary style={{padding:'1rem 1.5rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',listStyle:'none',userSelect:'none'}}>
+                                        <div>
+                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:tMain}}>{language==='es'?semana.semana_es:semana.semana_en}</p>
+                                            <p style={{fontSize:'0.72rem',color:'#C9935A',marginTop:'0.1rem'}}>{language==='es'?semana.objetivo_es:semana.objetivo_en}</p>
+                                        </div>
+                                        <div style={{display:'flex',alignItems:'center',gap:'0.5rem'}}>
+                                            <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px'}}>⏱ {semana.tiempo}</span>
+                                            <span style={{color:'#C9935A',fontSize:'0.9rem'}}>▾</span>
+                                        </div>
+                                    </summary>
+                                    <div style={{padding:'0 1.5rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+                                        <div style={{display:'flex',flexWrap:'wrap',gap:'0.4rem'}}>
+                                            {(language==='es'?semana.bases_es:semana.bases_en).map((b,bi) => (
+                                                <div key={bi} style={{background:'rgba(201,147,90,0.07)',borderRadius:'0.75rem',padding:'0.5rem 0.75rem',border:'1px solid rgba(201,147,90,0.15)',flex:'1',minWidth:'140px'}}>
+                                                    <p style={{fontSize:'0.65rem',color:'#C9935A',fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:'0.2rem'}}>{b.tipo}</p>
+                                                    <p style={{fontSize:'0.78rem',color:tMain,fontWeight:500}}>{b.item}</p>
+                                                    {b.opciones?<p style={{fontSize:'0.68rem',color:tSub,marginTop:'0.15rem'}}>✦ {b.opciones}</p>:null}
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div style={{background:darkMode?'rgba(255,255,255,0.04)":'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
+                                            <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.4rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>{language==='es'?'Combina así':'Combine like this'}</p>
+                                            {(language==='es'?semana.combinaciones_es:semana.combinaciones_en).map((co,ci) => (
+                                                <p key={ci} style={{fontSize:'0.76rem',color:tSub,lineHeight:1.6}}>✦ {co}</p>
+                                            ))}
+                                        </div>
+                                        <div style={{background:'rgba(201,147,90,0.06)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.15)'}}>
+                                            <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.3rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>💪 {language==='es'?'Mientras tanto':'Meanwhile'}</p>
+                                            <p style={{fontSize:'0.78rem',color:tMain,fontWeight:500,marginBottom:'0.25rem'}}>{language==='es'?semana.ejercicio_es:semana.ejercicio_en}</p>
+                                            <p style={{fontSize:'0.72rem',color:tSub,fontStyle:'italic'}}>🔬 {language==='es'?semana.ejercicio_ciencia_es:semana.ejercicio_ciencia_en}</p>
+                                        </div>
+                                        <div style={{background:'rgba(155,142,196,0.08)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(155,142,196,0.15)'}}>
+                                            <p style={{fontSize:'0.72rem',fontStyle:'italic',color:'#78716c'}}>🔬 {language==='es'?semana.ciencia_es:semana.ciencia_en}</p>
+                                        </div>
+                                        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                                            <p style={{fontSize:'0.78rem',color:tSub}}>{language==='es'?semana.capricho_es:semana.capricho_en}</p>
+                                            <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px'}}>⚡ {semana.kcal}</span>
+                                        </div>
+                                        <div onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} style={{textAlign:'center',padding:'0.6rem',borderRadius:'0.75rem',border:'1px solid rgba(201,147,90,0.3)',cursor:'pointer'}}>
+                                            <p style={{fontSize:'0.78rem',color:'#C9935A',fontWeight:600}}>{language==='es'?'Ver tu menú personalizado ↑':'See your personalised menu ↑'}</p>
+                                        </div>
+                                    </div>
+                                </details>
+                            ))}
+                        </div>
+                            );
+                        })()}
+
+                        {/* ── DESPENSA IMPRESCINDIBLE ── */}
+                        {(() => {
+                            const tMain = darkMode?'#e7e5e4':'#292524';
+                            const tSub = darkMode?'#a8a29e':'#78716c';
+                            return (
+                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background:darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
+                            <div style={{padding:'1.25rem 1.5rem 0.75rem'}}>
+                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'DESPENSA IMPRESCINDIBLE':'ESSENTIAL PANTRY'}</p>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:tMain,lineHeight:1.2,marginBottom:'0.3rem'}}>{language==='es'?'Lo que siempre debes tener.':'What you should always have.'}</h3>
+                                <p style={{fontSize:'0.78rem',color:tSub,marginBottom:'0.75rem'}}>{language==='es'?'Ingredientes de cualquier super. Para cada síntoma.':'Ingredients from any supermarket. For every symptom.'}</p>
+                            </div>
+                            {[
+                                {categoria_es:'Sofocos y calores',categoria_en:'Hot flashes',icono:'🌡️',items:[{nombre_es:'Semillas de lino (linaza)',nombre_en:'Flaxseeds',por_es:'Fitoestrógenos naturales que reducen la frecuencia de sofocos',por_en:'Natural phytoestrogens that reduce hot flash frequency',glp1:false},{nombre_es:'Soja / tofu / edamame',nombre_en:'Soy / tofu / edamame',por_es:'Las isoflavonas imitan el estrógeno y alivian los sofocos',por_en:'Isoflavones mimic oestrogen and relieve hot flashes',glp1:false},{nombre_es:'Salvia en infusión',nombre_en:'Sage tea',por_es:'Reduce la sudoración nocturna de forma natural',por_en:'Naturally reduces night sweats',glp1:false}]},
+                                {categoria_es:'↑ GLP-1 · Regula apetito y peso',categoria_en:'↑ GLP-1 · Regulates appetite and weight',icono:'⚖️',items:[{nombre_es:'Huevos',nombre_en:'Eggs',por_es:'Proteína completa que activa GLP-1 y sacia durante horas',por_en:'Complete protein that activates GLP-1 and keeps you full for hours',glp1:true},{nombre_es:'Aguacate / palta',nombre_en:'Avocado',por_es:'Grasas saludables que estimulan GLP-1 y reducen antojos',por_en:'Healthy fats that stimulate GLP-1 and reduce cravings',glp1:true},{nombre_es:'Avena',nombre_en:'Oats',por_es:'Fibra soluble beta-glucano — el mayor estimulador de GLP-1',por_en:'Soluble beta-glucan fibre — the greatest GLP-1 stimulator',glp1:true},{nombre_es:'Yogur griego natural',nombre_en:'Plain Greek yogurt',por_es:'Proteína + probióticos que potencian la secreción de GLP-1',por_en:'Protein + probiotics that enhance GLP-1 secretion',glp1:true},{nombre_es:'Lentejas y garbanzos',nombre_en:'Lentils and chickpeas',por_es:'Fibra + proteína vegetal — combinación perfecta para GLP-1',por_en:'Fibre + plant protein — perfect GLP-1 combination',glp1:true}]},
+                                {categoria_es:'Huesos y osteoporosis',categoria_en:'Bones and osteoporosis',icono:'🦴',items:[{nombre_es:'Sardinas o caballa en lata',nombre_en:'Canned sardines or mackerel',por_es:'Calcio + vitamina D + omega-3 en un solo alimento',por_en:'Calcium + vitamin D + omega-3 in one food',glp1:false},{nombre_es:'Brócoli',nombre_en:'Broccoli',por_es:'Vitamina K imprescindible para fijar el calcio en los huesos',por_en:'Vitamin K essential for fixing calcium in bones',glp1:false},{nombre_es:'Almendras',nombre_en:'Almonds',por_es:'Magnesio y calcio vegetal — snack perfecto',por_en:'Magnesium and plant calcium — perfect snack',glp1:false}]},
+                                {categoria_es:'Ansiedad y sueño',categoria_en:'Anxiety and sleep',icono:'🌙',items:[{nombre_es:'Plátano / banana',nombre_en:'Banana',por_es:'Triptófano precursor de la serotonina y melatonina',por_en:'Tryptophan precursor to serotonin and melatonin',glp1:false},{nombre_es:'Chocolate negro 85%+',nombre_en:'Dark chocolate 85%+',por_es:'Magnesio + feniletilamina — reduce cortisol y mejora el ánimo',por_en:'Magnesium + phenylethylamine — reduces cortisol and lifts mood',glp1:false},{nombre_es:'Manzanilla o valeriana',nombre_en:'Chamomile or valerian',por_es:'Apigenina que activa receptores GABA — efecto calmante real',por_en:'Apigenin activates GABA receptors — real calming effect',glp1:false}]},
+                                {categoria_es:'Niebla mental y energía',categoria_en:'Brain fog and energy',icono:'⚡',items:[{nombre_es:'Nueces',nombre_en:'Walnuts',por_es:'Omega-3 vegetal — el fruto seco con más beneficios cerebrales',por_en:'Plant omega-3 — the nut with the most brain benefits',glp1:true},{nombre_es:'Salmón o sardinas',nombre_en:'Salmon or sardines',por_es:'Omega-3 EPA/DHA — nutre el cerebro y estimula GLP-1',por_en:'Omega-3 EPA/DHA — nourishes the brain and stimulates GLP-1',glp1:true},{nombre_es:'Cúrcuma + pimienta negra',nombre_en:'Turmeric + black pepper',por_es:'Piperina aumenta absorción de curcumina x20 — antiinflamatorio potente',por_en:'Piperine increases curcumin absorption x20 — potent anti-inflammatory',glp1:false}]},
+                                {categoria_es:'Sequedad e hidratación',categoria_en:'Dryness and hydration',icono:'💧',items:[{nombre_es:'Aceite de oliva virgen extra',nombre_en:'Extra virgin olive oil',por_es:'Oleocantal antiinflamatorio + vitamina E para la piel desde dentro',por_en:'Oleocanthal anti-inflammatory + vitamin E for skin from within',glp1:false},{nombre_es:'Pepino',nombre_en:'Cucumber',por_es:'96% agua + silicio para la hidratación celular',por_en:'96% water + silicon for cellular hydration',glp1:false}]},
+                            ].map((cat,ci) => (
+                                <details key={ci} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
+                                    <summary style={{padding:'1rem 1.5rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',listStyle:'none',userSelect:'none'}}>
+                                        <div style={{display:'flex',alignItems:'center',gap:'0.75rem'}}>
+                                            <span style={{fontSize:'1.3rem'}}>{cat.icono}</span>
+                                            <div>
+                                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:tMain}}>{language==='es'?cat.categoria_es:cat.categoria_en}</p>
+                                                <p style={{fontSize:'0.7rem',color:tSub}}>{language==='es'?`${cat.items.length} imprescindibles`:`${cat.items.length} essentials`}</p>
+                                            </div>
+                                        </div>
+                                        <span style={{color:'#C9935A',fontSize:'0.9rem'}}>▾</span>
+                                    </summary>
+                                    <div style={{padding:'0 1.5rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.6rem'}}>
+                                        {cat.items.map((item,ii) => (
+                                            <div key={ii} style={{background:darkMode?'rgba(201,147,90,0.06)':'rgba(253,248,243,0.8)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.12)'}}>
+                                                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'0.5rem'}}>
+                                                    <p style={{fontSize:'0.85rem',fontWeight:600,color:tMain}}>{language==='es'?item.nombre_es:item.nombre_en}</p>
+                                                    {item.glp1&&<span style={{fontSize:'0.62rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.1rem 0.4rem',borderRadius:'9999px',fontWeight:700,whiteSpace:'nowrap',flexShrink:0}}>↑ GLP-1</span>}
+                                                </div>
+                                                <p style={{fontSize:'0.75rem',color:tSub,marginTop:'0.2rem',fontStyle:'italic'}}>🔬 {language==='es'?item.por_es:item.por_en}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </details>
+                            ))}
+                        </div>
+                            );
+                        })()}
+
+
+                        {/* ── BATCH COOKING DOMINICAL ── */}
+                        {(() => {
+                            const tMain = darkMode?'#e7e5e4':'#292524';
+                            const tSub = darkMode?'#a8a29e':'#78716c';
+                            return (
+                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background:darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
+                            <div style={{padding:'1.25rem 1.5rem 0.75rem'}}>
+                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'COCINA EL DOMINGO, COME TODA LA SEMANA':'COOK SUNDAY, EAT ALL WEEK'}</p>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:tMain,lineHeight:1.2,marginBottom:'0.4rem'}}>{language==='es'?'Tu mes completo de comidas.':'Your complete month of meals.'}</h3>
+                                <p style={{fontSize:'0.78rem',color:tSub,marginBottom:'1rem'}}>{language==='es'?'~60 min el domingo. Varía cada día combinando las bases.':'~60 min on Sunday. Vary each day by combining the bases.'}</p>
+                            </div>
+                            {[
+                                {semana_es:'Semana 1 · Antiinflamatoria',semana_en:'Week 1 · Anti-inflammatory',objetivo_es:'Sofocos · Inflamación · Energía',objetivo_en:'Hot flashes · Inflammation · Energy',tiempo:'55 min',kcal:'~1500-1700 kcal/día',bases_es:[{tipo:'Proteína',item:'Pollo al horno con limón y romero',opciones:'pavo · garbanzos'},{tipo:'Hidrato',item:'Arroz integral',opciones:'quinoa · boniato (camote)'},{tipo:'Verdura',item:'Pimientos + berenjena + calabacín asados',opciones:'con aceite de oliva'},{tipo:'Extra',item:'Hummus casero',opciones:''}],bases_en:[{tipo:'Protein',item:'Lemon rosemary chicken',opciones:'turkey · chickpeas'},{tipo:'Carbs',item:'Brown rice',opciones:'quinoa · sweet potato'},{tipo:'Veggies',item:'Roasted peppers + aubergine',opciones:'with olive oil'},{tipo:'Extra',item:'Homemade hummus',opciones:''}],combinaciones_es:['L: pollo + arroz + verduras','M: wrap pollo + hummus','X: arroz + huevo salteado','J: ensalada garbanzos + aguacate (palta)','V: pasta integral + pesto'],combinaciones_en:['M: chicken + rice + veggies','T: chicken wrap + hummus','W: fried rice + egg','T: chickpea salad + avocado','F: wholegrain pasta + pesto'],ciencia_es:'Los polifenoles del aceite de oliva reducen la inflamación sistémica. La proteína magra estabiliza el cortisol.',ciencia_en:'Olive oil polyphenols reduce systemic inflammation. Lean protein stabilises cortisol.',ejercicio_es:'15 elevaciones de talones mientras esperas el arroz',ejercicio_en:'15 heel raises while waiting for the rice',ejercicio_ciencia_es:'Mejora el retorno venoso, clave si sientes pesadez en piernas.',ejercicio_ciencia_en:'Improves venous return, key if you feel leg heaviness.',capricho_es:'🍫 Onza de chocolate negro 85%',capricho_en:'🍫 Square of 85% dark chocolate'},
+                                {semana_es:'Semana 2 · Reconfortante',semana_en:'Week 2 · Comforting',objetivo_es:'Sueño · Ansiedad · Humor',objetivo_en:'Sleep · Anxiety · Mood',tiempo:'60 min',kcal:'~1550-1750 kcal/día',bases_es:[{tipo:'Proteína',item:'Salmón al horno con eneldo',opciones:'sardinas · lentejas rojas'},{tipo:'Hidrato',item:'Boniato (camote) asado + avena',opciones:''},{tipo:'Verdura',item:'Espinacas + brócoli al vapor',opciones:'con ajo y aceite de oliva'},{tipo:'Extra',item:'Caldo de verduras casero',opciones:'20 min, vale toda la semana'}],bases_en:[{tipo:'Protein',item:'Dill baked salmon',opciones:'sardines · red lentils'},{tipo:'Carbs',item:'Roasted sweet potato + oats',opciones:''},{tipo:'Veggies',item:'Spinach + steamed broccoli',opciones:'with garlic and olive oil'},{tipo:'Extra',item:'Homemade vegetable broth',opciones:'20 min, lasts all week'}],combinaciones_es:['L: salmón + boniato + espinacas','M: crema boniato con caldo','X: lentejas + brócoli','J: bowl avena + huevo + espinacas','V: pasta + sardinas + limón'],combinaciones_en:['M: salmon + sweet potato + spinach','T: sweet potato cream with broth','W: red lentils + broccoli','T: oat bowl + egg + spinach','F: pasta + sardines + lemon'],ciencia_es:'El omega-3 del salmón mejora el sueño. El magnesio del boniato regula el cortisol nocturno.',ciencia_en:'Salmon omega-3 improves sleep. Sweet potato magnesium regulates night cortisol.',ejercicio_es:'Estiramiento apertura de pecho en el marco de la puerta',ejercicio_en:'Chest opening stretch in doorframe',ejercicio_ciencia_es:'Abre la caja torácica para respiración profunda, reduciendo la ansiedad.',ejercicio_ciencia_en:'Opens the chest for deep breathing, reducing anxiety.',capricho_es:'🍫 Trufas de dátil + cacao puro (5 min)',capricho_en:'🍫 Date truffles + raw cacao (5 min)'},
+                                {semana_es:'Semana 3 · Ligera y fresca',semana_en:'Week 3 · Light and fresh',objetivo_es:'Retención · Niebla mental · Peso',objetivo_en:'Bloating · Brain fog · Weight',tiempo:'50 min',kcal:'~1450-1650 kcal/día',bases_es:[{tipo:'Proteína',item:'Atún al horno',opciones:'pechuga · tofu'},{tipo:'Hidrato',item:'Pasta integral + arroz basmati',opciones:''},{tipo:'Verdura',item:'Tomate + pepino + zanahoria + rúcula',opciones:'bases ensalada'},{tipo:'Extra',item:'Vinagreta limón mostaza + aguacate (palta)',opciones:''}],bases_en:[{tipo:'Protein',item:'Baked tuna',opciones:'chicken breast · tofu'},{tipo:'Carbs',item:'Wholegrain pasta + basmati rice',opciones:''},{tipo:'Veggies',item:'Tomato + cucumber + carrot + rocket',opciones:'salad bases'},{tipo:'Extra',item:'Lemon mustard dressing + avocado',opciones:''}],combinaciones_es:['L: atún + pasta + rúcula','M: bowl arroz + aguacate (palta) + zanahoria','X: ensalada + atún + huevo duro','J: wrap integral + tofu + verduras','V: pasta fría + atún + pepino'],combinaciones_en:['M: tuna + pasta + rocket','T: rice bowl + avocado + carrot','W: big salad + tuna + boiled egg','T: wholegrain wrap + tofu + veggies','F: cold pasta + tuna + cucumber'],ciencia_es:'El potasio del aguacate/palta reduce la retención. Los hidratos de bajo IG evitan picos de insulina que disparan los sofocos.',ciencia_en:'Avocado potassium reduces bloating. Low GI carbs prevent insulin spikes that trigger hot flashes.',ejercicio_es:'Kegel mientras cortas las verduras, siguiendo el ritmo de la respiración',ejercicio_en:'Kegel exercises while chopping vegetables',ejercicio_ciencia_es:'Fortalece la faja abdominal interna de forma invisible.',ejercicio_ciencia_en:'Strengthens the inner abdominal belt invisibly.',capricho_es:'🍪 Galletas de avena y plátano (10 min)',capricho_en:'🍪 Oat and banana cookies (10 min)'},
+                                {semana_es:'Semana 4 · Equilibrio hormonal',semana_en:'Week 4 · Hormonal balance',objetivo_es:'Humor · Sequedad · Huesos · Vitalidad',objetivo_en:'Mood · Dryness · Bones · Vitality',tiempo:'55 min',kcal:'~1500-1700 kcal/día',bases_es:[{tipo:'Proteína',item:'Huevos + lentejas o alubias',opciones:'pollo · merluza'},{tipo:'Hidrato',item:'Mijo o arroz integral',opciones:''},{tipo:'Verdura',item:'Coliflor gratinada + puerro salteado',opciones:'con aceite de oliva'},{tipo:'Extra',item:'Yogur griego con semillas de lino molidas',opciones:''}],bases_en:[{tipo:'Protein',item:'Eggs + lentils or beans',opciones:'chicken · white fish'},{tipo:'Carbs',item:'Millet or brown rice',opciones:''},{tipo:'Veggies',item:'Gratinated cauliflower + sautéed leek',opciones:'with olive oil'},{tipo:'Extra',item:'Greek yogurt with ground flaxseeds',opciones:''}],combinaciones_es:['L: lentejas + puerro + mijo','M: tortilla espinacas + pan integral','X: coliflor gratinada + huevo pochado','J: bowl arroz + alubias + aguacate (palta)','V: merluza al horno + puerro + patata'],combinaciones_en:['M: lentils + leek + millet','T: spinach omelette + wholegrain bread','W: gratinated cauliflower + poached egg','T: rice bowl + beans + avocado','F: baked white fish + leek + potato'],ciencia_es:'Las semillas de lino son fitoestrógenos naturales que reducen sofocos y sequedad. El yogur griego protege los huesos.',ciencia_en:'Flaxseeds are natural phytoestrogens that reduce hot flashes. Greek yogurt protects bones.',ejercicio_es:'Rotación circular de hombros y cuello mientras preparas el yogur',ejercicio_en:'Circular shoulder and neck rotation while preparing yogurt',ejercicio_ciencia_es:'Libera la tensión del trapecio, donde acumulamos el estrés hormonal.',ejercicio_ciencia_en:'Releases trapezius tension where we accumulate hormonal stress.',capricho_es:'🍫 Brownie de alubias negras y cacao (15 min)',capricho_en:'🍫 Black bean and cacao brownie (15 min)'},
+                            ].map((semana,si) => (
+                                <details key={si} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
+                                    <summary style={{padding:'1rem 1.5rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',listStyle:'none',userSelect:'none'}}>
+                                        <div>
+                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:tMain}}>{language==='es'?semana.semana_es:semana.semana_en}</p>
+                                            <p style={{fontSize:'0.72rem',color:'#C9935A',marginTop:'0.1rem'}}>{language==='es'?semana.objetivo_es:semana.objetivo_en}</p>
+                                        </div>
+                                        <div style={{display:'flex',alignItems:'center',gap:'0.5rem'}}>
+                                            <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px'}}>⏱ {semana.tiempo}</span>
+                                            <span style={{color:'#C9935A',fontSize:'0.9rem'}}>▾</span>
+                                        </div>
+                                    </summary>
+                                    <div style={{padding:'0 1.5rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+                                        <div style={{display:'flex',flexWrap:'wrap',gap:'0.4rem'}}>
+                                            {(language==='es'?semana.bases_es:semana.bases_en).map((b,bi) => (
+                                                <div key={bi} style={{background:'rgba(201,147,90,0.07)',borderRadius:'0.75rem',padding:'0.5rem 0.75rem',border:'1px solid rgba(201,147,90,0.15)',flex:'1',minWidth:'140px'}}>
+                                                    <p style={{fontSize:'0.65rem',color:'#C9935A',fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:'0.2rem'}}>{b.tipo}</p>
+                                                    <p style={{fontSize:'0.78rem',color:tMain,fontWeight:500}}>{b.item}</p>
+                                                    {b.opciones?<p style={{fontSize:'0.68rem',color:tSub,marginTop:'0.15rem'}}>✦ {b.opciones}</p>:null}
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div style={{background:darkMode?'rgba(255,255,255,0.04)":'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
+                                            <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.4rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>{language==='es'?'Combina así':'Combine like this'}</p>
+                                            {(language==='es'?semana.combinaciones_es:semana.combinaciones_en).map((co,ci) => (
+                                                <p key={ci} style={{fontSize:'0.76rem',color:tSub,lineHeight:1.6}}>✦ {co}</p>
+                                            ))}
+                                        </div>
+                                        <div style={{background:'rgba(201,147,90,0.06)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.15)'}}>
+                                            <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.3rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>💪 {language==='es'?'Mientras tanto':'Meanwhile'}</p>
+                                            <p style={{fontSize:'0.78rem',color:tMain,fontWeight:500,marginBottom:'0.25rem'}}>{language==='es'?semana.ejercicio_es:semana.ejercicio_en}</p>
+                                            <p style={{fontSize:'0.72rem',color:tSub,fontStyle:'italic'}}>🔬 {language==='es'?semana.ejercicio_ciencia_es:semana.ejercicio_ciencia_en}</p>
+                                        </div>
+                                        <div style={{background:'rgba(155,142,196,0.08)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(155,142,196,0.15)'}}>
+                                            <p style={{fontSize:'0.72rem',fontStyle:'italic',color:'#78716c'}}>🔬 {language==='es'?semana.ciencia_es:semana.ciencia_en}</p>
+                                        </div>
+                                        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                                            <p style={{fontSize:'0.78rem',color:tSub}}>{language==='es'?semana.capricho_es:semana.capricho_en}</p>
+                                            <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px'}}>⚡ {semana.kcal}</span>
+                                        </div>
+                                        <div onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} style={{textAlign:'center',padding:'0.6rem',borderRadius:'0.75rem',border:'1px solid rgba(201,147,90,0.3)',cursor:'pointer'}}>
+                                            <p style={{fontSize:'0.78rem',color:'#C9935A',fontWeight:600}}>{language==='es'?'Ver tu menú personalizado ↑':'See your personalised menu ↑'}</p>
+                                        </div>
+                                    </div>
+                                </details>
+                            ))}
+                        </div>
+                            );
+                        })()}
+
+                        {/* ── DESPENSA IMPRESCINDIBLE ── */}
+                        {(() => {
+                            const tMain = darkMode?'#e7e5e4':'#292524';
+                            const tSub = darkMode?'#a8a29e':'#78716c';
+                            return (
+                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background:darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
+                            <div style={{padding:'1.25rem 1.5rem 0.75rem'}}>
+                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'DESPENSA IMPRESCINDIBLE':'ESSENTIAL PANTRY'}</p>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:tMain,lineHeight:1.2,marginBottom:'0.3rem'}}>{language==='es'?'Lo que siempre debes tener.':'What you should always have.'}</h3>
+                                <p style={{fontSize:'0.78rem',color:tSub,marginBottom:'0.75rem'}}>{language==='es'?'Ingredientes de cualquier super. Para cada síntoma.':'Ingredients from any supermarket. For every symptom.'}</p>
+                            </div>
+                            {[
+                                {categoria_es:'Sofocos y calores',categoria_en:'Hot flashes',icono:'🌡️',items:[{nombre_es:'Semillas de lino (linaza)',nombre_en:'Flaxseeds',por_es:'Fitoestrógenos naturales que reducen la frecuencia de sofocos',por_en:'Natural phytoestrogens that reduce hot flash frequency',glp1:false},{nombre_es:'Soja / tofu / edamame',nombre_en:'Soy / tofu / edamame',por_es:'Las isoflavonas imitan el estrógeno y alivian los sofocos',por_en:'Isoflavones mimic oestrogen and relieve hot flashes',glp1:false},{nombre_es:'Salvia en infusión',nombre_en:'Sage tea',por_es:'Reduce la sudoración nocturna de forma natural',por_en:'Naturally reduces night sweats',glp1:false}]},
+                                {categoria_es:'↑ GLP-1 · Regula apetito y peso',categoria_en:'↑ GLP-1 · Regulates appetite and weight',icono:'⚖️',items:[{nombre_es:'Huevos',nombre_en:'Eggs',por_es:'Proteína completa que activa GLP-1 y sacia durante horas',por_en:'Complete protein that activates GLP-1 and keeps you full for hours',glp1:true},{nombre_es:'Aguacate / palta',nombre_en:'Avocado',por_es:'Grasas saludables que estimulan GLP-1 y reducen antojos',por_en:'Healthy fats that stimulate GLP-1 and reduce cravings',glp1:true},{nombre_es:'Avena',nombre_en:'Oats',por_es:'Fibra soluble beta-glucano — el mayor estimulador de GLP-1',por_en:'Soluble beta-glucan fibre — the greatest GLP-1 stimulator',glp1:true},{nombre_es:'Yogur griego natural',nombre_en:'Plain Greek yogurt',por_es:'Proteína + probióticos que potencian la secreción de GLP-1',por_en:'Protein + probiotics that enhance GLP-1 secretion',glp1:true},{nombre_es:'Lentejas y garbanzos',nombre_en:'Lentils and chickpeas',por_es:'Fibra + proteína vegetal — combinación perfecta para GLP-1',por_en:'Fibre + plant protein — perfect GLP-1 combination',glp1:true}]},
+                                {categoria_es:'Huesos y osteoporosis',categoria_en:'Bones and osteoporosis',icono:'🦴',items:[{nombre_es:'Sardinas o caballa en lata',nombre_en:'Canned sardines or mackerel',por_es:'Calcio + vitamina D + omega-3 en un solo alimento',por_en:'Calcium + vitamin D + omega-3 in one food',glp1:false},{nombre_es:'Brócoli',nombre_en:'Broccoli',por_es:'Vitamina K imprescindible para fijar el calcio en los huesos',por_en:'Vitamin K essential for fixing calcium in bones',glp1:false},{nombre_es:'Almendras',nombre_en:'Almonds',por_es:'Magnesio y calcio vegetal — snack perfecto',por_en:'Magnesium and plant calcium — perfect snack',glp1:false}]},
+                                {categoria_es:'Ansiedad y sueño',categoria_en:'Anxiety and sleep',icono:'🌙',items:[{nombre_es:'Plátano / banana',nombre_en:'Banana',por_es:'Triptófano precursor de la serotonina y melatonina',por_en:'Tryptophan precursor to serotonin and melatonin',glp1:false},{nombre_es:'Chocolate negro 85%+',nombre_en:'Dark chocolate 85%+',por_es:'Magnesio + feniletilamina — reduce cortisol y mejora el ánimo',por_en:'Magnesium + phenylethylamine — reduces cortisol and lifts mood',glp1:false},{nombre_es:'Manzanilla o valeriana',nombre_en:'Chamomile or valerian',por_es:'Apigenina que activa receptores GABA — efecto calmante real',por_en:'Apigenin activates GABA receptors — real calming effect',glp1:false}]},
+                                {categoria_es:'Niebla mental y energía',categoria_en:'Brain fog and energy',icono:'⚡',items:[{nombre_es:'Nueces',nombre_en:'Walnuts',por_es:'Omega-3 vegetal — el fruto seco con más beneficios cerebrales',por_en:'Plant omega-3 — the nut with the most brain benefits',glp1:true},{nombre_es:'Salmón o sardinas',nombre_en:'Salmon or sardines',por_es:'Omega-3 EPA/DHA — nutre el cerebro y estimula GLP-1',por_en:'Omega-3 EPA/DHA — nourishes the brain and stimulates GLP-1',glp1:true},{nombre_es:'Cúrcuma + pimienta negra',nombre_en:'Turmeric + black pepper',por_es:'Piperina aumenta absorción de curcumina x20 — antiinflamatorio potente',por_en:'Piperine increases curcumin absorption x20 — potent anti-inflammatory',glp1:false}]},
+                                {categoria_es:'Sequedad e hidratación',categoria_en:'Dryness and hydration',icono:'💧',items:[{nombre_es:'Aceite de oliva virgen extra',nombre_en:'Extra virgin olive oil',por_es:'Oleocantal antiinflamatorio + vitamina E para la piel desde dentro',por_en:'Oleocanthal anti-inflammatory + vitamin E for skin from within',glp1:false},{nombre_es:'Pepino',nombre_en:'Cucumber',por_es:'96% agua + silicio para la hidratación celular',por_en:'96% water + silicon for cellular hydration',glp1:false}]},
+                            ].map((cat,ci) => (
+                                <details key={ci} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
+                                    <summary style={{padding:'1rem 1.5rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',listStyle:'none',userSelect:'none'}}>
+                                        <div style={{display:'flex',alignItems:'center',gap:'0.75rem'}}>
+                                            <span style={{fontSize:'1.3rem'}}>{cat.icono}</span>
+                                            <div>
+                                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:tMain}}>{language==='es'?cat.categoria_es:cat.categoria_en}</p>
+                                                <p style={{fontSize:'0.7rem',color:tSub}}>{language==='es'?`${cat.items.length} imprescindibles`:`${cat.items.length} essentials`}</p>
+                                            </div>
+                                        </div>
+                                        <span style={{color:'#C9935A',fontSize:'0.9rem'}}>▾</span>
+                                    </summary>
+                                    <div style={{padding:'0 1.5rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.6rem'}}>
+                                        {cat.items.map((item,ii) => (
+                                            <div key={ii} style={{background:darkMode?'rgba(201,147,90,0.06)':'rgba(253,248,243,0.8)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.12)'}}>
+                                                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'0.5rem'}}>
+                                                    <p style={{fontSize:'0.85rem',fontWeight:600,color:tMain}}>{language==='es'?item.nombre_es:item.nombre_en}</p>
+                                                    {item.glp1&&<span style={{fontSize:'0.62rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.1rem 0.4rem',borderRadius:'9999px',fontWeight:700,whiteSpace:'nowrap',flexShrink:0}}>↑ GLP-1</span>}
+                                                </div>
+                                                <p style={{fontSize:'0.75rem',color:tSub,marginTop:'0.2rem',fontStyle:'italic'}}>🔬 {language==='es'?item.por_es:item.por_en}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </details>
+                            ))}
+                        </div>
+                            );
+                        })()}
+
                         <div className={`${darkMode ? 'bg-indigo-900' : 'bg-indigo-50'} rounded-xl p-6 border-l-4 border-indigo-500`}>
                             <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                                 {language === 'es'
@@ -5079,6 +5317,234 @@ query = query.eq('region', region.toUpperCase());
                                 </details>
                             ))}
                         </div>
+
+
+                        {/* ── BATCH COOKING DOMINICAL ── */}
+                        {(() => {
+                            const tMain = darkMode?'#e7e5e4':'#292524';
+                            const tSub = darkMode?'#a8a29e':'#78716c';
+                            return (
+                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background:darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
+                            <div style={{padding:'1.25rem 1.5rem 0.75rem'}}>
+                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'COCINA EL DOMINGO, COME TODA LA SEMANA':'COOK SUNDAY, EAT ALL WEEK'}</p>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:tMain,lineHeight:1.2,marginBottom:'0.4rem'}}>{language==='es'?'Tu mes completo de comidas.':'Your complete month of meals.'}</h3>
+                                <p style={{fontSize:'0.78rem',color:tSub,marginBottom:'1rem'}}>{language==='es'?'~60 min el domingo. Varía cada día combinando las bases.':'~60 min on Sunday. Vary each day by combining the bases.'}</p>
+                            </div>
+                            {[
+                                {semana_es:'Semana 1 · Antiinflamatoria',semana_en:'Week 1 · Anti-inflammatory',objetivo_es:'Sofocos · Inflamación · Energía',objetivo_en:'Hot flashes · Inflammation · Energy',tiempo:'55 min',kcal:'~1500-1700 kcal/día',bases_es:[{tipo:'Proteína',item:'Pollo al horno con limón y romero',opciones:'pavo · garbanzos'},{tipo:'Hidrato',item:'Arroz integral',opciones:'quinoa · boniato (camote)'},{tipo:'Verdura',item:'Pimientos + berenjena + calabacín asados',opciones:'con aceite de oliva'},{tipo:'Extra',item:'Hummus casero',opciones:''}],bases_en:[{tipo:'Protein',item:'Lemon rosemary chicken',opciones:'turkey · chickpeas'},{tipo:'Carbs',item:'Brown rice',opciones:'quinoa · sweet potato'},{tipo:'Veggies',item:'Roasted peppers + aubergine',opciones:'with olive oil'},{tipo:'Extra',item:'Homemade hummus',opciones:''}],combinaciones_es:['L: pollo + arroz + verduras','M: wrap pollo + hummus','X: arroz + huevo salteado','J: ensalada garbanzos + aguacate (palta)','V: pasta integral + pesto'],combinaciones_en:['M: chicken + rice + veggies','T: chicken wrap + hummus','W: fried rice + egg','T: chickpea salad + avocado','F: wholegrain pasta + pesto'],ciencia_es:'Los polifenoles del aceite de oliva reducen la inflamación sistémica. La proteína magra estabiliza el cortisol.',ciencia_en:'Olive oil polyphenols reduce systemic inflammation. Lean protein stabilises cortisol.',ejercicio_es:'15 elevaciones de talones mientras esperas el arroz',ejercicio_en:'15 heel raises while waiting for the rice',ejercicio_ciencia_es:'Mejora el retorno venoso, clave si sientes pesadez en piernas.',ejercicio_ciencia_en:'Improves venous return, key if you feel leg heaviness.',capricho_es:'🍫 Onza de chocolate negro 85%',capricho_en:'🍫 Square of 85% dark chocolate'},
+                                {semana_es:'Semana 2 · Reconfortante',semana_en:'Week 2 · Comforting',objetivo_es:'Sueño · Ansiedad · Humor',objetivo_en:'Sleep · Anxiety · Mood',tiempo:'60 min',kcal:'~1550-1750 kcal/día',bases_es:[{tipo:'Proteína',item:'Salmón al horno con eneldo',opciones:'sardinas · lentejas rojas'},{tipo:'Hidrato',item:'Boniato (camote) asado + avena',opciones:''},{tipo:'Verdura',item:'Espinacas + brócoli al vapor',opciones:'con ajo y aceite de oliva'},{tipo:'Extra',item:'Caldo de verduras casero',opciones:'20 min, vale toda la semana'}],bases_en:[{tipo:'Protein',item:'Dill baked salmon',opciones:'sardines · red lentils'},{tipo:'Carbs',item:'Roasted sweet potato + oats',opciones:''},{tipo:'Veggies',item:'Spinach + steamed broccoli',opciones:'with garlic and olive oil'},{tipo:'Extra',item:'Homemade vegetable broth',opciones:'20 min, lasts all week'}],combinaciones_es:['L: salmón + boniato + espinacas','M: crema boniato con caldo','X: lentejas + brócoli','J: bowl avena + huevo + espinacas','V: pasta + sardinas + limón'],combinaciones_en:['M: salmon + sweet potato + spinach','T: sweet potato cream with broth','W: red lentils + broccoli','T: oat bowl + egg + spinach','F: pasta + sardines + lemon'],ciencia_es:'El omega-3 del salmón mejora el sueño. El magnesio del boniato regula el cortisol nocturno.',ciencia_en:'Salmon omega-3 improves sleep. Sweet potato magnesium regulates night cortisol.',ejercicio_es:'Estiramiento apertura de pecho en el marco de la puerta',ejercicio_en:'Chest opening stretch in doorframe',ejercicio_ciencia_es:'Abre la caja torácica para respiración profunda, reduciendo la ansiedad.',ejercicio_ciencia_en:'Opens the chest for deep breathing, reducing anxiety.',capricho_es:'🍫 Trufas de dátil + cacao puro (5 min)',capricho_en:'🍫 Date truffles + raw cacao (5 min)'},
+                                {semana_es:'Semana 3 · Ligera y fresca',semana_en:'Week 3 · Light and fresh',objetivo_es:'Retención · Niebla mental · Peso',objetivo_en:'Bloating · Brain fog · Weight',tiempo:'50 min',kcal:'~1450-1650 kcal/día',bases_es:[{tipo:'Proteína',item:'Atún al horno',opciones:'pechuga · tofu'},{tipo:'Hidrato',item:'Pasta integral + arroz basmati',opciones:''},{tipo:'Verdura',item:'Tomate + pepino + zanahoria + rúcula',opciones:'bases ensalada'},{tipo:'Extra',item:'Vinagreta limón mostaza + aguacate (palta)',opciones:''}],bases_en:[{tipo:'Protein',item:'Baked tuna',opciones:'chicken breast · tofu'},{tipo:'Carbs',item:'Wholegrain pasta + basmati rice',opciones:''},{tipo:'Veggies',item:'Tomato + cucumber + carrot + rocket',opciones:'salad bases'},{tipo:'Extra',item:'Lemon mustard dressing + avocado',opciones:''}],combinaciones_es:['L: atún + pasta + rúcula','M: bowl arroz + aguacate (palta) + zanahoria','X: ensalada + atún + huevo duro','J: wrap integral + tofu + verduras','V: pasta fría + atún + pepino'],combinaciones_en:['M: tuna + pasta + rocket','T: rice bowl + avocado + carrot','W: big salad + tuna + boiled egg','T: wholegrain wrap + tofu + veggies','F: cold pasta + tuna + cucumber'],ciencia_es:'El potasio del aguacate/palta reduce la retención. Los hidratos de bajo IG evitan picos de insulina que disparan los sofocos.',ciencia_en:'Avocado potassium reduces bloating. Low GI carbs prevent insulin spikes that trigger hot flashes.',ejercicio_es:'Kegel mientras cortas las verduras, siguiendo el ritmo de la respiración',ejercicio_en:'Kegel exercises while chopping vegetables',ejercicio_ciencia_es:'Fortalece la faja abdominal interna de forma invisible.',ejercicio_ciencia_en:'Strengthens the inner abdominal belt invisibly.',capricho_es:'🍪 Galletas de avena y plátano (10 min)',capricho_en:'🍪 Oat and banana cookies (10 min)'},
+                                {semana_es:'Semana 4 · Equilibrio hormonal',semana_en:'Week 4 · Hormonal balance',objetivo_es:'Humor · Sequedad · Huesos · Vitalidad',objetivo_en:'Mood · Dryness · Bones · Vitality',tiempo:'55 min',kcal:'~1500-1700 kcal/día',bases_es:[{tipo:'Proteína',item:'Huevos + lentejas o alubias',opciones:'pollo · merluza'},{tipo:'Hidrato',item:'Mijo o arroz integral',opciones:''},{tipo:'Verdura',item:'Coliflor gratinada + puerro salteado',opciones:'con aceite de oliva'},{tipo:'Extra',item:'Yogur griego con semillas de lino molidas',opciones:''}],bases_en:[{tipo:'Protein',item:'Eggs + lentils or beans',opciones:'chicken · white fish'},{tipo:'Carbs',item:'Millet or brown rice',opciones:''},{tipo:'Veggies',item:'Gratinated cauliflower + sautéed leek',opciones:'with olive oil'},{tipo:'Extra',item:'Greek yogurt with ground flaxseeds',opciones:''}],combinaciones_es:['L: lentejas + puerro + mijo','M: tortilla espinacas + pan integral','X: coliflor gratinada + huevo pochado','J: bowl arroz + alubias + aguacate (palta)','V: merluza al horno + puerro + patata'],combinaciones_en:['M: lentils + leek + millet','T: spinach omelette + wholegrain bread','W: gratinated cauliflower + poached egg','T: rice bowl + beans + avocado','F: baked white fish + leek + potato'],ciencia_es:'Las semillas de lino son fitoestrógenos naturales que reducen sofocos y sequedad. El yogur griego protege los huesos.',ciencia_en:'Flaxseeds are natural phytoestrogens that reduce hot flashes. Greek yogurt protects bones.',ejercicio_es:'Rotación circular de hombros y cuello mientras preparas el yogur',ejercicio_en:'Circular shoulder and neck rotation while preparing yogurt',ejercicio_ciencia_es:'Libera la tensión del trapecio, donde acumulamos el estrés hormonal.',ejercicio_ciencia_en:'Releases trapezius tension where we accumulate hormonal stress.',capricho_es:'🍫 Brownie de alubias negras y cacao (15 min)',capricho_en:'🍫 Black bean and cacao brownie (15 min)'},
+                            ].map((semana,si) => (
+                                <details key={si} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
+                                    <summary style={{padding:'1rem 1.5rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',listStyle:'none',userSelect:'none'}}>
+                                        <div>
+                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:tMain}}>{language==='es'?semana.semana_es:semana.semana_en}</p>
+                                            <p style={{fontSize:'0.72rem',color:'#C9935A',marginTop:'0.1rem'}}>{language==='es'?semana.objetivo_es:semana.objetivo_en}</p>
+                                        </div>
+                                        <div style={{display:'flex',alignItems:'center',gap:'0.5rem'}}>
+                                            <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px'}}>⏱ {semana.tiempo}</span>
+                                            <span style={{color:'#C9935A',fontSize:'0.9rem'}}>▾</span>
+                                        </div>
+                                    </summary>
+                                    <div style={{padding:'0 1.5rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+                                        <div style={{display:'flex',flexWrap:'wrap',gap:'0.4rem'}}>
+                                            {(language==='es'?semana.bases_es:semana.bases_en).map((b,bi) => (
+                                                <div key={bi} style={{background:'rgba(201,147,90,0.07)',borderRadius:'0.75rem',padding:'0.5rem 0.75rem',border:'1px solid rgba(201,147,90,0.15)',flex:'1',minWidth:'140px'}}>
+                                                    <p style={{fontSize:'0.65rem',color:'#C9935A',fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:'0.2rem'}}>{b.tipo}</p>
+                                                    <p style={{fontSize:'0.78rem',color:tMain,fontWeight:500}}>{b.item}</p>
+                                                    {b.opciones?<p style={{fontSize:'0.68rem',color:tSub,marginTop:'0.15rem'}}>✦ {b.opciones}</p>:null}
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div style={{background:darkMode?'rgba(255,255,255,0.04)":'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
+                                            <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.4rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>{language==='es'?'Combina así':'Combine like this'}</p>
+                                            {(language==='es'?semana.combinaciones_es:semana.combinaciones_en).map((co,ci) => (
+                                                <p key={ci} style={{fontSize:'0.76rem',color:tSub,lineHeight:1.6}}>✦ {co}</p>
+                                            ))}
+                                        </div>
+                                        <div style={{background:'rgba(201,147,90,0.06)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.15)'}}>
+                                            <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.3rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>💪 {language==='es'?'Mientras tanto':'Meanwhile'}</p>
+                                            <p style={{fontSize:'0.78rem',color:tMain,fontWeight:500,marginBottom:'0.25rem'}}>{language==='es'?semana.ejercicio_es:semana.ejercicio_en}</p>
+                                            <p style={{fontSize:'0.72rem',color:tSub,fontStyle:'italic'}}>🔬 {language==='es'?semana.ejercicio_ciencia_es:semana.ejercicio_ciencia_en}</p>
+                                        </div>
+                                        <div style={{background:'rgba(155,142,196,0.08)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(155,142,196,0.15)'}}>
+                                            <p style={{fontSize:'0.72rem',fontStyle:'italic',color:'#78716c'}}>🔬 {language==='es'?semana.ciencia_es:semana.ciencia_en}</p>
+                                        </div>
+                                        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                                            <p style={{fontSize:'0.78rem',color:tSub}}>{language==='es'?semana.capricho_es:semana.capricho_en}</p>
+                                            <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px'}}>⚡ {semana.kcal}</span>
+                                        </div>
+                                        <div onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} style={{textAlign:'center',padding:'0.6rem',borderRadius:'0.75rem',border:'1px solid rgba(201,147,90,0.3)',cursor:'pointer'}}>
+                                            <p style={{fontSize:'0.78rem',color:'#C9935A',fontWeight:600}}>{language==='es'?'Ver tu menú personalizado ↑':'See your personalised menu ↑'}</p>
+                                        </div>
+                                    </div>
+                                </details>
+                            ))}
+                        </div>
+                            );
+                        })()}
+
+                        {/* ── DESPENSA IMPRESCINDIBLE ── */}
+                        {(() => {
+                            const tMain = darkMode?'#e7e5e4':'#292524';
+                            const tSub = darkMode?'#a8a29e':'#78716c';
+                            return (
+                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background:darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
+                            <div style={{padding:'1.25rem 1.5rem 0.75rem'}}>
+                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'DESPENSA IMPRESCINDIBLE':'ESSENTIAL PANTRY'}</p>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:tMain,lineHeight:1.2,marginBottom:'0.3rem'}}>{language==='es'?'Lo que siempre debes tener.':'What you should always have.'}</h3>
+                                <p style={{fontSize:'0.78rem',color:tSub,marginBottom:'0.75rem'}}>{language==='es'?'Ingredientes de cualquier super. Para cada síntoma.':'Ingredients from any supermarket. For every symptom.'}</p>
+                            </div>
+                            {[
+                                {categoria_es:'Sofocos y calores',categoria_en:'Hot flashes',icono:'🌡️',items:[{nombre_es:'Semillas de lino (linaza)',nombre_en:'Flaxseeds',por_es:'Fitoestrógenos naturales que reducen la frecuencia de sofocos',por_en:'Natural phytoestrogens that reduce hot flash frequency',glp1:false},{nombre_es:'Soja / tofu / edamame',nombre_en:'Soy / tofu / edamame',por_es:'Las isoflavonas imitan el estrógeno y alivian los sofocos',por_en:'Isoflavones mimic oestrogen and relieve hot flashes',glp1:false},{nombre_es:'Salvia en infusión',nombre_en:'Sage tea',por_es:'Reduce la sudoración nocturna de forma natural',por_en:'Naturally reduces night sweats',glp1:false}]},
+                                {categoria_es:'↑ GLP-1 · Regula apetito y peso',categoria_en:'↑ GLP-1 · Regulates appetite and weight',icono:'⚖️',items:[{nombre_es:'Huevos',nombre_en:'Eggs',por_es:'Proteína completa que activa GLP-1 y sacia durante horas',por_en:'Complete protein that activates GLP-1 and keeps you full for hours',glp1:true},{nombre_es:'Aguacate / palta',nombre_en:'Avocado',por_es:'Grasas saludables que estimulan GLP-1 y reducen antojos',por_en:'Healthy fats that stimulate GLP-1 and reduce cravings',glp1:true},{nombre_es:'Avena',nombre_en:'Oats',por_es:'Fibra soluble beta-glucano — el mayor estimulador de GLP-1',por_en:'Soluble beta-glucan fibre — the greatest GLP-1 stimulator',glp1:true},{nombre_es:'Yogur griego natural',nombre_en:'Plain Greek yogurt',por_es:'Proteína + probióticos que potencian la secreción de GLP-1',por_en:'Protein + probiotics that enhance GLP-1 secretion',glp1:true},{nombre_es:'Lentejas y garbanzos',nombre_en:'Lentils and chickpeas',por_es:'Fibra + proteína vegetal — combinación perfecta para GLP-1',por_en:'Fibre + plant protein — perfect GLP-1 combination',glp1:true}]},
+                                {categoria_es:'Huesos y osteoporosis',categoria_en:'Bones and osteoporosis',icono:'🦴',items:[{nombre_es:'Sardinas o caballa en lata',nombre_en:'Canned sardines or mackerel',por_es:'Calcio + vitamina D + omega-3 en un solo alimento',por_en:'Calcium + vitamin D + omega-3 in one food',glp1:false},{nombre_es:'Brócoli',nombre_en:'Broccoli',por_es:'Vitamina K imprescindible para fijar el calcio en los huesos',por_en:'Vitamin K essential for fixing calcium in bones',glp1:false},{nombre_es:'Almendras',nombre_en:'Almonds',por_es:'Magnesio y calcio vegetal — snack perfecto',por_en:'Magnesium and plant calcium — perfect snack',glp1:false}]},
+                                {categoria_es:'Ansiedad y sueño',categoria_en:'Anxiety and sleep',icono:'🌙',items:[{nombre_es:'Plátano / banana',nombre_en:'Banana',por_es:'Triptófano precursor de la serotonina y melatonina',por_en:'Tryptophan precursor to serotonin and melatonin',glp1:false},{nombre_es:'Chocolate negro 85%+',nombre_en:'Dark chocolate 85%+',por_es:'Magnesio + feniletilamina — reduce cortisol y mejora el ánimo',por_en:'Magnesium + phenylethylamine — reduces cortisol and lifts mood',glp1:false},{nombre_es:'Manzanilla o valeriana',nombre_en:'Chamomile or valerian',por_es:'Apigenina que activa receptores GABA — efecto calmante real',por_en:'Apigenin activates GABA receptors — real calming effect',glp1:false}]},
+                                {categoria_es:'Niebla mental y energía',categoria_en:'Brain fog and energy',icono:'⚡',items:[{nombre_es:'Nueces',nombre_en:'Walnuts',por_es:'Omega-3 vegetal — el fruto seco con más beneficios cerebrales',por_en:'Plant omega-3 — the nut with the most brain benefits',glp1:true},{nombre_es:'Salmón o sardinas',nombre_en:'Salmon or sardines',por_es:'Omega-3 EPA/DHA — nutre el cerebro y estimula GLP-1',por_en:'Omega-3 EPA/DHA — nourishes the brain and stimulates GLP-1',glp1:true},{nombre_es:'Cúrcuma + pimienta negra',nombre_en:'Turmeric + black pepper',por_es:'Piperina aumenta absorción de curcumina x20 — antiinflamatorio potente',por_en:'Piperine increases curcumin absorption x20 — potent anti-inflammatory',glp1:false}]},
+                                {categoria_es:'Sequedad e hidratación',categoria_en:'Dryness and hydration',icono:'💧',items:[{nombre_es:'Aceite de oliva virgen extra',nombre_en:'Extra virgin olive oil',por_es:'Oleocantal antiinflamatorio + vitamina E para la piel desde dentro',por_en:'Oleocanthal anti-inflammatory + vitamin E for skin from within',glp1:false},{nombre_es:'Pepino',nombre_en:'Cucumber',por_es:'96% agua + silicio para la hidratación celular',por_en:'96% water + silicon for cellular hydration',glp1:false}]},
+                            ].map((cat,ci) => (
+                                <details key={ci} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
+                                    <summary style={{padding:'1rem 1.5rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',listStyle:'none',userSelect:'none'}}>
+                                        <div style={{display:'flex',alignItems:'center',gap:'0.75rem'}}>
+                                            <span style={{fontSize:'1.3rem'}}>{cat.icono}</span>
+                                            <div>
+                                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:tMain}}>{language==='es'?cat.categoria_es:cat.categoria_en}</p>
+                                                <p style={{fontSize:'0.7rem',color:tSub}}>{language==='es'?`${cat.items.length} imprescindibles`:`${cat.items.length} essentials`}</p>
+                                            </div>
+                                        </div>
+                                        <span style={{color:'#C9935A',fontSize:'0.9rem'}}>▾</span>
+                                    </summary>
+                                    <div style={{padding:'0 1.5rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.6rem'}}>
+                                        {cat.items.map((item,ii) => (
+                                            <div key={ii} style={{background:darkMode?'rgba(201,147,90,0.06)':'rgba(253,248,243,0.8)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.12)'}}>
+                                                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'0.5rem'}}>
+                                                    <p style={{fontSize:'0.85rem',fontWeight:600,color:tMain}}>{language==='es'?item.nombre_es:item.nombre_en}</p>
+                                                    {item.glp1&&<span style={{fontSize:'0.62rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.1rem 0.4rem',borderRadius:'9999px',fontWeight:700,whiteSpace:'nowrap',flexShrink:0}}>↑ GLP-1</span>}
+                                                </div>
+                                                <p style={{fontSize:'0.75rem',color:tSub,marginTop:'0.2rem',fontStyle:'italic'}}>🔬 {language==='es'?item.por_es:item.por_en}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </details>
+                            ))}
+                        </div>
+                            );
+                        })()}
+
+
+                        {/* ── BATCH COOKING DOMINICAL ── */}
+                        {(() => {
+                            const tMain = darkMode?'#e7e5e4':'#292524';
+                            const tSub = darkMode?'#a8a29e':'#78716c';
+                            return (
+                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background:darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
+                            <div style={{padding:'1.25rem 1.5rem 0.75rem'}}>
+                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'COCINA EL DOMINGO, COME TODA LA SEMANA':'COOK SUNDAY, EAT ALL WEEK'}</p>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:tMain,lineHeight:1.2,marginBottom:'0.4rem'}}>{language==='es'?'Tu mes completo de comidas.':'Your complete month of meals.'}</h3>
+                                <p style={{fontSize:'0.78rem',color:tSub,marginBottom:'1rem'}}>{language==='es'?'~60 min el domingo. Varía cada día combinando las bases.':'~60 min on Sunday. Vary each day by combining the bases.'}</p>
+                            </div>
+                            {[
+                                {semana_es:'Semana 1 · Antiinflamatoria',semana_en:'Week 1 · Anti-inflammatory',objetivo_es:'Sofocos · Inflamación · Energía',objetivo_en:'Hot flashes · Inflammation · Energy',tiempo:'55 min',kcal:'~1500-1700 kcal/día',bases_es:[{tipo:'Proteína',item:'Pollo al horno con limón y romero',opciones:'pavo · garbanzos'},{tipo:'Hidrato',item:'Arroz integral',opciones:'quinoa · boniato (camote)'},{tipo:'Verdura',item:'Pimientos + berenjena + calabacín asados',opciones:'con aceite de oliva'},{tipo:'Extra',item:'Hummus casero',opciones:''}],bases_en:[{tipo:'Protein',item:'Lemon rosemary chicken',opciones:'turkey · chickpeas'},{tipo:'Carbs',item:'Brown rice',opciones:'quinoa · sweet potato'},{tipo:'Veggies',item:'Roasted peppers + aubergine',opciones:'with olive oil'},{tipo:'Extra',item:'Homemade hummus',opciones:''}],combinaciones_es:['L: pollo + arroz + verduras','M: wrap pollo + hummus','X: arroz + huevo salteado','J: ensalada garbanzos + aguacate (palta)','V: pasta integral + pesto'],combinaciones_en:['M: chicken + rice + veggies','T: chicken wrap + hummus','W: fried rice + egg','T: chickpea salad + avocado','F: wholegrain pasta + pesto'],ciencia_es:'Los polifenoles del aceite de oliva reducen la inflamación sistémica. La proteína magra estabiliza el cortisol.',ciencia_en:'Olive oil polyphenols reduce systemic inflammation. Lean protein stabilises cortisol.',ejercicio_es:'15 elevaciones de talones mientras esperas el arroz',ejercicio_en:'15 heel raises while waiting for the rice',ejercicio_ciencia_es:'Mejora el retorno venoso, clave si sientes pesadez en piernas.',ejercicio_ciencia_en:'Improves venous return, key if you feel leg heaviness.',capricho_es:'🍫 Onza de chocolate negro 85%',capricho_en:'🍫 Square of 85% dark chocolate'},
+                                {semana_es:'Semana 2 · Reconfortante',semana_en:'Week 2 · Comforting',objetivo_es:'Sueño · Ansiedad · Humor',objetivo_en:'Sleep · Anxiety · Mood',tiempo:'60 min',kcal:'~1550-1750 kcal/día',bases_es:[{tipo:'Proteína',item:'Salmón al horno con eneldo',opciones:'sardinas · lentejas rojas'},{tipo:'Hidrato',item:'Boniato (camote) asado + avena',opciones:''},{tipo:'Verdura',item:'Espinacas + brócoli al vapor',opciones:'con ajo y aceite de oliva'},{tipo:'Extra',item:'Caldo de verduras casero',opciones:'20 min, vale toda la semana'}],bases_en:[{tipo:'Protein',item:'Dill baked salmon',opciones:'sardines · red lentils'},{tipo:'Carbs',item:'Roasted sweet potato + oats',opciones:''},{tipo:'Veggies',item:'Spinach + steamed broccoli',opciones:'with garlic and olive oil'},{tipo:'Extra',item:'Homemade vegetable broth',opciones:'20 min, lasts all week'}],combinaciones_es:['L: salmón + boniato + espinacas','M: crema boniato con caldo','X: lentejas + brócoli','J: bowl avena + huevo + espinacas','V: pasta + sardinas + limón'],combinaciones_en:['M: salmon + sweet potato + spinach','T: sweet potato cream with broth','W: red lentils + broccoli','T: oat bowl + egg + spinach','F: pasta + sardines + lemon'],ciencia_es:'El omega-3 del salmón mejora el sueño. El magnesio del boniato regula el cortisol nocturno.',ciencia_en:'Salmon omega-3 improves sleep. Sweet potato magnesium regulates night cortisol.',ejercicio_es:'Estiramiento apertura de pecho en el marco de la puerta',ejercicio_en:'Chest opening stretch in doorframe',ejercicio_ciencia_es:'Abre la caja torácica para respiración profunda, reduciendo la ansiedad.',ejercicio_ciencia_en:'Opens the chest for deep breathing, reducing anxiety.',capricho_es:'🍫 Trufas de dátil + cacao puro (5 min)',capricho_en:'🍫 Date truffles + raw cacao (5 min)'},
+                                {semana_es:'Semana 3 · Ligera y fresca',semana_en:'Week 3 · Light and fresh',objetivo_es:'Retención · Niebla mental · Peso',objetivo_en:'Bloating · Brain fog · Weight',tiempo:'50 min',kcal:'~1450-1650 kcal/día',bases_es:[{tipo:'Proteína',item:'Atún al horno',opciones:'pechuga · tofu'},{tipo:'Hidrato',item:'Pasta integral + arroz basmati',opciones:''},{tipo:'Verdura',item:'Tomate + pepino + zanahoria + rúcula',opciones:'bases ensalada'},{tipo:'Extra',item:'Vinagreta limón mostaza + aguacate (palta)',opciones:''}],bases_en:[{tipo:'Protein',item:'Baked tuna',opciones:'chicken breast · tofu'},{tipo:'Carbs',item:'Wholegrain pasta + basmati rice',opciones:''},{tipo:'Veggies',item:'Tomato + cucumber + carrot + rocket',opciones:'salad bases'},{tipo:'Extra',item:'Lemon mustard dressing + avocado',opciones:''}],combinaciones_es:['L: atún + pasta + rúcula','M: bowl arroz + aguacate (palta) + zanahoria','X: ensalada + atún + huevo duro','J: wrap integral + tofu + verduras','V: pasta fría + atún + pepino'],combinaciones_en:['M: tuna + pasta + rocket','T: rice bowl + avocado + carrot','W: big salad + tuna + boiled egg','T: wholegrain wrap + tofu + veggies','F: cold pasta + tuna + cucumber'],ciencia_es:'El potasio del aguacate/palta reduce la retención. Los hidratos de bajo IG evitan picos de insulina que disparan los sofocos.',ciencia_en:'Avocado potassium reduces bloating. Low GI carbs prevent insulin spikes that trigger hot flashes.',ejercicio_es:'Kegel mientras cortas las verduras, siguiendo el ritmo de la respiración',ejercicio_en:'Kegel exercises while chopping vegetables',ejercicio_ciencia_es:'Fortalece la faja abdominal interna de forma invisible.',ejercicio_ciencia_en:'Strengthens the inner abdominal belt invisibly.',capricho_es:'🍪 Galletas de avena y plátano (10 min)',capricho_en:'🍪 Oat and banana cookies (10 min)'},
+                                {semana_es:'Semana 4 · Equilibrio hormonal',semana_en:'Week 4 · Hormonal balance',objetivo_es:'Humor · Sequedad · Huesos · Vitalidad',objetivo_en:'Mood · Dryness · Bones · Vitality',tiempo:'55 min',kcal:'~1500-1700 kcal/día',bases_es:[{tipo:'Proteína',item:'Huevos + lentejas o alubias',opciones:'pollo · merluza'},{tipo:'Hidrato',item:'Mijo o arroz integral',opciones:''},{tipo:'Verdura',item:'Coliflor gratinada + puerro salteado',opciones:'con aceite de oliva'},{tipo:'Extra',item:'Yogur griego con semillas de lino molidas',opciones:''}],bases_en:[{tipo:'Protein',item:'Eggs + lentils or beans',opciones:'chicken · white fish'},{tipo:'Carbs',item:'Millet or brown rice',opciones:''},{tipo:'Veggies',item:'Gratinated cauliflower + sautéed leek',opciones:'with olive oil'},{tipo:'Extra',item:'Greek yogurt with ground flaxseeds',opciones:''}],combinaciones_es:['L: lentejas + puerro + mijo','M: tortilla espinacas + pan integral','X: coliflor gratinada + huevo pochado','J: bowl arroz + alubias + aguacate (palta)','V: merluza al horno + puerro + patata'],combinaciones_en:['M: lentils + leek + millet','T: spinach omelette + wholegrain bread','W: gratinated cauliflower + poached egg','T: rice bowl + beans + avocado','F: baked white fish + leek + potato'],ciencia_es:'Las semillas de lino son fitoestrógenos naturales que reducen sofocos y sequedad. El yogur griego protege los huesos.',ciencia_en:'Flaxseeds are natural phytoestrogens that reduce hot flashes. Greek yogurt protects bones.',ejercicio_es:'Rotación circular de hombros y cuello mientras preparas el yogur',ejercicio_en:'Circular shoulder and neck rotation while preparing yogurt',ejercicio_ciencia_es:'Libera la tensión del trapecio, donde acumulamos el estrés hormonal.',ejercicio_ciencia_en:'Releases trapezius tension where we accumulate hormonal stress.',capricho_es:'🍫 Brownie de alubias negras y cacao (15 min)',capricho_en:'🍫 Black bean and cacao brownie (15 min)'},
+                            ].map((semana,si) => (
+                                <details key={si} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
+                                    <summary style={{padding:'1rem 1.5rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',listStyle:'none',userSelect:'none'}}>
+                                        <div>
+                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:tMain}}>{language==='es'?semana.semana_es:semana.semana_en}</p>
+                                            <p style={{fontSize:'0.72rem',color:'#C9935A',marginTop:'0.1rem'}}>{language==='es'?semana.objetivo_es:semana.objetivo_en}</p>
+                                        </div>
+                                        <div style={{display:'flex',alignItems:'center',gap:'0.5rem'}}>
+                                            <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px'}}>⏱ {semana.tiempo}</span>
+                                            <span style={{color:'#C9935A',fontSize:'0.9rem'}}>▾</span>
+                                        </div>
+                                    </summary>
+                                    <div style={{padding:'0 1.5rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+                                        <div style={{display:'flex',flexWrap:'wrap',gap:'0.4rem'}}>
+                                            {(language==='es'?semana.bases_es:semana.bases_en).map((b,bi) => (
+                                                <div key={bi} style={{background:'rgba(201,147,90,0.07)',borderRadius:'0.75rem',padding:'0.5rem 0.75rem',border:'1px solid rgba(201,147,90,0.15)',flex:'1',minWidth:'140px'}}>
+                                                    <p style={{fontSize:'0.65rem',color:'#C9935A',fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:'0.2rem'}}>{b.tipo}</p>
+                                                    <p style={{fontSize:'0.78rem',color:tMain,fontWeight:500}}>{b.item}</p>
+                                                    {b.opciones?<p style={{fontSize:'0.68rem',color:tSub,marginTop:'0.15rem'}}>✦ {b.opciones}</p>:null}
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div style={{background:darkMode?'rgba(255,255,255,0.04)":'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
+                                            <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.4rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>{language==='es'?'Combina así':'Combine like this'}</p>
+                                            {(language==='es'?semana.combinaciones_es:semana.combinaciones_en).map((co,ci) => (
+                                                <p key={ci} style={{fontSize:'0.76rem',color:tSub,lineHeight:1.6}}>✦ {co}</p>
+                                            ))}
+                                        </div>
+                                        <div style={{background:'rgba(201,147,90,0.06)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.15)'}}>
+                                            <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.3rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>💪 {language==='es'?'Mientras tanto':'Meanwhile'}</p>
+                                            <p style={{fontSize:'0.78rem',color:tMain,fontWeight:500,marginBottom:'0.25rem'}}>{language==='es'?semana.ejercicio_es:semana.ejercicio_en}</p>
+                                            <p style={{fontSize:'0.72rem',color:tSub,fontStyle:'italic'}}>🔬 {language==='es'?semana.ejercicio_ciencia_es:semana.ejercicio_ciencia_en}</p>
+                                        </div>
+                                        <div style={{background:'rgba(155,142,196,0.08)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(155,142,196,0.15)'}}>
+                                            <p style={{fontSize:'0.72rem',fontStyle:'italic',color:'#78716c'}}>🔬 {language==='es'?semana.ciencia_es:semana.ciencia_en}</p>
+                                        </div>
+                                        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                                            <p style={{fontSize:'0.78rem',color:tSub}}>{language==='es'?semana.capricho_es:semana.capricho_en}</p>
+                                            <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px'}}>⚡ {semana.kcal}</span>
+                                        </div>
+                                        <div onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} style={{textAlign:'center',padding:'0.6rem',borderRadius:'0.75rem',border:'1px solid rgba(201,147,90,0.3)',cursor:'pointer'}}>
+                                            <p style={{fontSize:'0.78rem',color:'#C9935A',fontWeight:600}}>{language==='es'?'Ver tu menú personalizado ↑':'See your personalised menu ↑'}</p>
+                                        </div>
+                                    </div>
+                                </details>
+                            ))}
+                        </div>
+                            );
+                        })()}
+
+                        {/* ── DESPENSA IMPRESCINDIBLE ── */}
+                        {(() => {
+                            const tMain = darkMode?'#e7e5e4':'#292524';
+                            const tSub = darkMode?'#a8a29e':'#78716c';
+                            return (
+                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background:darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
+                            <div style={{padding:'1.25rem 1.5rem 0.75rem'}}>
+                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'DESPENSA IMPRESCINDIBLE':'ESSENTIAL PANTRY'}</p>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:tMain,lineHeight:1.2,marginBottom:'0.3rem'}}>{language==='es'?'Lo que siempre debes tener.':'What you should always have.'}</h3>
+                                <p style={{fontSize:'0.78rem',color:tSub,marginBottom:'0.75rem'}}>{language==='es'?'Ingredientes de cualquier super. Para cada síntoma.':'Ingredients from any supermarket. For every symptom.'}</p>
+                            </div>
+                            {[
+                                {categoria_es:'Sofocos y calores',categoria_en:'Hot flashes',icono:'🌡️',items:[{nombre_es:'Semillas de lino (linaza)',nombre_en:'Flaxseeds',por_es:'Fitoestrógenos naturales que reducen la frecuencia de sofocos',por_en:'Natural phytoestrogens that reduce hot flash frequency',glp1:false},{nombre_es:'Soja / tofu / edamame',nombre_en:'Soy / tofu / edamame',por_es:'Las isoflavonas imitan el estrógeno y alivian los sofocos',por_en:'Isoflavones mimic oestrogen and relieve hot flashes',glp1:false},{nombre_es:'Salvia en infusión',nombre_en:'Sage tea',por_es:'Reduce la sudoración nocturna de forma natural',por_en:'Naturally reduces night sweats',glp1:false}]},
+                                {categoria_es:'↑ GLP-1 · Regula apetito y peso',categoria_en:'↑ GLP-1 · Regulates appetite and weight',icono:'⚖️',items:[{nombre_es:'Huevos',nombre_en:'Eggs',por_es:'Proteína completa que activa GLP-1 y sacia durante horas',por_en:'Complete protein that activates GLP-1 and keeps you full for hours',glp1:true},{nombre_es:'Aguacate / palta',nombre_en:'Avocado',por_es:'Grasas saludables que estimulan GLP-1 y reducen antojos',por_en:'Healthy fats that stimulate GLP-1 and reduce cravings',glp1:true},{nombre_es:'Avena',nombre_en:'Oats',por_es:'Fibra soluble beta-glucano — el mayor estimulador de GLP-1',por_en:'Soluble beta-glucan fibre — the greatest GLP-1 stimulator',glp1:true},{nombre_es:'Yogur griego natural',nombre_en:'Plain Greek yogurt',por_es:'Proteína + probióticos que potencian la secreción de GLP-1',por_en:'Protein + probiotics that enhance GLP-1 secretion',glp1:true},{nombre_es:'Lentejas y garbanzos',nombre_en:'Lentils and chickpeas',por_es:'Fibra + proteína vegetal — combinación perfecta para GLP-1',por_en:'Fibre + plant protein — perfect GLP-1 combination',glp1:true}]},
+                                {categoria_es:'Huesos y osteoporosis',categoria_en:'Bones and osteoporosis',icono:'🦴',items:[{nombre_es:'Sardinas o caballa en lata',nombre_en:'Canned sardines or mackerel',por_es:'Calcio + vitamina D + omega-3 en un solo alimento',por_en:'Calcium + vitamin D + omega-3 in one food',glp1:false},{nombre_es:'Brócoli',nombre_en:'Broccoli',por_es:'Vitamina K imprescindible para fijar el calcio en los huesos',por_en:'Vitamin K essential for fixing calcium in bones',glp1:false},{nombre_es:'Almendras',nombre_en:'Almonds',por_es:'Magnesio y calcio vegetal — snack perfecto',por_en:'Magnesium and plant calcium — perfect snack',glp1:false}]},
+                                {categoria_es:'Ansiedad y sueño',categoria_en:'Anxiety and sleep',icono:'🌙',items:[{nombre_es:'Plátano / banana',nombre_en:'Banana',por_es:'Triptófano precursor de la serotonina y melatonina',por_en:'Tryptophan precursor to serotonin and melatonin',glp1:false},{nombre_es:'Chocolate negro 85%+',nombre_en:'Dark chocolate 85%+',por_es:'Magnesio + feniletilamina — reduce cortisol y mejora el ánimo',por_en:'Magnesium + phenylethylamine — reduces cortisol and lifts mood',glp1:false},{nombre_es:'Manzanilla o valeriana',nombre_en:'Chamomile or valerian',por_es:'Apigenina que activa receptores GABA — efecto calmante real',por_en:'Apigenin activates GABA receptors — real calming effect',glp1:false}]},
+                                {categoria_es:'Niebla mental y energía',categoria_en:'Brain fog and energy',icono:'⚡',items:[{nombre_es:'Nueces',nombre_en:'Walnuts',por_es:'Omega-3 vegetal — el fruto seco con más beneficios cerebrales',por_en:'Plant omega-3 — the nut with the most brain benefits',glp1:true},{nombre_es:'Salmón o sardinas',nombre_en:'Salmon or sardines',por_es:'Omega-3 EPA/DHA — nutre el cerebro y estimula GLP-1',por_en:'Omega-3 EPA/DHA — nourishes the brain and stimulates GLP-1',glp1:true},{nombre_es:'Cúrcuma + pimienta negra',nombre_en:'Turmeric + black pepper',por_es:'Piperina aumenta absorción de curcumina x20 — antiinflamatorio potente',por_en:'Piperine increases curcumin absorption x20 — potent anti-inflammatory',glp1:false}]},
+                                {categoria_es:'Sequedad e hidratación',categoria_en:'Dryness and hydration',icono:'💧',items:[{nombre_es:'Aceite de oliva virgen extra',nombre_en:'Extra virgin olive oil',por_es:'Oleocantal antiinflamatorio + vitamina E para la piel desde dentro',por_en:'Oleocanthal anti-inflammatory + vitamin E for skin from within',glp1:false},{nombre_es:'Pepino',nombre_en:'Cucumber',por_es:'96% agua + silicio para la hidratación celular',por_en:'96% water + silicon for cellular hydration',glp1:false}]},
+                            ].map((cat,ci) => (
+                                <details key={ci} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
+                                    <summary style={{padding:'1rem 1.5rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',listStyle:'none',userSelect:'none'}}>
+                                        <div style={{display:'flex',alignItems:'center',gap:'0.75rem'}}>
+                                            <span style={{fontSize:'1.3rem'}}>{cat.icono}</span>
+                                            <div>
+                                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:tMain}}>{language==='es'?cat.categoria_es:cat.categoria_en}</p>
+                                                <p style={{fontSize:'0.7rem',color:tSub}}>{language==='es'?`${cat.items.length} imprescindibles`:`${cat.items.length} essentials`}</p>
+                                            </div>
+                                        </div>
+                                        <span style={{color:'#C9935A',fontSize:'0.9rem'}}>▾</span>
+                                    </summary>
+                                    <div style={{padding:'0 1.5rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.6rem'}}>
+                                        {cat.items.map((item,ii) => (
+                                            <div key={ii} style={{background:darkMode?'rgba(201,147,90,0.06)':'rgba(253,248,243,0.8)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.12)'}}>
+                                                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'0.5rem'}}>
+                                                    <p style={{fontSize:'0.85rem',fontWeight:600,color:tMain}}>{language==='es'?item.nombre_es:item.nombre_en}</p>
+                                                    {item.glp1&&<span style={{fontSize:'0.62rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.1rem 0.4rem',borderRadius:'9999px',fontWeight:700,whiteSpace:'nowrap',flexShrink:0}}>↑ GLP-1</span>}
+                                                </div>
+                                                <p style={{fontSize:'0.75rem',color:tSub,marginTop:'0.2rem',fontStyle:'italic'}}>🔬 {language==='es'?item.por_es:item.por_en}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </details>
+                            ))}
+                        </div>
+                            );
+                        })()}
 
                         <div className={`${darkMode ? 'bg-indigo-900' : 'bg-indigo-50'} rounded-xl p-6 border-l-4 border-indigo-500`}>
                             <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
@@ -5632,6 +6098,49 @@ query = query.eq('region', region.toUpperCase());
                                 </div>
                             </div>
                         </div>
+
+                        {/* ── GLP-1 NATURAL ── */}
+                        <div style={{background:darkMode?'rgba(255,255,255,0.05)':'rgba(255,255,255,0.95)',borderRadius:'1.1rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 2px 12px rgba(0,0,0,0.06)'}}>
+                            <div style={{padding:'1rem 1.25rem',borderBottom:'1px solid rgba(201,147,90,0.1)',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(232,200,159,0.08))'}}>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.2rem',fontWeight:600,color:darkMode?'#e8d5c0':'#292524'}}>
+                                    <span style={{color:'#C9935A',marginRight:'0.4rem'}}>✦</span>{language==='es'?'GLP-1 Natural: por qué engordas aunque comas igual':'GLP-1 Natural: why you gain weight even eating the same'}
+                                </h3>
+                            </div>
+                            <div style={{padding:'1rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+                                <div style={{borderLeft:'3px solid #C9935A',paddingLeft:'0.75rem'}}>
+                                    <p style={{fontSize:'0.8rem',fontWeight:600,color:'#C9935A',marginBottom:'0.2rem'}}>{language==='es'?'Qué es el GLP-1':'What is GLP-1'}</p>
+                                    <p style={{fontSize:'0.85rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.5}}>{language==='es'?'El GLP-1 es una hormona que produce tu propio cuerpo después de comer. Regula el apetito, reduce los antojos y controla el azúcar en sangre. En esta etapa, los cambios hormonales reducen su producción — y eso explica por qué sientes más hambre y acumulas más grasa abdominal aunque no hayas cambiado tus hábitos.':'GLP-1 is a hormone your own body produces after eating. It regulates appetite, reduces cravings and controls blood sugar. At this stage, hormonal changes reduce its production — which explains why you feel hungrier and accumulate more belly fat even without changing your habits.'}</p>
+                                </div>
+                                <div style={{borderLeft:'3px solid rgba(201,147,90,0.4)',paddingLeft:'0.75rem'}}>
+                                    <p style={{fontSize:'0.8rem',fontWeight:600,color:'#92580a',marginBottom:'0.2rem'}}>{language==='es'?'Cómo estimularlo de forma natural':'How to stimulate it naturally'}</p>
+                                    <p style={{fontSize:'0.85rem',color:darkMode?'#a8a29e':'#78716c',lineHeight:1.5}}>{language==='es'?'Ciertos alimentos activan la producción de GLP-1 de forma natural — sin pastillas ni inyecciones. Son ingredientes comunes que ya tienes en tu despensa o puedes encontrar en cualquier supermercado.':'Certain foods naturally activate GLP-1 production — no pills or injections needed. They are common ingredients you already have in your pantry or can find in any supermarket.'}</p>
+                                </div>
+                                <div style={{background:'rgba(201,147,90,0.06)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.15)'}}>
+                                    <p style={{fontSize:'0.78rem',fontWeight:700,color:'#C9935A',marginBottom:'0.5rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>✦ {language==='es'?'Alimentos que ↑ GLP-1':'Foods that ↑ GLP-1'}</p>
+                                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.4rem'}}>
+                                        {[
+                                            {es:'Huevos',en:'Eggs',motivo_es:'Proteína completa',motivo_en:'Complete protein'},
+                                            {es:'Aguacate / palta',en:'Avocado',motivo_es:'Grasa saludable',motivo_en:'Healthy fat'},
+                                            {es:'Avena',en:'Oats',motivo_es:'Fibra soluble',motivo_en:'Soluble fibre'},
+                                            {es:'Yogur griego',en:'Greek yogurt',motivo_es:'Proteína + probióticos',motivo_en:'Protein + probiotics'},
+                                            {es:'Legumbres',en:'Legumes',motivo_es:'Fibra + proteína vegetal',motivo_en:'Fibre + plant protein'},
+                                            {es:'Nueces',en:'Walnuts',motivo_es:'Omega-3 vegetal',motivo_en:'Plant omega-3'},
+                                            {es:'Salmón / sardinas',en:'Salmon / sardines',motivo_es:'Omega-3 EPA/DHA',motivo_en:'Omega-3 EPA/DHA'},
+                                            {es:'Brócoli y verduras',en:'Broccoli & veggies',motivo_es:'Fibra + antioxidantes',motivo_en:'Fibre + antioxidants'},
+                                        ].map((item,i) => (
+                                            <div key={i} style={{background:'rgba(255,255,255,0.7)',borderRadius:'0.5rem',padding:'0.4rem 0.6rem',border:'1px solid rgba(201,147,90,0.12)'}}>
+                                                <p style={{fontSize:'0.78rem',fontWeight:600,color:darkMode?'#e8d5c0':'#292524'}}>{language==='es'?item.es:item.en}</p>
+                                                <p style={{fontSize:'0.68rem',color:'#C9935A'}}>{language==='es'?item.motivo_es:item.motivo_en}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div style={{borderLeft:'3px solid rgba(155,142,196,0.5)',paddingLeft:'0.75rem'}}>
+                                    <p style={{fontSize:'0.72rem',color:darkMode?'#a8a29e':'#78716c',fontStyle:'italic'}}>🔬 {language==='es'?'Estudios publicados en Cell Metabolism confirman que la dieta rica en proteína y fibra aumenta la secreción endógena de GLP-1 en mujeres postmenopáusicas.':'Studies published in Cell Metabolism confirm that a diet rich in protein and fibre increases endogenous GLP-1 secretion in postmenopausal women.'}</p>
+                                </div>
+                            </div>
+                        </div>
+
                         {(tips || []).map((tip, idx) => (
                             <div key={idx} style={{background:darkMode?'rgba(255,255,255,0.05)':'rgba(255,255,255,0.9)',borderRadius:'1.1rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.15)',boxShadow:'0 2px 12px rgba(0,0,0,0.04)'}}>
                                 <div style={{padding:'1rem 1.25rem',borderBottom:'1px solid rgba(201,147,90,0.1)',background:'linear-gradient(135deg,rgba(201,147,90,0.08),rgba(232,200,159,0.06))'}}>
