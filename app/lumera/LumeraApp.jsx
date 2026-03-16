@@ -4833,7 +4833,7 @@ query = query.eq('region', region.toUpperCase());
                                                 </div>
                                             ))}
                                         </div>
-                                        <div style={{background:darkMode?'rgba(255,255,255,0.04)":'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
+                                        <div style={{background:darkMode?'rgba(255,255,255,0.04)':'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
                                             <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.4rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>{language==='es'?'Combina así':'Combine like this'}</p>
                                             {(language==='es'?semana.combinaciones_es:semana.combinaciones_en).map((co,ci) => (
                                                 <p key={ci} style={{fontSize:'0.76rem',color:tSub,lineHeight:1.6}}>✦ {co}</p>
@@ -4947,7 +4947,7 @@ query = query.eq('region', region.toUpperCase());
                                                 </div>
                                             ))}
                                         </div>
-                                        <div style={{background:darkMode?'rgba(255,255,255,0.04)":'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
+                                        <div style={{background:darkMode?'rgba(255,255,255,0.04)':'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
                                             <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.4rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>{language==='es'?'Combina así':'Combine like this'}</p>
                                             {(language==='es'?semana.combinaciones_es:semana.combinaciones_en).map((co,ci) => (
                                                 <p key={ci} style={{fontSize:'0.76rem',color:tSub,lineHeight:1.6}}>✦ {co}</p>
@@ -5357,7 +5357,7 @@ query = query.eq('region', region.toUpperCase());
                                                 </div>
                                             ))}
                                         </div>
-                                        <div style={{background:darkMode?'rgba(255,255,255,0.04)":'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
+                                        <div style={{background:darkMode?'rgba(255,255,255,0.04)':'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
                                             <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.4rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>{language==='es'?'Combina así':'Combine like this'}</p>
                                             {(language==='es'?semana.combinaciones_es:semana.combinaciones_en).map((co,ci) => (
                                                 <p key={ci} style={{fontSize:'0.76rem',color:tSub,lineHeight:1.6}}>✦ {co}</p>
@@ -5471,7 +5471,7 @@ query = query.eq('region', region.toUpperCase());
                                                 </div>
                                             ))}
                                         </div>
-                                        <div style={{background:darkMode?'rgba(255,255,255,0.04)":'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
+                                        <div style={{background:darkMode?'rgba(255,255,255,0.04)':'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
                                             <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.4rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>{language==='es'?'Combina así':'Combine like this'}</p>
                                             {(language==='es'?semana.combinaciones_es:semana.combinaciones_en).map((co,ci) => (
                                                 <p key={ci} style={{fontSize:'0.76rem',color:tSub,lineHeight:1.6}}>✦ {co}</p>
