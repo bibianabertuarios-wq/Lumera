@@ -2916,6 +2916,66 @@ query = query.eq('region', region.toUpperCase());
                 const hasHighHotFlashes = todaySymptoms && todaySymptoms.hotFlashes >= 4;
                 const hasLowMood = todaySymptoms && todaySymptoms.mood <= 3;
 
+                // Mensaje bienvenida día 1 sin síntomas
+                const isDay1 = symptoms.length === 0 && getUserTier() === 'trial';
+                if (isDay1 && page === 'home') {
+                    return (
+                        <div style={{display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.15rem',fontWeight:500,color:darkMode?'#e8d5c0':'#292524',lineHeight:1.6}}>
+                                {language==='es' ? 'Hola preciosa, soy LUMI ✦' : 'Hi gorgeous, I am LUMI ✦'}
+                            </p>
+                            <p style={{fontSize:'0.88rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.7}}>
+                                {language==='es' ? 'Antes de empezar, quiero que sepas algo: este no es otro espacio de tips saludables. Este es tu refugio.' : 'Before we start, I want you to know: this is not just another wellness app. This is your sanctuary.'}
+                            </p>
+                            <p style={{fontSize:'0.88rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.7}}>
+                                {language==='es' ? 'Donde puedes confesar que algunos días no te reconoces. Que te asusta lo impredecible que eres. Que nadie entiende esta montaña rusa. Que te sientes sola en este proceso.' : 'Where you can admit that some days you do not recognise yourself. That your unpredictability scares you. That nobody understands this rollercoaster. That you feel alone.'}
+                            </p>
+                            <p style={{fontSize:'0.9rem',color:'#C9935A',lineHeight:1.6,fontWeight:600}}>
+                                {language==='es' ? '¿Sabes qué? Eres de las valientes. ✦' : 'You know what? You are one of the brave ones. ✦'}
+                            </p>
+                            <p style={{fontSize:'0.88rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.7}}>
+                                {language==='es' ? 'Hay dos tipos de mujeres en esta etapa: las que florecen y las que sienten que todo se desmorona. Las dos son completamente normales.' : 'There are two types of women at this stage: those who bloom and those who feel everything is falling apart. Both are completely normal.'}
+                            </p>
+                            <p style={{fontSize:'0.88rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.7}}>
+                                {language==='es' ? 'Voy a ayudarte con menús, ejercicio y entender tu cuerpo... pero también estaré aquí cuando quieras matar a alguien por masticar fuerte 😅, llores viendo un anuncio, o necesites que alguien te diga "no estás loca".' : "I'll help you with menus, exercise and understanding your body... but I'll also be here when you want to kill someone for chewing loudly 😅, cry at a commercial, or need someone to tell you you are not crazy."}
+                            </p>
+                            <p style={{fontSize:'0.9rem',color:'#C9935A',fontWeight:600,lineHeight:1.5}}>
+                                {language==='es' ? 'Somos tú y yo. Tu espacio más seguro. 🌿 ¿Lista?' : 'It is just you and me. Your safest space. 🌿 Ready?'}
+                            </p>
+                        </div>
+                    );
+                }
+
+                // Mensaje bienvenida día 1 sin síntomas
+                const isDay1 = symptoms.length === 0 && getUserTier() === 'trial';
+                if (isDay1 && page === 'home') {
+                    return (
+                        <div style={{display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.15rem',fontWeight:500,color:darkMode?'#e8d5c0':'#292524',lineHeight:1.6}}>
+                                {language==='es' ? 'Hola preciosa, soy LUMI ✦' : 'Hi gorgeous, I am LUMI ✦'}
+                            </p>
+                            <p style={{fontSize:'0.88rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.7}}>
+                                {language==='es' ? 'Antes de empezar, quiero que sepas algo: este no es otro espacio de tips saludables. Este es tu refugio.' : 'Before we start, I want you to know: this is not just another wellness app. This is your sanctuary.'}
+                            </p>
+                            <p style={{fontSize:'0.88rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.7}}>
+                                {language==='es' ? 'Donde puedes confesar que algunos días no te reconoces. Que te asusta lo impredecible que eres. Que nadie entiende esta montaña rusa. Que te sientes sola en este proceso.' : 'Where you can admit that some days you do not recognise yourself. That your unpredictability scares you. That nobody understands this rollercoaster. That you feel alone.'}
+                            </p>
+                            <p style={{fontSize:'0.9rem',color:'#C9935A',lineHeight:1.6,fontWeight:600}}>
+                                {language==='es' ? '¿Sabes qué? Eres de las valientes. ✦' : 'You know what? You are one of the brave ones. ✦'}
+                            </p>
+                            <p style={{fontSize:'0.88rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.7}}>
+                                {language==='es' ? 'Hay dos tipos de mujeres en esta etapa: las que florecen y las que sienten que todo se desmorona. Las dos son completamente normales.' : 'There are two types of women at this stage: those who bloom and those who feel everything is falling apart. Both are completely normal.'}
+                            </p>
+                            <p style={{fontSize:'0.88rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.7}}>
+                                {language==='es' ? 'Voy a ayudarte con menús, ejercicio y entender tu cuerpo... pero también estaré aquí cuando quieras matar a alguien por masticar fuerte 😅, llores viendo un anuncio, o necesites que alguien te diga "no estás loca".' : "I'll help you with menus, exercise and understanding your body... but I'll also be here when you want to kill someone for chewing loudly 😅, cry at a commercial, or need someone to tell you you are not crazy."}
+                            </p>
+                            <p style={{fontSize:'0.9rem',color:'#C9935A',fontWeight:600,lineHeight:1.5}}>
+                                {language==='es' ? 'Somos tú y yo. Tu espacio más seguro. 🌿 ¿Lista?' : 'It is just you and me. Your safest space. 🌿 Ready?'}
+                            </p>
+                        </div>
+                    );
+                }
+
                 // Mensajes según contexto
                 const messages = {
                     es: {
