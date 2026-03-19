@@ -4216,12 +4216,9 @@ query = query.eq('region', region.toUpperCase());
                                     {/* Momento del día */}
                                     {flipped && (
                                         <div style={{marginTop:'10px',display:'flex',gap:'8px'}}>
-                                            {[
-                                                {key:'aprender',icon:'🧠',es:'Aprender',en:'Learn'},
-                                                {key:'cuidarme',icon:'💆',es:'Cuidarme',en:'Care'},
-                                                {key:'intimidad',icon:'❤️',es:'Intimidad',en:'Intimacy'},
-                                            ].map((btn,i) => {
-                                                const contenido = {
+                                            {(() => {
+                                            const [activeMomento, setActiveMomento] = React.useState(null);
+                                            const contenido = {
                                                     aprender: {
                                                         luna: {es:'El estrógeno bajo reduce la melatonina. Por eso tu sueño cambió — no es tu culpa, es química.',en:'Low oestrogen reduces melatonin. Your sleep changed — not your fault, it is chemistry.'},
                                                         llama: {es:'Los sofocos son vasodilataciones controladas por el hipotálamo cuando el estrógeno fluctúa.',en:'Hot flashes are vasodilations controlled by the hypothalamus when oestrogen fluctuates.'},
@@ -4248,26 +4245,31 @@ query = query.eq('region', region.toUpperCase());
                                                     },
                                                 };
                                                 const [active, setActive] = React.useState(null);
-                                                return (
-                                                    <div key={i} style={{flex:1}}>
-                                                        <div onClick={(e)=>{e.stopPropagation();setActive(active===btn.key?null:btn.key)}} style={{
-                                                            background:active===btn.key?`linear-gradient(135deg,${carta.color_from},${carta.color_to})`:(darkMode?'rgba(255,255,255,0.06)':'white'),
-                                                            border:`1px solid ${active===btn.key?'rgba(201,147,90,0.5)':'rgba(201,147,90,0.2)'}`,
-                                                            borderRadius:'0.85rem',padding:'0.6rem',textAlign:'center',cursor:'pointer',transition:'all 0.2s',
-                                                        }}>
-                                                            <span style={{fontSize:'1.1rem',display:'block',marginBottom:'2px'}}>{btn.icon}</span>
-                                                            <p style={{fontSize:'0.72rem',color:active===btn.key?'rgba(255,255,255,0.9)':'#C9935A',margin:0,fontWeight:600}}>{language==='es'?btn.es:btn.en}</p>
-                                                        </div>
-                                                        {active===btn.key && (
-                                                            <div style={{marginTop:'6px',background:darkMode?'rgba(255,255,255,0.04)':'rgba(253,248,243,0.95)',borderRadius:'0.75rem',padding:'0.75rem',border:'1px solid rgba(201,147,90,0.15)'}}>
-                                                                <p style={{fontSize:'0.78rem',color:darkMode?'#e8d5c0':'#57534e',margin:0,lineHeight:1.5}}>
-                                                                    {language==='es'?contenido[btn.key][sintoma].es:contenido[btn.key][sintoma].en}
-                                                                </p>
-                                                            </div>
-                                                        )}
+                                            const btns = [
+                                                {key:'aprender',icon:'🧠',es:'Aprender',en:'Learn'},
+                                                {key:'cuidarme',icon:'💆',es:'Cuidarme',en:'Care'},
+                                                {key:'intimidad',icon:'❤️',es:'Intimidad',en:'Intimacy'},
+                                            ];
+                                            return btns.map((btn,i) => (
+                                                <div key={i} style={{flex:1}}>
+                                                    <div onClick={(e)=>{e.stopPropagation();setActiveMomento(activeMomento===btn.key?null:btn.key)}} style={{
+                                                        background:activeMomento===btn.key?`linear-gradient(135deg,${carta.color_from},${carta.color_to})`:(darkMode?'rgba(255,255,255,0.06)':'white'),
+                                                        border:`1px solid ${activeMomento===btn.key?'rgba(201,147,90,0.5)':'rgba(201,147,90,0.2)'}`,
+                                                        borderRadius:'0.85rem',padding:'0.6rem',textAlign:'center',cursor:'pointer',transition:'all 0.2s',
+                                                    }}>
+                                                        <span style={{fontSize:'1.1rem',display:'block',marginBottom:'2px'}}>{btn.icon}</span>
+                                                        <p style={{fontSize:'0.72rem',color:activeMomento===btn.key?'rgba(255,255,255,0.9)':'#C9935A',margin:0,fontWeight:600}}>{language==='es'?btn.es:btn.en}</p>
                                                     </div>
-                                                );
-                                            })}
+                                                    {activeMomento===btn.key && (
+                                                        <div style={{marginTop:'6px',background:darkMode?'rgba(255,255,255,0.04)':'rgba(253,248,243,0.95)',borderRadius:'0.75rem',padding:'0.75rem',border:'1px solid rgba(201,147,90,0.15)'}}>
+                                                            <p style={{fontSize:'0.78rem',color:darkMode?'#e8d5c0':'#57534e',margin:0,lineHeight:1.5}}>
+                                                                {language==='es'?contenido[btn.key][sintoma].es:contenido[btn.key][sintoma].en}
+                                                            </p>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ));
+                                        })()}
                                         </div>
                                     )}
                                 </div>
