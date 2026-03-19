@@ -3869,187 +3869,410 @@ query = query.eq('region', region.toUpperCase());
                         <video autoPlay loop muted playsInline src="/videos/Dashboard.mp4" style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none', opacity: 0.18}} />
                         <video autoPlay loop muted playsInline src="/videos/Dashboard.mp4" style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none', opacity: 0.18}} />
 
-                        {/* ── HERO TRIAL ── */}
-                        <div style={{
-                            background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 55%, #ec4899 100%)',
-                            borderRadius: '1.5rem',
-                            padding: '2rem 1.75rem',
-                            color: 'white',
-                            position: 'relative',
-                            overflow: 'hidden'
-                        }}>
-                            {/* Countdown días */}
-                            <div style={{
-                                position: 'absolute', top: '1.25rem', right: '1.25rem',
-                                background: 'rgba(255,255,255,0.18)',
-                                borderRadius: '9999px',
-                                padding: '0.3rem 0.9rem',
-                                fontSize: '0.78rem',
-                                fontWeight: 700,
-                                backdropFilter: 'blur(4px)'
-                            }}>
-                                {language === 'es' ? `Día ${dayNum} de 3` : `Day ${dayNum} of 3`}
-                            </div>
+                        {/* ── HERO DINÁMICO ── */}
+                        {(() => {
+                            const tier = getUserTier();
+                            const userName = currentUser?.profile_name || (language === 'es' ? 'amiga' : 'friend');
+                            const todayS = symptoms.length > 0 ? symptoms[symptoms.length - 1] : null;
+                            const hasLowSleep = todayS && (todayS.sleep || todayS.sleepQuality || 0) <= 3;
+                            const hasLowEnergy = todayS && (todayS.energy || todayS.energyLevel || 0) <= 3;
+                            const hasHighAnxiety = todayS && (todayS.anxiety || todayS.anxietyLevel || 0) >= 4;
+                            const hasLowMood = todayS && (todayS.mood || todayS.moodLevel || 0) <= 3;
 
-                            <p style={{fontSize: '0.8rem', fontWeight: 600, opacity: 0.85, marginBottom: '0.4rem', letterSpacing: '0.06em', textTransform: 'uppercase'}}>
-                                {language === 'es' ? '✦ PRUEBA GRATUITA' : '✦ FREE TRIAL'}
-                            </p>
-                            <h1 style={{fontFamily: "'Cormorant', serif", fontSize: '2rem', fontWeight: 500, lineHeight: 1.15, marginBottom: '0.75rem'}}>
-                                {language === 'es' ? `Hola, ${userName} 💜` : `Hi, ${userName} 💜`}
-                            </h1>
-                            <p style={{fontSize: '0.95rem', opacity: 0.9, lineHeight: 1.6, marginBottom: '1.25rem'}}>
-                                {language === 'es'
-                                    ? 'Tienes 3 días para descubrir cómo Lumera transforma tu bienestar en esta etapa. Explora todo sin límites.'
-                                    : 'You have 3 days to discover how Lumera transforms your wellbeing at this stage. Explore everything without limits.'}
-                            </p>
+                            let mode = 'ritual';
+                            if (hasLowEnergy || hasLowSleep) mode = 'cueva';
+                            else if (hasHighAnxiety || hasLowMood) mode = 'tormenta';
+                            else if (todayS && (todayS.energy || 0) >= 4 && (todayS.mood || 0) >= 4) mode = 'diosa';
 
-                            {/* Barra de progreso días */}
-                            <div style={{display: 'flex', gap: '0.4rem'}}>
-                                {[1,2,3].map(d => (
-                                    <div key={d} style={{
-                                        flex: 1, height: '6px', borderRadius: '9999px',
-                                        background: d <= dayNum ? 'white' : 'rgba(255,255,255,0.3)'
-                                    }}/>
-                                ))}
-                            </div>
-                        </div>
+                            const modeConfig = {
+                                cueva: {
+                                    bg: 'linear-gradient(135deg,#2d1f14 0%,#5c3d22 100%)',
+                                    label: language==='es'?'🐻 Modo cueva activado':'🐻 Cave mode on',
+                                    msg: language==='es'?`Hoy no tienes que poder con todo, ${userName}. Tu cuerpo está procesando algo importante. Yo me encargo del resto.`:`You don't have to handle everything today, ${userName}. Your body is processing something important. I've got the rest.`,
+                                },
+                                diosa: {
+                                    bg: 'linear-gradient(135deg,#7a4f1a 0%,#C9935A 100%)',
+                                    label: language==='es'?'✨ Modo diosa encendido':'✨ Goddess mode on',
+                                    msg: language==='es'?`Hoy tu cuerpo está brillando, ${userName}. Lo noto en tus datos. Aprovechamos esta energía juntas.`:`Your body is shining today, ${userName}. I can see it in your data. Let's use this energy together.`,
+                                },
+                                tormenta: {
+                                    bg: 'linear-gradient(135deg,#1a2535 0%,#2d4a7a 100%)',
+                                    label: language==='es'?'⛈️ Modo tormenta, respira':'⛈️ Storm mode, breathe',
+                                    msg: language==='es'?`No estás loca, ${userName}. Lo que sientes tiene nombre y tiene solución. Hoy vamos despacio.`:`You're not crazy, ${userName}. What you feel has a name and a solution. We go slow today.`,
+                                },
+                                ritual: {
+                                    bg: 'linear-gradient(135deg,#1a2d1f 0%,#3d6645 100%)',
+                                    label: language==='es'?'🌿 Modo ritual, fluye':'🌿 Ritual mode, flow',
+                                    msg: language==='es'?`Un día tranquilo también es un regalo, ${userName}. Tu cuerpo está hablando en voz baja hoy.`:`A calm day is also a gift, ${userName}. Your body is speaking softly today.`,
+                                },
+                            };
 
-                        {/* ── ACCIONES RÁPIDAS 2x2 GLASSMORPHISM ── */}
-                        <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0.85rem'}}>
-                            {[
-                                {img:'/images/sintomas.png',es:'Síntomas',en:'Symptoms',desc_es:'Registra cómo te sientes hoy',desc_en:'Log how you feel today',page:'symptoms'},
-                                {img:'/images/menu.png',es:'Nutrición',en:'Nutrition',desc_es:'Menú adaptado a ti',desc_en:'Menu adapted to you',page:'nutrition'},
-                                {img:'/images/ejercicio.png',es:'Ejercicio',en:'Exercise',desc_es:'Rutina para esta etapa',desc_en:'Routine for this stage',page:'exercise'},
-                                {img:'/images/lumi.png',es:'LUMI',en:'LUMI',desc_es:'Tu coach personal',desc_en:'Your personal coach',page:'chat'}
-                            ].map((action,i) => (
-                                <div key={i} onClick={() => setCurrentPage(action.page)}
-                                    style={{position:'relative',borderRadius:'1.25rem',padding:'1.25rem 1rem',cursor:'pointer',overflow:'hidden',
-                                        background: darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.85)',
-                                        backdropFilter:'blur(16px)',WebkitBackdropFilter:'blur(16px)',
-                                        border: darkMode ? '1px solid rgba(201,147,90,0.15)' : '1px solid rgba(201,147,90,0.2)',
-                                        boxShadow: darkMode ? '0 4px 24px rgba(0,0,0,0.3)' : '0 4px 20px rgba(201,147,90,0.1)',
-                                        transition:'transform 0.15s'}}
-                                    onMouseEnter={e=>{e.currentTarget.style.transform='scale(1.03)'}}
-                                    onMouseLeave={e=>{e.currentTarget.style.transform='scale(1)'}}>
-                                    <div style={{position:'absolute',top:'-1rem',right:'-1rem',width:'4rem',height:'4rem',borderRadius:'9999px',background:'rgba(201,147,90,0.3)',filter:'blur(20px)',opacity:0.4,pointerEvents:'none'}}/>
-                                    <img src={action.img} style={{width:'36px',height:'36px',borderRadius:'50%',objectFit:'cover',marginBottom:'0.5rem'}} alt="" />
-                                    <p style={{fontFamily:"'Cormorant', serif",fontSize:'1.2rem',fontWeight:600,color:textMain,marginBottom:'0.2rem',lineHeight:1.2}}>{language==='es'?action.es:action.en}</p>
-                                    <p style={{fontSize:'0.75rem',color:textSub,lineHeight:1.4}}>{language==='es'?action.desc_es:action.desc_en}</p>
-                                    <div style={{position:'absolute',bottom:'0.75rem',right:'0.85rem',fontSize:'0.8rem',color:textSub,opacity:0.6}}>→</div>
-                                </div>
-                            ))}
-                        </div>
-        
+                            const cfg = modeConfig[mode];
 
-                        
-                        
-                        {/* ── AUNQUE NO TENGAS TIEMPO ── */}
-                        <div style={{borderRadius:'1.25rem',overflow:'hidden',position:'relative',background:'linear-gradient(135deg,#fdf8f3,#fef3e8)',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.1)'}}>
-                            <div onClick={(e)=>{const b=e.currentTarget.nextSibling;b.style.display=b.style.display==='none'?'block':'none'}} style={{cursor:'pointer'}}>
-                            <img src="/images/express.png" style={{width:'100%',height:'140px',objectFit:'cover',objectPosition:'left center',opacity:0.9}} alt="" />
-                            <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                            const completedActions = [
+                                symptoms.length > 0,
+                                true,
+                                true,
+                                false,
+                            ].filter(Boolean).length;
+                            const progressPct = Math.round((completedActions / 4) * 100);
+
+                            return (
                                 <div>
-                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'AUNQUE NO TENGAS TIEMPO':'EVEN WHEN YOU HAVE NO TIME'}</p>
-                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:'#1c1917',lineHeight:1.2}}>{language==='es'?'Pequeños momentos, grandes cambios.':'Small moments, big changes.'}</h3>
-                                </div>
-                                <span style={{color:'#C9935A',fontSize:'1rem',flexShrink:0,marginLeft:'1rem'}}>▾</span>
-                            </div>
-                            </div>
-                            <div style={{display:'none',padding:'0 1.5rem 1.25rem'}}>
-                                <div style={{display:'flex',flexDirection:'column',gap:'0.75rem'}}>
-                                <div style={{display:'flex',flexDirection:'column',gap:'0.75rem'}}>
-                                    {[
-                                        {icon:'☀️',momento_es:'Preparando el desayuno',momento_en:'Preparing breakfast',receta_es:'Avena + nueces + canela',receta_en:'Oats + nuts + cinnamon',ejercicio_es:'10 sentadillas',ejercicio_en:'10 squats',ciencia_es:'Estabiliza tu azúcar en sangre 4h',ciencia_en:'Stabilises blood sugar 4h',kcal:'~380 kcal',tiempo:'8 min',sintoma_es:'Energía',sintoma_en:'Energy'},
-                                        {icon:'🚗',momento_es:'En el coche o metro',momento_en:'In the car or metro',receta_es:'Yogur griego + nueces',receta_en:'Greek yogurt + nuts',ejercicio_es:'Kegel en el semáforo',ejercicio_en:'Kegel at red lights',ciencia_es:'El magnesio reduce el cortisol',ciencia_en:'Magnesium reduces cortisol',kcal:'~180 kcal',tiempo:'2 min',sintoma_es:'Ansiedad',sintoma_en:'Anxiety'},
-                                        {icon:'🌿',momento_es:'Bajón de media mañana',momento_en:'Mid-morning slump',receta_es:'Plátano + almendras + cacao puro',receta_en:'Banana + almonds + raw cacao',ejercicio_es:'Respiración 4-4-4 (2 min)',ejercicio_en:'4-4-4 breathing (2 min)',ciencia_es:'El cacao activa la serotonina de forma natural',ciencia_en:'Cacao naturally boosts serotonin',kcal:'~200 kcal',tiempo:'2 min',sintoma_es:'Energía',sintoma_en:'Energy'},
-                                        {icon:'🌙',momento_es:'Cena en 12 minutos',momento_en:'Dinner in 12 min',receta_es:'Tortilla espinacas + aguacate',receta_en:'Spinach omelette + avocado',ejercicio_es:'Estiramiento cadera 3 min',ejercicio_en:'Hip stretch 3 min',ciencia_es:'El magnesio del aguacate mejora el sueño',ciencia_en:'Avocado magnesium improves sleep',kcal:'~420 kcal',tiempo:'12 min',sintoma_es:'Sueño',sintoma_en:'Sleep'},
-                                    ].map((item,i) => (
-                                        <div key={i} style={{background:'rgba(255,255,255,0.8)',borderRadius:'1rem',padding:'1rem',border:'1px solid rgba(201,147,90,0.15)'}}>
-                                            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'0.6rem'}}>
-                                                <div style={{display:'flex',alignItems:'center',gap:'0.5rem'}}>
-                                                    <span style={{fontSize:'1.1rem'}}>{item.icon}</span>
-                                                    <span style={{fontFamily:"'Cormorant',serif",fontSize:'1rem',fontWeight:600,color:'#1c1917'}}>{language==='es'?item.momento_es:item.momento_en}</span>
-                                                </div>
-                                                <div style={{display:'flex',gap:'0.4rem'}}>
-                                                    <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px',fontWeight:600}}>⏱ {item.tiempo}</span>
-                                                    <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px',fontWeight:600}}>⚡ {item.kcal}</span>
-                                                </div>
-                                            </div>
-                                            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.4rem',marginBottom:'0.5rem'}}>
-                                                <div style={{fontSize:'0.75rem',color:'#57534e'}}><span style={{color:'#C9935A'}}>🍳 </span>{language==='es'?item.receta_es:item.receta_en}</div>
-                                                <div style={{fontSize:'0.75rem',color:'#57534e'}}><span style={{color:'#C9935A'}}>💪 </span>{language==='es'?item.ejercicio_es:item.ejercicio_en}</div>
-                                            </div>
-                                            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                                                <p style={{fontSize:'0.72rem',color:'#78716c',fontStyle:'italic'}}>🔬 {language==='es'?item.ciencia_es:item.ciencia_en}</p>
-                                                <span style={{fontSize:'0.68rem',background:'rgba(155,142,196,0.15)',color:'#9b8ec4',padding:'0.15rem 0.5rem',borderRadius:'9999px',fontWeight:600}}>✦ {language==='es'?item.sintoma_es:item.sintoma_en}</span>
+                                    {/* Hero card */}
+                                    <div style={{borderRadius:'1.5rem',padding:'1.5rem',marginBottom:'12px',background:cfg.bg,position:'relative',overflow:'hidden'}}>
+                                        <div style={{position:'absolute',top:0,right:0,width:'120px',height:'120px',background:'rgba(255,255,255,0.04)',borderRadius:'50%',transform:'translate(30px,-30px)'}}/>
+                                        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'10px'}}>
+                                            <p style={{fontSize:'0.72rem',color:'rgba(255,255,255,0.7)',letterSpacing:'0.12em',textTransform:'uppercase',margin:0}}>{cfg.label}</p>
+                                            <div style={{background:'rgba(255,255,255,0.15)',borderRadius:'9999px',padding:'0.2rem 0.75rem',fontSize:'0.72rem',color:'white',backdropFilter:'blur(4px)'}}>
+                                                {language==='es'?`Día ${dayNum} de 3`:`Day ${dayNum} of 3`}
                                             </div>
                                         </div>
-                                    ))}
+                                        <h2 style={{fontFamily:"'Cormorant',serif",fontSize:'1.9rem',fontWeight:500,color:'white',margin:'0 0 8px',lineHeight:1.2}}>
+                                            {language==='es'?`Hola, ${userName}`:`Hi, ${userName}`}
+                                        </h2>
+                                        <div style={{display:'flex',alignItems:'flex-start',gap:'10px',marginBottom:'16px'}}>
+                                            <img src="/images/lumi.png" style={{width:'32px',height:'32px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'2px solid rgba(201,147,90,0.6)'}} alt="LUMI"/>
+                                            <p style={{fontSize:'0.88rem',color:'rgba(255,255,255,0.88)',lineHeight:1.6,margin:0,fontStyle:'italic'}}>{cfg.msg}</p>
+                                        </div>
+                                        {/* Barra progreso */}
+                                        <div>
+                                            <div style={{display:'flex',justifyContent:'space-between',marginBottom:'6px'}}>
+                                                <p style={{fontSize:'0.72rem',color:'rgba(255,255,255,0.65)',margin:0}}>{language==='es'?'Cuanto más registras, mejor te entiendo':'The more you log, the better I know you'}</p>
+                                                <p style={{fontSize:'0.72rem',color:'rgba(201,147,90,0.9)',margin:0,fontWeight:600}}>{progressPct}%</p>
+                                            </div>
+                                            <div style={{background:'rgba(255,255,255,0.15)',borderRadius:'9999px',height:'5px'}}>
+                                                <div style={{background:'linear-gradient(to right,#C9935A,#e8c89f)',borderRadius:'9999px',height:'100%',width:`${progressPct}%`,transition:'width 0.5s ease'}}/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Tip del día */}
+                                    {(() => {
+                                        const tips_es = {
+                                            cueva: '🌿 El magnesio del aguacate reduce el cortisol que te roba energía. Ponlo hoy en el desayuno.',
+                                            diosa: '⚡ Tu energía alta es el momento ideal para el ejercicio de fuerza. Aprovecha la ventana de hoy.',
+                                            tormenta: '🌊 La respiración 4-4-6 activa el nervio vago y frena la ansiedad en 3 minutos.',
+                                            ritual: '✦ Un día tranquilo es cuando tu cuerpo consolida los cambios. Descansa sin culpa.',
+                                        };
+                                        const tips_en = {
+                                            cueva: '🌿 Avocado magnesium reduces the cortisol stealing your energy. Have it at breakfast today.',
+                                            diosa: '⚡ High energy is the perfect time for strength training. Use todays window.',
+                                            tormenta: '🌊 4-4-6 breathing activates the vagus nerve and stops anxiety in 3 minutes.',
+                                            ritual: '✦ A calm day is when your body consolidates changes. Rest without guilt.',
+                                        };
+                                        return (
+                                            <div style={{background:darkMode?'rgba(201,147,90,0.08)':'rgba(253,248,243,0.95)',borderRadius:'1.1rem',padding:'0.85rem 1.1rem',marginBottom:'12px',border:'1px solid rgba(201,147,90,0.2)'}}>
+                                                <p style={{fontSize:'0.7rem',color:'#C9935A',fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',margin:'0 0 4px'}}>{language==='es'?'✦ Aprendizaje de hoy':'✦ Todays insight'}</p>
+                                                <p style={{fontSize:'0.85rem',color:darkMode?'#e8d5c0':'#57534e',margin:0,lineHeight:1.55}}>{language==='es'?tips_es[mode]:tips_en[mode]}</p>
+                                            </div>
+                                        );
+                                    })()}
+
+                                    {/* ¿En qué nos centramos hoy? */}
+                                    <div style={{background:darkMode?'rgba(255,255,255,0.04)':'white',borderRadius:'1.25rem',padding:'1.1rem 1.25rem',marginBottom:'12px',border:'1px solid rgba(201,147,90,0.15)'}}>
+                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.15rem',fontWeight:500,color:darkMode?'#fdf8f3':'#1c1917',margin:'0 0 10px'}}>
+                                            {language==='es'?'¿En qué nos centramos hoy?':'What do we focus on today?'}
+                                        </p>
+                                        <div style={{display:'flex',flexWrap:'wrap',gap:'8px'}}>
+                                            {[
+                                                {es:'Sueño',en:'Sleep',icon:'🌙'},
+                                                {es:'Energía',en:'Energy',icon:'⚡'},
+                                                {es:'Ánimo',en:'Mood',icon:'🌊'},
+                                                {es:'Sofocos',en:'Hot flashes',icon:'🌡️'},
+                                                {es:'Ansiedad',en:'Anxiety',icon:'💨'},
+                                                {es:'Niebla mental',en:'Brain fog',icon:'🌫️'},
+                                            ].map((s,i) => (
+                                                <div key={i} onClick={()=>setCurrentPage('symptoms')} style={{
+                                                    background:darkMode?'rgba(201,147,90,0.1)':'rgba(253,248,243,0.9)',
+                                                    border:'1px solid rgba(201,147,90,0.25)',
+                                                    borderRadius:'9999px',
+                                                    padding:'0.35rem 0.85rem',
+                                                    fontSize:'0.82rem',
+                                                    color:darkMode?'#e8d5c0':'#57534e',
+                                                    cursor:'pointer',
+                                                    display:'flex',
+                                                    alignItems:'center',
+                                                    gap:'5px',
+                                                    transition:'all 0.2s',
+                                                }}
+                                                onMouseEnter={e=>{e.currentTarget.style.background='rgba(201,147,90,0.2)';e.currentTarget.style.color='#C9935A'}}
+                                                onMouseLeave={e=>{e.currentTarget.style.background=darkMode?'rgba(201,147,90,0.1)':'rgba(253,248,243,0.9)';e.currentTarget.style.color=darkMode?'#e8d5c0':'#57534e'}}
+                                                >
+                                                    <span style={{fontSize:'0.9rem'}}>{s.icon}</span>
+                                                    <span>{language==='es'?s.es:s.en}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* 4 tarjetas expandibles */}
+                                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px',marginBottom:'12px'}}>
+                                        {[
+                                            {
+                                                img:'/images/sintomas.png',
+                                                es:'Síntomas',en:'Symptoms',
+                                                desc_es:'Cuéntame tu día',desc_en:'Tell me about your day',
+                                                detail_es:'Registra cómo te sientes para que LUMI pueda acompañarte mejor hoy.',
+                                                detail_en:'Log how you feel so LUMI can support you better today.',
+                                                page:'symptoms'
+                                            },
+                                            {
+                                                img:'/images/menu.png',
+                                                es:'Nutrición',en:'Nutrition',
+                                                desc_es:'Lo que necesitas hoy',desc_en:'What you need today',
+                                                detail_es:'Tu menú adaptado a cómo te sientes. Cambia cada día contigo.',
+                                                detail_en:'Your menu adapted to how you feel. Changes with you every day.',
+                                                page:'nutrition'
+                                            },
+                                            {
+                                                img:'/images/ejercicio.png',
+                                                es:'Ejercicio',en:'Exercise',
+                                                desc_es:'Movimiento a tu medida',desc_en:'Movement your way',
+                                                detail_es:'Rutina pensada para esta etapa. Sin forzar, con propósito.',
+                                                detail_en:'Routine designed for this stage. No forcing, with purpose.',
+                                                page:'exercise'
+                                            },
+                                            {
+                                                img:'/images/lumi.png',
+                                                es:'LUMI',en:'LUMI',
+                                                desc_es:'Tu espacio seguro ✦',desc_en:'Your safe space ✦',
+                                                detail_es:'Cuéntame lo que no le dices a nadie. Aquí no hay juicios.',
+                                                detail_en:'Tell me what you dont tell anyone. No judgement here.',
+                                                page:'chat'
+                                            },
+                                        ].map((action,i) => (
+                                            <div key={i} style={{
+                                                borderRadius:'1.25rem',
+                                                overflow:'hidden',
+                                                background:darkMode?'rgba(255,255,255,0.06)':'white',
+                                                border:'1px solid rgba(201,147,90,0.15)',
+                                                boxShadow:'0 2px 16px rgba(201,147,90,0.08)',
+                                                cursor:'pointer',
+                                            }}
+                                            onClick={()=>setCurrentPage(action.page)}
+                                            >
+                                                <div style={{position:'relative',height:'90px',overflow:'hidden'}}>
+                                                    <img src={action.img} style={{width:'100%',height:'100%',objectFit:'cover'}} alt=""/>
+                                                    <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,rgba(0,0,0,0.1),rgba(0,0,0,0.4))'}}/>
+                                                </div>
+                                                <div style={{padding:'0.75rem'}}>
+                                                    <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:'0 0 3px'}}>{language==='es'?action.es:action.en}</p>
+                                                    <p style={{fontSize:'0.75rem',color:'#C9935A',margin:0,lineHeight:1.3}}>{language==='es'?action.desc_es:action.desc_en}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                                </div>
-                            </div>
-                        </div>
+                            );
+                        })()}
 
-                        {/* ── BATCH COOKING — tarjeta dashboard ── */}
-                        <div onClick={()=>setCurrentPage('nutrition')} style={{borderRadius:'1.25rem',background:'linear-gradient(135deg,#fdf8f3,#fef3e8)',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)',cursor:'pointer',padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                            <div>
-                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.3rem'}}>✦ {language==='es'?'COCINA EL DOMINGO':'COOK SUNDAY'}</p>
-                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.3rem',fontWeight:500,color:'#1c1917',lineHeight:1.2,marginBottom:'0.3rem'}}>{language==='es'?'Come bien toda la semana.':'Eat well all week.'}</h3>
-                                <p style={{fontSize:'0.75rem',color:'#78716c'}}>{language==='es'?'4 semanas · ~60 min · Ver en Nutrición →':'4 weeks · ~60 min · See in Nutrition →'}</p>
-                            </div>
-                            <span style={{fontSize:'2rem',flexShrink:0}}>🍳</span>
-                        </div>
 
-{/* ── BANNER CHALLENGE SUELO PÉLVICO ── */}
-                        <div onClick={() => setCurrentPage('exercise')} style={{position:'relative',borderRadius:'1.25rem',overflow:'hidden',cursor:'pointer',minHeight:'160px'}}>
-                            <video autoPlay loop muted playsInline style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}} src="/videos/pelvic-floor-hero.mp4" />
-                            <div style={{position:'relative',background:'linear-gradient(135deg,rgba(0,0,0,0.45),rgba(124,58,237,0.6))',padding:'1.5rem 1.75rem'}}>
-                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'rgba(255,255,255,0.8)',letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:'0.4rem'}}>🏆 {language === 'es' ? '21 DÍAS CHALLENGE' : '21 DAYS CHALLENGE'}</p>
-                                <h3 style={{fontFamily:"'Cormorant', serif",fontSize:'1.6rem',fontWeight:500,color:'white',lineHeight:1.2,marginBottom:'0.5rem'}}>{language === 'es' ? 'Empieza hoy,' : 'Start today,'}<br/>{language === 'es' ? 'siéntelo en 3 semanas' : 'feel it in 3 weeks'}</h3>
-                                <p style={{fontSize:'0.82rem',color:'rgba(255,255,255,0.85)'}}>{language === 'es' ? 'Challenge Suelo Pélvico →' : 'Pelvic Floor Challenge →'}</p>
-                            </div>
-                        </div>
+                        {/* ── CARTA DEL ORÁCULO ── */}
+                        {(() => {
+                            const todayS = symptoms.length > 0 ? symptoms[symptoms.length - 1] : null;
+                            const hasLowSleep = todayS && (todayS.sleep || 0) <= 3;
+                            const hasHighHotFlashes = todayS && (todayS.hotFlashes || todayS.hot_flashes || 0) >= 4;
+                            const hasHighAnxiety = todayS && (todayS.anxiety || 0) >= 4;
+                            const hasLowEnergy = todayS && (todayS.energy || 0) <= 2;
+                            const hasHighEnergy = todayS && (todayS.energy || 0) >= 4 && (todayS.mood || 0) >= 4;
+                            const hasLowMood = todayS && (todayS.mood || 0) <= 3;
 
-{/* ── SI TE SIENTES ASÍ — ACORDEÓN ── */}
-                        <div style={{background: bgCard, borderRadius: '1.25rem', border: `1px solid ${borderSoft}`, boxShadow: '0 2px 16px rgba(0,0,0,0.05)', overflow: 'hidden'}}>
-                            <button onClick={() => setShowSymptomsAccordion && setShowSymptomsAccordion(v => !v)}
-                                style={{width:'100%', display:'flex', alignItems:'center', justifyContent:'space-between', padding:'1.25rem 1.5rem', background:'none', border:'none', cursor:'pointer'}}
-                                onClick={(e) => { e.currentTarget.parentElement.querySelector('.accordion-body').style.display === 'none' ? e.currentTarget.parentElement.querySelector('.accordion-body').style.display = 'block' : e.currentTarget.parentElement.querySelector('.accordion-body').style.display = 'none'; e.currentTarget.querySelector('.acc-arrow').style.transform = e.currentTarget.parentElement.querySelector('.accordion-body').style.display === 'none' ? 'rotate(0deg)' : 'rotate(180deg)' }}>
-                                <div style={{textAlign:'left'}}>
-                                    <h2 style={{fontFamily:"'Cormorant', serif", fontSize:'1.45rem', fontWeight:500, color:textMain, marginBottom:'0.1rem'}}>
-                                        {language === 'es' ? 'Si te sientes así, Lumera es para ti' : 'If you feel this way, Lumera is for you'}
-                                    </h2>
-                                    <p style={{fontSize:'0.78rem', color:textSub}}>
-                                        {language === 'es' ? 'Síntomas comunes que Lumera ayuda a gestionar' : 'Common symptoms Lumera helps you manage'}
+                            let sintoma = 'flor';
+                            if (hasLowSleep) sintoma = 'luna';
+                            else if (hasHighHotFlashes) sintoma = 'llama';
+                            else if (hasHighAnxiety) sintoma = 'marea';
+                            else if (hasLowEnergy) sintoma = 'niebla';
+                            else if (hasHighEnergy) sintoma = 'rayo';
+
+                            let animo = 'ritual';
+                            if (hasHighEnergy) animo = 'diosa';
+                            else if (hasLowEnergy || hasLowSleep) animo = 'cueva';
+                            else if (hasHighAnxiety || hasLowMood) animo = 'tormenta';
+
+                            const cartas = {
+                                luna: {
+                                    symbol: '🌙', nombre_es: 'Carta Luna', nombre_en: 'Moon Card',
+                                    color_from: '#1a1f3a', color_to: '#2d3561',
+                                    variantes: {
+                                        tormenta: { titulo_es: 'Luna Oscura', titulo_en: 'Dark Moon', msg_es: 'Tu cuerpo pide oscuridad y silencio. La luna mengua para renovarse. Tú también.', msg_en: 'Your body asks for darkness and silence. The moon wanes to renew. So do you.', menu_es: 'Crema de calabaza con nuez moscada — regula la melatonina', menu_en: 'Pumpkin cream with nutmeg — regulates melatonin', ej_es: 'Respiración 4-4-6 tumbada. 5 min antes de apagar la luz', ej_en: '4-4-6 breathing lying down. 5 min before lights out' },
+                                        cueva: { titulo_es: 'Luna Serena', titulo_en: 'Serene Moon', msg_es: 'La cueva que buscas esta noche es sagrada. Tu cuerpo sabe que necesita restaurarse.', msg_en: 'The cave you seek tonight is sacred. Your body knows it needs to restore.', menu_es: 'Infusión de valeriana + chocolate 85%', menu_en: 'Valerian tea + 85% dark chocolate', ej_es: 'Estiramiento de cadera en el suelo. 3 minutos', ej_en: 'Hip stretch on the floor. 3 minutes' },
+                                        ritual: { titulo_es: 'Luna Llena', titulo_en: 'Full Moon', msg_es: 'Un día tranquilo es cuando la luna se prepara para brillar. Descansa sin culpa.', msg_en: 'A calm day is when the moon prepares to shine. Rest without guilt.', menu_es: 'Yogur griego con semillas de lino molidas', menu_en: 'Greek yogurt with ground flaxseeds', ej_es: 'Kegel suave x10 mientras preparas la cena', ej_en: 'Gentle Kegel x10 while making dinner' },
+                                        diosa: { titulo_es: 'Luna Nueva', titulo_en: 'New Moon', msg_es: 'Tienes energía pero el sueño te falla. Tu cuerpo está en transición — nuevo ciclo en marcha.', msg_en: 'You have energy but sleep fails you. Your body is in transition — new cycle beginning.', menu_es: 'Plátano con almendras antes de dormir', menu_en: 'Banana with almonds before bed', ej_es: 'Caminata meditativa 10 min antes de dormir', ej_en: '10 min meditative walk before bed' },
+                                    }
+                                },
+                                llama: {
+                                    symbol: '🔥', nombre_es: 'Carta Llama', nombre_en: 'Flame Card',
+                                    color_from: '#7a2510', color_to: '#c44b1a',
+                                    variantes: {
+                                        tormenta: { titulo_es: 'Llama Viva', titulo_en: 'Living Flame', msg_es: 'El fuego interno y la tormenta se encuentran hoy. No los apagues — transfórmalos.', msg_en: 'Inner fire and storm meet today. Transform them.', menu_es: 'Infusión de salvia fría — el remedio más estudiado para sofocos', menu_en: 'Cold sage infusion — most studied remedy for hot flashes', ej_es: 'Respiración refrescante: inhala 4, exhala 8. Repite 6 veces', ej_en: 'Cooling breath: inhale 4, exhale 8. Repeat 6 times' },
+                                        cueva: { titulo_es: 'Llama Interior', titulo_en: 'Inner Flame', msg_es: 'Tu cuerpo arde por dentro mientras pide calma por fuera. Ambas cosas pueden coexistir.', msg_en: 'Your body burns inside while asking for calm outside. Both can coexist.', menu_es: 'Ensalada de rúcula, pepino y semillas de lino', menu_en: 'Rocket, cucumber and flaxseed salad', ej_es: 'Estiramientos suaves en el suelo. Sin calor, sin presión', ej_en: 'Gentle stretches on the floor. No heat, no pressure' },
+                                        ritual: { titulo_es: 'Llama Sagrada', titulo_en: 'Sacred Flame', msg_es: 'El calor que sientes es tu cuerpo hablando. Escúchalo con curiosidad, no con miedo.', msg_en: 'The heat you feel is your body speaking. Listen with curiosity, not fear.', menu_es: 'Tofu salteado con sésamo y jengibre', menu_en: 'Stir-fried tofu with sesame and ginger', ej_es: 'Yoga suave: postura del niño 5 minutos', ej_en: 'Gentle yoga: child pose 5 minutes' },
+                                        diosa: { titulo_es: 'Llama Dorada', titulo_en: 'Golden Flame', msg_es: 'Energía de diosa y fuego interno juntos. Eres poderosa incluso cuando ardes.', msg_en: 'Goddess energy and inner fire together. You are powerful even when you burn.', menu_es: 'Salmón con aguacate y semillas — omega-3 que regula la temperatura', menu_en: 'Salmon with avocado and seeds — omega-3 regulates temperature', ej_es: 'Aprovecha la energía: 15 min caminata rápida por la mañana', ej_en: 'Use that energy: 15 min brisk walk in the morning' },
+                                    }
+                                },
+                                marea: {
+                                    symbol: '🌊', nombre_es: 'Carta Marea', nombre_en: 'Tide Card',
+                                    color_from: '#0f2d4a', color_to: '#1a5276',
+                                    variantes: {
+                                        tormenta: { titulo_es: 'Marea Alta', titulo_en: 'High Tide', msg_es: 'Las mareas suben. Tú no eres la tormenta — eres el océano entero. Esto también pasa.', msg_en: 'Tides rise. You are not the storm — you are the whole ocean. This too shall pass.', menu_es: 'Avena caliente con canela y nueces — magnesio que calma el sistema nervioso', menu_en: 'Warm oats with cinnamon and walnuts — magnesium calms the nervous system', ej_es: 'Respiración cuadrada 4-4-4-4. Solo 3 minutos', ej_en: 'Box breathing 4-4-4-4. Just 3 minutes' },
+                                        cueva: { titulo_es: 'Marea Profunda', titulo_en: 'Deep Tide', msg_es: 'La cueva y el mar hoy. Necesitas profundidad y silencio. Dátelos sin culpa.', msg_en: 'Cave and sea today. You need depth and silence. Give them to yourself.', menu_es: 'Caldo de verduras casero con jengibre', menu_en: 'Homemade vegetable broth with ginger', ej_es: 'Caminar 10 minutos sola, sin música ni móvil', ej_en: 'Walk 10 minutes alone, no music no phone' },
+                                        ritual: { titulo_es: 'Marea Serena', titulo_en: 'Serene Tide', msg_es: 'Ansiedad suave en un día tranquilo. Tu cuerpo está regulándose. Confía en el proceso.', msg_en: 'Gentle anxiety on a calm day. Your body is regulating. Trust the process.', menu_es: 'Infusión de manzanilla con miel cruda', menu_en: 'Chamomile tea with raw honey', ej_es: 'Estiramiento de psoas 3 minutos — donde el cuerpo almacena el estrés', ej_en: 'Psoas stretch 3 minutes — where the body stores stress' },
+                                        diosa: { titulo_es: 'Marea Brillante', titulo_en: 'Bright Tide', msg_es: 'Energía de diosa con ansiedad de fondo. Esa tensión creativa también es poder.', msg_en: 'Goddess energy with background anxiety. That creative tension is also power.', menu_es: 'Chocolate negro 85% + una naranja — dopamina y vitamina C', menu_en: '85% dark chocolate + an orange — dopamine and vitamin C', ej_es: 'Canaliza la energía: 20 sentadillas lentas y controladas', ej_en: 'Channel the energy: 20 slow controlled squats' },
+                                    }
+                                },
+                                niebla: {
+                                    symbol: '🌫️', nombre_es: 'Carta Niebla', nombre_en: 'Mist Card',
+                                    color_from: '#2a2a35', color_to: '#4a4a5a',
+                                    variantes: {
+                                        tormenta: { titulo_es: 'Niebla Densa', titulo_en: 'Dense Mist', msg_es: 'La niebla más la tormenta. Tu cerebro necesita un descanso urgente. Dáselo.', msg_en: 'Mist and storm. Your brain needs urgent rest. Give it.', menu_es: 'Huevos revueltos con aguacate — colina y omega-3 para el cerebro', menu_en: 'Scrambled eggs with avocado — choline and omega-3 for the brain', ej_es: 'Solo caminar 5 minutos al aire libre. El oxígeno es el primer remedio', ej_en: 'Just walk 5 minutes outdoors. Oxygen is the first remedy' },
+                                        cueva: { titulo_es: 'Niebla Suave', titulo_en: 'Soft Mist', msg_es: 'La niebla no dura. Detrás siempre hay claridad. Hoy descansa — mañana ves más lejos.', msg_en: 'The mist does not last. Behind it there is always clarity. Rest today.', menu_es: 'Nueces y arándanos — el snack más estudiado para la memoria', menu_en: 'Walnuts and blueberries — most studied snack for memory', ej_es: 'Rotación de hombros y cuello 2 minutos', ej_en: 'Shoulder and neck rotation 2 minutes' },
+                                        ritual: { titulo_es: 'Niebla Clara', titulo_en: 'Clear Mist', msg_es: 'La claridad llega después de la niebla. Hoy plantas la semilla — mañana florece.', msg_en: 'Clarity comes after the mist. Today you plant the seed — tomorrow it blooms.', menu_es: 'Salmón al horno con brócoli — omega-3 que regenera conexiones neuronales', menu_en: 'Baked salmon with broccoli — omega-3 that regenerates neural connections', ej_es: 'Meditación de 5 minutos enfocada en respiración nasal', ej_en: '5 minute meditation focused on nasal breathing' },
+                                        diosa: { titulo_es: 'Niebla Dorada', titulo_en: 'Golden Mist', msg_es: 'Energía alta con niebla mental — tu cuerpo y tu mente van a ritmos distintos hoy.', msg_en: 'High energy with brain fog — your body and mind are at different rhythms today.', menu_es: 'Batido de plátano, espinacas y proteína', menu_en: 'Banana, spinach and protein smoothie', ej_es: 'Aprovecha la energía corporal: 10 min de baile libre en casa', ej_en: 'Use that body energy: 10 min of free dancing at home' },
+                                    }
+                                },
+                                flor: {
+                                    symbol: '🌸', nombre_es: 'Carta Flor', nombre_en: 'Flower Card',
+                                    color_from: '#3d1f2d', color_to: '#7a3d5c',
+                                    variantes: {
+                                        ritual: { titulo_es: 'Flor Serena', titulo_en: 'Serene Flower', msg_es: 'Tu cuerpo florece cuando lo escuchas. Hoy es uno de esos días. No lo desperdicies.', msg_en: 'Your body blooms when you listen to it. Today is one of those days.', menu_es: 'Tu menú base de hoy — todos los nutrientes para florecer', menu_en: 'Your base menu today — all nutrients to bloom', ej_es: 'Rutina completa de hoy — tu cuerpo está listo', ej_en: 'Full routine today — your body is ready' },
+                                        diosa: { titulo_es: 'Flor Dorada', titulo_en: 'Golden Flower', msg_es: 'Hoy tu cuerpo está en su mejor momento. Aprovecha cada hora — esto es tuyo.', msg_en: 'Today your body is at its best. Make the most of every hour.', menu_es: 'Menú de alta energía — proteína + hidratos + grasas saludables', menu_en: 'High energy menu — protein + carbs + healthy fats', ej_es: 'Hoy puedes subir la intensidad. Tu cuerpo te lo está pidiendo', ej_en: 'Today you can increase intensity. Your body is asking for it' },
+                                        cueva: { titulo_es: 'Flor Protegida', titulo_en: 'Protected Flower', msg_es: 'Equilibrio interno con necesidad de calma. Las flores también necesitan sombra para crecer.', msg_en: 'Inner balance with need for calm. Flowers also need shade to grow.', menu_es: 'Menú reconfortante de hoy — cálido, nutritivo, sin complicaciones', menu_en: 'Comforting menu today — warm, nutritious, uncomplicated', ej_es: 'Movimiento suave — estiramientos o caminata tranquila', ej_en: 'Gentle movement — stretches or quiet walk' },
+                                        tormenta: { titulo_es: 'Flor en la Tormenta', titulo_en: 'Flower in the Storm', msg_es: 'Tu cuerpo está bien pero tu ánimo no acompaña. Eso también es válido. Aquí estoy.', msg_en: 'Your body is well but your mood does not follow. That is also valid. I am here.', menu_es: 'Chocolate negro 85% y frutos rojos — serotonina natural', menu_en: '85% dark chocolate and berries — natural serotonin', ej_es: 'Baile libre 5 minutos — el movimiento que más rápido cambia el ánimo', ej_en: 'Free dance 5 minutes — movement that changes mood fastest' },
+                                    }
+                                },
+                                rayo: {
+                                    symbol: '⚡', nombre_es: 'Carta Rayo', nombre_en: 'Lightning Card',
+                                    color_from: '#5c4a0a', color_to: '#C9935A',
+                                    variantes: {
+                                        diosa: { titulo_es: 'Rayo Dorado', titulo_en: 'Golden Lightning', msg_es: 'Hoy tienes poder. Tu cuerpo está en su momento. Úsalo — no lo desperdicies en pequeñeces.', msg_en: 'Today you have power. Your body is in its moment. Use it.', menu_es: 'Huevos + aguacate + tostada integral. Energía 4 horas', menu_en: 'Eggs + avocado + wholegrain toast. Energy 4 hours', ej_es: 'Sube la intensidad hoy: HIIT suave 15 min o caminata rápida 30 min', ej_en: 'Increase intensity today: gentle HIIT 15 min or brisk walk 30 min' },
+                                        ritual: { titulo_es: 'Rayo Sereno', titulo_en: 'Serene Lightning', msg_es: 'Energía tranquila y constante. No necesitas brillar fuerte — basta con brillar.', msg_en: 'Quiet and constant energy. You do not need to shine bright — shining is enough.', menu_es: 'Menú equilibrado de hoy — todo lo que necesitas está ahí', menu_en: 'Balanced menu today — everything you need is there', ej_es: 'Rutina de hoy completa — tu cuerpo está receptivo', ej_en: 'Full routine today — your body is receptive' },
+                                        tormenta: { titulo_es: 'Rayo y Tormenta', titulo_en: 'Lightning and Storm', msg_es: 'Energía con tensión. Canalízala con intención — puede ser tu día más creativo.', msg_en: 'Energy with tension. Channel it with intention — it can be your most creative day.', menu_es: 'Salmón + brócoli + boniato — antiinflamatorio y energético', menu_en: 'Salmon + broccoli + sweet potato — anti-inflammatory and energising', ej_es: 'Caminata rápida 20 min para liberar la tensión', ej_en: 'Brisk walk 20 min to release tension' },
+                                        cueva: { titulo_es: 'Rayo en Descanso', titulo_en: 'Resting Lightning', msg_es: 'Tu energía está ahí pero pide pausa. El descanso también es productivo.', msg_en: 'Your energy is there but asks for pause. Rest is also productive.', menu_es: 'Nueces + plátano + yogur griego — energía sostenida sin esfuerzo', menu_en: 'Walnuts + banana + Greek yogurt — sustained energy without effort', ej_es: 'Estiramientos suaves 10 min — recarga sin agotar', ej_en: 'Gentle stretches 10 min — recharge without exhausting' },
+                                    }
+                                },
+                            };
+
+                            const carta = cartas[sintoma];
+                            const variante = carta.variantes[animo] || carta.variantes.ritual || Object.values(carta.variantes)[0];
+                            const [flipped, setFlipped] = React.useState(false);
+
+                            return (
+                                <div style={{marginBottom:'12px'}}>
+                                    <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.1rem',fontWeight:500,color:darkMode?'#fdf8f3':'#1c1917',margin:'0 0 10px',textAlign:'center'}}>
+                                        {language==='es'?'✦ Tu carta de hoy':'✦ Your card today'}
                                     </p>
-                                </div>
-                                <span className="acc-arrow" style={{fontSize:'1rem', color:'#C9935A', transition:'transform 0.3s', display:'inline-block'}}>▾</span>
-                            </button>
-                            <div className="accordion-body" style={{display:'none', padding:'0 1.5rem 1.25rem'}}>
-                                <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0.55rem'}}>
-                                    {[
-                                        {es:'Sofocos y calores', en:'Hot flashes'},
-                                        {es:'Dormir mal o poco', en:'Poor sleep'},
-                                        {es:'Fatiga constante', en:'Constant fatigue'},
-                                        {es:'Niebla mental', en:'Brain fog'},
-                                        {es:'Retención de líquidos', en:'Water retention'},
-                                        {es:'Ansiedad o irritabilidad', en:'Anxiety or irritability'},
-                                        {es:'Cambios de peso', en:'Weight changes'},
-                                        {es:'Cambios de humor', en:'Mood swings'},
-                                    ].map((item, i) => (
-                                        <div key={i} style={{
-                                            display:'flex', alignItems:'center', gap:'0.5rem',
-                                            background: darkMode ? 'rgba(201,147,90,0.08)' : 'rgba(201,147,90,0.06)',
-                                            borderRadius:'0.75rem', padding:'0.6rem 0.8rem',
-                                            border:'1px solid rgba(201,147,90,0.18)'
+                                    {/* Carta con flip */}
+                                    <div onClick={()=>setFlipped(!flipped)} style={{cursor:'pointer',perspective:'1000px',height:'200px',position:'relative'}}>
+                                        {/* Cara frontal */}
+                                        <div style={{
+                                            position:'absolute',inset:0,borderRadius:'1.25rem',
+                                            background:`linear-gradient(135deg,${carta.color_from},${carta.color_to})`,
+                                            display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',
+                                            transition:'opacity 0.4s ease, transform 0.4s ease',
+                                            opacity: flipped ? 0 : 1,
+                                            transform: flipped ? 'rotateY(90deg)' : 'rotateY(0deg)',
+                                            border:'1px solid rgba(201,147,90,0.3)',
+                                            boxShadow:'0 8px 32px rgba(0,0,0,0.3)',
                                         }}>
-                                            <span style={{color:'#C9935A', fontSize:'0.9rem', flexShrink:0}}>✦</span>
-                                            <span style={{fontSize:'0.8rem', color:textSub, fontWeight:500, lineHeight:1.3}}>{language === 'es' ? item.es : item.en}</span>
+                                            <div style={{position:'absolute',top:0,right:0,width:'80px',height:'80px',background:'rgba(255,255,255,0.05)',borderRadius:'50%',transform:'translate(20px,-20px)'}}/>
+                                            <span style={{fontSize:'3.5rem',marginBottom:'8px'}}>{carta.symbol}</span>
+                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.3rem',fontWeight:500,color:'rgba(255,255,255,0.9)',margin:0}}>{language==='es'?carta.nombre_es:carta.nombre_en}</p>
+                                            <p style={{fontSize:'0.75rem',color:'rgba(255,255,255,0.5)',margin:'6px 0 0',letterSpacing:'0.1em'}}>{language==='es'?'Toca para revelar':'Tap to reveal'}</p>
                                         </div>
-                                    ))}
+                                        {/* Cara trasera — revelada */}
+                                        <div style={{
+                                            position:'absolute',inset:0,borderRadius:'1.25rem',
+                                            background:`linear-gradient(135deg,${carta.color_from},${carta.color_to})`,
+                                            padding:'1.25rem',
+                                            transition:'opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s',
+                                            opacity: flipped ? 1 : 0,
+                                            transform: flipped ? 'rotateY(0deg)' : 'rotateY(-90deg)',
+                                            border:'1px solid rgba(201,147,90,0.3)',
+                                            boxShadow:'0 8px 32px rgba(0,0,0,0.3)',
+                                            display:'flex',flexDirection:'column',justifyContent:'space-between',
+                                        }}>
+                                            <div>
+                                                <div style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'8px'}}>
+                                                    <span style={{fontSize:'1.5rem'}}>{carta.symbol}</span>
+                                                    <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.1rem',fontWeight:600,color:'rgba(255,255,255,0.95)',margin:0}}>{language==='es'?variante.titulo_es:variante.titulo_en}</p>
+                                                </div>
+                                                <p style={{fontSize:'0.85rem',color:'rgba(255,255,255,0.82)',lineHeight:1.55,margin:0,fontStyle:'italic'}}>{language==='es'?variante.msg_es:variante.msg_en}</p>
+                                            </div>
+                                            <div style={{display:'flex',flexDirection:'column',gap:'4px',marginTop:'10px'}}>
+                                                <div style={{display:'flex',alignItems:'center',gap:'6px',cursor:'pointer'}} onClick={(e)=>{e.stopPropagation();setCurrentPage('nutrition')}}>
+                                                    <span style={{fontSize:'0.75rem'}}>🍳</span>
+                                                    <p style={{fontSize:'0.75rem',color:'rgba(232,200,159,0.9)',margin:0}}>{language==='es'?variante.menu_es:variante.menu_en}</p>
+                                                    <span style={{fontSize:'0.72rem',color:'rgba(201,147,90,0.7)',marginLeft:'auto'}}>→</span>
+                                                </div>
+                                                <div style={{display:'flex',alignItems:'center',gap:'6px',cursor:'pointer'}} onClick={(e)=>{e.stopPropagation();setCurrentPage('exercise')}}>
+                                                    <span style={{fontSize:'0.75rem'}}>💪</span>
+                                                    <p style={{fontSize:'0.75rem',color:'rgba(232,200,159,0.9)',margin:0}}>{language==='es'?variante.ej_es:variante.ej_en}</p>
+                                                    <span style={{fontSize:'0.72rem',color:'rgba(201,147,90,0.7)',marginLeft:'auto'}}>→</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/* Momento del día */}
+                                    {flipped && (
+                                        <div style={{marginTop:'10px',display:'flex',gap:'8px'}}>
+                                            {[
+                                                {key:'aprender',icon:'🧠',es:'Aprender',en:'Learn'},
+                                                {key:'cuidarme',icon:'💆',es:'Cuidarme',en:'Care'},
+                                                {key:'intimidad',icon:'❤️',es:'Intimidad',en:'Intimacy'},
+                                            ].map((btn,i) => {
+                                                const contenido = {
+                                                    aprender: {
+                                                        luna: {es:'El estrógeno bajo reduce la melatonina. Por eso tu sueño cambió — no es tu culpa, es química.',en:'Low oestrogen reduces melatonin. Your sleep changed — not your fault, it is chemistry.'},
+                                                        llama: {es:'Los sofocos son vasodilataciones controladas por el hipotálamo cuando el estrógeno fluctúa.',en:'Hot flashes are vasodilations controlled by the hypothalamus when oestrogen fluctuates.'},
+                                                        marea: {es:'La ansiedad en esta etapa viene del eje HPA — hipotálamo, hipófisis y suprarrenales en desajuste.',en:'Anxiety at this stage comes from the HPA axis out of sync.'},
+                                                        niebla: {es:'El estrógeno protege las neuronas. Cuando baja, la conducción nerviosa se ralentiza temporalmente.',en:'Oestrogen protects neurons. When it drops, nerve conduction temporarily slows.'},
+                                                        flor: {es:'Los días de equilibrio son cuando tu microbioma intestinal regula bien tus hormonas.',en:'Balanced days are when your gut microbiome regulates your hormones well.'},
+                                                        rayo: {es:'Los picos de energía coinciden con los picos de estrógeno. Tu cuerpo sabe cuándo brillar.',en:'Energy peaks coincide with oestrogen peaks. Your body knows when to shine.'},
+                                                    },
+                                                    cuidarme: {
+                                                        luna: {es:'Pecado de hoy: Mousse de chocolate negro y frambuesas. Magnesio puro. Sin culpa.',en:'Todays treat: Dark chocolate and raspberry mousse. Pure magnesium. No guilt.'},
+                                                        llama: {es:'Pecado de hoy: Helado de yogur griego con miel y nueces. Refrescante y hormonal.',en:'Todays treat: Greek yogurt ice cream with honey and walnuts. Cooling and hormonal.'},
+                                                        marea: {es:'Pecado de hoy: Tarta de dátil y cacao sin horno. Serotonina natural en cada bocado.',en:'Todays treat: No-bake date and cacao tart. Natural serotonin in every bite.'},
+                                                        niebla: {es:'Pecado de hoy: Bowl de arándanos con granola y chocolate. Antioxidantes para tu cerebro.',en:'Todays treat: Blueberry bowl with granola and chocolate. Antioxidants for your brain.'},
+                                                        flor: {es:'Pecado de hoy: Fresas con nata de coco y miel cruda. Ligero, dulce, perfecto.',en:'Todays treat: Strawberries with coconut cream and raw honey. Light, sweet, perfect.'},
+                                                        rayo: {es:'Pecado de hoy: Brownie de alubias negras y cacao. Proteína disfrazada de indulgencia.',en:'Todays treat: Black bean and cacao brownie. Protein disguised as indulgence.'},
+                                                    },
+                                                    intimidad: {
+                                                        luna: {es:'La sequedad vaginal mejora con omega-3 y vitamina E. El salmón y el aguacate son tus aliados esta semana.',en:'Vaginal dryness improves with omega-3 and vitamin E. Salmon and avocado are your allies.'},
+                                                        llama: {es:'Los sofocos pueden afectar el deseo. El ejercicio moderado y el magnesio ayudan a regularlos.',en:'Hot flashes can affect desire. Moderate exercise and magnesium help regulate them.'},
+                                                        marea: {es:'La ansiedad reduce la libido — es una respuesta de supervivencia. Calmar el sistema nervioso es el primer paso.',en:'Anxiety reduces libido — it is a survival response. Calming the nervous system is the first step.'},
+                                                        niebla: {es:'La fatiga mental también afecta la intimidad. Descansar y nutrirte bien es el acto más amoroso hoy.',en:'Mental fatigue also affects intimacy. Resting and nourishing yourself is the most loving act today.'},
+                                                        flor: {es:'Los días de equilibrio son ideales para reconectar con tu cuerpo. El placer también es salud hormonal.',en:'Balanced days are ideal for reconnecting with your body. Pleasure is also hormonal health.'},
+                                                        rayo: {es:'Energía alta y buen ánimo — hoy tu cuerpo está en su mejor momento para la intimidad y la conexión.',en:'High energy and good mood — today your body is at its best for intimacy and connection.'},
+                                                    },
+                                                };
+                                                const [active, setActive] = React.useState(null);
+                                                return (
+                                                    <div key={i} style={{flex:1}}>
+                                                        <div onClick={(e)=>{e.stopPropagation();setActive(active===btn.key?null:btn.key)}} style={{
+                                                            background:active===btn.key?`linear-gradient(135deg,${carta.color_from},${carta.color_to})`:(darkMode?'rgba(255,255,255,0.06)':'white'),
+                                                            border:`1px solid ${active===btn.key?'rgba(201,147,90,0.5)':'rgba(201,147,90,0.2)'}`,
+                                                            borderRadius:'0.85rem',padding:'0.6rem',textAlign:'center',cursor:'pointer',transition:'all 0.2s',
+                                                        }}>
+                                                            <span style={{fontSize:'1.1rem',display:'block',marginBottom:'2px'}}>{btn.icon}</span>
+                                                            <p style={{fontSize:'0.72rem',color:active===btn.key?'rgba(255,255,255,0.9)':'#C9935A',margin:0,fontWeight:600}}>{language==='es'?btn.es:btn.en}</p>
+                                                        </div>
+                                                        {active===btn.key && (
+                                                            <div style={{marginTop:'6px',background:darkMode?'rgba(255,255,255,0.04)':'rgba(253,248,243,0.95)',borderRadius:'0.75rem',padding:'0.75rem',border:'1px solid rgba(201,147,90,0.15)'}}>
+                                                                <p style={{fontSize:'0.78rem',color:darkMode?'#e8d5c0':'#57534e',margin:0,lineHeight:1.5}}>
+                                                                    {language==='es'?contenido[btn.key][sintoma].es:contenido[btn.key][sintoma].en}
+                                                                </p>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
                                 </div>
-                            </div>
-                        </div>
+                            );
+                        })()}
 
                         {/* ── TARJETA PERÍODO — solo trial y premium ── */}
                         {getUserTier() !== 'free' && (
@@ -5236,234 +5459,7 @@ query = query.eq('region', region.toUpperCase());
                         </div>
 
 
-                        {/* ── BATCH COOKING DOMINICAL ── */}
-                        {(() => {
-                            const tMain = darkMode?'#e7e5e4':'#292524';
-                            const tSub = darkMode?'#a8a29e':'#78716c';
-                            return (
-                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background:darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
-                            <div style={{padding:'1.25rem 1.5rem 0.75rem'}}>
-                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'COCINA EL DOMINGO, COME TODA LA SEMANA':'COOK SUNDAY, EAT ALL WEEK'}</p>
-                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:tMain,lineHeight:1.2,marginBottom:'0.4rem'}}>{language==='es'?'Tu mes completo de comidas.':'Your complete month of meals.'}</h3>
-                                <p style={{fontSize:'0.78rem',color:tSub,marginBottom:'1rem'}}>{language==='es'?'~60 min el domingo. Varía cada día combinando las bases.':'~60 min on Sunday. Vary each day by combining the bases.'}</p>
-                            </div>
-                            {[
-                                {semana_es:'Semana 1 · Antiinflamatoria',semana_en:'Week 1 · Anti-inflammatory',objetivo_es:'Sofocos · Inflamación · Energía',objetivo_en:'Hot flashes · Inflammation · Energy',tiempo:'55 min',kcal:'~1500-1700 kcal/día',bases_es:[{tipo:'Proteína',item:'Pollo al horno con limón y romero',opciones:'pavo · garbanzos'},{tipo:'Hidrato',item:'Arroz integral',opciones:'quinoa · boniato (camote)'},{tipo:'Verdura',item:'Pimientos + berenjena + calabacín asados',opciones:'con aceite de oliva'},{tipo:'Extra',item:'Hummus casero',opciones:''}],bases_en:[{tipo:'Protein',item:'Lemon rosemary chicken',opciones:'turkey · chickpeas'},{tipo:'Carbs',item:'Brown rice',opciones:'quinoa · sweet potato'},{tipo:'Veggies',item:'Roasted peppers + aubergine',opciones:'with olive oil'},{tipo:'Extra',item:'Homemade hummus',opciones:''}],combinaciones_es:['L: pollo + arroz + verduras','M: wrap pollo + hummus','X: arroz + huevo salteado','J: ensalada garbanzos + aguacate (palta)','V: pasta integral + pesto'],combinaciones_en:['M: chicken + rice + veggies','T: chicken wrap + hummus','W: fried rice + egg','T: chickpea salad + avocado','F: wholegrain pasta + pesto'],ciencia_es:'Los polifenoles del aceite de oliva reducen la inflamación sistémica. La proteína magra estabiliza el cortisol.',ciencia_en:'Olive oil polyphenols reduce systemic inflammation. Lean protein stabilises cortisol.',ejercicio_es:'15 elevaciones de talones mientras esperas el arroz',ejercicio_en:'15 heel raises while waiting for the rice',ejercicio_ciencia_es:'Mejora el retorno venoso, clave si sientes pesadez en piernas.',ejercicio_ciencia_en:'Improves venous return, key if you feel leg heaviness.',capricho_es:'🍫 Onza de chocolate negro 85%',capricho_en:'🍫 Square of 85% dark chocolate'},
-                                {semana_es:'Semana 2 · Reconfortante',semana_en:'Week 2 · Comforting',objetivo_es:'Sueño · Ansiedad · Humor',objetivo_en:'Sleep · Anxiety · Mood',tiempo:'60 min',kcal:'~1550-1750 kcal/día',bases_es:[{tipo:'Proteína',item:'Salmón al horno con eneldo',opciones:'sardinas · lentejas rojas'},{tipo:'Hidrato',item:'Boniato (camote) asado + avena',opciones:''},{tipo:'Verdura',item:'Espinacas + brócoli al vapor',opciones:'con ajo y aceite de oliva'},{tipo:'Extra',item:'Caldo de verduras casero',opciones:'20 min, vale toda la semana'}],bases_en:[{tipo:'Protein',item:'Dill baked salmon',opciones:'sardines · red lentils'},{tipo:'Carbs',item:'Roasted sweet potato + oats',opciones:''},{tipo:'Veggies',item:'Spinach + steamed broccoli',opciones:'with garlic and olive oil'},{tipo:'Extra',item:'Homemade vegetable broth',opciones:'20 min, lasts all week'}],combinaciones_es:['L: salmón + boniato + espinacas','M: crema boniato con caldo','X: lentejas + brócoli','J: bowl avena + huevo + espinacas','V: pasta + sardinas + limón'],combinaciones_en:['M: salmon + sweet potato + spinach','T: sweet potato cream with broth','W: red lentils + broccoli','T: oat bowl + egg + spinach','F: pasta + sardines + lemon'],ciencia_es:'El omega-3 del salmón mejora el sueño. El magnesio del boniato regula el cortisol nocturno.',ciencia_en:'Salmon omega-3 improves sleep. Sweet potato magnesium regulates night cortisol.',ejercicio_es:'Estiramiento apertura de pecho en el marco de la puerta',ejercicio_en:'Chest opening stretch in doorframe',ejercicio_ciencia_es:'Abre la caja torácica para respiración profunda, reduciendo la ansiedad.',ejercicio_ciencia_en:'Opens the chest for deep breathing, reducing anxiety.',capricho_es:'🍫 Trufas de dátil + cacao puro (5 min)',capricho_en:'🍫 Date truffles + raw cacao (5 min)'},
-                                {semana_es:'Semana 3 · Ligera y fresca',semana_en:'Week 3 · Light and fresh',objetivo_es:'Retención · Niebla mental · Peso',objetivo_en:'Bloating · Brain fog · Weight',tiempo:'50 min',kcal:'~1450-1650 kcal/día',bases_es:[{tipo:'Proteína',item:'Atún al horno',opciones:'pechuga · tofu'},{tipo:'Hidrato',item:'Pasta integral + arroz basmati',opciones:''},{tipo:'Verdura',item:'Tomate + pepino + zanahoria + rúcula',opciones:'bases ensalada'},{tipo:'Extra',item:'Vinagreta limón mostaza + aguacate (palta)',opciones:''}],bases_en:[{tipo:'Protein',item:'Baked tuna',opciones:'chicken breast · tofu'},{tipo:'Carbs',item:'Wholegrain pasta + basmati rice',opciones:''},{tipo:'Veggies',item:'Tomato + cucumber + carrot + rocket',opciones:'salad bases'},{tipo:'Extra',item:'Lemon mustard dressing + avocado',opciones:''}],combinaciones_es:['L: atún + pasta + rúcula','M: bowl arroz + aguacate (palta) + zanahoria','X: ensalada + atún + huevo duro','J: wrap integral + tofu + verduras','V: pasta fría + atún + pepino'],combinaciones_en:['M: tuna + pasta + rocket','T: rice bowl + avocado + carrot','W: big salad + tuna + boiled egg','T: wholegrain wrap + tofu + veggies','F: cold pasta + tuna + cucumber'],ciencia_es:'El potasio del aguacate/palta reduce la retención. Los hidratos de bajo IG evitan picos de insulina que disparan los sofocos.',ciencia_en:'Avocado potassium reduces bloating. Low GI carbs prevent insulin spikes that trigger hot flashes.',ejercicio_es:'Kegel mientras cortas las verduras, siguiendo el ritmo de la respiración',ejercicio_en:'Kegel exercises while chopping vegetables',ejercicio_ciencia_es:'Fortalece la faja abdominal interna de forma invisible.',ejercicio_ciencia_en:'Strengthens the inner abdominal belt invisibly.',capricho_es:'🍪 Galletas de avena y plátano (10 min)',capricho_en:'🍪 Oat and banana cookies (10 min)'},
-                                {semana_es:'Semana 4 · Equilibrio hormonal',semana_en:'Week 4 · Hormonal balance',objetivo_es:'Humor · Sequedad · Huesos · Vitalidad',objetivo_en:'Mood · Dryness · Bones · Vitality',tiempo:'55 min',kcal:'~1500-1700 kcal/día',bases_es:[{tipo:'Proteína',item:'Huevos + lentejas o alubias',opciones:'pollo · merluza'},{tipo:'Hidrato',item:'Mijo o arroz integral',opciones:''},{tipo:'Verdura',item:'Coliflor gratinada + puerro salteado',opciones:'con aceite de oliva'},{tipo:'Extra',item:'Yogur griego con semillas de lino molidas',opciones:''}],bases_en:[{tipo:'Protein',item:'Eggs + lentils or beans',opciones:'chicken · white fish'},{tipo:'Carbs',item:'Millet or brown rice',opciones:''},{tipo:'Veggies',item:'Gratinated cauliflower + sautéed leek',opciones:'with olive oil'},{tipo:'Extra',item:'Greek yogurt with ground flaxseeds',opciones:''}],combinaciones_es:['L: lentejas + puerro + mijo','M: tortilla espinacas + pan integral','X: coliflor gratinada + huevo pochado','J: bowl arroz + alubias + aguacate (palta)','V: merluza al horno + puerro + patata'],combinaciones_en:['M: lentils + leek + millet','T: spinach omelette + wholegrain bread','W: gratinated cauliflower + poached egg','T: rice bowl + beans + avocado','F: baked white fish + leek + potato'],ciencia_es:'Las semillas de lino son fitoestrógenos naturales que reducen sofocos y sequedad. El yogur griego protege los huesos.',ciencia_en:'Flaxseeds are natural phytoestrogens that reduce hot flashes. Greek yogurt protects bones.',ejercicio_es:'Rotación circular de hombros y cuello mientras preparas el yogur',ejercicio_en:'Circular shoulder and neck rotation while preparing yogurt',ejercicio_ciencia_es:'Libera la tensión del trapecio, donde acumulamos el estrés hormonal.',ejercicio_ciencia_en:'Releases trapezius tension where we accumulate hormonal stress.',capricho_es:'🍫 Brownie de alubias negras y cacao (15 min)',capricho_en:'🍫 Black bean and cacao brownie (15 min)'},
-                            ].map((semana,si) => (
-                                <details key={si} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
-                                    <summary style={{padding:'1rem 1.5rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',listStyle:'none',userSelect:'none'}}>
-                                        <div>
-                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:tMain}}>{language==='es'?semana.semana_es:semana.semana_en}</p>
-                                            <p style={{fontSize:'0.72rem',color:'#C9935A',marginTop:'0.1rem'}}>{language==='es'?semana.objetivo_es:semana.objetivo_en}</p>
-                                        </div>
-                                        <div style={{display:'flex',alignItems:'center',gap:'0.5rem'}}>
-                                            <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px'}}>⏱ {semana.tiempo}</span>
-                                            <span style={{color:'#C9935A',fontSize:'0.9rem'}}>▾</span>
-                                        </div>
-                                    </summary>
-                                    <div style={{padding:'0 1.5rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
-                                        <div style={{display:'flex',flexWrap:'wrap',gap:'0.4rem'}}>
-                                            {(language==='es'?semana.bases_es:semana.bases_en).map((b,bi) => (
-                                                <div key={bi} style={{background:'rgba(201,147,90,0.07)',borderRadius:'0.75rem',padding:'0.5rem 0.75rem',border:'1px solid rgba(201,147,90,0.15)',flex:'1',minWidth:'140px'}}>
-                                                    <p style={{fontSize:'0.65rem',color:'#C9935A',fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:'0.2rem'}}>{b.tipo}</p>
-                                                    <p style={{fontSize:'0.78rem',color:tMain,fontWeight:500}}>{b.item}</p>
-                                                    {b.opciones?<p style={{fontSize:'0.68rem',color:tSub,marginTop:'0.15rem'}}>✦ {b.opciones}</p>:null}
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <div style={{background:darkMode?'rgba(255,255,255,0.04)':'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
-                                            <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.4rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>{language==='es'?'Combina así':'Combine like this'}</p>
-                                            {(language==='es'?semana.combinaciones_es:semana.combinaciones_en).map((co,ci) => (
-                                                <p key={ci} style={{fontSize:'0.76rem',color:tSub,lineHeight:1.6}}>✦ {co}</p>
-                                            ))}
-                                        </div>
-                                        <div style={{background:'rgba(201,147,90,0.06)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.15)'}}>
-                                            <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.3rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>💪 {language==='es'?'Mientras tanto':'Meanwhile'}</p>
-                                            <p style={{fontSize:'0.78rem',color:tMain,fontWeight:500,marginBottom:'0.25rem'}}>{language==='es'?semana.ejercicio_es:semana.ejercicio_en}</p>
-                                            <p style={{fontSize:'0.72rem',color:tSub,fontStyle:'italic'}}>🔬 {language==='es'?semana.ejercicio_ciencia_es:semana.ejercicio_ciencia_en}</p>
-                                        </div>
-                                        <div style={{background:'rgba(155,142,196,0.08)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(155,142,196,0.15)'}}>
-                                            <p style={{fontSize:'0.72rem',fontStyle:'italic',color:'#78716c'}}>🔬 {language==='es'?semana.ciencia_es:semana.ciencia_en}</p>
-                                        </div>
-                                        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                                            <p style={{fontSize:'0.78rem',color:tSub}}>{language==='es'?semana.capricho_es:semana.capricho_en}</p>
-                                            <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px'}}>⚡ {semana.kcal}</span>
-                                        </div>
-                                        <div onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} style={{textAlign:'center',padding:'0.6rem',borderRadius:'0.75rem',border:'1px solid rgba(201,147,90,0.3)',cursor:'pointer'}}>
-                                            <p style={{fontSize:'0.78rem',color:'#C9935A',fontWeight:600}}>{language==='es'?'Ver tu menú personalizado ↑':'See your personalised menu ↑'}</p>
-                                        </div>
-                                    </div>
-                                </details>
-                            ))}
-                        </div>
-                            );
-                        })()}
-
-                        {/* ── DESPENSA IMPRESCINDIBLE ── */}
-                        {(() => {
-                            const tMain = darkMode?'#e7e5e4':'#292524';
-                            const tSub = darkMode?'#a8a29e':'#78716c';
-                            return (
-                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background:darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
-                            <div style={{padding:'1.25rem 1.5rem 0.75rem'}}>
-                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'DESPENSA IMPRESCINDIBLE':'ESSENTIAL PANTRY'}</p>
-                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:tMain,lineHeight:1.2,marginBottom:'0.3rem'}}>{language==='es'?'Lo que siempre debes tener.':'What you should always have.'}</h3>
-                                <p style={{fontSize:'0.78rem',color:tSub,marginBottom:'0.75rem'}}>{language==='es'?'Ingredientes de cualquier super. Para cada síntoma.':'Ingredients from any supermarket. For every symptom.'}</p>
-                            </div>
-                            {[
-                                {categoria_es:'Sofocos y calores',categoria_en:'Hot flashes',icono:'🌡️',items:[{nombre_es:'Semillas de lino (linaza)',nombre_en:'Flaxseeds',por_es:'Fitoestrógenos naturales que reducen la frecuencia de sofocos',por_en:'Natural phytoestrogens that reduce hot flash frequency',glp1:false},{nombre_es:'Soja / tofu / edamame',nombre_en:'Soy / tofu / edamame',por_es:'Las isoflavonas imitan el estrógeno y alivian los sofocos',por_en:'Isoflavones mimic oestrogen and relieve hot flashes',glp1:false},{nombre_es:'Salvia en infusión',nombre_en:'Sage tea',por_es:'Reduce la sudoración nocturna de forma natural',por_en:'Naturally reduces night sweats',glp1:false}]},
-                                {categoria_es:'↑ GLP-1 · Regula apetito y peso',categoria_en:'↑ GLP-1 · Regulates appetite and weight',icono:'⚖️',items:[{nombre_es:'Huevos',nombre_en:'Eggs',por_es:'Proteína completa que activa GLP-1 y sacia durante horas',por_en:'Complete protein that activates GLP-1 and keeps you full for hours',glp1:true},{nombre_es:'Aguacate / palta',nombre_en:'Avocado',por_es:'Grasas saludables que estimulan GLP-1 y reducen antojos',por_en:'Healthy fats that stimulate GLP-1 and reduce cravings',glp1:true},{nombre_es:'Avena',nombre_en:'Oats',por_es:'Fibra soluble beta-glucano — el mayor estimulador de GLP-1',por_en:'Soluble beta-glucan fibre — the greatest GLP-1 stimulator',glp1:true},{nombre_es:'Yogur griego natural',nombre_en:'Plain Greek yogurt',por_es:'Proteína + probióticos que potencian la secreción de GLP-1',por_en:'Protein + probiotics that enhance GLP-1 secretion',glp1:true},{nombre_es:'Lentejas y garbanzos',nombre_en:'Lentils and chickpeas',por_es:'Fibra + proteína vegetal — combinación perfecta para GLP-1',por_en:'Fibre + plant protein — perfect GLP-1 combination',glp1:true}]},
-                                {categoria_es:'Huesos y osteoporosis',categoria_en:'Bones and osteoporosis',icono:'🦴',items:[{nombre_es:'Sardinas o caballa en lata',nombre_en:'Canned sardines or mackerel',por_es:'Calcio + vitamina D + omega-3 en un solo alimento',por_en:'Calcium + vitamin D + omega-3 in one food',glp1:false},{nombre_es:'Brócoli',nombre_en:'Broccoli',por_es:'Vitamina K imprescindible para fijar el calcio en los huesos',por_en:'Vitamin K essential for fixing calcium in bones',glp1:false},{nombre_es:'Almendras',nombre_en:'Almonds',por_es:'Magnesio y calcio vegetal — snack perfecto',por_en:'Magnesium and plant calcium — perfect snack',glp1:false}]},
-                                {categoria_es:'Ansiedad y sueño',categoria_en:'Anxiety and sleep',icono:'🌙',items:[{nombre_es:'Plátano / banana',nombre_en:'Banana',por_es:'Triptófano precursor de la serotonina y melatonina',por_en:'Tryptophan precursor to serotonin and melatonin',glp1:false},{nombre_es:'Chocolate negro 85%+',nombre_en:'Dark chocolate 85%+',por_es:'Magnesio + feniletilamina — reduce cortisol y mejora el ánimo',por_en:'Magnesium + phenylethylamine — reduces cortisol and lifts mood',glp1:false},{nombre_es:'Manzanilla o valeriana',nombre_en:'Chamomile or valerian',por_es:'Apigenina que activa receptores GABA — efecto calmante real',por_en:'Apigenin activates GABA receptors — real calming effect',glp1:false}]},
-                                {categoria_es:'Niebla mental y energía',categoria_en:'Brain fog and energy',icono:'⚡',items:[{nombre_es:'Nueces',nombre_en:'Walnuts',por_es:'Omega-3 vegetal — el fruto seco con más beneficios cerebrales',por_en:'Plant omega-3 — the nut with the most brain benefits',glp1:true},{nombre_es:'Salmón o sardinas',nombre_en:'Salmon or sardines',por_es:'Omega-3 EPA/DHA — nutre el cerebro y estimula GLP-1',por_en:'Omega-3 EPA/DHA — nourishes the brain and stimulates GLP-1',glp1:true},{nombre_es:'Cúrcuma + pimienta negra',nombre_en:'Turmeric + black pepper',por_es:'Piperina aumenta absorción de curcumina x20 — antiinflamatorio potente',por_en:'Piperine increases curcumin absorption x20 — potent anti-inflammatory',glp1:false}]},
-                                {categoria_es:'Sequedad e hidratación',categoria_en:'Dryness and hydration',icono:'💧',items:[{nombre_es:'Aceite de oliva virgen extra',nombre_en:'Extra virgin olive oil',por_es:'Oleocantal antiinflamatorio + vitamina E para la piel desde dentro',por_en:'Oleocanthal anti-inflammatory + vitamin E for skin from within',glp1:false},{nombre_es:'Pepino',nombre_en:'Cucumber',por_es:'96% agua + silicio para la hidratación celular',por_en:'96% water + silicon for cellular hydration',glp1:false}]},
-                            ].map((cat,ci) => (
-                                <details key={ci} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
-                                    <summary style={{padding:'1rem 1.5rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',listStyle:'none',userSelect:'none'}}>
-                                        <div style={{display:'flex',alignItems:'center',gap:'0.75rem'}}>
-                                            <span style={{fontSize:'1.3rem'}}>{cat.icono}</span>
-                                            <div>
-                                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:tMain}}>{language==='es'?cat.categoria_es:cat.categoria_en}</p>
-                                                <p style={{fontSize:'0.7rem',color:tSub}}>{language==='es'?`${cat.items.length} imprescindibles`:`${cat.items.length} essentials`}</p>
-                                            </div>
-                                        </div>
-                                        <span style={{color:'#C9935A',fontSize:'0.9rem'}}>▾</span>
-                                    </summary>
-                                    <div style={{padding:'0 1.5rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.6rem'}}>
-                                        {cat.items.map((item,ii) => (
-                                            <div key={ii} style={{background:darkMode?'rgba(201,147,90,0.06)':'rgba(253,248,243,0.8)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.12)'}}>
-                                                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'0.5rem'}}>
-                                                    <p style={{fontSize:'0.85rem',fontWeight:600,color:tMain}}>{language==='es'?item.nombre_es:item.nombre_en}</p>
-                                                    {item.glp1&&<span style={{fontSize:'0.62rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.1rem 0.4rem',borderRadius:'9999px',fontWeight:700,whiteSpace:'nowrap',flexShrink:0}}>↑ GLP-1</span>}
-                                                </div>
-                                                <p style={{fontSize:'0.75rem',color:tSub,marginTop:'0.2rem',fontStyle:'italic'}}>🔬 {language==='es'?item.por_es:item.por_en}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </details>
-                            ))}
-                        </div>
-                            );
-                        })()}
-
-
-                        {/* ── BATCH COOKING DOMINICAL ── */}
-                        {(() => {
-                            const tMain = darkMode?'#e7e5e4':'#292524';
-                            const tSub = darkMode?'#a8a29e':'#78716c';
-                            return (
-                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background:darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
-                            <div style={{padding:'1.25rem 1.5rem 0.75rem'}}>
-                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'COCINA EL DOMINGO, COME TODA LA SEMANA':'COOK SUNDAY, EAT ALL WEEK'}</p>
-                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:tMain,lineHeight:1.2,marginBottom:'0.4rem'}}>{language==='es'?'Tu mes completo de comidas.':'Your complete month of meals.'}</h3>
-                                <p style={{fontSize:'0.78rem',color:tSub,marginBottom:'1rem'}}>{language==='es'?'~60 min el domingo. Varía cada día combinando las bases.':'~60 min on Sunday. Vary each day by combining the bases.'}</p>
-                            </div>
-                            {[
-                                {semana_es:'Semana 1 · Antiinflamatoria',semana_en:'Week 1 · Anti-inflammatory',objetivo_es:'Sofocos · Inflamación · Energía',objetivo_en:'Hot flashes · Inflammation · Energy',tiempo:'55 min',kcal:'~1500-1700 kcal/día',bases_es:[{tipo:'Proteína',item:'Pollo al horno con limón y romero',opciones:'pavo · garbanzos'},{tipo:'Hidrato',item:'Arroz integral',opciones:'quinoa · boniato (camote)'},{tipo:'Verdura',item:'Pimientos + berenjena + calabacín asados',opciones:'con aceite de oliva'},{tipo:'Extra',item:'Hummus casero',opciones:''}],bases_en:[{tipo:'Protein',item:'Lemon rosemary chicken',opciones:'turkey · chickpeas'},{tipo:'Carbs',item:'Brown rice',opciones:'quinoa · sweet potato'},{tipo:'Veggies',item:'Roasted peppers + aubergine',opciones:'with olive oil'},{tipo:'Extra',item:'Homemade hummus',opciones:''}],combinaciones_es:['L: pollo + arroz + verduras','M: wrap pollo + hummus','X: arroz + huevo salteado','J: ensalada garbanzos + aguacate (palta)','V: pasta integral + pesto'],combinaciones_en:['M: chicken + rice + veggies','T: chicken wrap + hummus','W: fried rice + egg','T: chickpea salad + avocado','F: wholegrain pasta + pesto'],ciencia_es:'Los polifenoles del aceite de oliva reducen la inflamación sistémica. La proteína magra estabiliza el cortisol.',ciencia_en:'Olive oil polyphenols reduce systemic inflammation. Lean protein stabilises cortisol.',ejercicio_es:'15 elevaciones de talones mientras esperas el arroz',ejercicio_en:'15 heel raises while waiting for the rice',ejercicio_ciencia_es:'Mejora el retorno venoso, clave si sientes pesadez en piernas.',ejercicio_ciencia_en:'Improves venous return, key if you feel leg heaviness.',capricho_es:'🍫 Onza de chocolate negro 85%',capricho_en:'🍫 Square of 85% dark chocolate'},
-                                {semana_es:'Semana 2 · Reconfortante',semana_en:'Week 2 · Comforting',objetivo_es:'Sueño · Ansiedad · Humor',objetivo_en:'Sleep · Anxiety · Mood',tiempo:'60 min',kcal:'~1550-1750 kcal/día',bases_es:[{tipo:'Proteína',item:'Salmón al horno con eneldo',opciones:'sardinas · lentejas rojas'},{tipo:'Hidrato',item:'Boniato (camote) asado + avena',opciones:''},{tipo:'Verdura',item:'Espinacas + brócoli al vapor',opciones:'con ajo y aceite de oliva'},{tipo:'Extra',item:'Caldo de verduras casero',opciones:'20 min, vale toda la semana'}],bases_en:[{tipo:'Protein',item:'Dill baked salmon',opciones:'sardines · red lentils'},{tipo:'Carbs',item:'Roasted sweet potato + oats',opciones:''},{tipo:'Veggies',item:'Spinach + steamed broccoli',opciones:'with garlic and olive oil'},{tipo:'Extra',item:'Homemade vegetable broth',opciones:'20 min, lasts all week'}],combinaciones_es:['L: salmón + boniato + espinacas','M: crema boniato con caldo','X: lentejas + brócoli','J: bowl avena + huevo + espinacas','V: pasta + sardinas + limón'],combinaciones_en:['M: salmon + sweet potato + spinach','T: sweet potato cream with broth','W: red lentils + broccoli','T: oat bowl + egg + spinach','F: pasta + sardines + lemon'],ciencia_es:'El omega-3 del salmón mejora el sueño. El magnesio del boniato regula el cortisol nocturno.',ciencia_en:'Salmon omega-3 improves sleep. Sweet potato magnesium regulates night cortisol.',ejercicio_es:'Estiramiento apertura de pecho en el marco de la puerta',ejercicio_en:'Chest opening stretch in doorframe',ejercicio_ciencia_es:'Abre la caja torácica para respiración profunda, reduciendo la ansiedad.',ejercicio_ciencia_en:'Opens the chest for deep breathing, reducing anxiety.',capricho_es:'🍫 Trufas de dátil + cacao puro (5 min)',capricho_en:'🍫 Date truffles + raw cacao (5 min)'},
-                                {semana_es:'Semana 3 · Ligera y fresca',semana_en:'Week 3 · Light and fresh',objetivo_es:'Retención · Niebla mental · Peso',objetivo_en:'Bloating · Brain fog · Weight',tiempo:'50 min',kcal:'~1450-1650 kcal/día',bases_es:[{tipo:'Proteína',item:'Atún al horno',opciones:'pechuga · tofu'},{tipo:'Hidrato',item:'Pasta integral + arroz basmati',opciones:''},{tipo:'Verdura',item:'Tomate + pepino + zanahoria + rúcula',opciones:'bases ensalada'},{tipo:'Extra',item:'Vinagreta limón mostaza + aguacate (palta)',opciones:''}],bases_en:[{tipo:'Protein',item:'Baked tuna',opciones:'chicken breast · tofu'},{tipo:'Carbs',item:'Wholegrain pasta + basmati rice',opciones:''},{tipo:'Veggies',item:'Tomato + cucumber + carrot + rocket',opciones:'salad bases'},{tipo:'Extra',item:'Lemon mustard dressing + avocado',opciones:''}],combinaciones_es:['L: atún + pasta + rúcula','M: bowl arroz + aguacate (palta) + zanahoria','X: ensalada + atún + huevo duro','J: wrap integral + tofu + verduras','V: pasta fría + atún + pepino'],combinaciones_en:['M: tuna + pasta + rocket','T: rice bowl + avocado + carrot','W: big salad + tuna + boiled egg','T: wholegrain wrap + tofu + veggies','F: cold pasta + tuna + cucumber'],ciencia_es:'El potasio del aguacate/palta reduce la retención. Los hidratos de bajo IG evitan picos de insulina que disparan los sofocos.',ciencia_en:'Avocado potassium reduces bloating. Low GI carbs prevent insulin spikes that trigger hot flashes.',ejercicio_es:'Kegel mientras cortas las verduras, siguiendo el ritmo de la respiración',ejercicio_en:'Kegel exercises while chopping vegetables',ejercicio_ciencia_es:'Fortalece la faja abdominal interna de forma invisible.',ejercicio_ciencia_en:'Strengthens the inner abdominal belt invisibly.',capricho_es:'🍪 Galletas de avena y plátano (10 min)',capricho_en:'🍪 Oat and banana cookies (10 min)'},
-                                {semana_es:'Semana 4 · Equilibrio hormonal',semana_en:'Week 4 · Hormonal balance',objetivo_es:'Humor · Sequedad · Huesos · Vitalidad',objetivo_en:'Mood · Dryness · Bones · Vitality',tiempo:'55 min',kcal:'~1500-1700 kcal/día',bases_es:[{tipo:'Proteína',item:'Huevos + lentejas o alubias',opciones:'pollo · merluza'},{tipo:'Hidrato',item:'Mijo o arroz integral',opciones:''},{tipo:'Verdura',item:'Coliflor gratinada + puerro salteado',opciones:'con aceite de oliva'},{tipo:'Extra',item:'Yogur griego con semillas de lino molidas',opciones:''}],bases_en:[{tipo:'Protein',item:'Eggs + lentils or beans',opciones:'chicken · white fish'},{tipo:'Carbs',item:'Millet or brown rice',opciones:''},{tipo:'Veggies',item:'Gratinated cauliflower + sautéed leek',opciones:'with olive oil'},{tipo:'Extra',item:'Greek yogurt with ground flaxseeds',opciones:''}],combinaciones_es:['L: lentejas + puerro + mijo','M: tortilla espinacas + pan integral','X: coliflor gratinada + huevo pochado','J: bowl arroz + alubias + aguacate (palta)','V: merluza al horno + puerro + patata'],combinaciones_en:['M: lentils + leek + millet','T: spinach omelette + wholegrain bread','W: gratinated cauliflower + poached egg','T: rice bowl + beans + avocado','F: baked white fish + leek + potato'],ciencia_es:'Las semillas de lino son fitoestrógenos naturales que reducen sofocos y sequedad. El yogur griego protege los huesos.',ciencia_en:'Flaxseeds are natural phytoestrogens that reduce hot flashes. Greek yogurt protects bones.',ejercicio_es:'Rotación circular de hombros y cuello mientras preparas el yogur',ejercicio_en:'Circular shoulder and neck rotation while preparing yogurt',ejercicio_ciencia_es:'Libera la tensión del trapecio, donde acumulamos el estrés hormonal.',ejercicio_ciencia_en:'Releases trapezius tension where we accumulate hormonal stress.',capricho_es:'🍫 Brownie de alubias negras y cacao (15 min)',capricho_en:'🍫 Black bean and cacao brownie (15 min)'},
-                            ].map((semana,si) => (
-                                <details key={si} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
-                                    <summary style={{padding:'1rem 1.5rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',listStyle:'none',userSelect:'none'}}>
-                                        <div>
-                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:tMain}}>{language==='es'?semana.semana_es:semana.semana_en}</p>
-                                            <p style={{fontSize:'0.72rem',color:'#C9935A',marginTop:'0.1rem'}}>{language==='es'?semana.objetivo_es:semana.objetivo_en}</p>
-                                        </div>
-                                        <div style={{display:'flex',alignItems:'center',gap:'0.5rem'}}>
-                                            <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px'}}>⏱ {semana.tiempo}</span>
-                                            <span style={{color:'#C9935A',fontSize:'0.9rem'}}>▾</span>
-                                        </div>
-                                    </summary>
-                                    <div style={{padding:'0 1.5rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
-                                        <div style={{display:'flex',flexWrap:'wrap',gap:'0.4rem'}}>
-                                            {(language==='es'?semana.bases_es:semana.bases_en).map((b,bi) => (
-                                                <div key={bi} style={{background:'rgba(201,147,90,0.07)',borderRadius:'0.75rem',padding:'0.5rem 0.75rem',border:'1px solid rgba(201,147,90,0.15)',flex:'1',minWidth:'140px'}}>
-                                                    <p style={{fontSize:'0.65rem',color:'#C9935A',fontWeight:700,textTransform:'uppercase',letterSpacing:'0.06em',marginBottom:'0.2rem'}}>{b.tipo}</p>
-                                                    <p style={{fontSize:'0.78rem',color:tMain,fontWeight:500}}>{b.item}</p>
-                                                    {b.opciones?<p style={{fontSize:'0.68rem',color:tSub,marginTop:'0.15rem'}}>✦ {b.opciones}</p>:null}
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <div style={{background:darkMode?'rgba(255,255,255,0.04)':'#fdf8f3',borderRadius:'0.75rem',padding:'0.75rem 1rem'}}>
-                                            <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.4rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>{language==='es'?'Combina así':'Combine like this'}</p>
-                                            {(language==='es'?semana.combinaciones_es:semana.combinaciones_en).map((co,ci) => (
-                                                <p key={ci} style={{fontSize:'0.76rem',color:tSub,lineHeight:1.6}}>✦ {co}</p>
-                                            ))}
-                                        </div>
-                                        <div style={{background:'rgba(201,147,90,0.06)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.15)'}}>
-                                            <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',marginBottom:'0.3rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>💪 {language==='es'?'Mientras tanto':'Meanwhile'}</p>
-                                            <p style={{fontSize:'0.78rem',color:tMain,fontWeight:500,marginBottom:'0.25rem'}}>{language==='es'?semana.ejercicio_es:semana.ejercicio_en}</p>
-                                            <p style={{fontSize:'0.72rem',color:tSub,fontStyle:'italic'}}>🔬 {language==='es'?semana.ejercicio_ciencia_es:semana.ejercicio_ciencia_en}</p>
-                                        </div>
-                                        <div style={{background:'rgba(155,142,196,0.08)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(155,142,196,0.15)'}}>
-                                            <p style={{fontSize:'0.72rem',fontStyle:'italic',color:'#78716c'}}>🔬 {language==='es'?semana.ciencia_es:semana.ciencia_en}</p>
-                                        </div>
-                                        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between'}}>
-                                            <p style={{fontSize:'0.78rem',color:tSub}}>{language==='es'?semana.capricho_es:semana.capricho_en}</p>
-                                            <span style={{fontSize:'0.68rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.15rem 0.5rem',borderRadius:'9999px'}}>⚡ {semana.kcal}</span>
-                                        </div>
-                                        <div onClick={()=>window.scrollTo({top:0,behavior:'smooth'})} style={{textAlign:'center',padding:'0.6rem',borderRadius:'0.75rem',border:'1px solid rgba(201,147,90,0.3)',cursor:'pointer'}}>
-                                            <p style={{fontSize:'0.78rem',color:'#C9935A',fontWeight:600}}>{language==='es'?'Ver tu menú personalizado ↑':'See your personalised menu ↑'}</p>
-                                        </div>
-                                    </div>
-                                </details>
-                            ))}
-                        </div>
-                            );
-                        })()}
-
-                        {/* ── DESPENSA IMPRESCINDIBLE ── */}
-                        {(() => {
-                            const tMain = darkMode?'#e7e5e4':'#292524';
-                            const tSub = darkMode?'#a8a29e':'#78716c';
-                            return (
-                        <div style={{borderRadius:'1.25rem',overflow:'hidden',background:darkMode?'rgba(255,255,255,0.04)':'#ffffff',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 4px 20px rgba(201,147,90,0.08)'}}>
-                            <div style={{padding:'1.25rem 1.5rem 0.75rem'}}>
-                                <p style={{fontSize:'0.72rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'0.4rem'}}>✦ {language==='es'?'DESPENSA IMPRESCINDIBLE':'ESSENTIAL PANTRY'}</p>
-                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.4rem',fontWeight:500,color:tMain,lineHeight:1.2,marginBottom:'0.3rem'}}>{language==='es'?'Lo que siempre debes tener.':'What you should always have.'}</h3>
-                                <p style={{fontSize:'0.78rem',color:tSub,marginBottom:'0.75rem'}}>{language==='es'?'Ingredientes de cualquier super. Para cada síntoma.':'Ingredients from any supermarket. For every symptom.'}</p>
-                            </div>
-                            {[
-                                {categoria_es:'Sofocos y calores',categoria_en:'Hot flashes',icono:'🌡️',items:[{nombre_es:'Semillas de lino (linaza)',nombre_en:'Flaxseeds',por_es:'Fitoestrógenos naturales que reducen la frecuencia de sofocos',por_en:'Natural phytoestrogens that reduce hot flash frequency',glp1:false},{nombre_es:'Soja / tofu / edamame',nombre_en:'Soy / tofu / edamame',por_es:'Las isoflavonas imitan el estrógeno y alivian los sofocos',por_en:'Isoflavones mimic oestrogen and relieve hot flashes',glp1:false},{nombre_es:'Salvia en infusión',nombre_en:'Sage tea',por_es:'Reduce la sudoración nocturna de forma natural',por_en:'Naturally reduces night sweats',glp1:false}]},
-                                {categoria_es:'↑ GLP-1 · Regula apetito y peso',categoria_en:'↑ GLP-1 · Regulates appetite and weight',icono:'⚖️',items:[{nombre_es:'Huevos',nombre_en:'Eggs',por_es:'Proteína completa que activa GLP-1 y sacia durante horas',por_en:'Complete protein that activates GLP-1 and keeps you full for hours',glp1:true},{nombre_es:'Aguacate / palta',nombre_en:'Avocado',por_es:'Grasas saludables que estimulan GLP-1 y reducen antojos',por_en:'Healthy fats that stimulate GLP-1 and reduce cravings',glp1:true},{nombre_es:'Avena',nombre_en:'Oats',por_es:'Fibra soluble beta-glucano — el mayor estimulador de GLP-1',por_en:'Soluble beta-glucan fibre — the greatest GLP-1 stimulator',glp1:true},{nombre_es:'Yogur griego natural',nombre_en:'Plain Greek yogurt',por_es:'Proteína + probióticos que potencian la secreción de GLP-1',por_en:'Protein + probiotics that enhance GLP-1 secretion',glp1:true},{nombre_es:'Lentejas y garbanzos',nombre_en:'Lentils and chickpeas',por_es:'Fibra + proteína vegetal — combinación perfecta para GLP-1',por_en:'Fibre + plant protein — perfect GLP-1 combination',glp1:true}]},
-                                {categoria_es:'Huesos y osteoporosis',categoria_en:'Bones and osteoporosis',icono:'🦴',items:[{nombre_es:'Sardinas o caballa en lata',nombre_en:'Canned sardines or mackerel',por_es:'Calcio + vitamina D + omega-3 en un solo alimento',por_en:'Calcium + vitamin D + omega-3 in one food',glp1:false},{nombre_es:'Brócoli',nombre_en:'Broccoli',por_es:'Vitamina K imprescindible para fijar el calcio en los huesos',por_en:'Vitamin K essential for fixing calcium in bones',glp1:false},{nombre_es:'Almendras',nombre_en:'Almonds',por_es:'Magnesio y calcio vegetal — snack perfecto',por_en:'Magnesium and plant calcium — perfect snack',glp1:false}]},
-                                {categoria_es:'Ansiedad y sueño',categoria_en:'Anxiety and sleep',icono:'🌙',items:[{nombre_es:'Plátano / banana',nombre_en:'Banana',por_es:'Triptófano precursor de la serotonina y melatonina',por_en:'Tryptophan precursor to serotonin and melatonin',glp1:false},{nombre_es:'Chocolate negro 85%+',nombre_en:'Dark chocolate 85%+',por_es:'Magnesio + feniletilamina — reduce cortisol y mejora el ánimo',por_en:'Magnesium + phenylethylamine — reduces cortisol and lifts mood',glp1:false},{nombre_es:'Manzanilla o valeriana',nombre_en:'Chamomile or valerian',por_es:'Apigenina que activa receptores GABA — efecto calmante real',por_en:'Apigenin activates GABA receptors — real calming effect',glp1:false}]},
-                                {categoria_es:'Niebla mental y energía',categoria_en:'Brain fog and energy',icono:'⚡',items:[{nombre_es:'Nueces',nombre_en:'Walnuts',por_es:'Omega-3 vegetal — el fruto seco con más beneficios cerebrales',por_en:'Plant omega-3 — the nut with the most brain benefits',glp1:true},{nombre_es:'Salmón o sardinas',nombre_en:'Salmon or sardines',por_es:'Omega-3 EPA/DHA — nutre el cerebro y estimula GLP-1',por_en:'Omega-3 EPA/DHA — nourishes the brain and stimulates GLP-1',glp1:true},{nombre_es:'Cúrcuma + pimienta negra',nombre_en:'Turmeric + black pepper',por_es:'Piperina aumenta absorción de curcumina x20 — antiinflamatorio potente',por_en:'Piperine increases curcumin absorption x20 — potent anti-inflammatory',glp1:false}]},
-                                {categoria_es:'Sequedad e hidratación',categoria_en:'Dryness and hydration',icono:'💧',items:[{nombre_es:'Aceite de oliva virgen extra',nombre_en:'Extra virgin olive oil',por_es:'Oleocantal antiinflamatorio + vitamina E para la piel desde dentro',por_en:'Oleocanthal anti-inflammatory + vitamin E for skin from within',glp1:false},{nombre_es:'Pepino',nombre_en:'Cucumber',por_es:'96% agua + silicio para la hidratación celular',por_en:'96% water + silicon for cellular hydration',glp1:false}]},
-                            ].map((cat,ci) => (
-                                <details key={ci} style={{borderTop:'1px solid rgba(201,147,90,0.12)'}}>
-                                    <summary style={{padding:'1rem 1.5rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'space-between',listStyle:'none',userSelect:'none'}}>
-                                        <div style={{display:'flex',alignItems:'center',gap:'0.75rem'}}>
-                                            <span style={{fontSize:'1.3rem'}}>{cat.icono}</span>
-                                            <div>
-                                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:tMain}}>{language==='es'?cat.categoria_es:cat.categoria_en}</p>
-                                                <p style={{fontSize:'0.7rem',color:tSub}}>{language==='es'?`${cat.items.length} imprescindibles`:`${cat.items.length} essentials`}</p>
-                                            </div>
-                                        </div>
-                                        <span style={{color:'#C9935A',fontSize:'0.9rem'}}>▾</span>
-                                    </summary>
-                                    <div style={{padding:'0 1.5rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.6rem'}}>
-                                        {cat.items.map((item,ii) => (
-                                            <div key={ii} style={{background:darkMode?'rgba(201,147,90,0.06)':'rgba(253,248,243,0.8)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.12)'}}>
-                                                <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:'0.5rem'}}>
-                                                    <p style={{fontSize:'0.85rem',fontWeight:600,color:tMain}}>{language==='es'?item.nombre_es:item.nombre_en}</p>
-                                                    {item.glp1&&<span style={{fontSize:'0.62rem',background:'rgba(201,147,90,0.12)',color:'#C9935A',padding:'0.1rem 0.4rem',borderRadius:'9999px',fontWeight:700,whiteSpace:'nowrap',flexShrink:0}}>↑ GLP-1</span>}
-                                                </div>
-                                                <p style={{fontSize:'0.75rem',color:tSub,marginTop:'0.2rem',fontStyle:'italic'}}>🔬 {language==='es'?item.por_es:item.por_en}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </details>
-                            ))}
-                        </div>
-                            );
-                        })()}
-
-                        <div className={`${darkMode ? 'bg-indigo-900' : 'bg-indigo-50'} rounded-xl p-6 border-l-4 border-indigo-500`}>
+                                                <div className={`${darkMode ? 'bg-indigo-900' : 'bg-indigo-50'} rounded-xl p-6 border-l-4 border-indigo-500`}>
                             <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                                 {getUserTier() === 'free'
                                     ? (language === 'es'
