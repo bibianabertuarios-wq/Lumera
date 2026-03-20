@@ -550,7 +550,7 @@ import './lumera.css'
                             type: 'line',
                             data: {
                                 labels: labels,
-                                datasets: [{ label: language === 'es' ? 'Sueño' : 'Sleep', data: sleepData, borderColor: '#9333ea', backgroundColor: 'rgba(147,51,234,0.1)', borderWidth: 2, fill: true, tension: 0.4 }]
+                                datasets: [{ label: language === 'es' ? 'Sueño' : 'Sleep', data: sleepData, borderColor: '#C9935A', backgroundColor: 'rgba(201,147,90,0.1)', borderWidth: 2, fill: true, tension: 0.4 }]
                             },
                             options: chartOptions
                         });
@@ -562,7 +562,7 @@ import './lumera.css'
                             type: 'line',
                             data: {
                                 labels: labels,
-                                datasets: [{ label: language === 'es' ? 'Energía' : 'Energy', data: energyData, borderColor: '#ec4899', backgroundColor: 'rgba(236,72,153,0.1)', borderWidth: 2, fill: true, tension: 0.4 }]
+                                datasets: [{ label: language === 'es' ? 'Energía' : 'Energy', data: energyData, borderColor: '#B87333', backgroundColor: 'rgba(184,115,51,0.1)', borderWidth: 2, fill: true, tension: 0.4 }]
                             },
                             options: chartOptions
                         });
@@ -617,7 +617,7 @@ import './lumera.css'
                             data: {
                                 labels: labels,
                                 datasets: [
-                                    { label: language === 'es' ? 'Intensidad' : 'Intensity', data: intensityData, backgroundColor: '#ec4899', borderColor: '#be185d', borderWidth: 1 },
+                                    { label: language === 'es' ? 'Intensidad' : 'Intensity', data: intensityData, backgroundColor: '#C9935A', borderColor: '#B87333', borderWidth: 1 },
                                     { label: language === 'es' ? 'Duración (días)' : 'Duration (days)', data: durationData, backgroundColor: '#f97316', borderColor: '#c2410c', borderWidth: 1 }
                                 ]
                             },
@@ -2013,13 +2013,13 @@ query = query.eq('region', region.toUpperCase());
                         { emoji: '💪', title: 'Movimiento 30+ min Diario', why: 'Ejercicio es medicina. Reduce sofocos, mejora sueño, preserva hueso. Incrementa serotonina.', how: '• Cardio suave (caminar) 5 días\n• Fuerza 2-3 días\n• Flexibilidad (yoga) 2-3 días' },
                         { emoji: '🥗', title: 'Nutrición Real No Dietas', why: 'Dietas restrictivas empeoran síntomas. Necesitas nutrientes para neurotransmisores.', how: '• Proteína CADA comida (30-40g)\n• Come arcoíris\n• Grasas omega-3' },
                         { emoji: '✨', title: 'Respiración Profunda 5 min', why: 'Activa parasimpático (sistema calma). En sofoco: respira y baja 50% intensidad.', how: '• Inhalación 4 segundos\n• Retención 4 segundos\n• Exhalación 6 segundos' },
-                        { emoji: '💜', title: 'Conexión Humana', why: 'Aislamiento amplifica ansiedad. Conexión reduce estrés 35%.', how: '• Busca círculo de mujeres\n• Habla sin tabúes\n• Comparte miedos' }
+                        { emoji: '🪨', title: 'Conexión Humana', why: 'Aislamiento amplifica ansiedad. Conexión reduce estrés 35%.', how: '• Busca círculo de mujeres\n• Habla sin tabúes\n• Comparte miedos' }
                     ] : [
                         { emoji: '🌙', title: 'Sleep 7-9 Hours', why: 'Sleep is repair. Your body NEEDS more sleep. Sleeping 7+ hours reduces hot flashes 40%.', how: '• Same time always\n• No screens after 9 PM\n• Room 16-18°C' },
                         { emoji: '💪', title: 'Movement 30+ min Daily', why: 'Exercise is medicine. Reduces hot flashes, improves sleep, preserves bone. Increases serotonin.', how: '• Light cardio (walking) 5 days\n• Strength 2-3 days\n• Flexibility (yoga) 2-3 days' },
                         { emoji: '🥗', title: 'Real Nutrition Not Diets', why: 'Restrictive diets worsen symptoms. You need nutrients for neurotransmitters.', how: '• Protein EVERY meal (30-40g)\n• Eat the rainbow\n• Omega-3 fats' },
                         { emoji: '✨', title: 'Deep Breathing 5 min', why: 'Activates parasympathetic (calm system). In hot flash: breathe and reduce intensity 50%.', how: '• Inhale 4 seconds\n• Hold 4 seconds\n• Exhale 6 seconds' },
-                        { emoji: '💜', title: 'Human Connection', why: 'Isolation amplifies anxiety. Connection reduces stress 35%.', how: '• Find a circle of women\n• Talk without taboos\n• Share fears' }
+                        { emoji: '🪨', title: 'Human Connection', why: 'Isolation amplifies anxiety. Connection reduces stress 35%.', how: '• Find a circle of women\n• Talk without taboos\n• Share fears' }
                     ]
                 };
             };
@@ -2502,7 +2502,7 @@ query = query.eq('region', region.toUpperCase());
                     if (result && result.length > 0) {
                         setPatternResult(result);
                         setTimeout(() => {
-                            setShowPatternModal(true);
+                            if (getTrialDaysLeft() <= 1) setShowPatternModal(true);
                             setPatternShown(true);
                         }, 1500);
                     }
@@ -3126,7 +3126,7 @@ query = query.eq('region', region.toUpperCase());
                     const result = analyzePatterns(newSymptoms);
                     if (result && result.length > 0) {
                         setPatternResult(result);
-                        setShowPatternModal(true);
+                        if (getTrialDaysLeft() <= 1) setShowPatternModal(true);
                         setPatternShown(true);
                     }
                 }
@@ -3374,7 +3374,7 @@ query = query.eq('region', region.toUpperCase());
                                         </span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <span className="text-2xl">💜</span>
+                                        <span style={{fontSize:"1.5rem",color:"#C9935A"}}>✦</span>
                                         <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
                                             {language === 'es' ? 'Acompañamiento diario' : 'Daily support'}
                                         </span>
@@ -4675,7 +4675,7 @@ query = query.eq('region', region.toUpperCase());
 
                         <div className={`${darkMode ? 'bg-rose-900' : 'bg-amber-50'} rounded-xl shadow p-5 border-l-4 border-rose-400`}>
                             <div className="flex items-start gap-3">
-                                <span className="text-2xl">💜</span>
+                                <span style={{fontSize:"1.5rem",color:"#C9935A"}}>✦</span>
                                 <p className={`text-sm ${darkMode ? 'text-amber-200' : 'text-rose-900'} font-medium leading-relaxed`}>
                                     {getLumiMessage('nutrition')}
                                 </p>
@@ -4705,7 +4705,7 @@ query = query.eq('region', region.toUpperCase());
                                             {chartData && (
                                                 <button
                                                     onClick={() => setShowDashboardModal(true)}
-                                                    className="text-purple-600 hover:text-amber-700 text-sm font-semibold"
+                                                    className="text-amber-700 hover:text-amber-800 text-sm font-semibold"
                                                 >
                                                     📊 {language === 'es' ? 'Ver gráficos' : 'View charts'}
                                                 </button>
@@ -4719,7 +4719,7 @@ query = query.eq('region', region.toUpperCase());
                                                     setEditGoal(currentUser?.goal || 'maintain');
                                                     setShowProfileModal(true);
                                                 }}
-                                                className="text-purple-600 hover:text-amber-700 text-sm font-semibold"
+                                                className="text-amber-700 hover:text-amber-800 text-sm font-semibold"
                                             >
                                                 ✏️ {language === 'es' ? 'Editar' : 'Edit'}
                                             </button>
@@ -4745,7 +4745,7 @@ query = query.eq('region', region.toUpperCase());
                                             </p>
                                         </div>
                                         <div className={`${darkMode ? 'bg-stone-900/40' : 'bg-amber-50'} p-4 rounded-xl`}>
-                                            <p className={`text-xs ${darkMode ? 'text-amber-300' : 'text-purple-600'} font-semibold mb-1`}>
+                                            <p className={`text-xs ${darkMode ? 'text-amber-300' : 'text-amber-700'} font-semibold mb-1`}>
                                                 TDEE
                                             </p>
                                             <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -4777,7 +4777,7 @@ query = query.eq('region', region.toUpperCase());
                                                 setEditGoal(currentUser?.goal || 'maintain');
                                                 setShowProfileModal(true);
                                             }}
-                                            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition"
+                                            className="bg-gradient-to-r from-amber-600 to-amber-400 text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition"
                                         >
                                             {language === 'es' ? 'Completar Ahora' : 'Complete Now'}
                                         </button>
@@ -4801,7 +4801,7 @@ query = query.eq('region', region.toUpperCase());
                                     </div>
                                     <button
                                         onClick={() => setCurrentPage('symptoms')}
-                                        className="text-xs text-purple-600 font-semibold hover:underline"
+                                        className="text-xs text-amber-700 font-semibold hover:underline"
                                     >
                                         {language === 'es' ? 'Ver detalle →' : 'See detail →'}
                                     </button>
@@ -4812,7 +4812,7 @@ query = query.eq('region', region.toUpperCase());
                                     {[
                                         { label: language === 'es' ? 'Sueño' : 'Sleep', key: 'sleep', color: 'purple', icon: '😴' },
                                         { label: language === 'es' ? 'Energía' : 'Energy', key: 'energy', color: 'pink', icon: '⚡' },
-                                        { label: language === 'es' ? 'Ánimo' : 'Mood', key: 'mood', color: 'blue', icon: '💜' },
+                                        { label: language === 'es' ? 'Ánimo' : 'Mood', key: 'mood', color: 'blue', icon: '🪨' },
                                         { label: language === 'es' ? 'Sofocos' : 'Hot flashes', key: 'hot_flashes', color: 'orange', icon: '🔥' }
                                     ].map(metric => {
                                         const last7 = symptoms.slice(0, 7);
@@ -4836,8 +4836,8 @@ query = query.eq('region', region.toUpperCase());
 
                                 {/* Barra visual simple para cada métrica */}
                                 {[
-                                    { label: language === 'es' ? 'Sueño' : 'Sleep', key: 'sleep', color: '#9333ea' },
-                                    { label: language === 'es' ? 'Energía' : 'Energy', key: 'energy', color: '#ec4899' },
+                                    { label: language === 'es' ? 'Sueño' : 'Sleep', key: 'sleep', color: '#C9935A' },
+                                    { label: language === 'es' ? 'Energía' : 'Energy', key: 'energy', color: '#C9935A' },
                                     { label: language === 'es' ? 'Ánimo' : 'Mood', key: 'mood', color: '#06b6d4' }
                                 ].map(metric => {
                                     const last7 = symptoms.slice(0, 7).reverse();
@@ -4881,7 +4881,7 @@ query = query.eq('region', region.toUpperCase());
                                     <h3 className="text-lg font-semibold gradient-text">
                                         📊 {language === 'es' ? 'Tus Tendencias' : 'Your Trends'}
                                     </h3>
-                                    <span className="text-xs bg-purple-100 text-amber-700 px-2 py-1 rounded-full font-semibold">
+                                    <span className="text-xs bg-amber-50 text-amber-700 px-2 py-1 rounded-full font-semibold">
                                         {language === 'es' ? '✦ Premium' : '✦ Premium'}
                                     </span>
                                 </div>
@@ -4890,7 +4890,7 @@ query = query.eq('region', region.toUpperCase());
                                 <div className="relative">
                                     <div className="blur-sm opacity-50 pointer-events-none">
                                         <div className="grid grid-cols-4 gap-3 mb-4">
-                                            {['😴', '⚡', '💜', '🔥'].map((icon, i) => (
+                                            {['😴', '⚡', '🪨', '🔥'].map((icon, i) => (
                                                 <div key={i} className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-3 text-center`}>
                                                     <div className="text-lg mb-1">{icon}</div>
                                                     <p className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>7.{i}</p>
@@ -4900,7 +4900,7 @@ query = query.eq('region', region.toUpperCase());
                                         </div>
                                         <div className="flex items-end gap-1 h-12">
                                             {[6,7,5,8,7,9,8].map((v, i) => (
-                                                <div key={i} className="flex-1 rounded-t-sm bg-purple-400" style={{ height: (v/10*100) + '%' }} />
+                                                <div key={i} className="flex-1 rounded-t-sm bg-amber-400" style={{ height: (v/10*100) + '%' }} />
                                             ))}
                                         </div>
                                     </div>
@@ -4914,7 +4914,7 @@ query = query.eq('region', region.toUpperCase());
                                         </p>
                                         <button
                                             onClick={() => setCurrentPage('premium')}
-                                            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition"
+                                            className="bg-gradient-to-r from-amber-600 to-amber-400 text-white px-6 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition"
                                         >
                                             {language === 'es' ? '✦ Desbloquear tendencias' : '✦ Unlock trends'}
                                         </button>
@@ -4953,7 +4953,7 @@ query = query.eq('region', region.toUpperCase());
                                                     </div>
                                                 )}
                                             </div>
-                                            <span className={`${darkMode ? 'bg-stone-900' : 'bg-purple-100'} text-amber-700 px-4 py-2 rounded-xl text-lg font-bold`}>
+                                            <span className={`${darkMode ? 'bg-stone-900' : 'bg-amber-50'} text-amber-700 px-4 py-2 rounded-xl text-lg font-bold`}>
                                                 {recipe.calories} cal
                                             </span>
                                         </div>
@@ -4970,7 +4970,7 @@ query = query.eq('region', region.toUpperCase());
 
                                         {/* POR QUÉ ESTE MENÚ - BENEFICIOS */}
                                         <div className={`${darkMode ? 'bg-stone-900' : 'bg-amber-50'} p-4 rounded-lg border-l-4 border-amber-500`}>
-                                            <p className={`text-sm ${darkMode ? 'text-amber-200' : 'text-purple-900'} font-medium leading-relaxed`}>
+                                            <p className={`text-sm ${darkMode ? 'text-amber-200' : 'text-amber-900'} font-medium leading-relaxed`}>
                                                 <strong className="font-bold">💜 {language === 'es' ? '¿Por qué este menú?' : 'Why this menu?'}</strong><br/>
                                                 {recipe.why}
                                             </p>
@@ -5457,13 +5457,13 @@ query = query.eq('region', region.toUpperCase());
 
                         {/* EJERCICIOS PERSONALIZADOS - Trial y Premium */}
                         {(getUserTier() === 'premium' || getUserTier() === 'trial') && (
-                            <div className={`${darkMode ? 'bg-gray-800 border-purple-700' : 'bg-amber-50 border-purple-200'} rounded-xl p-5 border`}>
+                            <div className={`${darkMode ? 'bg-gray-800 border-amber-700' : 'bg-amber-50 border-amber-200'} rounded-xl p-5 border`}>
                                 <div className="flex items-center justify-between mb-3">
                                     <div>
-                                        <h3 className={`font-semibold ${darkMode ? 'text-amber-200' : 'text-purple-800'}`}>
+                                        <h3 className={`font-semibold ${darkMode ? 'text-amber-200' : 'text-amber-800'}`}>
                                             💎 {language === 'es' ? 'Rutina personalizada para ti' : 'Personalized routine for you'}
                                         </h3>
-                                        <p className={`text-xs mt-1 ${darkMode ? 'text-amber-300' : 'text-purple-600'}`}>
+                                        <p className={`text-xs mt-1 ${darkMode ? 'text-amber-300' : 'text-amber-700'}`}>
                                             {language === 'es' 
                                                 ? 'Basada en tus síntomas recientes y condiciones de salud' 
                                                 : 'Based on your recent symptoms and health conditions'}
@@ -5473,7 +5473,7 @@ query = query.eq('region', region.toUpperCase());
                                         <button
                                             onClick={fetchPersonalizedExercises}
                                             disabled={loadingExercises}
-                                            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition disabled:opacity-50 whitespace-nowrap"
+                                            className="bg-gradient-to-r from-amber-600 to-amber-400 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition disabled:opacity-50 whitespace-nowrap"
                                         >
                                             {loadingExercises 
                                                 ? (language === 'es' ? '⏳ Generando...' : '⏳ Generating...')
@@ -5544,7 +5544,7 @@ query = query.eq('region', region.toUpperCase());
                                                 })()}
                                             </div>
                                         ))}
-                                        <p className={`text-xs ${darkMode ? 'text-purple-400' : 'text-purple-600'} italic text-center mt-2`}>
+                                        <p className={`text-xs ${darkMode ? 'text-purple-400' : 'text-amber-700'} italic text-center mt-2`}>
                                             ✨ {language === 'es' ? 'Rutina adaptada a cómo te has sentido esta semana' : 'Routine adapted to how you\'ve felt this week'}
                                         </p>
                                     </div>
@@ -5917,7 +5917,7 @@ query = query.eq('region', region.toUpperCase());
                                 {/* Mensaje LUMI */}
                                 <div className="rounded-2xl p-6" style={{background: 'linear-gradient(135deg, #fdf4ff, #fff7ed)', borderLeft: '4px solid #f43f5e'}}>
                                     <div className="flex items-start gap-3">
-                                        <span className="text-2xl">💜</span>
+                                        <span style={{fontSize:"1.5rem",color:"#C9935A"}}>✦</span>
                                         <p className={`leading-relaxed ${darkMode ? 'text-gray-200' : 'text-rose-900'} font-medium`}>
                                             {periodGuidance.lumiMessage}
                                         </p>
@@ -6079,7 +6079,7 @@ query = query.eq('region', region.toUpperCase());
                                                         </div>
                                                         <div className={`${darkMode ? 'bg-gray-700' : 'bg-amber-50'} p-4 rounded-lg text-center`}>
                                                             <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>{language === 'es' ? 'Duración avg' : 'Avg duration'}</p>
-                                                            <p className="text-2xl font-bold text-purple-600">{avgDuration}<span className="text-sm font-normal"> {language === 'es' ? 'días' : 'days'}</span></p>
+                                                            <p className="text-2xl font-bold text-amber-700">{avgDuration}<span className="text-sm font-normal"> {language === 'es' ? 'días' : 'days'}</span></p>
                                                         </div>
                                                     </div>
 
@@ -6608,7 +6608,7 @@ query = query.eq('region', region.toUpperCase());
                                             <button
                                                 type="button"
                                                 onClick={() => setShowPasswordReset(true)}
-                                                className="text-xs text-purple-600 hover:text-purple-800 text-right transition"
+                                                className="text-xs text-amber-700 hover:text-amber-800 text-right transition"
                                             >
                                                 {language === 'es' ? '¿Olvidaste tu contraseña?' : 'Forgot your password?'}
                                             </button>
@@ -7094,7 +7094,7 @@ query = query.eq('region', region.toUpperCase());
                                     style={{background:'linear-gradient(135deg,#C9935A,#e8c89f)',color:'white',border:'none',borderRadius:'9999px',padding:'0.45rem 1.1rem',fontSize:'0.8rem',fontWeight:600,cursor:'pointer',whiteSpace:'nowrap'}}
                                     className={`px-4 py-2 rounded-full font-semibold whitespace-nowrap text-sm ${
                                         darkMode 
-                                            ? 'bg-white text-purple-900 hover:bg-gray-100' 
+                                            ? 'bg-white text-amber-900 hover:bg-gray-100' 
                                             : 'bg-gradient-to-r from-rose-500 to-amber-500 text-white hover:opacity-90'
                                     } transition`}
                                 >
@@ -7424,7 +7424,7 @@ query = query.eq('region', region.toUpperCase());
                                                             : 'You are still building your history. Log your symptoms every day and in 3 days I will have real patterns from your body to show you.'
                                                     }]);
                                                 }
-                                                setShowPatternModal(true);
+                                                if (getTrialDaysLeft() <= 1) setShowPatternModal(true);
                                                 setPatternShown(true);
                                             }}
                                             style={{
@@ -7565,7 +7565,7 @@ query = query.eq('region', region.toUpperCase());
                                     const metrics = [
                                         { label: language === 'es' ? 'Sueño' : 'Sleep', val: avg('sleep','sleep'), icon: '😴', good: v => v >= 6, goodText: language === 'es' ? 'Descansando bien' : 'Resting well', badText: language === 'es' ? 'Necesita atención' : 'Needs attention', color: '#6366f1' },
                                         { label: language === 'es' ? 'Energía' : 'Energy', val: avg('energy','energy'), icon: '⚡', good: v => v >= 5, goodText: language === 'es' ? 'Estable' : 'Stable', badText: language === 'es' ? 'Baja estos días' : 'Low these days', color: '#f59e0b' },
-                                        { label: language === 'es' ? 'Ánimo' : 'Mood', val: avg('mood','mood'), icon: '💜', good: v => v >= 5, goodText: language === 'es' ? 'Equilibrado' : 'Balanced', badText: language === 'es' ? 'Días difíciles' : 'Tough days', color: '#ec4899' },
+                                        { label: language === 'es' ? 'Ánimo' : 'Mood', val: avg('mood','mood'), icon: '🪨', good: v => v >= 5, goodText: language === 'es' ? 'Equilibrado' : 'Balanced', badText: language === 'es' ? 'Días difíciles' : 'Tough days', color: '#C9935A' },
                                         { label: language === 'es' ? 'Sofocos' : 'Hot flashes', val: avg('hotFlashes','hot_flashes'), icon: '🌡️', good: v => v <= 4, goodText: language === 'es' ? 'Manejables' : 'Manageable', badText: language === 'es' ? 'Frecuentes' : 'Frequent', color: '#f43f5e' },
                                     ];
                                     return (
@@ -7688,7 +7688,7 @@ query = query.eq('region', region.toUpperCase());
                         <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6 mt-4 border-2 border-purple-300`}>
                             <div className="text-center mb-4">
                                 <div className="text-3xl mb-2">🌱</div>
-                                <h3 className={`text-lg font-bold ${darkMode ? 'text-amber-200' : 'text-purple-800'}`}>
+                                <h3 className={`text-lg font-bold ${darkMode ? 'text-amber-200' : 'text-amber-800'}`}>
                                     {language === 'es' ? 'Algo importante' : 'Something important'}
                                 </h3>
                             </div>
@@ -7701,7 +7701,7 @@ query = query.eq('region', region.toUpperCase());
 
                             {/* Qué esperar */}
                             <div className={`${darkMode ? 'bg-stone-900' : 'bg-amber-50'} rounded-lg p-4 mb-4`}>
-                                <p className={`text-sm font-semibold mb-2 ${darkMode ? 'text-amber-200' : 'text-purple-800'}`}>
+                                <p className={`text-sm font-semibold mb-2 ${darkMode ? 'text-amber-200' : 'text-amber-800'}`}>
                                     {language === 'es' ? '¿Qué puede pasar?' : 'What might happen?'}
                                 </p>
                                 <ul className={`text-xs space-y-1.5 ${darkMode ? 'text-amber-300' : 'text-amber-700'}`}>
@@ -7949,7 +7949,7 @@ query = query.eq('region', region.toUpperCase());
 
                                     <button
                                         onClick={saveMetabolicProfile}
-                                        className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-semibold hover:opacity-90 transition mt-6"
+                                        className="w-full bg-gradient-to-r from-amber-600 to-amber-400 text-white py-3 rounded-lg font-semibold hover:opacity-90 transition mt-6"
                                     >
                                         {language === 'es' ? '💾 Guardar' : '💾 Save'}
                                     </button>
