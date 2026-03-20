@@ -3639,224 +3639,254 @@ query = query.eq('region', region.toUpperCase());
                 // (useEffect movido al nivel de LumeraApp para cumplir reglas de hooks)
 
                 return (
-                    <div className="pb-32" key={language} style={{background:'#0D0D0D',minHeight:'100vh',position:'relative',overflowX:'hidden'}}>
+                    <div className="pb-32" key={language} style={{background:'#0A0A0A',minHeight:'100vh',position:'relative',overflowX:'hidden'}}>
 
-                        <div style={{position:'fixed',inset:0,zIndex:0,pointerEvents:'none',overflow:'hidden'}}>
-                            <div style={{position:'absolute',top:'-15%',left:'-10%',width:'55vw',height:'55vw',borderRadius:'50%',background:'radial-gradient(circle at 40% 40%, rgba(184,115,51,0.22) 0%, rgba(184,115,51,0.06) 50%, transparent 70%)',animation:'gpulse 8s ease-in-out infinite'}}/>
-                            <div style={{position:'absolute',top:'20%',right:'-12%',width:'45vw',height:'45vw',borderRadius:'50%',background:'radial-gradient(circle at 60% 60%, rgba(232,200,120,0.15) 0%, transparent 70%)',animation:'gpulse 10s ease-in-out infinite 2s'}}/>
-                            <div style={{position:'absolute',bottom:'-10%',left:'20%',width:'40vw',height:'40vw',borderRadius:'50%',background:'radial-gradient(circle at 50% 50%, rgba(184,115,51,0.12) 0%, transparent 70%)',animation:'gpulse 12s ease-in-out infinite 4s'}}/>
-                            <div style={{position:'absolute',inset:0,backgroundImage:'repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(184,115,51,0.025) 60px,rgba(184,115,51,0.025) 61px)'}}/>
-                        </div>
+                        {/* VIDEO FONDO SEDA NEGRA */}
+                        <video
+                            autoPlay loop muted playsInline
+                            src="/videos/premium_bg.mp4"
+                            style={{position:'fixed',top:0,left:0,width:'100%',height:'100%',objectFit:'cover',zIndex:0,opacity:0.55,pointerEvents:'none'}}
+                        />
+                        {/* Overlay cobre sutil */}
+                        <div style={{position:'fixed',inset:0,zIndex:1,pointerEvents:'none',background:'linear-gradient(180deg,rgba(10,8,6,0.55) 0%,rgba(10,8,6,0.35) 40%,rgba(10,8,6,0.65) 100%)'}}/>
 
                         <style>{`
-                            @keyframes gpulse{0%,100%{transform:scale(1);opacity:1}33%{transform:scale(1.08);opacity:.85}66%{transform:scale(.95);opacity:.95}}
                             @keyframes gshimmer{0%{background-position:-200% center}100%{background-position:200% center}}
-                            .gc{background:rgba(22,16,10,0.85);border:1px solid rgba(184,115,51,0.25);border-radius:1.25rem;backdrop-filter:blur(12px);box-shadow:0 8px 32px rgba(0,0,0,0.5)}
-                            .gch{transition:all 0.3s ease;cursor:pointer}
-                            .gch:hover{border-color:rgba(184,115,51,0.55)!important;transform:translateY(-2px)}
+                            @keyframes floatcard{0%,100%{transform:translateY(0px)}50%{transform:translateY(-6px)}}
+                            @keyframes lunabrillo{0%,100%{opacity:0.7;filter:blur(0px)}50%{opacity:1;filter:blur(1px)}}
+                            .gc2{
+                                background:rgba(15,10,5,0.65);
+                                border:1px solid rgba(184,115,51,0.28);
+                                border-radius:1.25rem;
+                                backdrop-filter:blur(18px);
+                                -webkit-backdrop-filter:blur(18px);
+                                box-shadow:0 8px 40px rgba(0,0,0,0.6),inset 0 1px 0 rgba(184,115,51,0.12);
+                            }
+                            .gch2{transition:all 0.35s ease;cursor:pointer}
+                            .gch2:hover{border-color:rgba(184,115,51,0.6)!important;transform:translateY(-3px);box-shadow:0 16px 48px rgba(0,0,0,0.7),0 0 30px rgba(184,115,51,0.15)!important}
                         `}</style>
 
-                        <div style={{position:'relative',zIndex:1,padding:'0 0 2rem'}}>
+                        <div style={{position:'relative',zIndex:2,padding:'0 0 3rem'}}>
 
-                            <div style={{background:'linear-gradient(160deg,rgba(184,115,51,0.18) 0%,rgba(22,16,10,0.95) 60%)',borderBottom:'1px solid rgba(184,115,51,0.20)',padding:'2.5rem 1.5rem 2rem',position:'relative',overflow:'hidden'}}>
-                                <div style={{position:'absolute',top:0,left:'50%',transform:'translateX(-50%)',width:'120px',height:'3px',background:'linear-gradient(90deg,transparent,#B87333,transparent)'}}/>
-                                <div style={{display:'inline-flex',alignItems:'center',background:'linear-gradient(135deg,rgba(184,115,51,0.25),rgba(232,200,120,0.15))',border:'1px solid rgba(184,115,51,0.45)',borderRadius:'9999px',padding:'0.3rem 1rem',marginBottom:'1.25rem'}}>
-                                    <span style={{fontSize:'0.65rem',fontWeight:700,color:'#E8C878',letterSpacing:'0.18em',textTransform:'uppercase'}}>PREMIUM</span>
+                            {/* HEADER — Logo + Luna */}
+                            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'3rem 1.5rem 1.5rem'}}>
+                                <div>
+                                    <p style={{fontSize:'0.62rem',color:'rgba(184,115,51,0.6)',letterSpacing:'0.25em',textTransform:'uppercase',marginBottom:'4px'}}>LUMERA</p>
+                                    <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.5rem',fontWeight:400,color:'#F5E6D3',letterSpacing:'0.05em',lineHeight:1}}>
+                                        {language==='es'?`Hola, ${userName}`:`Hello, ${userName}`}
+                                    </p>
                                 </div>
-                                <h1 style={{fontFamily:"'Cormorant',serif",fontSize:'2.5rem',fontWeight:500,color:'#F5E6D3',lineHeight:1.1,marginBottom:'0.75rem'}}>
-                                    {language==='es'?'Bienvenida,':'Welcome,'}<br/>
-                                    <span style={{background:'linear-gradient(135deg,#B87333,#E8C878,#D4956A)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundSize:'200%',animation:'gshimmer 4s linear infinite'}}>{userName}</span>
-                                </h1>
-                                <p style={{fontSize:'0.92rem',color:'rgba(212,149,106,0.85)',lineHeight:1.6,marginBottom:'1.5rem',fontStyle:'italic',fontFamily:"'Cormorant',serif"}}>
-                                    {language==='es'?'Tu santuario. Tu ritmo. Tu transformación.':'Your sanctuary. Your rhythm. Your transformation.'}
+                                {/* Luna GLP-1 */}
+                                <div style={{textAlign:'center'}}>
+                                    <div style={{
+                                        width:'48px',height:'48px',borderRadius:'50%',
+                                        background:'radial-gradient(circle at 35% 35%, #E8C878, #B87333)',
+                                        boxShadow:'0 0 20px rgba(232,200,120,0.4),0 0 40px rgba(184,115,51,0.2)',
+                                        animation:'lunabrillo 4s ease-in-out infinite',
+                                        display:'flex',alignItems:'center',justifyContent:'center',
+                                        fontSize:'1.2rem',
+                                    }}>🌙</div>
+                                    <p style={{fontSize:'0.55rem',color:'rgba(184,115,51,0.6)',letterSpacing:'0.1em',textTransform:'uppercase',marginTop:'4px'}}>GLP-1</p>
+                                </div>
+                            </div>
+
+                            <div style={{padding:'0 1.25rem'}}>
+
+                            {/* EL ORÁCULO — protagonista flotante */}
+                            {symptoms && symptoms.length > 0 && (() => {
+                                const todayS = symptoms[symptoms.length-1];
+                                const hasLowSleep = (todayS.sleep||0) <= 3;
+                                const hasHighAnx = (todayS.anxiety||0) >= 4;
+                                const hasLowEnergy = (todayS.energy||0) <= 3;
+                                const hasLowMood = (todayS.mood||0) <= 3;
+                                const hasHotFlash = (todayS.hotFlashes||todayS.hot_flashes||0) >= 4;
+
+                                let oracle_es, oracle_en, action_es, action_en, icon;
+                                if (hasLowSleep) {
+                                    icon='🌙';
+                                    oracle_es='Esta noche tu cuerpo necesita restauración profunda. He ajustado tu plan de mañana para que empieces despacio.';
+                                    oracle_en='Tonight your body needs deep restoration. I have adjusted your plan for tomorrow to start slowly.';
+                                    action_es='Tu ritual de hoy: Magnesio + infusión de valeriana + sin pantallas 60 min antes de dormir.';
+                                    action_en='Your ritual today: Magnesium + valerian tea + no screens 60 min before sleep.';
+                                } else if (hasHighAnx) {
+                                    icon='🌊';
+                                    oracle_es='Detecto tensión en tu sistema nervioso. Tu estrógeno está fluctuando y eso activa el eje HPA.';
+                                    oracle_en='I detect tension in your nervous system. Your oestrogen is fluctuating and activating the HPA axis.';
+                                    action_es='Tu ritual de hoy: Respiración 4-7-8 antes de cada comida. Omega-3 en el desayuno. Nada de café después de las 12h.';
+                                    action_en='Your ritual today: 4-7-8 breathing before each meal. Omega-3 at breakfast. No coffee after noon.';
+                                } else if (hasHotFlash) {
+                                    icon='🔥';
+                                    oracle_es='Los sofocos de hoy son vasodilataciones del hipotálamo cuando el estrógeno cae. No es calor — es química.';
+                                    oracle_en='Today hot flashes are hypothalamic vasodilations as oestrogen drops. Not heat, it is chemistry.';
+                                    action_es='Tu ritual de hoy: Ropa de lino, agua fría con pepino, flaxseeds en el menú de hoy.';
+                                    action_en='Your ritual today: Linen clothing, cold cucumber water, flaxseeds in your menu today.';
+                                } else if (hasLowEnergy) {
+                                    icon='⚡';
+                                    oracle_es='Tu energía está baja. He detectado que llevas 2+ días así — tu cuerpo pide hierro y vitamina B12.';
+                                    oracle_en='Your energy is low. I detect this is day 2+ — your body is asking for iron and B12.';
+                                    action_es='Tu ritual de hoy: Lentejas o espinacas en el almuerzo. Nada de ejercicio intenso. Siesta de 20 min si puedes.';
+                                    action_en='Your ritual today: Lentils or spinach at lunch. No intense exercise. 20-min nap if you can.';
+                                } else if (hasLowMood) {
+                                    icon='🌿';
+                                    oracle_es='Tu ánimo fluctuante tiene una causa hormonal directa. No es contigo — es el ciclo.';
+                                    oracle_en='Your fluctuating mood has a direct hormonal cause. It is not you — it is the cycle.';
+                                    action_es='Tu ritual de hoy: 10 min de luz solar antes de las 10am. Chocolate 85% esta tarde. Llama a alguien que te haga reír.';
+                                    action_en='Your ritual today: 10 min sunlight before 10am. 85% dark chocolate this afternoon. Call someone who makes you laugh.';
+                                } else {
+                                    icon='✦';
+                                    oracle_es='Tu cuerpo está en equilibrio hoy. Los días así son cuando se consolidan los cambios — úsalos bien.';
+                                    oracle_en='Your body is balanced today. Days like this are when changes consolidate — use them well.';
+                                    action_es='Tu ritual de hoy: Movimiento que te guste, una comida que te nutra, una cosa que te ilusione.';
+                                    action_en='Your ritual today: Movement you enjoy, a meal that nourishes you, one thing that excites you.';
+                                }
+                                return (
+                                    <div className="gc2" style={{marginBottom:'1.25rem',padding:'1.75rem',position:'relative',overflow:'hidden',animation:'floatcard 6s ease-in-out infinite'}}>
+                                        <div style={{position:'absolute',top:0,left:0,right:0,height:'2px',background:'linear-gradient(90deg,transparent,#B87333,#E8C878,#B87333,transparent)'}}/>
+                                        <div style={{position:'absolute',top:0,right:0,width:'120px',height:'120px',background:'radial-gradient(circle,rgba(184,115,51,0.08),transparent)',borderRadius:'50%',transform:'translate(40px,-40px)'}}/>
+
+                                        <div style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'1rem'}}>
+                                            <div style={{fontSize:'1.8rem'}}>{icon}</div>
+                                            <div>
+                                                <p style={{fontSize:'0.58rem',color:'rgba(184,115,51,0.7)',fontWeight:700,letterSpacing:'0.18em',textTransform:'uppercase',marginBottom:'2px'}}>
+                                                    {language==='es'?'EL ORÁCULO DE HOY':'THE ORACLE TODAY'}
+                                                </p>
+                                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',color:'#F5E6D3',fontWeight:400,lineHeight:1.2}}>
+                                                    {language==='es'?oracle_es:oracle_en}
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div style={{background:'rgba(184,115,51,0.1)',border:'1px solid rgba(184,115,51,0.2)',borderRadius:'0.75rem',padding:'0.875rem 1rem',marginBottom:'1rem'}}>
+                                            <p style={{fontSize:'0.58rem',color:'#B87333',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'4px'}}>
+                                                {language==='es'?'✦ TU RITUAL DE HOY':'✦ YOUR RITUAL TODAY'}
+                                            </p>
+                                            <p style={{fontSize:'0.87rem',color:'rgba(245,230,211,0.9)',lineHeight:1.6,margin:0,fontStyle:'italic',fontFamily:"'Cormorant',serif"}}>
+                                                {language==='es'?action_es:action_en}
+                                            </p>
+                                        </div>
+
+                                        {/* 3 PILARES */}
+                                        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'0.5rem'}}>
+                                            {[
+                                                {key:'aprender',label_es:'APRENDER',label_en:'LEARN',page:'chat'},
+                                                {key:'cuidarme',label_es:'CUIDARME',label_en:'CARE',page:'nutrition'},
+                                                {key:'intimidad',label_es:'INTIMIDAD',label_en:'INTIMACY',page:'chat'},
+                                            ].map((pilar,i)=>(
+                                                <div key={i} onClick={()=>setCurrentPage(pilar.page)} style={{
+                                                    border:'1px solid rgba(184,115,51,0.30)',
+                                                    borderRadius:'0.75rem',
+                                                    padding:'0.75rem 0.5rem',
+                                                    textAlign:'center',
+                                                    cursor:'pointer',
+                                                    background:'rgba(184,115,51,0.06)',
+                                                    transition:'all 0.25s',
+                                                }}
+                                                onMouseEnter={e=>{e.currentTarget.style.background='rgba(184,115,51,0.15)';e.currentTarget.style.borderColor='rgba(184,115,51,0.55)'}}
+                                                onMouseLeave={e=>{e.currentTarget.style.background='rgba(184,115,51,0.06)';e.currentTarget.style.borderColor='rgba(184,115,51,0.30)'}}>
+                                                    <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.78rem',fontWeight:600,color:'#E8C878',letterSpacing:'0.12em',margin:0}}>
+                                                        {language==='es'?pilar.label_es:pilar.label_en}
+                                                    </p>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        <div style={{position:'absolute',bottom:0,left:0,right:0,height:'1px',background:'linear-gradient(90deg,transparent,rgba(184,115,51,0.3),transparent)'}}/>
+                                    </div>
+                                );
+                            })()}
+
+                            {/* ORÁCULO FALLBACK si no hay síntomas */}
+                            {(!symptoms || symptoms.length === 0) && (
+                                <div className="gc2" style={{marginBottom:'1.25rem',padding:'1.75rem',textAlign:'center',animation:'floatcard 6s ease-in-out infinite'}}>
+                                    <div style={{position:'absolute',top:0,left:0,right:0,height:'2px',background:'linear-gradient(90deg,transparent,#B87333,#E8C878,#B87333,transparent)'}}/>
+                                    <p style={{fontSize:'2rem',marginBottom:'0.75rem'}}>✦</p>
+                                    <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.2rem',color:'#F5E6D3',marginBottom:'0.5rem'}}>
+                                        {language==='es'?'Registra cómo te sientes hoy':'Log how you feel today'}
+                                    </p>
+                                    <p style={{fontSize:'0.82rem',color:'rgba(184,115,51,0.7)',marginBottom:'1rem'}}>
+                                        {language==='es'?'Para que el Oráculo se active con tus datos reales':'So the Oracle activates with your real data'}
+                                    </p>
+                                    <div onClick={()=>setCurrentPage('symptoms')} style={{display:'inline-block',background:'linear-gradient(135deg,#B87333,#E8C878)',borderRadius:'9999px',padding:'0.5rem 1.5rem',cursor:'pointer'}}>
+                                        <p style={{fontSize:'0.8rem',fontWeight:700,color:'#0A0A0A',margin:0}}>{language==='es'?'Registrar ahora':'Log now'}</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* 6 ACCESOS — frosted glass */}
+                            <div style={{marginBottom:'1.25rem'}}>
+                                <p style={{fontSize:'0.58rem',color:'rgba(184,115,51,0.55)',fontWeight:700,letterSpacing:'0.18em',textTransform:'uppercase',marginBottom:'0.75rem',paddingLeft:'0.25rem'}}>
+                                    {language==='es'?'TU SANTUARIO':'YOUR SANCTUARY'}
                                 </p>
-                                {currentUser && currentUser.bmi && currentUser.tdee && (
+                                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.6rem'}}>
+                                    {[
+                                        {icon:'🌿',es:'Síntomas',en:'Symptoms',page:'symptoms',des:'Cómo te sientes',den:'How you feel'},
+                                        {icon:'🍽',es:'Nutrición',en:'Nutrition',page:'nutrition',des:'Tu menú ritual',den:'Your ritual menu'},
+                                        {icon:'💪',es:'Ejercicio',en:'Exercise',page:'exercise',des:'Movimiento consciente',den:'Conscious movement'},
+                                        {icon:'✨',es:'LUMI',en:'LUMI',page:'chat',des:'Tu guía 24/7',den:'Your guide 24/7'},
+                                        {icon:'📊',es:'Progreso',en:'Progress',page:'progreso',des:'Tus patrones',den:'Your patterns'},
+                                        {icon:'🌙',es:'Período',en:'Period',page:'period',des:'Tu ciclo lunar',den:'Your lunar cycle'},
+                                    ].map((item,i)=>(
+                                        <div key={i} className="gc2 gch2" onClick={()=>setCurrentPage(item.page)} style={{padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem'}}>
+                                            <div style={{width:'36px',height:'36px',borderRadius:'50%',background:'rgba(184,115,51,0.1)',border:'1px solid rgba(184,115,51,0.22)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1rem',flexShrink:0}}>{item.icon}</div>
+                                            <div>
+                                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.95rem',fontWeight:500,color:'#F5E6D3',marginBottom:'1px'}}>{language==='es'?item.es:item.en}</p>
+                                                <p style={{fontSize:'0.68rem',color:'rgba(184,115,51,0.6)'}}>{language==='es'?item.des:item.den}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* MÉTRICAS */}
+                            {currentUser && currentUser.bmi && currentUser.tdee && (
+                                <div className="gc2" style={{marginBottom:'1.25rem',padding:'1.25rem'}}>
+                                    <p style={{fontSize:'0.58rem',color:'rgba(184,115,51,0.6)',fontWeight:700,letterSpacing:'0.16em',textTransform:'uppercase',marginBottom:'0.75rem'}}>
+                                        {language==='es'?'TU PERFIL METABÓLICO':'YOUR METABOLIC PROFILE'}
+                                    </p>
                                     <div style={{display:'flex',gap:'0.75rem',flexWrap:'wrap'}}>
                                         {[{label:'IMC',value:currentUser.bmi,sub:getBMICategory(currentUser.bmi,language)},{label:'TDEE',value:currentUser.tdee,sub:'kcal/día'}].map(({label,value,sub})=>(
-                                            <div key={label} style={{background:'rgba(184,115,51,0.12)',border:'1px solid rgba(184,115,51,0.30)',borderRadius:'0.75rem',padding:'0.6rem 1rem',minWidth:'90px'}}>
-                                                <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:'2px'}}>{label}</p>
+                                            <div key={label} style={{background:'rgba(184,115,51,0.08)',border:'1px solid rgba(184,115,51,0.20)',borderRadius:'0.75rem',padding:'0.6rem 1rem',flex:1,minWidth:'80px'}}>
+                                                <p style={{fontSize:'0.58rem',color:'#B87333',fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'2px'}}>{label}</p>
                                                 <p style={{fontSize:'1.4rem',fontWeight:700,color:'#E8C878',lineHeight:1}}>{value}</p>
-                                                <p style={{fontSize:'0.65rem',color:'rgba(245,230,211,0.55)',marginTop:'2px'}}>{sub}</p>
+                                                <p style={{fontSize:'0.62rem',color:'rgba(245,230,211,0.45)',marginTop:'2px'}}>{sub}</p>
                                             </div>
                                         ))}
-                                        <div onClick={()=>setShowEditProfile(true)} style={{background:'rgba(184,115,51,0.08)',border:'1px solid rgba(184,115,51,0.20)',borderRadius:'0.75rem',padding:'0.6rem 1rem',cursor:'pointer',display:'flex',alignItems:'center',gap:'0.4rem'}}>
-                                            <span style={{fontSize:'0.72rem',color:'#B87333',fontWeight:600}}>{language==='es'?'Editar perfil':'Edit profile'}</span>
+                                        <div onClick={()=>setShowEditProfile(true)} style={{background:'rgba(184,115,51,0.06)',border:'1px solid rgba(184,115,51,0.18)',borderRadius:'0.75rem',padding:'0.6rem 1rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                                            <p style={{fontSize:'0.72rem',color:'rgba(184,115,51,0.7)',fontWeight:600,margin:0}}>{language==='es'?'Editar':'Edit'}</p>
                                         </div>
                                     </div>
+                                </div>
+                            )}
+
+                            {/* STATUS + CANCELAR */}
+                            <div className="gc2" style={{marginBottom:'1.25rem',padding:'1.25rem'}}>
+                                <div style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:!isInTrial?'1rem':'0'}}>
+                                    <div style={{width:'28px',height:'28px',borderRadius:'50%',background:'linear-gradient(135deg,#B87333,#E8C878)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                                        <span style={{fontSize:'0.7rem',color:'#0A0A0A',fontWeight:700}}>P</span>
+                                    </div>
+                                    <div style={{flex:1}}>
+                                        <p style={{fontSize:'0.78rem',fontWeight:600,color:'#E8C878'}}>{isTrialDay3?(language==='es'?'Último día de prueba':'Last trial day'):isInTrial?(language==='es'?`Trial · ${trialDaysLeft} días`:`Trial · ${trialDaysLeft} days`):(language==='es'?'Premium activa':'Premium active')}</p>
+                                        <p style={{fontSize:'0.68rem',color:'rgba(184,115,51,0.5)'}}>{language==='es'?'Acceso completo a tu santuario':'Full access to your sanctuary'}</p>
+                                    </div>
+                                </div>
+                                {!isInTrial&&(
+                                    <button onClick={handleCancelSubscription} style={{background:'none',border:'1px solid rgba(184,115,51,0.15)',borderRadius:'0.5rem',padding:'0.4rem 1rem',fontSize:'0.72rem',color:'rgba(184,115,51,0.4)',cursor:'pointer',width:'100%',transition:'all 0.2s'}} onMouseEnter={e=>{e.target.style.borderColor='rgba(239,68,68,0.4)';e.target.style.color='rgba(239,68,68,0.6)'}} onMouseLeave={e=>{e.target.style.borderColor='rgba(184,115,51,0.15)';e.target.style.color='rgba(184,115,51,0.4)'}}>
+                                        {language==='es'?'Cancelar suscripción':'Cancel subscription'}
+                                    </button>
                                 )}
                             </div>
 
-                            <div style={{padding:'1.25rem'}}>
-
-                                {symptoms && symptoms.length >= 2 && (()=>{
-                                    const last7=symptoms.slice(-7);
-                                    const avg=(k)=>{const v=last7.map(s=>s[k]||0).filter(x=>x>0);return v.length?v.reduce((a,b)=>a+b,0)/v.length:0};
-                                    const trd=(k)=>{if(last7.length<2)return 0;const h=Math.floor(last7.length/2);const r=last7.slice(-h).map(s=>s[k]||0);const o=last7.slice(0,h).map(s=>s[k]||0);return(r.reduce((a,b)=>a+b,0)/r.length)-(o.reduce((a,b)=>a+b,0)/o.length)};
-                                    const eA=avg('energy'),sA=avg('sleep'),mA=avg('mood'),aA=avg('anxiety');
-                                    const sT=trd('sleep'),eT=trd('energy'),mT=trd('mood');
-                                    const pr=[];
-                                    if(sT<-0.5)pr.push(language==='es'?'🌙 Tu sueño ha bajado. Los próximos días pueden traer más cansancio.':'🌙 Sleep has dropped. Coming days may bring more fatigue.');
-                                    else if(sT>0.5)pr.push(language==='es'?'🌙 Estás durmiendo mejor. Más energía en los próximos días.':'🌙 Sleeping better. More energy coming up.');
-                                    if(eT<-0.5)pr.push(language==='es'?'⚡ Energía bajando. Añade proteína y magnesio esta semana.':'⚡ Energy declining. Add protein and magnesium this week.');
-                                    else if(eT>0.5)pr.push(language==='es'?'⚡ Energía subiendo. Aprovecha este pico.':'⚡ Energy rising. Use this peak.');
-                                    if(aA>=3.5)pr.push(language==='es'?'🌊 Ansiedad presente. Respiración 4-7-8 antes de comer.':'🌊 Anxiety present. 4-7-8 breathing before meals.');
-                                    if(mT<-0.5)pr.push(language==='es'?'🌿 Ánimo fluctuante. Omega-3 y luz solar matutina.':'🌿 Mood fluctuating. Omega-3s and morning sunlight.');
-                                    if(pr.length===0)pr.push(language==='es'?'✦ Patrones estables esta semana. Tu cuerpo está respondiendo.':'✦ Stable patterns this week. Your body is responding.');
-                                    const ac=[sA<3?(language==='es'?'Magnesio 300mg antes de dormir':'300mg magnesium before sleep'):null,eA<3?(language==='es'?'Proteína en desayuno':'Protein at breakfast'):null,aA>=3.5?(language==='es'?'Respiración 4-7-8 x3 al día':'4-7-8 breathing x3 daily'):null,mA<3?(language==='es'?'10 min luz solar por la mañana':'10 min morning sunlight'):null].filter(Boolean);
-                                    return (
-                                        <div className="gc" style={{marginBottom:'1rem',padding:'1.5rem',position:'relative',overflow:'hidden'}}>
-                                            <div style={{position:'absolute',top:0,left:0,right:0,height:'3px',background:'linear-gradient(90deg,#B87333,#E8C878,#B87333)'}}/>
-                                            <div style={{display:'flex',alignItems:'center',gap:'0.6rem',marginBottom:'1rem'}}>
-                                                <div style={{width:'36px',height:'36px',borderRadius:'50%',background:'linear-gradient(135deg,#B87333,#E8C878)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1rem',flexShrink:0}}>🔮</div>
-                                                <div>
-                                                    <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase'}}>LUMI PREDICTIVA</p>
-                                                    <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.1rem',color:'#F5E6D3',fontWeight:500}}>{language==='es'?'Esta semana te espera esto':'This week ahead for you'}</p>
-                                                </div>
-                                            </div>
-                                            {pr.slice(0,2).map((p,i)=>(
-                                                <div key={i} style={{background:'rgba(184,115,51,0.08)',border:'1px solid rgba(184,115,51,0.18)',borderRadius:'0.75rem',padding:'0.75rem 1rem',marginBottom:'0.6rem'}}>
-                                                    <p style={{fontSize:'0.87rem',color:'rgba(245,230,211,0.88)',lineHeight:1.55}}>{p}</p>
-                                                </div>
-                                            ))}
-                                            {ac.length>0&&(<div style={{marginTop:'0.75rem'}}>
-                                                <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:'0.5rem'}}>ACCIONES ESTA SEMANA</p>
-                                                {ac.slice(0,3).map((a,i)=>(
-                                                    <div key={i} style={{display:'flex',alignItems:'center',gap:'0.5rem',marginBottom:'0.35rem'}}>
-                                                        <div style={{width:'5px',height:'5px',borderRadius:'50%',background:'#B87333',flexShrink:0}}/>
-                                                        <p style={{fontSize:'0.82rem',color:'rgba(212,149,106,0.9)'}}>{a}</p>
-                                                    </div>
-                                                ))}
-                                            </div>)}
-                                            <div style={{marginTop:'1rem',paddingTop:'0.75rem',borderTop:'1px solid rgba(184,115,51,0.15)',display:'flex',alignItems:'center',gap:'0.5rem'}}>
-                                                <img src="/images/lumi.png" style={{width:'22px',height:'22px',borderRadius:'50%',objectFit:'cover'}} onError={e=>{e.target.style.display='none'}} alt="LUMI"/>
-                                                <p style={{fontSize:'0.75rem',color:'rgba(184,115,51,0.7)',fontStyle:'italic',fontFamily:"'Cormorant',serif"}}>{`LUMI · ${last7.length} ${language==='es'?'registros analizados':'entries analysed'}`}</p>
-                                            </div>
-                                        </div>
-                                    );
-                                })()}
-
-                                <div className="gc" style={{marginBottom:'1rem',overflow:'hidden',padding:0}}>
-                                    <div style={{position:'relative'}}>
-                                        <img src="/images/acuarela.jpg" alt="Shula Ríos" style={{width:'100%',maxHeight:'200px',objectFit:'cover',display:'block',filter:'brightness(0.85) sepia(0.15)'}} onError={e=>{e.target.style.display='none'}}/>
-                                        <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,transparent 30%,rgba(13,13,13,0.85) 100%)'}}/>
-                                        <div style={{position:'absolute',bottom:0,left:0,right:0,padding:'1rem 1.25rem'}}>
-                                            <p style={{fontFamily:"'Cormorant',serif",fontStyle:'italic',color:'rgba(245,230,211,0.9)',fontSize:'0.95rem'}}>{language==='es'?'"No estás sola en este camino."':'"You are not alone on this path."'}</p>
-                                            <p style={{fontSize:'0.62rem',color:'rgba(184,115,51,0.7)',marginTop:'4px'}}>Arte original · Shula Ríos</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div style={{marginBottom:'1rem'}}>
-                                    <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.75rem'}}>{language==='es'?'TU ESPACIO':'YOUR SPACE'}</p>
-                                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.6rem'}}>
-                                        {[
-                                            {icon:'🌿',es:'Síntomas',en:'Symptoms',page:'symptoms',des:'Registra tu día',den:'Log your day'},
-                                            {icon:'🍽',es:'Nutrición',en:'Nutrition',page:'nutrition',des:'Tu menú hoy',den:'Your menu today'},
-                                            {icon:'💪',es:'Ejercicio',en:'Exercise',page:'exercise',des:'Movimiento',den:'Movement'},
-                                            {icon:'✨',es:'LUMI',en:'LUMI',page:'chat',des:'Tu guía amiga',den:'Your guide'},
-                                            {icon:'📊',es:'Progreso',en:'Progress',page:'progreso',des:'Tus patrones',den:'Your patterns'},
-                                            {icon:'🌙',es:'Período',en:'Period',page:'period',des:'Tu ciclo',den:'Your cycle'},
-                                        ].map((item,i)=>(
-                                            <div key={i} className="gc gch" onClick={()=>setCurrentPage(item.page)} style={{padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem'}}>
-                                                <div style={{width:'38px',height:'38px',borderRadius:'50%',background:'rgba(184,115,51,0.12)',border:'1px solid rgba(184,115,51,0.25)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.1rem',flexShrink:0}}>{item.icon}</div>
-                                                <div>
-                                                    <p style={{fontSize:'0.88rem',fontWeight:600,color:'#F5E6D3',fontFamily:"'Cormorant',serif"}}>{language==='es'?item.es:item.en}</p>
-                                                    <p style={{fontSize:'0.7rem',color:'rgba(184,115,51,0.7)'}}>{language==='es'?item.des:item.den}</p>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <div className="gc" style={{marginBottom:'1rem',padding:'1.25rem'}}>
-                                    <div style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:!isInTrial?'1rem':'0'}}>
-                                        <div style={{width:'32px',height:'32px',borderRadius:'50%',background:'linear-gradient(135deg,#B87333,#E8C878)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                                            <span style={{fontSize:'0.8rem',color:'#0D0D0D',fontWeight:700}}>P</span>
-                                        </div>
-                                        <div style={{flex:1}}>
-                                            <p style={{fontSize:'0.78rem',fontWeight:600,color:'#E8C878'}}>{isTrialDay3?(language==='es'?'Último día de prueba':'Last trial day'):isInTrial?(language==='es'?`Trial activo · ${trialDaysLeft} días`:`Trial · ${trialDaysLeft} days`):(language==='es'?'Premium activa':'Premium active')}</p>
-                                            <p style={{fontSize:'0.72rem',color:'rgba(184,115,51,0.65)'}}>{language==='es'?'Acceso completo a Lumera':'Full access to Lumera'}</p>
-                                        </div>
-                                    </div>
-                                    {!isInTrial&&(
-                                        <button onClick={handleCancelSubscription} style={{background:'none',border:'1px solid rgba(184,115,51,0.2)',borderRadius:'0.5rem',padding:'0.45rem 1rem',fontSize:'0.75rem',color:'rgba(184,115,51,0.5)',cursor:'pointer',width:'100%'}} onMouseEnter={e=>{e.target.style.borderColor='rgba(239,68,68,0.5)';e.target.style.color='rgba(239,68,68,0.7)'}} onMouseLeave={e=>{e.target.style.borderColor='rgba(184,115,51,0.2)';e.target.style.color='rgba(184,115,51,0.5)'}}>
-                                            {language==='es'?'Cancelar suscripción':'Cancel subscription'}
-                                        </button>
-                                    )}
-                                </div>
-
-                                <div style={{textAlign:'center',padding:'1rem 0 0.5rem',borderTop:'1px solid rgba(184,115,51,0.12)'}}>
-                                    <p style={{fontFamily:"'Cormorant',serif",fontStyle:'italic',fontSize:'1rem',color:'rgba(245,230,211,0.5)',lineHeight:1.6}}>{language==='es'?'"Conocerte mejor es el primer paso para cuidarte mejor."':'"Knowing yourself better is the first step to caring for yourself better."'}</p>
-                                </div>
+                            {/* FRASE FINAL */}
+                            <div style={{textAlign:'center',padding:'0.5rem 0'}}>
+                                <p style={{fontFamily:"'Cormorant',serif",fontStyle:'italic',fontSize:'0.95rem',color:'rgba(245,230,211,0.3)',lineHeight:1.6}}>
+                                    {language==='es'?'"Tu cuerpo sabe. Lumera escucha."':'"Your body knows. Lumera listens."'}
+                                </p>
+                            </div>
 
                             </div>
                         </div>
                     </div>
                 );
-            };
-
-            const renderHome = () => {
-                if (!currentUser) return renderLanding();
-
-                const userName = currentUser.profile_name || (language === 'es' ? 'amiga' : 'friend');
-                const trialDaysForRouting = getTrialDaysLeft();
-
-                // Premium activo → su propio dashboard
-                if (currentUser?.subscription_status === 'active') {
-                    return renderPremiumDashboard();
-                }
-
-                // Trial (días 1, 2 y 3) → dashboard de onboarding + conversión
-                const trialDaysLeft = trialDaysForRouting;
-                const dayNum = Math.max(1, 4 - trialDaysLeft); // día 1, 2 o 3
-
-                const bgCard = darkMode ? '#1c1917' : '#ffffff';
-                const bgPage = darkMode ? '#0c0a09' : '#fafaf9';
-                const textMain = darkMode ? '#e7e5e4' : '#292524';
-                const textSub = darkMode ? '#a8a29e' : '#78716c';
-                const borderSoft = darkMode ? 'rgba(201,147,90,0.18)' : 'rgba(201,147,90,0.15)';
-
-                return (
-                    <div className="pb-32 space-y-6" key={language} style={{background: bgPage, position: 'relative'}}>
-                        <video autoPlay loop muted playsInline src="/videos/Dashboard.mp4" style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none', opacity: 0.18}} />
-                        <video autoPlay loop muted playsInline src="/videos/Dashboard.mp4" style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none', opacity: 0.18}} />
-
-                        {/* ── HERO DINÁMICO ── */}
-                        {(() => {
-                            const tier = getUserTier();
-                            const userName = currentUser?.profile_name || (language === 'es' ? 'amiga' : 'friend');
-                            const todayS = symptoms.length > 0 ? symptoms[symptoms.length - 1] : null;
-                            const hasLowSleep = todayS && (todayS.sleep || todayS.sleepQuality || 0) <= 3;
-                            const hasLowEnergy = todayS && (todayS.energy || todayS.energyLevel || 0) <= 3;
-                            const hasHighAnxiety = todayS && (todayS.anxiety || todayS.anxietyLevel || 0) >= 4;
-                            const hasLowMood = todayS && (todayS.mood || todayS.moodLevel || 0) <= 3;
-
-                            let mode = 'ritual';
-                            if (hasLowEnergy || hasLowSleep) mode = 'cueva';
-                            else if (hasHighAnxiety || hasLowMood) mode = 'tormenta';
-                            else if (todayS && (todayS.energy || 0) >= 4 && (todayS.mood || 0) >= 4) mode = 'diosa';
-
-                            const modeConfig = {
-                                cueva: {
-                                    bg: 'linear-gradient(135deg,#2d1f14 0%,#5c3d22 100%)',
-                                    label: language==='es'?'🐻 Modo cueva activado':'🐻 Cave mode on',
-                                    msg: language==='es'?`Hoy no tienes que poder con todo, ${userName}. Tu cuerpo está procesando algo importante. Yo me encargo del resto.`:`You don't have to handle everything today, ${userName}. Your body is processing something important. I've got the rest.`,
-                                },
-                                diosa: {
-                                    bg: 'linear-gradient(135deg,#7a4f1a 0%,#C9935A 100%)',
-                                    label: language==='es'?'✨ Modo diosa encendido':'✨ Goddess mode on',
-                                    msg: language==='es'?`Hoy tu cuerpo está brillando, ${userName}. Lo noto en tus datos. Aprovechamos esta energía juntas.`:`Your body is shining today, ${userName}. I can see it in your data. Let's use this energy together.`,
-                                },
-                                tormenta: {
-                                    bg: 'linear-gradient(135deg,#1a2535 0%,#2d4a7a 100%)',
-                                    label: language==='es'?'⛈️ Modo tormenta, respira':'⛈️ Storm mode, breathe',
-                                    msg: language==='es'?`No estás loca, ${userName}. Lo que sientes tiene nombre y tiene solución. Hoy vamos despacio.`:`You're not crazy, ${userName}. What you feel has a name and a solution. We go slow today.`,
-                                },
-                                ritual: {
-                                    bg: 'linear-gradient(135deg,#1a2d1f 0%,#3d6645 100%)',
-                                    label: language==='es'?'🌿 Modo ritual, fluye':'🌿 Ritual mode, flow',
-                                    msg: language==='es'?`Un día tranquilo también es un regalo, ${userName}. Tu cuerpo está hablando en voz baja hoy.`:`A calm day is also a gift, ${userName}. Your body is speaking softly today.`,
-                                },
                             };
 
                             const cfg = modeConfig[mode];
