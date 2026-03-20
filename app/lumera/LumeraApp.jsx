@@ -84,6 +84,9 @@ import './lumera.css'
             const [showBmiInfo, setShowBmiInfo] = useState(false);
             const [showBmrInfo, setShowBmrInfo] = useState(false);
             const [showTdeeInfo, setShowTdeeInfo] = useState(false);
+            const [oracleFlipped, setOracleFlipped] = useState(false);
+            const [oracleActiveMomento, setOracleActiveMomento] = useState(null);
+            const [oracleActive, setOracleActive] = useState(null);
 
             // CHAT LUMI
             const [showLumiChat, setShowLumiChat] = useState(false);
@@ -4155,7 +4158,7 @@ query = query.eq('region', region.toUpperCase());
 
                             const carta = cartas[sintoma];
                             const variante = carta.variantes[animo] || carta.variantes.ritual || Object.values(carta.variantes)[0];
-                            const [flipped, setFlipped] = React.useState(false);
+                            // flipped → moved to global as oracleFlipped
 
                             return (
                                 <div style={{marginBottom:'12px'}}>
@@ -4163,15 +4166,15 @@ query = query.eq('region', region.toUpperCase());
                                         {language==='es'?'✦ Tu carta de hoy':'✦ Your card today'}
                                     </p>
                                     {/* Carta con flip */}
-                                    <div onClick={()=>setFlipped(!flipped)} style={{cursor:'pointer',perspective:'1000px',height:'200px',position:'relative'}}>
+                                    <div onClick={()=>setOracleFlipped(!oracleFlipped)} style={{cursor:'pointer',perspective:'1000px',height:'200px',position:'relative'}}>
                                         {/* Cara frontal */}
                                         <div style={{
                                             position:'absolute',inset:0,borderRadius:'1.25rem',
                                             background:`linear-gradient(135deg,${carta.color_from},${carta.color_to})`,
                                             display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',
                                             transition:'opacity 0.4s ease, transform 0.4s ease',
-                                            opacity: flipped ? 0 : 1,
-                                            transform: flipped ? 'rotateY(90deg)' : 'rotateY(0deg)',
+                                            opacity: oracleFlipped ? 0 : 1,
+                                            transform: oracleFlipped ? 'rotateY(90deg)' : 'rotateY(0deg)',
                                             border:'1px solid rgba(201,147,90,0.3)',
                                             boxShadow:'0 8px 32px rgba(0,0,0,0.3)',
                                         }}>
@@ -4186,8 +4189,8 @@ query = query.eq('region', region.toUpperCase());
                                             background:`linear-gradient(135deg,${carta.color_from},${carta.color_to})`,
                                             padding:'1.25rem',
                                             transition:'opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s',
-                                            opacity: flipped ? 1 : 0,
-                                            transform: flipped ? 'rotateY(0deg)' : 'rotateY(-90deg)',
+                                            opacity: oracleFlipped ? 1 : 0,
+                                            transform: oracleFlipped ? 'rotateY(0deg)' : 'rotateY(-90deg)',
                                             border:'1px solid rgba(201,147,90,0.3)',
                                             boxShadow:'0 8px 32px rgba(0,0,0,0.3)',
                                             display:'flex',flexDirection:'column',justifyContent:'space-between',
@@ -4214,10 +4217,10 @@ query = query.eq('region', region.toUpperCase());
                                         </div>
                                     </div>
                                     {/* Momento del día */}
-                                    {flipped && (
+                                    {oracleFlipped && (
                                         <div style={{marginTop:'10px',display:'flex',gap:'8px'}}>
                                             {(() => {
-                                            const [activeMomento, setActiveMomento] = React.useState(null);
+                                            // oracleActiveMomento → moved to global as oracleActiveMomento
                                             const contenido = {
                                                     aprender: {
                                                         luna: {es:'El estrógeno bajo reduce la melatonina. Por eso tu sueño cambió — no es tu culpa, es química.',en:'Low oestrogen reduces melatonin. Your sleep changed — not your fault, it is chemistry.'},
@@ -4244,7 +4247,7 @@ query = query.eq('region', region.toUpperCase());
                                                         rayo: {es:'Energía alta y buen ánimo — hoy tu cuerpo está en su mejor momento para la intimidad y la conexión.',en:'High energy and good mood — today your body is at its best for intimacy and connection.'},
                                                     },
                                                 };
-                                                const [active, setActive] = React.useState(null);
+                                                // active → moved to global as oracleActive
                                             const btns = [
                                                 {key:'aprender',icon:'🧠',es:'Aprender',en:'Learn'},
                                                 {key:'cuidarme',icon:'💆',es:'Cuidarme',en:'Care'},
@@ -4252,15 +4255,15 @@ query = query.eq('region', region.toUpperCase());
                                             ];
                                             return btns.map((btn,i) => (
                                                 <div key={i} style={{flex:1}}>
-                                                    <div onClick={(e)=>{e.stopPropagation();setActiveMomento(activeMomento===btn.key?null:btn.key)}} style={{
-                                                        background:activeMomento===btn.key?`linear-gradient(135deg,${carta.color_from},${carta.color_to})`:(darkMode?'rgba(255,255,255,0.06)':'white'),
-                                                        border:`1px solid ${activeMomento===btn.key?'rgba(201,147,90,0.5)':'rgba(201,147,90,0.2)'}`,
+                                                    <div onClick={(e)=>{e.stopPropagation();setOracleActiveMomento(oracleActiveMomento===btn.key?null:btn.key)}} style={{
+                                                        background:oracleActiveMomento===btn.key?`linear-gradient(135deg,${carta.color_from},${carta.color_to})`:(darkMode?'rgba(255,255,255,0.06)':'white'),
+                                                        border:`1px solid ${oracleActiveMomento===btn.key?'rgba(201,147,90,0.5)':'rgba(201,147,90,0.2)'}`,
                                                         borderRadius:'0.85rem',padding:'0.6rem',textAlign:'center',cursor:'pointer',transition:'all 0.2s',
                                                     }}>
                                                         <span style={{fontSize:'1.1rem',display:'block',marginBottom:'2px'}}>{btn.icon}</span>
-                                                        <p style={{fontSize:'0.72rem',color:activeMomento===btn.key?'rgba(255,255,255,0.9)':'#C9935A',margin:0,fontWeight:600}}>{language==='es'?btn.es:btn.en}</p>
+                                                        <p style={{fontSize:'0.72rem',color:oracleActiveMomento===btn.key?'rgba(255,255,255,0.9)':'#C9935A',margin:0,fontWeight:600}}>{language==='es'?btn.es:btn.en}</p>
                                                     </div>
-                                                    {activeMomento===btn.key && (
+                                                    {oracleActiveMomento===btn.key && (
                                                         <div style={{marginTop:'6px',background:darkMode?'rgba(255,255,255,0.04)':'rgba(253,248,243,0.95)',borderRadius:'0.75rem',padding:'0.75rem',border:'1px solid rgba(201,147,90,0.15)'}}>
                                                             <p style={{fontSize:'0.78rem',color:darkMode?'#e8d5c0':'#57534e',margin:0,lineHeight:1.5}}>
                                                                 {language==='es'?contenido[btn.key][sintoma].es:contenido[btn.key][sintoma].en}
