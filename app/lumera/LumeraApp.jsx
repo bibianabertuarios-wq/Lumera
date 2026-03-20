@@ -4639,6 +4639,27 @@ query = query.eq('region', region.toUpperCase());
 
                 return (
                     <div className="pb-32 space-y-8" key={`nutrition-${language}`} style={{position: 'relative'}}>
+                        {/* HEADER NUTRICIÓN */}
+                        <div style={{marginBottom:'1.5rem'}}>
+                            <h1 style={{fontFamily:"'Cormorant',serif",fontSize:'2.2rem',fontWeight:400,color:darkMode?'#fdf8f3':'#1c1917',lineHeight:1.2,marginBottom:'0.5rem'}}>
+                                {language==='es'?'¿Qué necesitas hoy?':'What do you need today?'}
+                            </h1>
+                            <p style={{fontSize:'0.85rem',color:'#C9935A',fontStyle:'italic',fontFamily:"'Cormorant',serif"}}>
+                                {language==='es'?'Elige y te llevo directa a lo que buscas.':'Choose and I will take you straight to what you need.'}
+                            </p>
+                        </div>
+                        <div style={{display:'flex',flexDirection:'column',gap:'0.75rem',marginBottom:'1.5rem'}}>
+                        <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
+                            <summary style={{listStyle:'none',cursor:'pointer'}}>
+                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
+                                    <span style={{fontSize:'2rem'}}>🍳</span>
+                                    <div style={{flex:1}}>
+                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Tengo tiempo y ganas de cocinar':'I have time and feel like cooking'}</p>
+                                        <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'Tu menú del día personalizado':'Your personalised daily menu'}</p>
+                                    </div>
+                                </div>
+                            </summary>
+                            <div>
                         {symptoms.length === 0 && (
                             <div onClick={()=>setCurrentPage('symptoms')} style={{borderRadius:'1.25rem',padding:'1.25rem 1.5rem',background:'linear-gradient(135deg,#fdf8f3,#fef3e8)',border:'1px solid rgba(201,147,90,0.3)',cursor:'pointer',display:'flex',alignItems:'center',gap:'1rem'}}>
                                 <span style={{fontSize:'2rem',flexShrink:0}}>🌿</span>
@@ -5214,6 +5235,110 @@ query = query.eq('region', region.toUpperCase());
                                     ? '💡 Este menú se adapta según tus síntomas registrados. Vuelve mañana para un menú diferente basado en cómo te sientes.'
                                     : '💡 This menu adapts based on your logged symptoms. Come back tomorrow for a different menu based on how you feel.'}
                             </p>
+                        </div>
+            </div>
+                        </details>
+                        <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
+                            <summary style={{listStyle:'none',cursor:'pointer'}}>
+                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
+                                    <span style={{fontSize:'2rem'}}>⏱️</span>
+                                    <div style={{flex:1}}>
+                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Sin tiempo — cocina el domingo':'No time — cook on Sunday'}</p>
+                                        <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'2 horas = comida sana toda la semana':'2 hours = healthy food all week'}</p>
+                                    </div>
+                                </div>
+                            </summary>
+                            <div style={{padding:'1.25rem 1.5rem'}}>
+                                {[{time:'30min',es:'Legumbres base',en:'Base legumes',d_es:'Lentejas + garbanzos. Proteína para toda la semana.',d_en:'Lentils + chickpeas. Protein base for the whole week.',icon:'🫘'},{time:'20min',es:'Cereales integrales',en:'Whole grains',d_es:'Arroz integral o quinoa. 5 días en nevera.',d_en:'Brown rice or quinoa. Keeps 5 days in fridge.',icon:'🌾'},{time:'15min',es:'Verduras asadas',en:'Roasted veg',d_es:'Boniato + brócoli a 200°C.',d_en:'Sweet potato + broccoli at 200°C.',icon:'🥦'},{time:'10min',es:'Salsa hormonal',en:'Hormonal sauce',d_es:'Tomate + cúrcuma + AOVE + ajo.',d_en:'Tomato + turmeric + EVOO + garlic.',icon:'🍅'},{time:'5min',es:'Snacks listos',en:'Ready snacks',d_es:'Nueces + almendras + dátiles en tarros.',d_en:'Walnuts + almonds + dates in jars.',icon:'🥜'}].map((item,i)=>(
+                                    <div key={i} style={{display:'flex',gap:'1rem',padding:'0.875rem 0',borderBottom:'1px solid rgba(201,147,90,0.1)'}}>
+                                        <span style={{fontSize:'1.5rem',flexShrink:0}}>{item.icon}</span>
+                                        <div style={{flex:1}}>
+                                            <div style={{display:'flex',justifyContent:'space-between',marginBottom:'4px'}}>
+                                                <p style={{fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',fontSize:'0.92rem',margin:0}}>{language==='es'?item.es:item.en}</p>
+                                                <span style={{fontSize:'0.72rem',color:'#C9935A',background:'rgba(201,147,90,0.1)',borderRadius:'9999px',padding:'2px 8px'}}>{item.time}</span>
+                                            </div>
+                                            <p style={{fontSize:'0.8rem',color:'#78716c',margin:0,lineHeight:1.5}}>{language==='es'?item.d_es:item.d_en}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </details>
+                        <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
+                            <summary style={{listStyle:'none',cursor:'pointer'}}>
+                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
+                                    <span style={{fontSize:'2rem'}}>🍫</span>
+                                    <div style={{flex:1}}>
+                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Los Irresistibles':'The Irresistibles'}</p>
+                                        <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'Postres que activan tu GLP-1':'Desserts that activate your GLP-1'}</p>
+                                    </div>
+                                </div>
+                            </summary>
+                            <div style={{padding:'1.25rem 1.5rem'}}>
+                                {[{icon:'🍫',es:'Mousse chocolate negro',en:'Dark chocolate mousse',cal:'180 kcal',glp:3,p_es:'200g choc 85% + 2 claras + frambuesas. Enfía 2h.',p_en:'200g 85% choc + 2 whites + raspberries. Chill 2h.',w_es:'Flavonoides activan GLP-1 en 30 min.',w_en:'Flavonoids activate GLP-1 in 30 min.'},{icon:'🍨',es:'Helado yogur griego',en:'Greek yogurt ice cream',cal:'120 kcal',glp:2,p_es:'Yogur griego + miel + nueces. Congela 4h.',p_en:'Greek yogurt + honey + walnuts. Freeze 4h.',w_es:'Proteína + probióticos = más GLP-1.',w_en:'Protein + probiotics = more GLP-1.'},{icon:'🟤',es:'Brownie alubias negras',en:'Black bean brownie',cal:'160 kcal',glp:3,p_es:'1 bote alubias + 3 huevos + cacao + miel. 20min 180°.',p_en:'1 tin beans + 3 eggs + cocoa + honey. 20min 180°.',w_es:'Triple: proteína + fibra + flavonoides.',w_en:'Triple: protein + fibre + flavonoids.'},{icon:'🫐',es:'Bowl arándanos',en:'Blueberry bowl',cal:'210 kcal',glp:2,p_es:'Arándanos + granola + yogur + chía + miel.',p_en:'Blueberries + granola + yogurt + chia + honey.',w_es:'Antioxidantes reducen inflamación que bloquea GLP-1.',w_en:'Antioxidants reduce inflammation blocking GLP-1.'},{icon:'🟡',es:'Tarta dátil sin horno',en:'No-bake date tart',cal:'140 kcal',glp:2,p_es:'12 dátiles + cacao + almendras. Tritura y enfía 1h.',p_en:'12 dates + cocoa + almonds. Blend and chill 1h.',w_es:'Fibra del dátil = GLP-1 activo horas.',w_en:'Date fibre = GLP-1 active for hours.'}].map((r,i)=>(
+                                    <div key={i} style={{borderRadius:'0.875rem',padding:'1rem',marginBottom:'0.75rem',background:darkMode?'rgba(255,255,255,0.04)':'rgba(253,248,243,0.8)',border:'1px solid rgba(201,147,90,0.15)'}}>
+                                        <div style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'0.5rem'}}>
+                                            <span style={{fontSize:'1.5rem'}}>{r.icon}</span>
+                                            <div style={{flex:1}}>
+                                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'1rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?r.es:r.en}</p>
+                                                <div style={{display:'flex',gap:'0.5rem',marginTop:'2px'}}>
+                                                    <span style={{fontSize:'0.7rem',color:'#78716c'}}>{r.cal}</span>
+                                                    <span style={{fontSize:'0.7rem',color:'#C9935A',fontWeight:600}}>{'⚡'.repeat(r.glp)} GLP-1</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p style={{fontSize:'0.8rem',color:darkMode?'#e8d5c0':'#57534e',margin:'0 0 4px',lineHeight:1.5}}>{language==='es'?r.p_es:r.p_en}</p>
+                                        <p style={{fontSize:'0.75rem',color:'#C9935A',margin:0,fontStyle:'italic'}}>✦ {language==='es'?r.w_es:r.w_en}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </details>
+                        <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
+                            <summary style={{listStyle:'none',cursor:'pointer'}}>
+                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
+                                    <span style={{fontSize:'2rem'}}>🛒</span>
+                                    <div style={{flex:1}}>
+                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Voy de compras':'Shopping list'}</p>
+                                        <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'Los imprescindibles siempre en casa':'The essentials always at home'}</p>
+                                    </div>
+                                </div>
+                            </summary>
+                            <div style={{padding:'1.25rem 1.5rem'}}>
+                                {[{cat_es:'Proteínas',cat_en:'Proteins',items_es:['Huevos (12u)','Yogur griego','Salmón o sardinas','Legumbres (botes)'],items_en:['Eggs (12)','Greek yogurt','Salmon or sardines','Legumes (tins)'],icon:'🥚'},{cat_es:'Grasas buenas',cat_en:'Good fats',items_es:['Aguacates','Nueces o almendras','Aceite oliva virgen extra','Lino o chía'],items_en:['Avocados','Walnuts or almonds','Extra virgin olive oil','Flax or chia'],icon:'🥑'},{cat_es:'Fibra',cat_en:'Fibre',items_es:['Brócoli','Boniato','Espinacas','Manzana con piel'],items_en:['Broccoli','Sweet potato','Spinach','Apple with skin'],icon:'🥦'},{cat_es:'Activadores GLP-1',cat_en:'GLP-1 activators',items_es:['Chocolate 85%+','Kéfir o kombucha','Jengibre fresco','Avena integral'],items_en:['85%+ chocolate','Kefir or kombucha','Fresh ginger','Whole oats'],icon:'⚡'}].map((cat,i)=>(
+                                    <div key={i} style={{marginBottom:'1rem'}}>
+                                        <p style={{fontSize:'0.72rem',color:'#C9935A',fontWeight:700,letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:'0.5rem',display:'flex',alignItems:'center',gap:'6px'}}><span>{cat.icon}</span>{language==='es'?cat.cat_es:cat.cat_en}</p>
+                                        {(language==='es'?cat.items_es:cat.items_en).map((item,j)=>(
+                                            <div key={j} style={{display:'flex',alignItems:'center',gap:'8px',padding:'0.35rem 0',borderBottom:'1px solid rgba(201,147,90,0.08)'}}>
+                                                <div style={{width:'6px',height:'6px',borderRadius:'50%',background:'#C9935A',flexShrink:0}}/>
+                                                <p style={{fontSize:'0.85rem',color:darkMode?'#e8d5c0':'#44403c',margin:0}}>{item}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>
+                        </details>
+                        <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
+                            <summary style={{listStyle:'none',cursor:'pointer'}}>
+                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
+                                    <span style={{fontSize:'2rem'}}>🧠</span>
+                                    <div style={{flex:1}}>
+                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Aprendiendo':'Learning'}</p>
+                                        <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'GLP-1, IMC, TDEE y Cortisol explicados':'GLP-1, BMI, TDEE and Cortisol explained'}</p>
+                                    </div>
+                                </div>
+                            </summary>
+                            <div style={{padding:'1.25rem 1.5rem'}}>
+                                {[{term:'GLP-1',icon:'🔬',color:'#C9935A',d_es:'Tu hormona del apetito natural.',d_en:'Your natural appetite hormone.',x_es:'Cuando está alta: te sacias más rápido, menos antojos, mejor metabolismo. Ozempic la imita artificialmente. Tú puedes activarla con comida real.',x_en:'When high: you feel full faster, fewer cravings, better metabolism. Ozempic mimics it artificially. You can activate it with real food.'},{term:'IMC',icon:'📊',color:'#B87333',d_es:'Índice de Masa Corporal. Una referencia, no un juicio.',d_en:'Body Mass Index. A reference, not a judgement.',x_es:'En la transición hormonal puede subir aunque comas igual: el estrógeno bajo redistribuye la grasa. No es tu fracaso, es biología.',x_en:'During hormonal transition it can rise even eating the same: low oestrogen redistributes fat. Not your failure, it is biology.'},{term:'TDEE',icon:'⚡',color:'#D97706',d_es:'Las calorías que tu cuerpo necesita cada día.',d_en:'The calories your body needs each day.',x_es:'Comer muy por debajo sube el cortisol y baja el metabolismo. Tu menú está calibrado a tu TDEE.',x_en:'Eating far below raises cortisol and slows metabolism. Your menu is calibrated to your TDEE.'},{term:'Cortisol',icon:'😤',color:'#78716c',d_es:'La hormona del estrés. El enemigo del GLP-1.',d_en:'The stress hormone. The enemy of GLP-1.',x_es:'Cuando sube bloquea el GLP-1 y almacena grasa en la cintura. Dormir bien y no saltarse comidas es tan importante como qué comes.',x_en:'When it rises it blocks GLP-1 and stores fat around the waist. Sleeping well and not skipping meals is as important as what you eat.'}].map((item,i)=>(
+                                    <div key={i} style={{borderRadius:'0.875rem',padding:'1rem',marginBottom:'0.75rem',background:darkMode?'rgba(255,255,255,0.04)':'rgba(253,248,243,0.8)',border:'1px solid rgba(201,147,90,0.15)'}}>
+                                        <div style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'0.5rem'}}>
+                                            <span style={{fontSize:'1.4rem'}}>{item.icon}</span>
+                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.2rem',fontWeight:700,color:item.color,margin:0}}>{item.term}</p>
+                                        </div>
+                                        <p style={{fontSize:'0.87rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:'0 0 6px',lineHeight:1.4}}>{language==='es'?item.d_es:item.d_en}</p>
+                                        <p style={{fontSize:'0.8rem',color:darkMode?'#a8a29e':'#78716c',margin:0,lineHeight:1.6}}>{language==='es'?item.x_es:item.x_en}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </details>
                         </div>
                     </div>
                 );
