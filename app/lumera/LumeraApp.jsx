@@ -3922,6 +3922,43 @@ query = query.eq('region', region.toUpperCase());
 
                             return (
                                 <div>
+                                    {/* ¿En qué nos centramos hoy? */}
+                                    <div style={{background:darkMode?'rgba(255,255,255,0.04)':'white',borderRadius:'1.25rem',padding:'1.1rem 1.25rem',marginBottom:'12px',border:'1px solid rgba(201,147,90,0.15)'}}>
+                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.15rem',fontWeight:500,color:darkMode?'#fdf8f3':'#1c1917',margin:'0 0 10px'}}>
+                                            {language==='es'?'¿En qué nos centramos hoy?':'What do we focus on today?'}
+                                        </p>
+                                        <div style={{display:'flex',flexWrap:'wrap',gap:'8px'}}>
+                                            {[
+                                                {es:'Sueño',en:'Sleep',icon:'🌙'},
+                                                {es:'Energía',en:'Energy',icon:'⚡'},
+                                                {es:'Ánimo',en:'Mood',icon:'🌊'},
+                                                {es:'Sofocos',en:'Hot flashes',icon:'🌡️'},
+                                                {es:'Ansiedad',en:'Anxiety',icon:'💨'},
+                                                {es:'Niebla mental',en:'Brain fog',icon:'🌫️'},
+                                            ].map((s,i) => (
+                                                <div key={i} onClick={()=>setCurrentPage('symptoms')} style={{
+                                                    background:darkMode?'rgba(201,147,90,0.1)':'rgba(253,248,243,0.9)',
+                                                    border:'1px solid rgba(201,147,90,0.25)',
+                                                    borderRadius:'9999px',
+                                                    padding:'0.35rem 0.85rem',
+                                                    fontSize:'0.82rem',
+                                                    color:darkMode?'#e8d5c0':'#57534e',
+                                                    cursor:'pointer',
+                                                    display:'flex',
+                                                    alignItems:'center',
+                                                    gap:'5px',
+                                                    transition:'all 0.2s',
+                                                }}
+                                                onMouseEnter={e=>{e.currentTarget.style.background='rgba(201,147,90,0.2)';e.currentTarget.style.color='#C9935A'}}
+                                                onMouseLeave={e=>{e.currentTarget.style.background=darkMode?'rgba(201,147,90,0.1)':'rgba(253,248,243,0.9)';e.currentTarget.style.color=darkMode?'#e8d5c0':'#57534e'}}
+                                                >
+                                                    <span style={{fontSize:'0.9rem'}}>{s.icon}</span>
+                                                    <span>{language==='es'?s.es:s.en}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
                                     {/* Hero card */}
                                     <div style={{borderRadius:'1.5rem',padding:'1.5rem',marginBottom:'12px',background:cfg.bg,position:'relative',overflow:'hidden'}}>
                                         <div style={{position:'absolute',top:0,right:0,width:'120px',height:'120px',background:'rgba(255,255,255,0.04)',borderRadius:'50%',transform:'translate(30px,-30px)'}}/>
@@ -3971,43 +4008,6 @@ query = query.eq('region', region.toUpperCase());
                                             </div>
                                         );
                                     })()}
-
-                                    {/* ¿En qué nos centramos hoy? */}
-                                    <div style={{background:darkMode?'rgba(255,255,255,0.04)':'white',borderRadius:'1.25rem',padding:'1.1rem 1.25rem',marginBottom:'12px',border:'1px solid rgba(201,147,90,0.15)'}}>
-                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.15rem',fontWeight:500,color:darkMode?'#fdf8f3':'#1c1917',margin:'0 0 10px'}}>
-                                            {language==='es'?'¿En qué nos centramos hoy?':'What do we focus on today?'}
-                                        </p>
-                                        <div style={{display:'flex',flexWrap:'wrap',gap:'8px'}}>
-                                            {[
-                                                {es:'Sueño',en:'Sleep',icon:'🌙'},
-                                                {es:'Energía',en:'Energy',icon:'⚡'},
-                                                {es:'Ánimo',en:'Mood',icon:'🌊'},
-                                                {es:'Sofocos',en:'Hot flashes',icon:'🌡️'},
-                                                {es:'Ansiedad',en:'Anxiety',icon:'💨'},
-                                                {es:'Niebla mental',en:'Brain fog',icon:'🌫️'},
-                                            ].map((s,i) => (
-                                                <div key={i} onClick={()=>setCurrentPage('symptoms')} style={{
-                                                    background:darkMode?'rgba(201,147,90,0.1)':'rgba(253,248,243,0.9)',
-                                                    border:'1px solid rgba(201,147,90,0.25)',
-                                                    borderRadius:'9999px',
-                                                    padding:'0.35rem 0.85rem',
-                                                    fontSize:'0.82rem',
-                                                    color:darkMode?'#e8d5c0':'#57534e',
-                                                    cursor:'pointer',
-                                                    display:'flex',
-                                                    alignItems:'center',
-                                                    gap:'5px',
-                                                    transition:'all 0.2s',
-                                                }}
-                                                onMouseEnter={e=>{e.currentTarget.style.background='rgba(201,147,90,0.2)';e.currentTarget.style.color='#C9935A'}}
-                                                onMouseLeave={e=>{e.currentTarget.style.background=darkMode?'rgba(201,147,90,0.1)':'rgba(253,248,243,0.9)';e.currentTarget.style.color=darkMode?'#e8d5c0':'#57534e'}}
-                                                >
-                                                    <span style={{fontSize:'0.9rem'}}>{s.icon}</span>
-                                                    <span>{language==='es'?s.es:s.en}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
 
                                     {/* 4 tarjetas expandibles */}
                                     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'10px',marginBottom:'12px'}}>
