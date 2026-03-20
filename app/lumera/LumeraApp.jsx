@@ -4214,8 +4214,15 @@ query = query.eq('region', region.toUpperCase());
                                                     </div>
                                                     {oracleActiveMomento===btn.key && (
                                                         <div style={{marginTop:'6px',background:darkMode?'rgba(255,255,255,0.04)':'rgba(253,248,243,0.95)',borderRadius:'0.75rem',padding:'0.75rem',border:'1px solid rgba(201,147,90,0.15)'}}>
-                                                            <p style={{fontSize:'0.78rem',color:darkMode?'#e8d5c0':'#57534e',margin:0,lineHeight:1.5}}>
+                                                            <p style={{fontSize:'0.78rem',color:darkMode?'#e8d5c0':'#57534e',margin:'0 0 8px',lineHeight:1.5}}>
                                                                 {language==='es'?contenido[btn.key][sintoma].es:contenido[btn.key][sintoma].en}
+                                                            </p>
+                                                            <p onClick={()=>setCurrentPage(btn.key==='aprender'?'chat':btn.key==='cuidarme'?'nutrition':'chat')} style={{fontSize:'0.72rem',color:'#C9935A',margin:0,cursor:'pointer',fontWeight:600,display:'flex',alignItems:'center',gap:'4px'}}>
+                                                                {btn.key==='aprender'
+                                                                    ?(language==='es'?'Pregúntale a LUMI para ir más profundo →':'Ask LUMI to go deeper →')
+                                                                    :btn.key==='cuidarme'
+                                                                        ?(language==='es'?'Ver tu plan en Nutrición →':'See your plan in Nutrition →')
+                                                                        :(language==='es'?'Habla con LUMI sobre esto →':'Talk to LUMI about this →')}
                                                             </p>
                                                         </div>
                                                     )}
@@ -4270,8 +4277,13 @@ query = query.eq('region', region.toUpperCase());
                                         <p style={{fontSize:'0.68rem',color:'#C9935A',fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'4px'}}>
                                             {language==='es'?'✦ LUMI se anticipa':'✦ LUMI anticipates'}
                                         </p>
-                                        <p style={{fontSize:'0.87rem',color:darkMode?'#e8d5c0':'#44403c',lineHeight:1.6,margin:0}}>
+                                        <p style={{fontSize:'0.87rem',color:darkMode?'#e8d5c0':'#44403c',lineHeight:1.6,margin:'0 0 10px'}}>
                                             {language==='es'?tip_es:tip_en}
+                                        </p>
+                                        <p onClick={()=>setCurrentPage('chat')} style={{fontSize:'0.8rem',color:'#C9935A',margin:0,lineHeight:1.5,cursor:'pointer',fontStyle:'italic'}}>
+                                            {language==='es'
+                                                ?'Estoy en la esquina izquierda, 24/7, para lo que necesites — toca para hablar conmigo ✦'
+                                                :'I am in the bottom left corner, 24/7, for whatever you need — tap to talk to me ✦'}
                                         </p>
                                     </div>
                                 </div>
