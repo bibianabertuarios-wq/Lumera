@@ -3908,13 +3908,38 @@ query = query.eq('region', region.toUpperCase());
                                         </div>
                                     </div>
 
-                                    {/* Hero card */}
-                                    <div style={{borderRadius:'1.5rem',padding:'1.5rem',marginBottom:'12px',background:cfg.bg,position:'relative',overflow:'hidden'}}>
-                                        <div style={{position:'absolute',top:0,right:0,width:'120px',height:'120px',background:'rgba(255,255,255,0.04)',borderRadius:'50%',transform:'translate(30px,-30px)'}}/>
+                                    {/* Hero card — evoluciona por día */}
+                                    <div style={{
+                                        borderRadius:'1.5rem',padding:'1.5rem',marginBottom:'12px',
+                                        background: dayNum === 3
+                                            ? `linear-gradient(160deg, rgba(13,8,3,0.92) 0%, ${cfg.bg.replace('linear-gradient(135deg,','').split(')')[0].split(',').pop().trim()} 100%)`
+                                            : cfg.bg,
+                                        position:'relative',overflow:'hidden',
+                                        boxShadow: dayNum === 3 ? '0 0 40px rgba(184,115,51,0.25), inset 0 0 60px rgba(0,0,0,0.3)' :
+                                                   dayNum === 2 ? '0 0 20px rgba(201,147,90,0.15)' : 'none',
+                                        border: dayNum >= 2 ? '1px solid rgba(184,115,51,0.3)' : 'none',
+                                        transition: 'all 1s ease',
+                                    }}>
+                                        {/* Esfera cobre — aparece día 2+ */}
+                                        {dayNum >= 2 && <div style={{position:'absolute',top:0,right:0,width:'140px',height:'140px',background:`radial-gradient(circle, rgba(184,115,51,${dayNum===3?'0.35':'0.18'}), transparent)`,borderRadius:'50%',transform:'translate(40px,-40px)',animation:'pulse 4s ease-in-out infinite'}}/>}
+                                        {dayNum === 1 && <div style={{position:'absolute',top:0,right:0,width:'120px',height:'120px',background:'rgba(255,255,255,0.04)',borderRadius:'50%',transform:'translate(30px,-30px)'}}/>}
+                                        <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}`}</style>
+
                                         <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:'10px'}}>
-                                            <p style={{fontSize:'0.72rem',color:'rgba(255,255,255,0.7)',letterSpacing:'0.12em',textTransform:'uppercase',margin:0}}>{cfg.label}</p>
-                                            <div style={{background:'rgba(255,255,255,0.15)',borderRadius:'9999px',padding:'0.2rem 0.75rem',fontSize:'0.72rem',color:'white',backdropFilter:'blur(4px)'}}>
-                                                {language==='es'?`Día ${dayNum} de 3`:`Day ${dayNum} of 3`}
+                                            <p style={{fontSize:'0.72rem',color: dayNum===3?'rgba(232,200,120,0.9)':'rgba(255,255,255,0.7)',letterSpacing:'0.12em',textTransform:'uppercase',margin:0}}>{cfg.label}</p>
+                                            <div style={{
+                                                background: dayNum===3?'linear-gradient(135deg,rgba(184,115,51,0.4),rgba(232,200,120,0.25))':
+                                                            dayNum===2?'rgba(184,115,51,0.2)':'rgba(255,255,255,0.15)',
+                                                border: dayNum>=2?'1px solid rgba(184,115,51,0.4)':'none',
+                                                borderRadius:'9999px',padding:'0.2rem 0.75rem',fontSize:'0.72rem',
+                                                color: dayNum>=2?'#E8C878':'white',
+                                                backdropFilter:'blur(4px)',
+                                            }}>
+                                                {dayNum===1
+                                                    ?(language==='es'?'✦ Iniciando sintonía...':'✦ Beginning alignment...')
+                                                    :dayNum===2
+                                                        ?(language==='es'?'✦ Descubriendo tus patrones...':'✦ Discovering your patterns...')
+                                                        :(language==='es'?'✦ Tu santuario está casi listo':'✦ Your sanctuary is almost ready')}
                                             </div>
                                         </div>
                                         <h2 style={{fontFamily:"'Cormorant',serif",fontSize:'1.9rem',fontWeight:500,color:'white',margin:'0 0 8px',lineHeight:1.2}}>
@@ -3927,7 +3952,13 @@ query = query.eq('region', region.toUpperCase());
                                         {/* Barra progreso */}
                                         <div>
                                             <div style={{display:'flex',justifyContent:'space-between',marginBottom:'6px'}}>
-                                                <p style={{fontSize:'0.72rem',color:'rgba(255,255,255,0.65)',margin:0}}>{language==='es'?'Cuanto más registras, mejor te entiendo':'The more you log, the better I know you'}</p>
+                                                <p style={{fontSize:'0.72rem',color: dayNum===3?'rgba(232,200,120,0.8)':'rgba(255,255,255,0.65)',margin:0}}>
+                                                    {dayNum===1
+                                                        ?(language==='es'?'Iniciando sintonía con tu cuerpo...':'Beginning alignment with your body...')
+                                                        :dayNum===2
+                                                            ?(language==='es'?'Descubriendo tus patrones de GLP-1 y cortisol...':'Discovering your GLP-1 and cortisol patterns...')
+                                                            :(language==='es'?'La claridad te espera. Un paso más.':'Clarity awaits. One more step.')}
+                                                </p>
                                                 <p style={{fontSize:'0.72rem',color:'rgba(201,147,90,0.9)',margin:0,fontWeight:600}}>{progressPct}%</p>
                                             </div>
                                             <div style={{background:'rgba(255,255,255,0.15)',borderRadius:'9999px',height:'5px'}}>
@@ -4289,6 +4320,109 @@ query = query.eq('region', region.toUpperCase());
                                 </div>
                             );
                         })()}
+
+                        {/* ── BLOQUE LOCKED — predicción bloqueada ── */}
+                        <div style={{
+                            borderRadius:'1.25rem',
+                            overflow:'hidden',
+                            marginBottom:'12px',
+                            position:'relative',
+                        }}>
+                            {/* Contenido borroso */}
+                            <div style={{
+                                background: darkMode?'rgba(20,14,8,0.9)':'rgba(253,248,243,0.95)',
+                                border:`1px solid rgba(184,115,51,${dayNum===3?'0.5':'0.25'})`,
+                                borderRadius:'1.25rem',
+                                padding:'1.1rem 1.25rem',
+                                filter:'blur(3px)',
+                                userSelect:'none',
+                                pointerEvents:'none',
+                            }}>
+                                <p style={{fontSize:'0.68rem',color:'#B87333',fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'4px'}}>
+                                    {language==='es'?'✦ PREDICCIÓN DE MAÑANA':'✦ TOMORROWS PREDICTION'}
+                                </p>
+                                <p style={{fontSize:'0.87rem',color:darkMode?'#e8d5c0':'#44403c',lineHeight:1.6,margin:'0 0 6px'}}>
+                                    {language==='es'
+                                        ?'Tu estrógeno cae mañana. He ajustado tu plan de nutrición para evitar el hambre emocional y el pico de cortisol.'
+                                        :'Your oestrogen drops tomorrow. I have adjusted your nutrition plan to prevent emotional hunger and cortisol spikes.'}
+                                </p>
+                                <p style={{fontSize:'0.78rem',color:'#B87333',fontStyle:'italic'}}>
+                                    {language==='es'?'Ritual recomendado: Chocolate 85% + estiramientos + magnesio.':'Recommended ritual: 85% dark chocolate + stretches + magnesium.'}
+                                </p>
+                            </div>
+                            {/* Overlay candado */}
+                            <div onClick={()=>setCurrentPage('upgrade')} style={{
+                                position:'absolute',inset:0,
+                                background:'rgba(10,8,5,0.55)',
+                                borderRadius:'1.25rem',
+                                display:'flex',flexDirection:'column',
+                                alignItems:'center',justifyContent:'center',
+                                cursor:'pointer',
+                                backdropFilter:'blur(1px)',
+                                border:`1px solid rgba(184,115,51,${dayNum===3?'0.6':'0.3'})`,
+                                gap:'8px',
+                            }}>
+                                <div style={{
+                                    width:'40px',height:'40px',borderRadius:'50%',
+                                    background:`linear-gradient(135deg,rgba(184,115,51,${dayNum===3?'0.5':'0.3'}),rgba(232,200,120,0.2))`,
+                                    border:'1px solid rgba(184,115,51,0.5)',
+                                    display:'flex',alignItems:'center',justifyContent:'center',
+                                    fontSize:'1.1rem',
+                                }}>🔒</div>
+                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.95rem',color:'#E8C878',margin:0,fontWeight:500}}>
+                                    {language==='es'?'LUMI Predictiva — Premium':'LUMI Predictive — Premium'}
+                                </p>
+                                <p style={{fontSize:'0.72rem',color:'rgba(232,200,120,0.6)',margin:0}}>
+                                    {language==='es'?'Toca para desbloquear':'Tap to unlock'}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* ── POPUP DÍA 3 — "Enter the New Era" ── */}
+                        {dayNum === 3 && (
+                            <div style={{
+                                background:'linear-gradient(160deg,rgba(10,6,2,0.97) 0%,rgba(30,18,6,0.97) 100%)',
+                                borderRadius:'1.5rem',
+                                padding:'2rem 1.5rem',
+                                marginBottom:'12px',
+                                border:'1px solid rgba(184,115,51,0.4)',
+                                boxShadow:'0 0 60px rgba(184,115,51,0.15)',
+                                textAlign:'center',
+                                position:'relative',
+                                overflow:'hidden',
+                            }}>
+                                <div style={{position:'absolute',top:0,left:0,right:0,height:'2px',background:'linear-gradient(90deg,transparent,#B87333,#E8C878,#B87333,transparent)'}}/>
+                                <p style={{fontSize:'0.62rem',color:'rgba(184,115,51,0.7)',fontWeight:700,letterSpacing:'0.2em',textTransform:'uppercase',marginBottom:'1rem'}}>
+                                    {language==='es'?'TU SANTUARIO ESTÁ LISTO':'YOUR SANCTUARY IS READY'}
+                                </p>
+                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.6rem',fontWeight:400,color:'#F5E6D3',lineHeight:1.3,marginBottom:'0.75rem'}}>
+                                    {language==='es'
+                                        ?'Has aprendido a escuchar. Ahora es momento de dominar tu ritmo.'
+                                        :'You have learned to listen. Now it is time to master your rhythm.'}
+                                </p>
+                                <p style={{fontSize:'0.85rem',color:'rgba(184,115,51,0.8)',lineHeight:1.6,marginBottom:'1.5rem',fontStyle:'italic',fontFamily:"'Cormorant',serif"}}>
+                                    {language==='es'
+                                        ?'Deja atrás la niebla hormonal. Pasa de registrar el pasado a predecir tu bienestar.'
+                                        :'Leave the hormonal fog behind. Move from logging the past to predicting your wellbeing.'}
+                                </p>
+                                <div onClick={()=>setCurrentPage('upgrade')} style={{
+                                    background:'linear-gradient(135deg,#B87333,#E8C878)',
+                                    borderRadius:'9999px',
+                                    padding:'0.85rem 2.5rem',
+                                    cursor:'pointer',
+                                    display:'inline-block',
+                                    boxShadow:'0 0 30px rgba(184,115,51,0.4)',
+                                }}>
+                                    <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.1rem',fontWeight:600,color:'#0A0A0A',margin:0,letterSpacing:'0.05em'}}>
+                                        {language==='es'?'Entrar en la Nueva Era':'Enter the New Era'}
+                                    </p>
+                                </div>
+                                <p style={{fontSize:'0.72rem',color:'rgba(184,115,51,0.45)',marginTop:'0.75rem'}}>
+                                    {language==='es'?'3 días · Sin tarjeta · Cancela cuando quieras':'3 days · No card · Cancel anytime'}
+                                </p>
+                                <div style={{position:'absolute',bottom:0,left:0,right:0,height:'2px',background:'linear-gradient(90deg,transparent,rgba(184,115,51,0.4),transparent)'}}/>
+                            </div>
+                        )}
 
                         {/* ── CTA PREMIUM ── */}
                         <div style={{
