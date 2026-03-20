@@ -4228,109 +4228,55 @@ query = query.eq('region', region.toUpperCase());
                             );
                         })()}
 
-                        {/* ── TARJETA PERÍODO — solo trial y premium ── */}
-                        {getUserTier() !== 'free' && (
-                            <div style={{
-                                background: darkMode ? 'rgba(244,63,94,0.08)' : 'linear-gradient(135deg, #fff1f2, #fff7ed)',
-                                borderRadius: '1.25rem',
-                                border: '1px solid rgba(244,63,94,0.2)',
-                                padding: '1.5rem',
-                                display: 'flex',
-                                alignItems: 'flex-start',
-                                gap: '1rem'
-                            }}>
-                                <span style={{fontSize: '2rem', flexShrink: 0}}>🌙</span>
-                                <div style={{flex: 1}}>
-                                    <p style={{
-                                        fontFamily: "'Cormorant', serif",
-                                        fontSize: '1.15rem',
-                                        fontWeight: 500,
-                                        color: darkMode ? '#fda4af' : '#be123c',
-                                        marginBottom: '0.4rem',
-                                        lineHeight: 1.4
-                                    }}>
-                                        {language === 'es'
-                                            ? 'Tu ciclo también habla.'
-                                            : 'Your cycle speaks too.'}
-                                    </p>
-                                    <p style={{
-                                        fontSize: '0.88rem',
-                                        color: darkMode ? '#a8a29e' : '#78716c',
-                                        lineHeight: 1.55,
-                                        marginBottom: '1rem'
-                                    }}>
-                                        {language === 'es'
-                                            ? 'Si aún lo tienes, registrarlo me ayuda a entenderte mejor y acompañarte en cada fase.'
-                                            : 'If you still have it, logging it helps me understand you better and support you through each phase.'}
-                                    </p>
-                                    <button
-                                        onClick={() => setCurrentPage('period')}
-                                        style={{
-                                            background: 'linear-gradient(135deg, #f43f5e, #fb923c)',
-                                            color: 'white',
-                                            border: 'none',
-                                            borderRadius: '9999px',
-                                            padding: '0.55rem 1.4rem',
-                                            fontSize: '0.85rem',
-                                            fontWeight: 600,
-                                            cursor: 'pointer'
-                                        }}
-                                    >
-                                        {language === 'es' ? 'Registrar período →' : 'Log period →'}
-                                    </button>
+                        {/* ── LUMI SE ANTICIPA ── */}
+                        {(() => {
+                            const todayS = symptoms.length > 0 ? symptoms[symptoms.length - 1] : null;
+                            const hasLowEnergy = todayS && (todayS.energy || 0) <= 3;
+                            const hasAnxiety = todayS && (todayS.anxiety || 0) >= 4;
+                            const hasLowSleep = todayS && (todayS.sleep || 0) <= 3;
+                            const hasLowMood = todayS && (todayS.mood || 0) <= 3;
+                            let tip_es, tip_en;
+                            if (hasLowSleep) {
+                                tip_es = '🌙 Cuando el sueño baja, el cortisol sube. Esta noche: magnesio, sin pantallas 1h antes, temperatura fresca.';
+                                tip_en = '🌙 When sleep drops, cortisol rises. Tonight: magnesium, no screens 1h before, cool temperature.';
+                            } else if (hasLowEnergy) {
+                                tip_es = '⚡ Energía baja hoy. Tu cuerpo pide hierro o vitamina B12 — revisa tu menú de hoy en Nutrición.';
+                                tip_en = '⚡ Low energy today. Your body may need iron or B12 — check your menu in Nutrition.';
+                            } else if (hasAnxiety) {
+                                tip_es = '🌊 Ansiedad detectada. Antes de comer: 4 seg inhala, 7 mantén, 8 exhala. Repite 3 veces.';
+                                tip_en = '🌊 Anxiety detected. Before eating: inhale 4s, hold 7, exhale 8. Repeat 3 times.';
+                            } else if (hasLowMood) {
+                                tip_es = '🌿 Ánimo bajo hoy. 10 minutos de luz solar antes de las 10am tiene evidencia directa sobre el estado de ánimo.';
+                                tip_en = '🌿 Low mood today. 10 minutes of sunlight before 10am has direct evidence on mood.';
+                            } else {
+                                tip_es = '✦ Tu cuerpo está en equilibrio hoy. Los días tranquilos son cuando se consolidan los cambios — aprovéchalo.';
+                                tip_en = '✦ Your body is balanced today. Calm days are when changes consolidate — make the most of it.';
+                            }
+                            return (
+                                <div style={{
+                                    background: darkMode ? 'rgba(201,147,90,0.08)' : 'rgba(253,248,243,0.98)',
+                                    borderRadius: '1.25rem',
+                                    padding: '1rem 1.25rem',
+                                    marginBottom: '12px',
+                                    border: '1px solid rgba(201,147,90,0.22)',
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
+                                    gap: '0.75rem',
+                                }}>
+                                    <img src="/images/lumi.png"
+                                        style={{width:'32px',height:'32px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'2px solid rgba(201,147,90,0.4)',marginTop:'2px'}}
+                                        onError={e=>{e.target.style.display='none'}} alt="LUMI"/>
+                                    <div>
+                                        <p style={{fontSize:'0.68rem',color:'#C9935A',fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'4px'}}>
+                                            {language==='es'?'✦ LUMI se anticipa':'✦ LUMI anticipates'}
+                                        </p>
+                                        <p style={{fontSize:'0.87rem',color:darkMode?'#e8d5c0':'#44403c',lineHeight:1.6,margin:0}}>
+                                            {language==='es'?tip_es:tip_en}
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-
-                        {/* ── TABLA FREE vs PREMIUM ── */}
-                        <details style={{background: bgCard, borderRadius: '1.25rem', overflow: 'hidden', border: '1px solid rgba(201,147,90,0.2)', boxShadow: '0 2px 16px rgba(0,0,0,0.05)'}}>
-                        <summary style={{listStyle:'none',cursor:'pointer'}}>
-                            <div style={{background: 'linear-gradient(135deg, #C9935A, #e8c89f)', padding: '1.1rem 1.5rem'}}>
-                                <h2 style={{color: 'white', fontFamily: "'Cormorant', serif", fontSize: '1.4rem', fontWeight: 500, margin: 0}}>
-                                    {language === 'es' ? '¿Qué incluye cada plan?' : 'What does each plan include?'}
-                                </h2>
-                            </div>
-                        </summary>
-                            <table style={{width: '100%', borderCollapse: 'collapse', fontSize: '0.83rem'}}>
-                                <thead>
-                                    <tr style={{background: 'rgba(201,147,90,0.1)'}}>
-                                        <th style={{padding: '0.75rem 1rem', textAlign: 'left', color: textSub, fontWeight: 600}}>
-                                            {language === 'es' ? 'Función' : 'Feature'}
-                                        </th>
-                                        <th style={{padding: '0.75rem 0.5rem', textAlign: 'center', color: textSub, fontWeight: 600}}>
-                                            {language === 'es' ? 'Gratis' : 'Free'}
-                                        </th>
-                                        <th style={{padding: '0.75rem 1rem', textAlign: 'center', color: '#C9935A', fontWeight: 700}}>
-                                            ✦ Premium
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {[
-                                        { es: 'Registro de síntomas', en: 'Symptom tracking',           free: true,  premium: true  },
-                                        { es: 'Menú nutricional básico', en: 'Basic nutrition menu',    free: true,  premium: true  },
-                                        { es: 'Mitos y consejos', en: 'Myths & tips',                   free: true,  premium: true  },
-                                        { es: 'Menú adaptado a síntomas', en: 'Symptom-adapted menu',   free: false, premium: true  },
-                                        { es: 'Ejercicios personalizados', en: 'Personalized exercises', free: false, premium: true },
-                                        { es: 'LUMI — coach personal', en: 'LUMI — personal coach',     free: false, premium: true  },
-                                        { es: 'Análisis de patrones', en: 'Pattern analysis',           free: false, premium: true  },
-                                        { es: 'Gráficos de tendencias', en: 'Trend charts',             free: false, premium: true  },
-                                        { es: 'Dashboard metabólico', en: 'Metabolic dashboard',        free: false, premium: true  },
-                                        { es: 'Comunidad premium', en: 'Premium community',             free: false, premium: true  },
-                                    ].map((row, i) => (
-                                        <tr key={i} style={{borderTop: `1px solid ${darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'}`, background: i % 2 === 0 ? 'transparent' : (darkMode ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.01)')}}>
-                                            <td style={{padding: '0.65rem 1rem', color: textMain}}>{language === 'es' ? row.es : row.en}</td>
-                                            <td style={{padding: '0.65rem 0.5rem', textAlign: 'center', fontSize: '1.1rem'}}>
-                                                {row.free ? '✅' : '—'}
-                                            </td>
-                                            <td style={{padding: '0.65rem 1rem', textAlign: 'center', fontSize: '1.1rem'}}>
-                                                {row.premium ? '✅' : '—'}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </details>
+                            );
+                        })()}
 
                         {/* ── CTA PREMIUM ── */}
                         <div style={{
