@@ -4645,6 +4645,8 @@ query = query.eq('region', region.toUpperCase());
 
                 return (
                     <div className="pb-32 space-y-8" key={`nutrition-${language}`} style={{position: 'relative'}}>
+                        <video autoPlay loop muted playsInline src="/videos/menu.mp4"
+                            style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none', opacity: 0.18}} />
                         {/* HEADER NUTRICIÓN */}
                         <div style={{marginBottom:'1.5rem'}}>
                             <h1 style={{fontFamily:"'Cormorant',serif",fontSize:'2.2rem',fontWeight:400,color:darkMode?'#fdf8f3':'#1c1917',lineHeight:1.2,marginBottom:'0.5rem'}}>
@@ -4949,7 +4951,7 @@ query = query.eq('region', region.toUpperCase());
                         <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
                             <summary style={{listStyle:'none',cursor:'pointer'}}>
                                 <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
-                                    <span style={{fontSize:'2rem'}}>🛒</span>
+                                    <img src='/images/nutri_lista.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Voy de compras':'Shopping list'}</p>
                                         <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'Los imprescindibles siempre en casa':'The essentials always at home'}</p>
