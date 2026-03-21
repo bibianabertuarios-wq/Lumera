@@ -3828,8 +3828,13 @@ query = query.eq('region', region.toUpperCase());
                 const trialDaysLeft = trialDaysForRouting;
                 const dayNum = Math.max(1, 4 - trialDaysLeft); // día 1, 2 o 3
 
-                const bgCard = darkMode ? '#1c1917' : '#ffffff';
-                const bgPage = darkMode ? '#0c0a09' : '#fafaf9';
+                const isPremiumUser = ['active','paid'].includes(currentUser?.subscription_status);
+                const bgCard = isPremiumUser ? 'rgba(22,14,6,0.88)' : (darkMode ? '#1c1917' : '#ffffff');
+                const bgPage = isPremiumUser ? '#0D0A06' : (darkMode ? '#0c0a09' : '#fafaf9');
+                const bgAccent = isPremiumUser ? 'rgba(184,115,51,0.12)' : (darkMode ? 'rgba(201,147,90,0.08)' : 'rgba(253,248,243,0.95)');
+                const borderColor = isPremiumUser ? 'rgba(184,115,51,0.25)' : 'rgba(201,147,90,0.15)';
+                const tMain = isPremiumUser ? '#F5E6D3' : (darkMode ? '#fdf8f3' : '#1c1917');
+                const tSub = isPremiumUser ? 'rgba(212,149,106,0.8)' : (darkMode ? '#a8a29e' : '#78716c');
                 const textMain = darkMode ? '#e7e5e4' : '#292524';
                 const textSub = darkMode ? '#a8a29e' : '#78716c';
                 const borderSoft = darkMode ? 'rgba(201,147,90,0.18)' : 'rgba(201,147,90,0.15)';
