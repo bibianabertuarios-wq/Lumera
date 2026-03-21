@@ -5723,6 +5723,36 @@ query = query.eq('region', region.toUpperCase());
                                 </div>
                             </>
                         )}
+                        {/* SIN TIEMPO */}
+                        <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white',position:'relative',zIndex:1,marginTop:'0.5rem'}}>
+                            <summary style={{listStyle:'none',cursor:'pointer'}}>
+                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
+                                    <img src="/images/nutri_reloj.png" style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
+                                    <div style={{flex:1}}>
+                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Sin tiempo — 10 minutos':'No time — 10 minutes'}</p>
+                                        <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'Mínimo esfuerzo, máximo impacto hormonal':'Minimum effort, maximum hormonal impact'}</p>
+                                    </div>
+                                </div>
+                            </summary>
+                            <div style={{padding:'1.25rem'}}>
+                                {[
+                                    {es:'Respiración 4-7-8',en:'4-7-8 Breathing',min:'3 min',d_es:'Activa el nervio vago y reduce cortisol inmediatamente.',d_en:'Activates vagus nerve, reduces cortisol immediately.'},
+                                    {es:'Sentadillas suaves',en:'Gentle squats',min:'5 min',d_es:'10 repeticiones lentas. Activa GLP-1 y mejora insulina.',d_en:'10 slow reps. Activates GLP-1 and improves insulin.'},
+                                    {es:'Estiramiento de caderas',en:'Hip stretches',min:'5 min',d_es:'Libera tensión pélvica. Reduce ansiedad acumulada.',d_en:'Releases pelvic tension. Reduces accumulated anxiety.'},
+                                    {es:'Caminata consciente',en:'Mindful walk',min:'10 min',d_es:'Al aire libre. Luz solar + movimiento = GLP-1.',d_en:'Outdoors. Sunlight + movement = GLP-1.'},
+                                ].map((item,i)=>(
+                                    <div key={i} style={{display:'flex',gap:'1rem',padding:'0.875rem 0',borderBottom:'1px solid rgba(201,147,90,0.1)'}}>
+                                        <div style={{minWidth:'45px',height:'45px',borderRadius:'50%',background:'rgba(201,147,90,0.1)',border:'1px solid rgba(201,147,90,0.2)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                                            <p style={{fontSize:'0.65rem',color:'#C9935A',fontWeight:700,margin:0,textAlign:'center'}}>{item.min}</p>
+                                        </div>
+                                        <div style={{flex:1}}>
+                                            <p style={{fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',fontSize:'0.92rem',margin:'0 0 3px'}}>{language==='es'?item.es:item.en}</p>
+                                            <p style={{fontSize:'0.8rem',color:'#78716c',margin:0,lineHeight:1.5}}>{language==='es'?item.d_es:item.d_en}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </details>
                     </div>
                 );
             };
