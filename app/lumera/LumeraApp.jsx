@@ -124,6 +124,7 @@ import './lumera.css'
             const [showDashboardModal, setShowDashboardModal] = useState(false);
             const [showWelcomePremium, setShowWelcomePremium] = useState(false);
             const [showWelcomeTrial, setShowWelcomeTrial] = useState(false);
+            const [showShulaDay3, setShowShulaDay3] = useState(false);
             const [welcomeAct, setWelcomeAct] = useState(1);
             const [chartData, setChartData] = useState(null);
             const [aiCookingTips, setAiCookingTips] = useState({}); // {recipeName: [tip1, tip2, tip3]}
@@ -3824,6 +3825,17 @@ query = query.eq('region', region.toUpperCase());
                     return renderPremiumDashboard();
                 }
 
+                // Shula Day 3 popup — solo una vez
+                if (isTrialDay3 && !showShulaDay3) {
+                    const hasSeenShula = localStorage.getItem(`shula_day3_${currentUser?.id}`);
+                    if (!hasSeenShula) {
+                        setTimeout(() => {
+                            setShowShulaDay3(true);
+                            localStorage.setItem(`shula_day3_${currentUser?.id}`, 'true');
+                        }, 1500);
+                    }
+                }
+
                 // Trial (días 1, 2 y 3) → dashboard de onboarding + conversión
                 const trialDaysLeft = trialDaysForRouting;
                 const dayNum = Math.max(1, 4 - trialDaysLeft); // día 1, 2 o 3
@@ -6396,6 +6408,62 @@ query = query.eq('region', region.toUpperCase());
 
             
             // LANDING PAGE CON HERO ELEGANTE
+            if (showShulaDay3) return (
+                <div style={{position:'fixed',inset:0,zIndex:9999,background:'#0A0608',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
+                    {/* Video de fondo — seda negra */}
+                    <video autoPlay loop muted playsInline src="/videos/premium_bg.mp4"
+                        style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',opacity:0.3,pointerEvents:'none'}}/>
+                    <div style={{position:'absolute',inset:0,background:'linear-gradient(180deg,rgba(10,4,2,0.7) 0%,rgba(10,4,2,0.4) 50%,rgba(10,4,2,0.8) 100%)'}}/>
+
+                    <style>{`@keyframes shulaFade{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}.shula-in{animation:shulaFade 1.5s ease forwards}`}</style>
+
+                    <div className="shula-in" style={{position:'relative',zIndex:1,maxWidth:'400px',width:'100%',padding:'2rem',textAlign:'center'}}>
+                        {/* Ornamento top */}
+                        <div style={{width:'60px',height:'1px',background:'linear-gradient(90deg,transparent,#B87333,transparent)',margin:'0 auto 2rem'}}/>
+
+                        {/* Video de Shula en círculo */}
+                        <div style={{width:'180px',height:'180px',borderRadius:'50%',overflow:'hidden',margin:'0 auto 2rem',border:'2px solid rgba(184,115,51,0.5)',boxShadow:'0 0 40px rgba(184,115,51,0.2)'}}>
+                            <video autoPlay loop muted playsInline src="/videos/shula_day3.mp4"
+                                style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+                        </div>
+
+                        {/* Mensaje */}
+                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.68rem',color:'rgba(184,115,51,0.7)',letterSpacing:'0.2em',textTransform:'uppercase',marginBottom:'1.5rem'}}>
+                            SHULA RÍOS · LUMERA
+                        </p>
+                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.35rem',fontWeight:400,color:'#F5E6D3',lineHeight:1.8,marginBottom:'2rem',fontStyle:'italic'}}>
+                            {language==='es'
+                                ?'"Algo ha cambiado en ti, lo noto. En estos días, tu cuerpo ha dejado de ser un misterio para empezar a ser tu mapa. Hoy nuestra prueba termina, pero este santuario es tuyo para siempre. No vuelvas al ruido exterior. Quédate aquí, conmigo... El viaje real comienza ahora."'
+                                :'"Something has changed in you, I can feel it. Over these days, your body has stopped being a mystery and started becoming your map. Today our trial ends, but this sanctuary is yours forever. Do not go back to the noise. Stay here, with me... The real journey begins now."'}
+                        </p>
+
+                        {/* Botón CTA */}
+                        <button
+                            onClick={()=>{setShowShulaDay3(false);setCurrentPage('upgrade');}}
+                            style={{
+                                background:'linear-gradient(135deg,#B87333,#E8C878)',
+                                border:'none',borderRadius:'9999px',
+                                padding:'1rem 2.5rem',
+                                color:'#0A0A0A',
+                                fontFamily:"'Cormorant',serif",
+                                fontSize:'1.1rem',fontWeight:600,
+                                cursor:'pointer',letterSpacing:'0.06em',
+                                boxShadow:'0 0 30px rgba(184,115,51,0.4)',
+                                marginBottom:'1rem',display:'block',width:'100%',
+                            }}>
+                            {language==='es'?'Mantener mi Santuario':'Keep my Sanctuary'}
+                        </button>
+                        <button
+                            onClick={()=>setShowShulaDay3(false)}
+                            style={{background:'none',border:'none',color:'rgba(184,115,51,0.4)',fontSize:'0.78rem',cursor:'pointer',letterSpacing:'0.08em'}}>
+                            {language==='es'?'Explorar un momento más':'Explore a little longer'}
+                        </button>
+
+                        <div style={{width:'60px',height:'1px',background:'linear-gradient(90deg,transparent,#B87333,transparent)',margin:'2rem auto 0'}}/>
+                    </div>
+                </div>
+            );
+
             if (showWelcomeTrial) return (
                 <div style={{position:'fixed',inset:0,zIndex:9999,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'2rem',background:'rgba(10,8,5,0.95)'}}>
                                     <video autoPlay loop muted playsInline src="/videos/welcome_bg.mp4" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',opacity:0.35,pointerEvents:'none'}}/>
