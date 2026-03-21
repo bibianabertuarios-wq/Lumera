@@ -3840,25 +3840,25 @@ query = query.eq('region', region.toUpperCase());
                                 cueva: {
                                     bg: 'linear-gradient(135deg,#2d1f14 0%,#5c3d22 100%)',
                                     img: '/images/modo_cueva.png',
-                                    label: language==='es'?'🐻 Modo cueva activado':'🐻 Cave mode on',
+                                    label: language==='es'?'Modo cueva':'Cave mode',
                                     msg: language==='es'?`Hoy no tienes que poder con todo, ${userName}. Tu cuerpo está procesando algo importante. Yo me encargo del resto.`:`You don't have to handle everything today, ${userName}. Your body is processing something important. I've got the rest.`,
                                 },
                                 diosa: {
                                     bg: 'linear-gradient(135deg,#7a4f1a 0%,#C9935A 100%)',
                                     img: '/images/modo_diosa.png',
-                                    label: language==='es'?'✨ Modo diosa encendido':'✨ Goddess mode on',
+                                    label: language==='es'?'Modo diosa':'Goddess mode',
                                     msg: language==='es'?`Hoy tu cuerpo está brillando, ${userName}. Lo noto en tus datos. Aprovechamos esta energía juntas.`:`Your body is shining today, ${userName}. I can see it in your data. Let's use this energy together.`,
                                 },
                                 tormenta: {
                                     bg: 'linear-gradient(135deg,#1a2535 0%,#2d4a7a 100%)',
                                     img: '/images/modo_tormenta.png',
-                                    label: language==='es'?'⛈️ Modo tormenta, respira':'⛈️ Storm mode, breathe',
+                                    label: language==='es'?'Modo tormenta':'Storm mode',
                                     msg: language==='es'?`No estás loca, ${userName}. Lo que sientes tiene nombre y tiene solución. Hoy vamos despacio.`:`You're not crazy, ${userName}. What you feel has a name and a solution. We go slow today.`,
                                 },
                                 ritual: {
                                     bg: 'linear-gradient(135deg,#1a2d1f 0%,#3d6645 100%)',
                                     img: '/images/modo_ritual.png',
-                                    label: language==='es'?'🌿 Modo ritual, fluye':'🌿 Ritual mode, flow',
+                                    label: language==='es'?'Modo ritual':'Ritual mode',
                                     msg: language==='es'?`Un día tranquilo también es un regalo, ${userName}. Tu cuerpo está hablando en voz baja hoy.`:`A calm day is also a gift, ${userName}. Your body is speaking softly today.`,
                                 },
                             };
@@ -3882,12 +3882,12 @@ query = query.eq('region', region.toUpperCase());
                                         </p>
                                         <div style={{display:'flex',flexWrap:'wrap',gap:'8px'}}>
                                             {[
-                                                {es:'Sueño',en:'Sleep',icon:'🌙'},
-                                                {es:'Energía',en:'Energy',icon:'⚡'},
-                                                {es:'Ánimo',en:'Mood',icon:'🌊'},
-                                                {es:'Sofocos',en:'Hot flashes',icon:'🌡️'},
-                                                {es:'Ansiedad',en:'Anxiety',icon:'💨'},
-                                                {es:'Niebla mental',en:'Brain fog',icon:'🌫️'},
+                                                {es:'Sueño',en:'Sleep',icon:''},
+                                                {es:'Energía',en:'Energy',icon:''},
+                                                {es:'Ánimo',en:'Mood',icon:''},
+                                                {es:'Sofocos',en:'Hot flashes',icon:''},
+                                                {es:'Ansiedad',en:'Anxiety',icon:''},
+                                                {es:'Niebla mental',en:'Brain fog',icon:''},
                                             ].map((s,i) => (
                                                 <div key={i} onClick={()=>setCurrentPage('symptoms')} style={{
                                                     background:darkMode?'rgba(201,147,90,0.1)':'rgba(253,248,243,0.9)',
@@ -3905,8 +3905,8 @@ query = query.eq('region', region.toUpperCase());
                                                 onMouseEnter={e=>{e.currentTarget.style.background='rgba(201,147,90,0.2)';e.currentTarget.style.color='#C9935A'}}
                                                 onMouseLeave={e=>{e.currentTarget.style.background=darkMode?'rgba(201,147,90,0.1)':'rgba(253,248,243,0.9)';e.currentTarget.style.color=darkMode?'#e8d5c0':'#57534e'}}
                                                 >
-                                                    <span style={{fontSize:'0.9rem'}}>{s.icon}</span>
-                                                    <span>{language==='es'?s.es:s.en}</span>
+                                                    {s.icon && <span style={{fontSize:'0.9rem',marginRight:'2px'}}>{s.icon}</span>}
+                                                    <span style={{fontSize:'0.82rem'}}>{language==='es'?s.es:s.en}</span>
                                                 </div>
                                             ))}
                                         </div>
@@ -3925,8 +3925,8 @@ query = query.eq('region', region.toUpperCase());
                                         transition: 'all 1s ease',
                                     }}>
                                         {/* Esfera cobre — aparece día 2+ */}
-                                        {/* Imagen del modo — esquina derecha */}
-                                        {cfg.img && <img src={cfg.img} style={{position:'absolute',top:'-10px',right:'-10px',width:'110px',height:'110px',borderRadius:'50%',objectFit:'cover',opacity: dayNum===3?0.9:0.75,filter:'brightness(0.9)',pointerEvents:'none'}}/>}
+                                        {/* Imagen del modo — fondo completo */}
+                                        {cfg.img && <img src={cfg.img} style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',opacity:0.25,filter:'brightness(0.8) saturate(1.2)',pointerEvents:'none',zIndex:0,borderRadius:'1.5rem'}}/>}
                                         {dayNum >= 2 && <div style={{position:'absolute',top:0,right:0,width:'140px',height:'140px',background:`radial-gradient(circle, rgba(184,115,51,${dayNum===3?'0.35':'0.18'}), transparent)`,borderRadius:'50%',transform:'translate(40px,-40px)',animation:'pulse 4s ease-in-out infinite'}}/>}
                                         {dayNum === 1 && <div style={{position:'absolute',top:0,right:0,width:'120px',height:'120px',background:'rgba(255,255,255,0.04)',borderRadius:'50%',transform:'translate(30px,-30px)'}}/>}
                                         <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}`}</style>
@@ -4235,9 +4235,9 @@ query = query.eq('region', region.toUpperCase());
                                                 };
                                                 // active → moved to global as oracleActive
                                             const btns = [
-                                                {key:'aprender',icon:'🧠',es:'Aprender',en:'Learn'},
-                                                {key:'cuidarme',icon:'💆',es:'Cuidarme',en:'Care'},
-                                                {key:'intimidad',icon:'❤️',es:'Intimidad',en:'Intimacy'},
+                                                {key:'aprender',icon:'/images/carta_aprender.png',es:'Aprender',en:'Learn'},
+                                                {key:'cuidarme',icon:'/images/carta_cuidarme.png',es:'Cuidarme',en:'Care'},
+                                                {key:'intimidad',icon:'/images/carta_intimidad.png',es:'Intimidad',en:'Intimacy'},
                                             ];
                                             return btns.map((btn,i) => (
                                                 <div key={i} style={{flex:1}}>
@@ -4246,7 +4246,9 @@ query = query.eq('region', region.toUpperCase());
                                                         border:`1px solid ${oracleActiveMomento===btn.key?'rgba(201,147,90,0.5)':'rgba(201,147,90,0.2)'}`,
                                                         borderRadius:'0.85rem',padding:'0.6rem',textAlign:'center',cursor:'pointer',transition:'all 0.2s',
                                                     }}>
-                                                        <span style={{fontSize:'1.1rem',display:'block',marginBottom:'2px'}}>{btn.icon}</span>
+                                                        {btn.icon.startsWith('/') 
+                                            ? <img src={btn.icon} style={{width:'32px',height:'32px',borderRadius:'50%',objectFit:'cover',margin:'0 auto 4px',display:'block',boxShadow:'0 2px 6px rgba(201,147,90,0.3)'}}/>
+                                            : <span style={{fontSize:'1.1rem',display:'block',marginBottom:'2px'}}>{btn.icon}</span>}
                                                         <p style={{fontSize:'0.72rem',color:oracleActiveMomento===btn.key?'rgba(255,255,255,0.9)':'#C9935A',margin:0,fontWeight:600}}>{language==='es'?btn.es:btn.en}</p>
                                                     </div>
                                                     {oracleActiveMomento===btn.key && (
