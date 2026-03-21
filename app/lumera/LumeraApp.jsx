@@ -7377,13 +7377,13 @@ query = query.eq('region', region.toUpperCase());
                                             placeholder={language === 'es' ? 'Escribe tu pregunta...' : 'Type your question...'}
                                             className={`flex-1 px-4 py-3 rounded-full border ${
                                                 darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-50 border-gray-300'
-                                            } focus:outline-none focus:ring-2 focus:ring-rose-400`}
+                                            } focus:outline-none focus:ring-2 focus:ring-amber-600`}
                                             disabled={lumiLoading}
                                         />
                                         <button
                                             onClick={sendToLumi}
                                             disabled={!lumiInput.trim() || lumiLoading}
-                                            className="bg-gradient-to-r from-rose-400 to-amber-300 text-white rounded-full p-3 disabled:opacity-50 hover:scale-105 transition">
+                                            style={{background:'linear-gradient(135deg,#B87333,#E8C878)',border:'none',borderRadius:'50%',padding:'0.75rem',cursor:'pointer',transition:'all 0.2s'}} className="disabled:opacity-50 hover:scale-105">
                                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                                             </svg>
