@@ -7298,23 +7298,21 @@ query = query.eq('region', region.toUpperCase());
                     {showLumiChat && (
                         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4" onClick={() => setShowLumiChat(false)}>
                             <div 
-                                className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-t-3xl sm:rounded-3xl shadow-2xl w-full sm:w-96 h-[80vh] sm:h-[600px] flex flex-col`}
+                                style={{background:['active','paid'].includes(currentUser?.subscription_status)?'#0D0A06':(darkMode?'#1c1917':'#ffffff'),borderRadius:'1.5rem 1.5rem 0 0',boxShadow:'0 -8px 40px rgba(0,0,0,0.4)',width:'100%',maxWidth:'24rem',height:'80vh',maxHeight:'600px',display:'flex',flexDirection:'column',border:['active','paid'].includes(currentUser?.subscription_status)?'1px solid rgba(184,115,51,0.25)':'none'}}
                                 onClick={(e) => e.stopPropagation()}>
 
                                 {/* Header */}
-                                <div className="bg-gradient-to-r from-rose-400 to-amber-300 text-white p-4 rounded-t-3xl flex justify-between items-center">
-                                    <div className="flex items-center gap-3">
-                                        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                                        </svg>
+                                <div style={{background:'linear-gradient(135deg,#0D0A06,#1a1008)',borderBottom:'1px solid rgba(184,115,51,0.3)',padding:'1rem 1.25rem',borderRadius:'1.5rem 1.5rem 0 0',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                                    <div style={{display:'flex',alignItems:'center',gap:'0.75rem'}}>
+                                        <img src="/images/lumi.png" style={{width:'40px',height:'40px',borderRadius:'50%',objectFit:'cover',border:'2px solid rgba(184,115,51,0.5)'}} onError={e=>{e.target.style.display='none'}} alt="LUMI"/>
                                         <div>
-                                            <h3 className="font-semibold text-lg">Lumi</h3>
-                                            <p className="text-xs opacity-90">
-                                                {!isPremium() && `${dailyQuestions}/5 ${language === 'es' ? 'preguntas hoy' : 'questions today'}`}
+                                            <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.15rem',fontWeight:600,color:'#E8C878',margin:0}}>LUMI</h3>
+                                            <p style={{fontSize:'0.72rem',color:'rgba(184,115,51,0.65)',margin:0}}>
+                                                {!isPremium() ? `${dailyQuestions}/5 ${language === 'es' ? 'preguntas hoy' : 'questions today'}` : (language==='es'?'✦ Tu reflejo biológico':'✦ Your biological reflection')}
                                             </p>
                                         </div>
                                     </div>
-                                    <button onClick={() => setShowLumiChat(false)} className="text-white hover:bg-white/20 rounded-full p-2">
+                                    <button onClick={() => setShowLumiChat(false)} style={{background:'none',border:'none',color:'rgba(184,115,51,0.6)',cursor:'pointer',padding:'0.5rem',borderRadius:'50%'}}>
                                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/>
                                         </svg>
