@@ -7121,7 +7121,9 @@ query = query.eq('region', region.toUpperCase());
                                     setShowLumiChat(true);
                                 }
                             }}
-                            className="fixed bottom-24 right-6 z-50 bg-gradient-to-r from-rose-400 to-amber-300 text-white rounded-full p-4 shadow-2xl hover:scale-110 transition transform relative"
+                            style={{position:'fixed',bottom:'6rem',right:'1.5rem',zIndex:50,width:'60px',height:'60px',borderRadius:'50%',background:'#0D0D0D',border:'2px solid rgba(184,115,51,0.7)',boxShadow:'0 4px 20px rgba(0,0,0,0.4), 0 0 15px rgba(184,115,51,0.2)',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',transition:'all 0.3s ease',padding:0}}
+                            onMouseEnter={e=>{e.currentTarget.style.transform='scale(1.08)';e.currentTarget.style.boxShadow='0 0 25px rgba(184,115,51,0.4)'}}
+                            onMouseLeave={e=>{e.currentTarget.style.transform='scale(1)';e.currentTarget.style.boxShadow='0 4px 20px rgba(0,0,0,0.4)'}}
                             title={language === 'es' ? 'Habla con LUMI - Tu coach personal' : 'Talk to LUMI - Your personal coach'}>
 
                             {/* BADGE ANIMADO */}
@@ -7130,10 +7132,9 @@ query = query.eq('region', region.toUpperCase());
                                     {unreadLumiMessages}
                                 </div>
                             )}
+                            <img src="/images/lumi.png" style={{width:'38px',height:'38px',borderRadius:'50%',objectFit:'cover'}} onError={e=>{e.target.style.display='none'}} alt="LUMI"/>
 
-                            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                            </svg>
+
 
                             {/* PULSO ANIMADO CUANDO HAY MENSAJES */}
                             {unreadLumiMessages > 0 && (
