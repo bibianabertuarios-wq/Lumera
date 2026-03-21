@@ -3175,7 +3175,21 @@ query = query.eq('region', region.toUpperCase());
 
             // MARCAR MENSAJES PROACTIVOS COMO LEÍDOS - NUEVO ✨
             const markMessagesAsRead = async () => {
-                if (proactiveMessages.length === 0) return;
+                if (proactiveMessages.length === 0) {
+                    // Primer día — mostrar mensaje de bienvenida de LUMI
+                    const userName = currentUser?.profile_name || (language === 'es' ? 'amiga' : 'friend');
+                    const welcomeMsg = {
+                        id: 'welcome_lumi',
+                        message_type: 'greeting',
+                        content: language === 'es'
+                            ? `Hola, ${userName}. Soy LUMI, tu reflejo biológico. Me alegra que hayas cruzado la puerta del santuario.\n\nMi misión es escucharte. Hoy no te pediré imposibles; solo quiero que registres cómo te sientes en Síntomas. Con eso, empezaré a descifrar tu ritmo para que mañana tu menú y tu movimiento sean medicina, no obligación.\n\n¿Por dónde quieres que empecemos a explorar hoy?`
+                            : `Hello, ${userName}. I am LUMI, your biological reflection. I am glad you have stepped into the sanctuary.\n\nMy mission is to listen. Today, I will not ask for the impossible; I just want you to log how you feel in Symptoms. With that, I will begin to decode your rhythm so that tomorrow, your menu and movement become medicine, not a chore.\n\nWhere shall we begin exploring today?`,
+                        created_at: new Date().toISOString(),
+                    };
+                    setProactiveMessages([welcomeMsg]);
+                    const timer = setTimeout(() => setShowProactiveModal(true), 1500);
+                    return () => clearTimeout(timer);
+                }
 
                 const messageIds = proactiveMessages.map(m => m.id);
 
@@ -5645,7 +5659,7 @@ query = query.eq('region', region.toUpperCase());
                                 setTimeout(() => checkAndShowPattern(newSymptoms), 500);
                                 // Mostrar notificación personalizada
                                 const notification = document.createElement('div');
-                                notification.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-rose-400 to-amber-300 text-white px-6 py-4 rounded-xl shadow-2xl z-50 max-w-md';
+                                notification.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 text-white px-6 py-4 rounded-xl shadow-2xl z-50 max-w-md'; notification.style.background='linear-gradient(135deg,#0D0D0D,#1a1008)'; notification.style.border='1px solid rgba(184,115,51,0.4)';
                                 notification.innerHTML = `
                                     <div class="flex items-start gap-3">
                                         <div class="text-3xl">💜</div>
@@ -5825,7 +5839,7 @@ query = query.eq('region', region.toUpperCase());
                                 <p className="font-light text-lg gradient-text" style={{fontFamily: 'Cormorant, serif'}}>
                                     {language === 'es' ? 'LUMI está preparando tu guía...' : 'LUMI is preparing your guidance...'}
                                 </p>
-                                <div className="mt-4 w-12 h-1 mx-auto rounded-full bg-gradient-to-r from-rose-400 to-amber-300 animate-pulse"></div>
+                                <div className="mt-4 w-12 h-1 mx-auto rounded-full animate-pulse" style={{background:"linear-gradient(135deg,#B87333,#E8C878)"}}></div>
                             </div>
                         )}
 
@@ -6198,7 +6212,7 @@ query = query.eq('region', region.toUpperCase());
 
                             // Notificación de éxito
                             const notification = document.createElement('div');
-                            notification.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-rose-400 to-amber-300 text-white px-6 py-4 rounded-xl shadow-2xl z-50 max-w-md';
+                            notification.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 text-white px-6 py-4 rounded-xl shadow-2xl z-50 max-w-md'; notification.style.background='linear-gradient(135deg,#0D0D0D,#1a1008)'; notification.style.border='1px solid rgba(184,115,51,0.4)';
                             notification.innerHTML = `
                                 <div class="flex items-start gap-3">
                                     <div class="text-3xl">💜</div>
@@ -6241,7 +6255,7 @@ query = query.eq('region', region.toUpperCase());
                             <button 
                                 onClick={handlePostMessage}
                                 disabled={!communityMessage.trim()}
-                                className="w-full bg-gradient-to-r from-rose-400 to-amber-300 text-white py-3 rounded-lg font-semibold hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full text-white py-3 rounded-lg font-semibold hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" style={{background:"linear-gradient(135deg,#B87333,#E8C878)",color:"#0D0D0D"}}
                             >
                                 {language === 'es' ? 'Compartir Mensaje' : 'Share Message'}
                             </button>
@@ -6334,7 +6348,7 @@ query = query.eq('region', region.toUpperCase());
                                         <span>{language === 'es' ? 'Seguimiento de síntomas y análisis' : 'Symptom tracking and analysis'}</span>
                                     </li>
                                 </ul>
-                                <button onClick={() => setShowPlanModal(true)} className="w-full bg-gradient-to-r from-rose-400 to-amber-300 text-white py-4 rounded-lg font-semibold text-lg hover:shadow-lg">
+                                <button onClick={() => setShowPlanModal(true)} className="w-full text-white py-4 rounded-lg font-semibold text-lg hover:shadow-lg" style={{background:"linear-gradient(135deg,#B87333,#E8C878)",color:"#0D0D0D"}}>
                                     {language === 'es' ? 'Suscribirme' : 'Subscribe'}
                                 </button>
                             </div>
@@ -6372,7 +6386,7 @@ query = query.eq('region', region.toUpperCase());
                             <path d="M 40 32 Q 40 26 42 22 Q 42 28 40 35 Q 38 28 38 22 Q 40 26 40 32" fill="url(#flameGradLoad)"/>
                         </svg>
                         <h1 className="text-3xl font-light gradient-text" style={{fontFamily: 'Cormorant, serif'}}>Lumera</h1>
-                        <div className="mt-4 w-8 h-1 mx-auto rounded-full bg-gradient-to-r from-rose-400 to-amber-300 animate-pulse"></div>
+                        <div className="mt-4 w-8 h-1 mx-auto rounded-full animate-pulse" style={{background:"linear-gradient(135deg,#B87333,#E8C878)"}}></div>
                     </div>
                 </div>
             );
@@ -7323,25 +7337,22 @@ query = query.eq('region', region.toUpperCase());
 
                                 {/* Header — distinto para saludo vs día 3 patrón */}
                                 <div style={{
-                                    background: proactiveMessages[0]?.message_type === 'pattern_insight'
-                                        ? 'linear-gradient(135deg, #C9935A, #C9935A)'
-                                        : 'linear-gradient(135deg, #fb923c, #fbbf24)',
+                                    background: 'linear-gradient(135deg, #0D0D0D, #1a1008)',
+                                    borderBottom: '1px solid rgba(184,115,51,0.3)',
                                     padding: '1.25rem'
                                 }}>
                                     <div className="flex items-center gap-3">
-                                        <div style={{fontSize: '2.5rem'}}>
-                                            {proactiveMessages[0]?.message_type === 'pattern_insight' ? '🔍' : '☀️'}
-                                        </div>
+                                        <img src="/images/lumi.png" style={{width:'44px',height:'44px',borderRadius:'50%',objectFit:'cover',border:'2px solid rgba(184,115,51,0.5)',flexShrink:0}} onError={e=>{e.target.style.display='none'}} alt="LUMI"/>
                                         <div>
-                                            <h3 style={{fontWeight: 700, fontSize: '1.05rem', color: 'white', margin: 0}}>
+                                            <h3 style={{fontFamily:"'Cormorant',serif",fontWeight:600,fontSize:'1.15rem',color:'#E8C878',margin:0}}>
                                                 {proactiveMessages[0]?.message_type === 'pattern_insight'
                                                     ? (language === 'es' ? 'LUMI encontró tus patrones' : 'LUMI found your patterns')
-                                                    : (language === 'es' ? 'LUMI te saluda' : 'LUMI says hi')}
+                                                    : (language === 'es' ? 'LUMI' : 'LUMI')}
                                             </h3>
-                                            <p style={{fontSize: '0.78rem', color: 'rgba(255,255,255,0.85)', margin: 0, marginTop: '0.15rem'}}>
+                                            <p style={{fontSize:'0.78rem',color:'rgba(184,115,51,0.7)',margin:0,marginTop:'0.15rem'}}>
                                                 {proactiveMessages[0]?.message_type === 'pattern_insight'
                                                     ? (language === 'es' ? '✦ Día 3 · Análisis completado' : '✦ Day 3 · Analysis complete')
-                                                    : (language === 'es' ? '✦ Tu coach personal' : '✦ Your personal coach')}
+                                                    : (language === 'es' ? '✦ Tu reflejo biológico' : '✦ Your biological reflection')}
                                             </p>
                                         </div>
                                     </div>
@@ -7350,14 +7361,14 @@ query = query.eq('region', region.toUpperCase());
                                 {/* Messages */}
                                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
                                     {proactiveMessages.map((msg, idx) => (
-                                        <div key={msg.id} className={`${darkMode ? 'bg-gray-700' : 'bg-amber-50'} rounded-xl p-4 border-l-4 border-amber-500`}>
+                                        <div key={msg.id} style={{background:darkMode?'rgba(184,115,51,0.08)':'rgba(253,248,243,0.95)',borderRadius:'0.75rem',padding:'1rem',borderLeft:'3px solid #C9935A'}}>
                                             {/* Tipo de mensaje con emoji */}
                                             <div className="flex items-center gap-2 mb-2">
                                                 <span className="text-xl">
-                                                    {msg.message_type === 'pattern_detected' && '🔍'}
-                                                    {msg.message_type === 'greeting' && '☀️'}
-                                                    {msg.message_type === 'check_in' && '💬'}
-                                                    {msg.message_type === 'encouragement' && '🌸'}
+                                                    
+                                                    
+                                                    
+                                                    
                                                 </span>
                                                 <span className={`text-xs font-semibold ${darkMode ? 'text-amber-300' : 'text-amber-700'}`}>
                                                     {msg.message_type === 'pattern_detected' && (language === 'es' ? 'Patrón detectado' : 'Pattern detected')}
