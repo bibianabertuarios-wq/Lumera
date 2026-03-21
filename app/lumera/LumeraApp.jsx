@@ -3839,21 +3839,25 @@ query = query.eq('region', region.toUpperCase());
                             const modeConfig = {
                                 cueva: {
                                     bg: 'linear-gradient(135deg,#2d1f14 0%,#5c3d22 100%)',
+                                    img: '/images/modo_cueva.png',
                                     label: language==='es'?'🐻 Modo cueva activado':'🐻 Cave mode on',
                                     msg: language==='es'?`Hoy no tienes que poder con todo, ${userName}. Tu cuerpo está procesando algo importante. Yo me encargo del resto.`:`You don't have to handle everything today, ${userName}. Your body is processing something important. I've got the rest.`,
                                 },
                                 diosa: {
                                     bg: 'linear-gradient(135deg,#7a4f1a 0%,#C9935A 100%)',
+                                    img: '/images/modo_diosa.png',
                                     label: language==='es'?'✨ Modo diosa encendido':'✨ Goddess mode on',
                                     msg: language==='es'?`Hoy tu cuerpo está brillando, ${userName}. Lo noto en tus datos. Aprovechamos esta energía juntas.`:`Your body is shining today, ${userName}. I can see it in your data. Let's use this energy together.`,
                                 },
                                 tormenta: {
                                     bg: 'linear-gradient(135deg,#1a2535 0%,#2d4a7a 100%)',
+                                    img: '/images/modo_tormenta.png',
                                     label: language==='es'?'⛈️ Modo tormenta, respira':'⛈️ Storm mode, breathe',
                                     msg: language==='es'?`No estás loca, ${userName}. Lo que sientes tiene nombre y tiene solución. Hoy vamos despacio.`:`You're not crazy, ${userName}. What you feel has a name and a solution. We go slow today.`,
                                 },
                                 ritual: {
                                     bg: 'linear-gradient(135deg,#1a2d1f 0%,#3d6645 100%)',
+                                    img: '/images/modo_ritual.png',
                                     label: language==='es'?'🌿 Modo ritual, fluye':'🌿 Ritual mode, flow',
                                     msg: language==='es'?`Un día tranquilo también es un regalo, ${userName}. Tu cuerpo está hablando en voz baja hoy.`:`A calm day is also a gift, ${userName}. Your body is speaking softly today.`,
                                 },
@@ -3921,6 +3925,8 @@ query = query.eq('region', region.toUpperCase());
                                         transition: 'all 1s ease',
                                     }}>
                                         {/* Esfera cobre — aparece día 2+ */}
+                                        {/* Imagen del modo — esquina derecha */}
+                                        {cfg.img && <img src={cfg.img} style={{position:'absolute',top:'-10px',right:'-10px',width:'110px',height:'110px',borderRadius:'50%',objectFit:'cover',opacity: dayNum===3?0.9:0.75,filter:'brightness(0.9)',pointerEvents:'none'}}/>}
                                         {dayNum >= 2 && <div style={{position:'absolute',top:0,right:0,width:'140px',height:'140px',background:`radial-gradient(circle, rgba(184,115,51,${dayNum===3?'0.35':'0.18'}), transparent)`,borderRadius:'50%',transform:'translate(40px,-40px)',animation:'pulse 4s ease-in-out infinite'}}/>}
                                         {dayNum === 1 && <div style={{position:'absolute',top:0,right:0,width:'120px',height:'120px',background:'rgba(255,255,255,0.04)',borderRadius:'50%',transform:'translate(30px,-30px)'}}/>}
                                         <style>{`@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}`}</style>
