@@ -4683,246 +4683,6 @@ query = query.eq('region', region.toUpperCase());
                         </div>
 
                         {/* DASHBOARD METABÓLICO - Trial y Premium */}
-                        {(getUserTier() === 'premium' || getUserTier() === 'trial') && (
-                            <div className="relative rounded-2xl shadow-2xl overflow-hidden mb-8" style={{
-                                background: 'linear-gradient(135deg, rgba(254, 240, 138, 0.3) 0%, rgba(251, 207, 232, 0.3) 25%, rgba(216, 180, 254, 0.3) 50%, rgba(165, 180, 252, 0.3) 75%, rgba(254, 202, 202, 0.3) 100%)'
-                            }}>
-                                {/* Overlay sutil */}
-                                <div className="absolute inset-0" style={{background: 'rgba(255,255,255,0.65)'}}></div>
-
-                                {/* Contenido */}
-                                <div className="relative z-10 p-6">
-                                    <div className="flex items-center justify-between mb-6">
-                                        <div>
-                                            <h3 className="text-2xl font-semibold gradient-text mb-2">
-                                                🐍 {language === 'es' ? 'Tu Transformación' : 'Your Transformation'}
-                                            </h3>
-                                            <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                                {language === 'es' ? 'Como la serpiente muda su piel, tú estás transformándote' : 'Like the snake sheds its skin, you are transforming'}
-                                            </p>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            {chartData && (
-                                                <button
-                                                    onClick={() => setShowDashboardModal(true)}
-                                                    className="text-amber-700 hover:text-amber-800 text-sm font-semibold"
-                                                >
-                                                    📊 {language === 'es' ? 'Ver gráficos' : 'View charts'}
-                                                </button>
-                                            )}
-                                            <button
-                                                onClick={() => {
-                                                    setEditWeight(currentUser?.weight || '');
-                                                    setEditHeight(currentUser?.height || '');
-                                                    setEditAge(currentUser?.age || '');
-                                                    setEditActivityLevel(currentUser?.activity_level || 'moderate');
-                                                    setEditGoal(currentUser?.goal || 'maintain');
-                                                    setShowProfileModal(true);
-                                                }}
-                                                className="text-amber-700 hover:text-amber-800 text-sm font-semibold"
-                                            >
-                                                ✏️ {language === 'es' ? 'Editar' : 'Edit'}
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                {getMetrics() ? (
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                        <div className={`${darkMode ? 'bg-blue-900/40' : 'bg-blue-50'} p-4 rounded-xl`}>
-                                            <p className={`text-xs ${darkMode ? 'text-blue-300' : 'text-blue-600'} font-semibold mb-1`}>
-                                                IMC
-                                            </p>
-                                            <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                                                {getMetrics().bmi}
-                                            </p>
-                                        </div>
-                                        <div className={`${darkMode ? 'bg-green-900/40' : 'bg-green-50'} p-4 rounded-xl`}>
-                                            <p className={`text-xs ${darkMode ? 'text-green-300' : 'text-green-600'} font-semibold mb-1`}>
-                                                TMB
-                                            </p>
-                                            <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                                                {getMetrics().bmr}
-                                            </p>
-                                        </div>
-                                        <div className={`${darkMode ? 'bg-stone-900/40' : 'bg-amber-50'} p-4 rounded-xl`}>
-                                            <p className={`text-xs ${darkMode ? 'text-amber-300' : 'text-amber-700'} font-semibold mb-1`}>
-                                                TDEE
-                                            </p>
-                                            <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                                                {getMetrics().tdee}
-                                            </p>
-                                        </div>
-                                        <div className={`${darkMode ? 'bg-pink-900/40' : 'bg-pink-50'} p-4 rounded-xl`}>
-                                            <p className={`text-xs ${darkMode ? 'text-pink-300' : 'text-pink-600'} font-semibold mb-1`}>
-                                                {language === 'es' ? 'Objetivo' : 'Target'}
-                                            </p>
-                                            <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                                                {getMetrics().target}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className={`${darkMode ? 'bg-yellow-900/40 border-yellow-700' : 'bg-yellow-50 border-yellow-200'} border-2 border-dashed rounded-xl p-6 text-center`}>
-                                        <p className={`text-sm ${darkMode ? 'text-yellow-200' : 'text-yellow-800'} mb-3`}>
-                                            {language === 'es' 
-                                                ? '⚠️ Completa tu perfil metabólico para menús ultra-personalizados'
-                                                : '⚠️ Complete your metabolic profile for ultra-personalized menus'}
-                                        </p>
-                                        <button
-                                            onClick={() => {
-                                                setEditWeight(currentUser?.weight || '');
-                                                setEditHeight(currentUser?.height || '');
-                                                setEditAge(currentUser?.age || '');
-                                                setEditActivityLevel(currentUser?.activity_level || 'moderate');
-                                                setEditGoal(currentUser?.goal || 'maintain');
-                                                setShowProfileModal(true);
-                                            }}
-                                            className="bg-gradient-to-r from-amber-600 to-amber-400 text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition"
-                                        >
-                                            {language === 'es' ? 'Completar Ahora' : 'Complete Now'}
-                                        </button>
-                                    </div>
-                                )}
-                                </div>
-                            </div>
-                        )}
-
-                        {/* GRÁFICOS DE TENDENCIA - Trial y Premium con síntomas */}
-                        {(getUserTier() === 'premium' || getUserTier() === 'trial') && symptoms.length >= 3 && (
-                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-lg p-6 mb-8`}>
-                                <div className="flex items-center justify-between mb-4">
-                                    <div>
-                                        <h3 className="text-lg font-semibold gradient-text">
-                                            📊 {language === 'es' ? 'Tus Tendencias' : 'Your Trends'}
-                                        </h3>
-                                        <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                            {language === 'es' ? 'Últimos 7 días' : 'Last 7 days'}
-                                        </p>
-                                    </div>
-                                    <button
-                                        onClick={() => setCurrentPage('symptoms')}
-                                        className="text-xs text-amber-700 font-semibold hover:underline"
-                                    >
-                                        {language === 'es' ? 'Ver detalle →' : 'See detail →'}
-                                    </button>
-                                </div>
-
-                                {/* Mini tarjetas de promedio */}
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-                                    {[
-                                        { label: language === 'es' ? 'Sueño' : 'Sleep', key: 'sleep', color: 'purple', icon: '😴' },
-                                        { label: language === 'es' ? 'Energía' : 'Energy', key: 'energy', color: 'pink', icon: '⚡' },
-                                        { label: language === 'es' ? 'Ánimo' : 'Mood', key: 'mood', color: 'blue', icon: '🪨' },
-                                        { label: language === 'es' ? 'Sofocos' : 'Hot flashes', key: 'hot_flashes', color: 'orange', icon: '🔥' }
-                                    ].map(metric => {
-                                        const last7 = symptoms.slice(0, 7);
-                                        const avg = last7.reduce((sum, s) => sum + (s[metric.key] || 0), 0) / last7.length;
-                                        const prev7 = symptoms.slice(7, 14);
-                                        const prevAvg = prev7.length > 0 ? prev7.reduce((sum, s) => sum + (s[metric.key] || 0), 0) / prev7.length : avg;
-                                        const trend = avg > prevAvg ? '↑' : avg < prevAvg ? '↓' : '→';
-                                        const trendColor = metric.key === 'hot_flashes' 
-                                            ? (avg < prevAvg ? 'text-green-500' : avg > prevAvg ? 'text-red-500' : 'text-gray-400')
-                                            : (avg > prevAvg ? 'text-green-500' : avg < prevAvg ? 'text-red-500' : 'text-gray-400');
-                                        return (
-                                            <div key={metric.key} className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-3 text-center`}>
-                                                <div className="text-lg mb-1">{metric.icon}</div>
-                                                <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'} mb-1`}>{metric.label}</p>
-                                                <p className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{avg.toFixed(1)}</p>
-                                                <p className={`text-sm font-semibold ${trendColor}`}>{trend}</p>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-
-                                {/* Barra visual simple para cada métrica */}
-                                {[
-                                    { label: language === 'es' ? 'Sueño' : 'Sleep', key: 'sleep', color: '#C9935A' },
-                                    { label: language === 'es' ? 'Energía' : 'Energy', key: 'energy', color: '#C9935A' },
-                                    { label: language === 'es' ? 'Ánimo' : 'Mood', key: 'mood', color: '#06b6d4' }
-                                ].map(metric => {
-                                    const last7 = symptoms.slice(0, 7).reverse();
-                                    return (
-                                        <div key={metric.key} className="mb-3">
-                                            <p className={`text-xs font-semibold mb-1 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{metric.label}</p>
-                                            <div className="flex items-end gap-1 h-10">
-                                                {last7.map((s, i) => {
-                                                    const val = s[metric.key] || 0;
-                                                    const height = (val / 10) * 100;
-                                                    return (
-                                                        <div
-                                                            key={i}
-                                                            className="flex-1 rounded-t-sm transition-all"
-                                                            style={{ height: height + '%', backgroundColor: metric.color, opacity: 0.7 + (i / last7.length) * 0.3 }}
-                                                            title={val + '/10'}
-                                                        />
-                                                    );
-                                                })}
-                                            </div>
-                                            <div className="flex justify-between mt-1">
-                                                <span className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                                                    {language === 'es' ? 'hace 7 días' : '7 days ago'}
-                                                </span>
-                                                <span className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                                                    {language === 'es' ? 'hoy' : 'today'}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-
-                                {/* Para trial: mensaje para upgrade */}
-                            </div>
-                        )}
-
-                        {/* PREVIEW gráficos para TRIAL - día 3 */}
-                        {getUserTier() === 'trial' && symptoms.length >= 3 && (
-                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-lg p-6 mb-8 relative overflow-hidden`}>
-                                <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-lg font-semibold gradient-text">
-                                        📊 {language === 'es' ? 'Tus Tendencias' : 'Your Trends'}
-                                    </h3>
-                                    <span className="text-xs bg-amber-50 text-amber-700 px-2 py-1 rounded-full font-semibold">
-                                        {language === 'es' ? '✦ Premium' : '✦ Premium'}
-                                    </span>
-                                </div>
-
-                                {/* Preview borroso */}
-                                <div className="relative">
-                                    <div className="blur-sm opacity-50 pointer-events-none">
-                                        <div className="grid grid-cols-4 gap-3 mb-4">
-                                            {['😴', '⚡', '🪨', '🔥'].map((icon, i) => (
-                                                <div key={i} className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-3 text-center`}>
-                                                    <div className="text-lg mb-1">{icon}</div>
-                                                    <p className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>7.{i}</p>
-                                                    <p className="text-sm text-green-500">↑</p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <div className="flex items-end gap-1 h-12">
-                                            {[6,7,5,8,7,9,8].map((v, i) => (
-                                                <div key={i} className="flex-1 rounded-t-sm bg-amber-400" style={{ height: (v/10*100) + '%' }} />
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    {/* Overlay CTA */}
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                        <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-800'} mb-2 text-center`}>
-                                            {language === 'es' 
-                                                ? '¡Ya tienes datos suficientes para ver tus patrones!' 
-                                                : 'You have enough data to see your patterns!'}
-                                        </p>
-                                        <button
-                                            onClick={() => setCurrentPage('premium')}
-                                            className="bg-gradient-to-r from-amber-600 to-amber-400 text-white px-6 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition"
-                                        >
-                                            {language === 'es' ? '✦ Desbloquear tendencias' : '✦ Unlock trends'}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
                         <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-lg overflow-hidden`}>
                             <div className="bg-gradient-to-r from-rose-400 to-amber-300 text-white p-6">
                                 <h3 className="text-2xl font-semibold">{language === 'es' ? '✨ Tu Menú de Hoy' : '✨ Your Menu Today'}</h3>
@@ -5228,6 +4988,260 @@ query = query.eq('region', region.toUpperCase());
                             </div>
                         </details>
                         </div>
+                        {/* MI PROGRESO */}
+                        <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white',marginTop:'1.5rem'}}>
+                            <summary style={{listStyle:'none',cursor:'pointer'}}>
+                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
+                                    <span style={{fontSize:'2rem'}}>📊</span>
+                                    <div style={{flex:1}}>
+                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Mi Progreso':'My Progress'}</p>
+                                        <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'Tu transformación metabólica y tendencias':'Your metabolic transformation and trends'}</p>
+                                    </div>
+                                </div>
+                            </summary>
+                            <div style={{padding:'0.5rem'}}>
+                        {(getUserTier() === 'premium' || getUserTier() === 'trial') && (
+                            <div className="relative rounded-2xl shadow-2xl overflow-hidden mb-8" style={{
+                                background: 'linear-gradient(135deg, rgba(254, 240, 138, 0.3) 0%, rgba(251, 207, 232, 0.3) 25%, rgba(216, 180, 254, 0.3) 50%, rgba(165, 180, 252, 0.3) 75%, rgba(254, 202, 202, 0.3) 100%)'
+                            }}>
+                                {/* Overlay sutil */}
+                                <div className="absolute inset-0" style={{background: 'rgba(255,255,255,0.65)'}}></div>
+
+                                {/* Contenido */}
+                                <div className="relative z-10 p-6">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <div>
+                                            <h3 className="text-2xl font-semibold gradient-text mb-2">
+                                                🐍 {language === 'es' ? 'Tu Transformación' : 'Your Transformation'}
+                                            </h3>
+                                            <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                                {language === 'es' ? 'Como la serpiente muda su piel, tú estás transformándote' : 'Like the snake sheds its skin, you are transforming'}
+                                            </p>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            {chartData && (
+                                                <button
+                                                    onClick={() => setShowDashboardModal(true)}
+                                                    className="text-amber-700 hover:text-amber-800 text-sm font-semibold"
+                                                >
+                                                    📊 {language === 'es' ? 'Ver gráficos' : 'View charts'}
+                                                </button>
+                                            )}
+                                            <button
+                                                onClick={() => {
+                                                    setEditWeight(currentUser?.weight || '');
+                                                    setEditHeight(currentUser?.height || '');
+                                                    setEditAge(currentUser?.age || '');
+                                                    setEditActivityLevel(currentUser?.activity_level || 'moderate');
+                                                    setEditGoal(currentUser?.goal || 'maintain');
+                                                    setShowProfileModal(true);
+                                                }}
+                                                className="text-amber-700 hover:text-amber-800 text-sm font-semibold"
+                                            >
+                                                ✏️ {language === 'es' ? 'Editar' : 'Edit'}
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                {getMetrics() ? (
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <div className={`${darkMode ? 'bg-blue-900/40' : 'bg-blue-50'} p-4 rounded-xl`}>
+                                            <p className={`text-xs ${darkMode ? 'text-blue-300' : 'text-blue-600'} font-semibold mb-1`}>
+                                                IMC
+                                            </p>
+                                            <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                                                {getMetrics().bmi}
+                                            </p>
+                                        </div>
+                                        <div className={`${darkMode ? 'bg-green-900/40' : 'bg-green-50'} p-4 rounded-xl`}>
+                                            <p className={`text-xs ${darkMode ? 'text-green-300' : 'text-green-600'} font-semibold mb-1`}>
+                                                TMB
+                                            </p>
+                                            <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                                                {getMetrics().bmr}
+                                            </p>
+                                        </div>
+                                        <div className={`${darkMode ? 'bg-stone-900/40' : 'bg-amber-50'} p-4 rounded-xl`}>
+                                            <p className={`text-xs ${darkMode ? 'text-amber-300' : 'text-amber-700'} font-semibold mb-1`}>
+                                                TDEE
+                                            </p>
+                                            <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                                                {getMetrics().tdee}
+                                            </p>
+                                        </div>
+                                        <div className={`${darkMode ? 'bg-pink-900/40' : 'bg-pink-50'} p-4 rounded-xl`}>
+                                            <p className={`text-xs ${darkMode ? 'text-pink-300' : 'text-pink-600'} font-semibold mb-1`}>
+                                                {language === 'es' ? 'Objetivo' : 'Target'}
+                                            </p>
+                                            <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                                                {getMetrics().target}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className={`${darkMode ? 'bg-yellow-900/40 border-yellow-700' : 'bg-yellow-50 border-yellow-200'} border-2 border-dashed rounded-xl p-6 text-center`}>
+                                        <p className={`text-sm ${darkMode ? 'text-yellow-200' : 'text-yellow-800'} mb-3`}>
+                                            {language === 'es' 
+                                                ? '⚠️ Completa tu perfil metabólico para menús ultra-personalizados'
+                                                : '⚠️ Complete your metabolic profile for ultra-personalized menus'}
+                                        </p>
+                                        <button
+                                            onClick={() => {
+                                                setEditWeight(currentUser?.weight || '');
+                                                setEditHeight(currentUser?.height || '');
+                                                setEditAge(currentUser?.age || '');
+                                                setEditActivityLevel(currentUser?.activity_level || 'moderate');
+                                                setEditGoal(currentUser?.goal || 'maintain');
+                                                setShowProfileModal(true);
+                                            }}
+                                            className="bg-gradient-to-r from-amber-600 to-amber-400 text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition"
+                                        >
+                                            {language === 'es' ? 'Completar Ahora' : 'Complete Now'}
+                                        </button>
+                                    </div>
+                                )}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* GRÁFICOS DE TENDENCIA - Trial y Premium con síntomas */}
+                        {(getUserTier() === 'premium' || getUserTier() === 'trial') && symptoms.length >= 3 && (
+                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-lg p-6 mb-8`}>
+                                <div className="flex items-center justify-between mb-4">
+                                    <div>
+                                        <h3 className="text-lg font-semibold gradient-text">
+                                            📊 {language === 'es' ? 'Tus Tendencias' : 'Your Trends'}
+                                        </h3>
+                                        <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            {language === 'es' ? 'Últimos 7 días' : 'Last 7 days'}
+                                        </p>
+                                    </div>
+                                    <button
+                                        onClick={() => setCurrentPage('symptoms')}
+                                        className="text-xs text-amber-700 font-semibold hover:underline"
+                                    >
+                                        {language === 'es' ? 'Ver detalle →' : 'See detail →'}
+                                    </button>
+                                </div>
+
+                                {/* Mini tarjetas de promedio */}
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                                    {[
+                                        { label: language === 'es' ? 'Sueño' : 'Sleep', key: 'sleep', color: 'purple', icon: '😴' },
+                                        { label: language === 'es' ? 'Energía' : 'Energy', key: 'energy', color: 'pink', icon: '⚡' },
+                                        { label: language === 'es' ? 'Ánimo' : 'Mood', key: 'mood', color: 'blue', icon: '🪨' },
+                                        { label: language === 'es' ? 'Sofocos' : 'Hot flashes', key: 'hot_flashes', color: 'orange', icon: '🔥' }
+                                    ].map(metric => {
+                                        const last7 = symptoms.slice(0, 7);
+                                        const avg = last7.reduce((sum, s) => sum + (s[metric.key] || 0), 0) / last7.length;
+                                        const prev7 = symptoms.slice(7, 14);
+                                        const prevAvg = prev7.length > 0 ? prev7.reduce((sum, s) => sum + (s[metric.key] || 0), 0) / prev7.length : avg;
+                                        const trend = avg > prevAvg ? '↑' : avg < prevAvg ? '↓' : '→';
+                                        const trendColor = metric.key === 'hot_flashes' 
+                                            ? (avg < prevAvg ? 'text-green-500' : avg > prevAvg ? 'text-red-500' : 'text-gray-400')
+                                            : (avg > prevAvg ? 'text-green-500' : avg < prevAvg ? 'text-red-500' : 'text-gray-400');
+                                        return (
+                                            <div key={metric.key} className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-3 text-center`}>
+                                                <div className="text-lg mb-1">{metric.icon}</div>
+                                                <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'} mb-1`}>{metric.label}</p>
+                                                <p className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{avg.toFixed(1)}</p>
+                                                <p className={`text-sm font-semibold ${trendColor}`}>{trend}</p>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Barra visual simple para cada métrica */}
+                                {[
+                                    { label: language === 'es' ? 'Sueño' : 'Sleep', key: 'sleep', color: '#C9935A' },
+                                    { label: language === 'es' ? 'Energía' : 'Energy', key: 'energy', color: '#C9935A' },
+                                    { label: language === 'es' ? 'Ánimo' : 'Mood', key: 'mood', color: '#06b6d4' }
+                                ].map(metric => {
+                                    const last7 = symptoms.slice(0, 7).reverse();
+                                    return (
+                                        <div key={metric.key} className="mb-3">
+                                            <p className={`text-xs font-semibold mb-1 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{metric.label}</p>
+                                            <div className="flex items-end gap-1 h-10">
+                                                {last7.map((s, i) => {
+                                                    const val = s[metric.key] || 0;
+                                                    const height = (val / 10) * 100;
+                                                    return (
+                                                        <div
+                                                            key={i}
+                                                            className="flex-1 rounded-t-sm transition-all"
+                                                            style={{ height: height + '%', backgroundColor: metric.color, opacity: 0.7 + (i / last7.length) * 0.3 }}
+                                                            title={val + '/10'}
+                                                        />
+                                                    );
+                                                })}
+                                            </div>
+                                            <div className="flex justify-between mt-1">
+                                                <span className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                                                    {language === 'es' ? 'hace 7 días' : '7 days ago'}
+                                                </span>
+                                                <span className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                                                    {language === 'es' ? 'hoy' : 'today'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+
+                                {/* Para trial: mensaje para upgrade */}
+                            </div>
+                        )}
+
+                        {/* PREVIEW gráficos para TRIAL - día 3 */}
+                        {getUserTier() === 'trial' && symptoms.length >= 3 && (
+                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-lg p-6 mb-8 relative overflow-hidden`}>
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="text-lg font-semibold gradient-text">
+                                        📊 {language === 'es' ? 'Tus Tendencias' : 'Your Trends'}
+                                    </h3>
+                                    <span className="text-xs bg-amber-50 text-amber-700 px-2 py-1 rounded-full font-semibold">
+                                        {language === 'es' ? '✦ Premium' : '✦ Premium'}
+                                    </span>
+                                </div>
+
+                                {/* Preview borroso */}
+                                <div className="relative">
+                                    <div className="blur-sm opacity-50 pointer-events-none">
+                                        <div className="grid grid-cols-4 gap-3 mb-4">
+                                            {['😴', '⚡', '🪨', '🔥'].map((icon, i) => (
+                                                <div key={i} className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-3 text-center`}>
+                                                    <div className="text-lg mb-1">{icon}</div>
+                                                    <p className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>7.{i}</p>
+                                                    <p className="text-sm text-green-500">↑</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className="flex items-end gap-1 h-12">
+                                            {[6,7,5,8,7,9,8].map((v, i) => (
+                                                <div key={i} className="flex-1 rounded-t-sm bg-amber-400" style={{ height: (v/10*100) + '%' }} />
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Overlay CTA */}
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                                        <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-800'} mb-2 text-center`}>
+                                            {language === 'es' 
+                                                ? '¡Ya tienes datos suficientes para ver tus patrones!' 
+                                                : 'You have enough data to see your patterns!'}
+                                        </p>
+                                        <button
+                                            onClick={() => setCurrentPage('premium')}
+                                            className="bg-gradient-to-r from-amber-600 to-amber-400 text-white px-6 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition"
+                                        >
+                                            {language === 'es' ? '✦ Desbloquear tendencias' : '✦ Unlock trends'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                            </div>
+                        </details>
                     </div>
                 );
             };
