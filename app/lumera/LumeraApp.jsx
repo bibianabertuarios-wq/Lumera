@@ -2899,6 +2899,8 @@ query = query.eq('region', region.toUpperCase());
                                         tdee: parseInt(tdee)
                                     });
                                     setShowQuiz(false);
+                                    setShowWelcomeTrial(true);
+                                    setWelcomeAct(1);
                                     setCurrentPage('home');
                                 }} style={{width:"100%", background:"linear-gradient(135deg, #C9935A, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
                                     {language === 'es' ? '¡Comenzar!' : 'Let\'s Go!'} ✨
