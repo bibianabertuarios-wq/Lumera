@@ -4652,7 +4652,7 @@ query = query.eq('region', region.toUpperCase());
                         <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
                             <summary style={{listStyle:'none',cursor:'pointer'}}>
                                 <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
-                                    <span style={{fontSize:'2rem'}}>🍳</span>
+                                    <img src='/images/nutri_huevo.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Tengo tiempo y ganas de cocinar':'I have time and feel like cooking'}</p>
                                         <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'Tu menú del día personalizado':'Your personalised daily menu'}</p>
@@ -4889,7 +4889,7 @@ query = query.eq('region', region.toUpperCase());
                         <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
                             <summary style={{listStyle:'none',cursor:'pointer'}}>
                                 <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
-                                    <span style={{fontSize:'2rem'}}>⏱️</span>
+                                    <img src='/images/nutri_reloj.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Sin tiempo — cocina el domingo':'No time — cook on Sunday'}</p>
                                         <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'2 horas = comida sana toda la semana':'2 hours = healthy food all week'}</p>
@@ -4914,7 +4914,7 @@ query = query.eq('region', region.toUpperCase());
                         <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
                             <summary style={{listStyle:'none',cursor:'pointer'}}>
                                 <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
-                                    <span style={{fontSize:'2rem'}}>🍫</span>
+                                    <img src='/images/nutri_chocolate.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Los Irresistibles':'The Irresistibles'}</p>
                                         <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'Postres que activan tu GLP-1':'Desserts that activate your GLP-1'}</p>
@@ -4967,7 +4967,7 @@ query = query.eq('region', region.toUpperCase());
                         <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
                             <summary style={{listStyle:'none',cursor:'pointer'}}>
                                 <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
-                                    <span style={{fontSize:'2rem'}}>🧠</span>
+                                    <img src='/images/nutri_cerebro.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Aprendiendo':'Learning'}</p>
                                         <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'GLP-1, IMC, TDEE y Cortisol explicados':'GLP-1, BMI, TDEE and Cortisol explained'}</p>
