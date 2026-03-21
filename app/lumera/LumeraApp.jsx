@@ -3659,13 +3659,11 @@ query = query.eq('region', region.toUpperCase());
                 // (useEffect movido al nivel de LumeraApp para cumplir reglas de hooks)
 
                 return (
-                    <div className="pb-32" key={language} style={{background:'#0D0D0D',minHeight:'100vh',position:'relative',overflowX:'hidden'}}>
-
-                        <div style={{position:'fixed',inset:0,zIndex:0,pointerEvents:'none',overflow:'hidden'}}>
-                            <div style={{position:'absolute',top:'-15%',left:'-10%',width:'55vw',height:'55vw',borderRadius:'50%',background:'radial-gradient(circle at 40% 40%, rgba(184,115,51,0.22) 0%, rgba(184,115,51,0.06) 50%, transparent 70%)',animation:'gpulse 8s ease-in-out infinite'}}/>
-                            <div style={{position:'absolute',top:'20%',right:'-12%',width:'45vw',height:'45vw',borderRadius:'50%',background:'radial-gradient(circle at 60% 60%, rgba(232,200,120,0.15) 0%, transparent 70%)',animation:'gpulse 10s ease-in-out infinite 2s'}}/>
-                            <div style={{position:'absolute',bottom:'-10%',left:'20%',width:'40vw',height:'40vw',borderRadius:'50%',background:'radial-gradient(circle at 50% 50%, rgba(184,115,51,0.12) 0%, transparent 70%)',animation:'gpulse 12s ease-in-out infinite 4s'}}/>
-                            <div style={{position:'absolute',inset:0,backgroundImage:'repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(184,115,51,0.025) 60px,rgba(184,115,51,0.025) 61px)'}}/>
+                    <div className="pb-32" key={language} style={{background:'#0A0A0A',minHeight:'100vh',position:'relative',overflowX:'hidden'}}>
+                        <video autoPlay loop muted playsInline src="/videos/premium_bg.mp4"
+                            style={{position:'fixed',top:0,left:0,width:'100%',height:'100%',objectFit:'cover',zIndex:0,opacity:0.45,pointerEvents:'none'}}/>
+                        <div style={{position:'fixed',inset:0,zIndex:1,pointerEvents:'none',background:'linear-gradient(180deg,rgba(10,6,2,0.55) 0%,rgba(10,6,2,0.3) 40%,rgba(10,6,2,0.65) 100%)'}}>
+                            <div style={{position:'absolute',inset:0,backgroundImage:'repeating-linear-gradient(90deg,transparent,transparent 80px,rgba(184,115,51,0.04) 80px,rgba(184,115,51,0.04) 81px)'}}/>
                         </div>
 
                         <style>{`
@@ -3676,7 +3674,7 @@ query = query.eq('region', region.toUpperCase());
                             .gch:hover{border-color:rgba(184,115,51,0.55)!important;transform:translateY(-2px)}
                         `}</style>
 
-                        <div style={{position:'relative',zIndex:1,padding:'0 0 2rem'}}>
+                        <div style={{position:'relative',zIndex:2,padding:'0 0 2rem'}}>
 
                             <div style={{background:'linear-gradient(160deg,rgba(184,115,51,0.18) 0%,rgba(22,16,10,0.95) 60%)',borderBottom:'1px solid rgba(184,115,51,0.20)',padding:'2.5rem 1.5rem 2rem',position:'relative',overflow:'hidden'}}>
                                 <div style={{position:'absolute',top:0,left:'50%',transform:'translateX(-50%)',width:'120px',height:'3px',background:'linear-gradient(90deg,transparent,#B87333,transparent)'}}/>
