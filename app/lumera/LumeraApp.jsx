@@ -123,6 +123,8 @@ import './lumera.css'
             const [editGoal, setEditGoal] = useState('maintain');
             const [showDashboardModal, setShowDashboardModal] = useState(false);
             const [showWelcomePremium, setShowWelcomePremium] = useState(false);
+            const [showWelcomeTrial, setShowWelcomeTrial] = useState(false);
+            const [welcomeAct, setWelcomeAct] = useState(1);
             const [chartData, setChartData] = useState(null);
             const [aiCookingTips, setAiCookingTips] = useState({}); // {recipeName: [tip1, tip2, tip3]}
             const [loadingTips, setLoadingTips] = useState({}); // {recipeName: true/false}
@@ -2479,6 +2481,8 @@ query = query.eq('region', region.toUpperCase());
                     }
                 }
             }, [currentUser]);
+
+
 
             // Limpiar todos los modales cuando se muestra la pantalla de auth (evita superposición en escritorio)
             useEffect(() => {
@@ -6373,6 +6377,66 @@ query = query.eq('region', region.toUpperCase());
 
             
             // LANDING PAGE CON HERO ELEGANTE
+            if (showWelcomeTrial) return (
+                <div style={{position:'fixed',inset:0,zIndex:9999,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'2rem',background:'rgba(10,8,5,0.95)'}}>
+                                    <video autoPlay loop muted playsInline src="/videos/welcome_bg.mp4" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',opacity:0.35,pointerEvents:'none'}}/>
+                    <div style={{position:'absolute',inset:0,background:'linear-gradient(180deg,rgba(10,8,5,0.6) 0%,rgba(10,8,5,0.5) 50%,rgba(10,8,5,0.7) 100%)'}}/>
+                    <img src="/images/acuarela.jpg" style={{display:'none'}} onError={e=>{e.target.style.display='none'}}/>
+                    <style>{`@keyframes wfadein{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}.wact{animation:wfadein 1.2s ease forwards}`}</style>
+                    <div style={{position:'relative',zIndex:1,maxWidth:'380px',width:'100%',textAlign:'center'}}>
+                        {welcomeAct===1&&(<div className="wact">
+                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.68rem',color:'rgba(184,115,51,0.7)',letterSpacing:'0.22em',textTransform:'uppercase',marginBottom:'2.5rem'}}>LUMERA</p>
+                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.45rem',fontWeight:400,color:'#F5E6D3',lineHeight:1.75,marginBottom:'3rem'}}>
+                                {language==='es'
+                                    ?'"Sé que eres una mujer ocupada. Sé que tienes preguntas sin respuesta y que, a veces, te sientes sola en tu propio cuerpo. Quieres cuidarte, pero no encuentras el cómo ni el cuándo."'
+                                    :'"I know you are busy. I know you have questions that go unanswered, and that sometimes, you feel like a stranger in your own body. You want to prioritize yourself, but the how and when feel out of reach."'}
+                            </p>
+                            <button onClick={()=>setWelcomeAct(2)} style={{background:'transparent',border:'1px solid rgba(184,115,51,0.5)',borderRadius:'9999px',padding:'0.6rem 2rem',color:'rgba(184,115,51,0.85)',fontSize:'0.82rem',cursor:'pointer',letterSpacing:'0.1em'}}>
+                                {language==='es'?'Continuar →':'Continue →'}
+                            </button>
+                        </div>)}
+                        {welcomeAct===2&&(<div className="wact">
+                            <div style={{width:'40px',height:'1px',background:'rgba(184,115,51,0.4)',margin:'0 auto 2.5rem'}}/>
+                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.45rem',fontWeight:400,color:'#F5E6D3',lineHeight:1.75,marginBottom:'1.5rem'}}>
+                                {language==='es'
+                                    ?'"Por eso nace Lumera. Un espacio por y para ti. Sin juicios, sin ruidos. Solo tú, yo y tu ritmo biológico."'
+                                    :'"That is why Lumera was born. A space designed by and for you. No judgment, no noise. Just you, me, and your biological rhythm."'}
+                            </p>
+                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.1rem',fontStyle:'italic',color:'rgba(232,200,120,0.85)',marginBottom:'3rem'}}>
+                                {language==='es'?'Bienvenida a tu santuario.':'Welcome to your sanctuary.'}
+                            </p>
+                            <button onClick={()=>setWelcomeAct(3)} style={{background:'transparent',border:'1px solid rgba(184,115,51,0.5)',borderRadius:'9999px',padding:'0.6rem 2rem',color:'rgba(184,115,51,0.85)',fontSize:'0.82rem',cursor:'pointer',letterSpacing:'0.1em'}}>
+                                {language==='es'?'Continuar →':'Continue →'}
+                            </button>
+                        </div>)}
+                        {welcomeAct===3&&(<div className="wact">
+                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.68rem',color:'rgba(184,115,51,0.7)',letterSpacing:'0.22em',textTransform:'uppercase',marginBottom:'2rem'}}>{language==='es'?'TU ESPACIO':'YOUR SPACE'}</p>
+                            <div style={{display:'flex',flexDirection:'column',gap:'1.25rem',marginBottom:'3rem',textAlign:'left'}}>
+                                {[
+                                    {img:'/images/nutri_huevo.png',es:'Nutrición',en:'Nutrition',d_es:'Placer sin culpas. Alquimia para tu GLP-1.',d_en:'Pleasure without guilt. Alchemy for your GLP-1.'},
+                                    {img:'/images/carta_aprender.png',es:'LUMI',en:'LUMI',d_es:'Tu guía silenciosa. La voz que entiende tus hormonas.',d_en:'Your quiet guide. The voice that speaks your hormones.'},
+                                    {img:'/images/ejer_espiral.png',es:'Movimiento',en:'Movement',d_es:'No es una obligación, es un ritual para ordenar tus ideas.',d_en:'Not a chore, but a ritual to clear your mind.'},
+                                ].map((item,i)=>(
+                                    <div key={i} style={{display:'flex',alignItems:'center',gap:'1rem'}}>
+                                        <img src={item.img} style={{width:'44px',height:'44px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'1px solid rgba(184,115,51,0.35)'}}/>
+                                        <div>
+                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1rem',fontWeight:600,color:'#E8C878',margin:'0 0 2px'}}>{language==='es'?item.es:item.en}</p>
+                                            <p style={{fontSize:'0.8rem',color:'rgba(245,230,211,0.65)',margin:0,lineHeight:1.5}}>{language==='es'?item.d_es:item.d_en}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <button onClick={()=>setShowWelcomeTrial(false)} style={{background:'linear-gradient(135deg,#B87333,#E8C878)',border:'none',borderRadius:'9999px',padding:'0.85rem 2.5rem',color:'#0A0A0A',fontSize:'1rem',fontFamily:"'Cormorant',serif",fontWeight:600,cursor:'pointer',letterSpacing:'0.08em',boxShadow:'0 0 25px rgba(184,115,51,0.35)'}}>
+                                {language==='es'?'Explórame':'Explore me'}
+                            </button>
+                            <p style={{fontSize:'0.7rem',color:'rgba(184,115,51,0.4)',marginTop:'1rem',fontStyle:'italic',fontFamily:"'Cormorant',serif"}}>
+                                {language==='es'?'"Tu cuerpo lleva mucho tiempo hablándote..."':'"Your body has been speaking to you for a long time..."'}
+                            </p>
+                        </div>)}
+                    </div>
+                </div>
+            );
+
             if (showAuth) return (
                 <div className="min-h-screen" style={{background: '#fafaf9'}}>
                     {/* NAVBAR ELEGANTE */}
