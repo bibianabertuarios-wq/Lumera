@@ -2483,6 +2483,23 @@ query = query.eq('region', region.toUpperCase());
                 }
             }, [currentUser]);
 
+            useEffect(() => {
+                if (!currentUser) return;
+                const trialDaysLeft = getTrialDaysLeft();
+                const isInTrial = !currentUser.subscription_status || !['active','paid'].includes(currentUser.subscription_status);
+                const isTrialDay3 = isInTrial && trialDaysLeft <= 1;
+                if (isTrialDay3) {
+                    const hasSeenShula = localStorage.getItem(`shula_day3_${currentUser.id}`);
+                    if (!hasSeenShula) {
+                        const timer = setTimeout(() => {
+                            setShowShulaDay3(true);
+                            localStorage.setItem(`shula_day3_${currentUser.id}`, 'true');
+                        }, 2000);
+                        return () => clearTimeout(timer);
+                    }
+                }
+            }, [currentUser]);
+
 
 
             // Limpiar todos los modales cuando se muestra la pantalla de auth (evita superposición en escritorio)
@@ -3823,17 +3840,6 @@ query = query.eq('region', region.toUpperCase());
                 // Premium activo → su propio dashboard
                 if (['active','paid'].includes(currentUser?.subscription_status)) {
                     return renderPremiumDashboard();
-                }
-
-                // Shula Day 3 popup — solo una vez
-                if (isTrialDay3 && !showShulaDay3) {
-                    const hasSeenShula = localStorage.getItem(`shula_day3_${currentUser?.id}`);
-                    if (!hasSeenShula) {
-                        setTimeout(() => {
-                            setShowShulaDay3(true);
-                            localStorage.setItem(`shula_day3_${currentUser?.id}`, 'true');
-                        }, 1500);
-                    }
                 }
 
                 // Trial (días 1, 2 y 3) → dashboard de onboarding + conversión
