@@ -125,6 +125,7 @@ import './lumera.css'
             const [showWelcomePremium, setShowWelcomePremium] = useState(false);
             const [showWelcomeTrial, setShowWelcomeTrial] = useState(false);
             const [showShulaDay3, setShowShulaDay3] = useState(false);
+            const [showOraclePopup, setShowOraclePopup] = useState(false);
             const [welcomeAct, setWelcomeAct] = useState(1);
             const [chartData, setChartData] = useState(null);
             const [aiCookingTips, setAiCookingTips] = useState({}); // {recipeName: [tip1, tip2, tip3]}
@@ -5675,6 +5676,7 @@ query = query.eq('region', region.toUpperCase());
 
                                 const newSymptoms = [symptomWithBothFormats, ...symptoms];
                                 setSymptoms(newSymptoms);
+                                setTimeout(() => setShowOraclePopup(true), 800);
                                 setSymptomForm({ sleep: 5, energy: 5, mood: 5, hotFlashes: 0, anxiety: 5, vaginalDryness: 0, brainFog: 0, memory: 5, date: new Date().toISOString().split('T')[0] });
                                 // Verificar patrones después de guardar
                                 setTimeout(() => checkAndShowPattern(newSymptoms), 500);
@@ -6414,6 +6416,57 @@ query = query.eq('region', region.toUpperCase());
 
             
             // LANDING PAGE CON HERO ELEGANTE
+            {/* ── ORACLE POPUP ── */}
+            {showOraclePopup && currentUser && (() => {
+                const todayS = symptoms && symptoms.length > 0 ? symptoms[0] : null;
+                const mode = todayS
+                    ? (todayS.energy <= 3 || todayS.sleep <= 3) ? 'cueva'
+                    : (todayS.anxiety >= 4) ? 'tormenta'
+                    : (todayS.energy >= 7 && todayS.mood >= 7) ? 'diosa'
+                    : 'ritual'
+                    : 'ritual';
+                const modeData = {
+                    cueva: {img:'/images/modo_cueva.png',label_es:'Modo Cueva',label_en:'Cave Mode',color:'#5c3d22',msg_es:`Tu cuerpo pide reposo hoy, ${currentUser.profile_name||'amiga'}. La cueva es sagrada — no es debilidad, es sabiduría.`,msg_en:`Your body asks for rest today, ${currentUser.profile_name||'friend'}. The cave is sacred — not weakness, but wisdom.`},
+                    tormenta: {img:'/images/modo_tormenta.png',label_es:'Modo Tormenta',label_en:'Storm Mode',color:'#2d4a7a',msg_es:`No estás loca, ${currentUser.profile_name||'amiga'}. Lo que sientes tiene nombre y tiene solución. Hoy vamos despacio.`,msg_en:`You are not crazy, ${currentUser.profile_name||'friend'}. What you feel has a name and a solution. We go slow today.`},
+                    diosa: {img:'/images/modo_diosa.png',label_es:'Modo Diosa',label_en:'Goddess Mode',color:'#7a4f1a',msg_es:`Tu energía está en su pico, ${currentUser.profile_name||'amiga'}. Aprovecha esta ventana — tu cuerpo está brillando.`,msg_en:`Your energy is at its peak, ${currentUser.profile_name||'friend'}. Use this window — your body is shining.`},
+                    ritual: {img:'/images/modo_ritual.png',label_es:'Modo Ritual',label_en:'Ritual Mode',color:'#3d6645',msg_es:`Un día tranquilo también es un regalo, ${currentUser.profile_name||'amiga'}. Tu cuerpo está hablando en voz baja.`,msg_en:`A calm day is also a gift, ${currentUser.profile_name||'friend'}. Your body is speaking softly.`},
+                };
+                const cfg = modeData[mode];
+                return (
+                    <div style={{position:'fixed',inset:0,zIndex:9998,background:'rgba(10,6,2,0.88)',display:'flex',alignItems:'center',justifyContent:'center',padding:'2rem'}} onClick={()=>setShowOraclePopup(false)}>
+                        <div onClick={e=>e.stopPropagation()} style={{
+                            maxWidth:'360px',width:'100%',borderRadius:'1.5rem',overflow:'hidden',
+                            background:'rgba(15,10,5,0.95)',border:'1px solid rgba(184,115,51,0.35)',
+                            boxShadow:'0 0 60px rgba(184,115,51,0.15)',
+                        }}>
+                            {/* Imagen modo a pantalla completa */}
+                            <div style={{position:'relative',height:'200px',overflow:'hidden'}}>
+                                <img src={cfg.img} style={{width:'100%',height:'100%',objectFit:'cover',filter:'brightness(0.7)'}}/>
+                                <div style={{position:'absolute',inset:0,background:`linear-gradient(to bottom, transparent 30%, rgba(15,10,5,0.95) 100%)`}}/>
+                                <div style={{position:'absolute',bottom:'1rem',left:'1.25rem'}}>
+                                    <p style={{fontSize:'0.6rem',color:'rgba(184,115,51,0.7)',letterSpacing:'0.18em',textTransform:'uppercase',marginBottom:'4px'}}>✦ {language==='es'?cfg.label_es:cfg.label_en}</p>
+                                    <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.5rem',fontWeight:400,color:'#F5E6D3',margin:0}}>{language==='es'?'Tu carta de hoy':'Your card today'}</p>
+                                </div>
+                            </div>
+                            {/* Mensaje */}
+                            <div style={{padding:'1.25rem 1.5rem'}}>
+                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontStyle:'italic',color:'rgba(245,230,211,0.9)',lineHeight:1.7,marginBottom:'1.25rem'}}>
+                                    {language==='es'?cfg.msg_es:cfg.msg_en}
+                                </p>
+                                <div style={{display:'flex',gap:'0.75rem'}}>
+                                    <button onClick={()=>{setShowOraclePopup(false);setCurrentPage('nutrition');}} style={{flex:1,background:'rgba(184,115,51,0.12)',border:'1px solid rgba(184,115,51,0.3)',borderRadius:'0.75rem',padding:'0.6rem',fontSize:'0.78rem',color:'#C9935A',cursor:'pointer',fontFamily:"'Cormorant',serif"}}>
+                                        {language==='es'?'Ver nutrición':'See nutrition'}
+                                    </button>
+                                    <button onClick={()=>setShowOraclePopup(false)} style={{flex:1,background:'linear-gradient(135deg,#B87333,#E8C878)',border:'none',borderRadius:'0.75rem',padding:'0.6rem',fontSize:'0.78rem',color:'#0A0A0A',cursor:'pointer',fontWeight:600,fontFamily:"'Cormorant',serif"}}>
+                                        {language==='es'?'Entendido':'Got it'}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            })()}
+
             if (showShulaDay3) return (
                 <div style={{position:'fixed',inset:0,zIndex:9999,background:'#0A0608',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
                     {/* Video de fondo — seda negra */}
