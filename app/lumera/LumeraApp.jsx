@@ -5531,16 +5531,23 @@ query = query.eq('region', region.toUpperCase());
                             </div>
                         )}
 
-                        <div className="flex gap-3 overflow-x-auto pb-4">
-                            {['strength', 'weightLoss', 'hormonal'].map((goal) => (
-                                <button key={goal} onClick={() => setExerciseGoal(goal)} style={{
-                                    padding:'0.6rem 1.25rem', borderRadius:'9999px', fontWeight:600,
-                                    whiteSpace:'nowrap', transition:'all 0.2s', border:'none', cursor:'pointer',
-                                    background: exerciseGoal === goal ? 'linear-gradient(135deg,#C9935A,#e8c89f)' : darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(201,147,90,0.1)',
-                                    color: exerciseGoal === goal ? 'white' : darkMode ? '#e8d5c0' : '#92580a',
-                                    boxShadow: exerciseGoal === goal ? '0 2px 10px rgba(201,147,90,0.4)' : 'none'
+                        <div style={{display:'flex',gap:'0.75rem',overflowX:'auto',paddingBottom:'1rem'}}>
+                            {[
+                                {key:'strength',img:'/images/ejer_fuerza.png'},
+                                {key:'weightLoss',img:'/images/ejer_espiral.png'},
+                                {key:'hormonal',img:'/images/ejer_hormonal.png'},
+                            ].map((obj) => (
+                                <button key={obj.key} onClick={() => setExerciseGoal(obj.key)} style={{
+                                    display:'flex',alignItems:'center',gap:'0.5rem',
+                                    padding:'0.5rem 1.1rem',borderRadius:'9999px',fontWeight:600,
+                                    whiteSpace:'nowrap',transition:'all 0.2s',border:'1px solid rgba(201,147,90,0.3)',cursor:'pointer',
+                                    background: exerciseGoal === obj.key ? 'linear-gradient(135deg,#C9935A,#e8c89f)' : darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(201,147,90,0.08)',
+                                    color: exerciseGoal === obj.key ? 'white' : darkMode ? '#e8d5c0' : '#92580a',
+                                    boxShadow: exerciseGoal === obj.key ? '0 2px 10px rgba(201,147,90,0.35)' : 'none',
+                                    fontSize:'0.82rem',
                                 }}>
-                                    {goal === 'strength' ? t[language].strength : goal === 'weightLoss' ? t[language].weightLoss : t[language].hormonal}
+                                    <img src={obj.img} style={{width:'22px',height:'22px',borderRadius:'50%',objectFit:'cover',flexShrink:0}}/>
+                                    {obj.key === 'strength' ? t[language].strength : obj.key === 'weightLoss' ? t[language].weightLoss : t[language].hormonal}
                                 </button>
                             ))}
                         </div>
