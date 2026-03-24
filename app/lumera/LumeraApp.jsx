@@ -5188,7 +5188,7 @@ query = query.eq('region', region.toUpperCase());
                                 {/* Mini tarjetas de promedio */}
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                                     {[
-                                        { label: language === 'es' ? 'Sueño' : 'Sleep', key: 'sleep', color: 'purple', icon: '😴' },
+                                        { label: language === 'es' ? 'Sueño' : 'Sleep', key: 'sleep', color: '#C9935A', icon: '😴' },
                                         { label: language === 'es' ? 'Energía' : 'Energy', key: 'energy', color: 'pink', icon: '⚡' },
                                         { label: language === 'es' ? 'Ánimo' : 'Mood', key: 'mood', color: 'blue', icon: '🪨' },
                                         { label: language === 'es' ? 'Sofocos' : 'Hot flashes', key: 'hot_flashes', color: 'orange', icon: '🔥' }
@@ -5480,7 +5480,7 @@ query = query.eq('region', region.toUpperCase());
                                                     <ol className="space-y-1">
                                                         {ex.steps.map((step, j) => (
                                                             <li key={j} className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'} flex gap-2`}>
-                                                                <span className="text-purple-500 font-bold shrink-0">{j+1}.</span>
+                                                                <span className="text-amber-600 font-bold shrink-0">{j+1}.</span>
                                                                 {step}
                                                             </li>
                                                         ))}
@@ -5507,7 +5507,7 @@ query = query.eq('region', region.toUpperCase());
                                                 })()}
                                             </div>
                                         ))}
-                                        <p className={`text-xs ${darkMode ? 'text-purple-400' : 'text-amber-700'} italic text-center mt-2`}>
+                                        <p className={`text-xs ${darkMode ? 'text-amber-500' : 'text-amber-700'} italic text-center mt-2`}>
                                             ✨ {language === 'es' ? 'Rutina adaptada a cómo te has sentido esta semana' : 'Routine adapted to how you\'ve felt this week'}
                                         </p>
                                     </div>
@@ -6352,7 +6352,7 @@ query = query.eq('region', region.toUpperCase());
                     return (
                         <div className="text-center py-20">
                             <div className="mb-6">
-                                <div className="inline-block p-8 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full mb-6">
+                                <div className="inline-block p-8 bg-gradient-to-br from-amber-900/20 to-amber-800/10 rounded-full mb-6">
                                     <svg className="w-24 h-24 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                     </svg>
@@ -6754,7 +6754,7 @@ query = query.eq('region', region.toUpperCase());
                                     </div>
 
                                     {authMode === 'register' && (
-                                        <div className="mb-4 space-y-2 text-xs bg-amber-50/60 p-4 rounded-2xl border border-purple-100">
+                                        <div className="mb-4 space-y-2 text-xs bg-amber-900/10 p-4 rounded-2xl border border-amber-700/20">
                                             <p className="font-bold text-sm text-rose-900 mb-2">
                                                 {language === 'es' ? '⚠️ Confirmaciones Importantes' : '⚠️ Important Confirmations'}
                                             </p>
@@ -7146,7 +7146,7 @@ query = query.eq('region', region.toUpperCase());
                                     </button>
                                     <button
                                         onClick={handlePasswordReset}
-                                        className="flex-1 bg-gradient-to-r from-purple-500 to-purple-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition"
+                                        className="flex-1 bg-gradient-to-r from-amber-700 to-amber-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition"
                                     >
                                         {language === 'es' ? 'Enviar Email' : 'Send Email'}
                                     </button>
@@ -7398,7 +7398,7 @@ query = query.eq('region', region.toUpperCase());
                                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
                                     {lumiMessages.length === 0 && (
                                         <div className="text-center py-8">
-                                            <svg className="w-14 h-14 mx-auto mb-4 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                                            <svg className="w-14 h-14 mx-auto mb-4 text-amber-500" fill="currentColor" viewBox="0 0 24 24">
                                                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                                             </svg>
                                             <p className={`text-sm font-semibold ${darkMode ? 'text-amber-300' : 'text-amber-700'} mb-3`}>
@@ -7819,7 +7819,7 @@ query = query.eq('region', region.toUpperCase());
 
                     {/* MODAL GUÍA: SIN PERIODO / PERIODO IRREGULAR */}
                     {currentUser && periodLog.length > 0 && getMonthsWithoutPeriod() >= 12 && currentPage === 'period' && (
-                        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6 mt-4 border-2 border-purple-300`}>
+                        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6 mt-4 border-2 border-amber-700/40`}>
                             <div className="text-center mb-4">
                                 <div className="text-3xl mb-2">🌱</div>
                                 <h3 className={`text-lg font-bold ${darkMode ? 'text-amber-200' : 'text-amber-800'}`}>
@@ -7844,7 +7844,7 @@ query = query.eq('region', region.toUpperCase());
                                         : ['Sleep changes — it may become lighter or interrupted due to hormonal shifts', 'More frequent or intense hot flashes, especially at night', 'Mood changes linked to hormonal variability', 'Greater sensitivity to stress', 'Metabolism changes and how your body processes nutrients', 'Your energy levels may vary more from day to day']
                                     ).map((item, i) => (
                                         <li key={i} className="flex items-start gap-1.5">
-                                            <span className="text-purple-400 mt-0.5">•</span>
+                                            <span className="text-amber-500 mt-0.5">•</span>
                                             <span>{item}</span>
                                         </li>
                                     ))}
@@ -7989,7 +7989,7 @@ query = query.eq('region', region.toUpperCase());
                                     {language === 'es' ? 'Te enviaremos un email.' : 'We will send you an email.'}
                                 </p>
                                 <input type="email" placeholder="Email" value={resetEmail} onChange={(e) => setResetEmail(e.target.value)} className="input-elegant w-full mb-6" />
-                                <button onClick={handlePasswordReset} className="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition">
+                                <button onClick={handlePasswordReset} className="w-full bg-gradient-to-r from-amber-700 to-amber-500 text-white py-3 rounded-lg font-semibold hover:shadow-lg transition">
                                     {language === 'es' ? 'Enviar' : 'Send'}
                                 </button>
                             </div>
@@ -8018,7 +8018,7 @@ query = query.eq('region', region.toUpperCase());
                                             type="number"
                                             value={editWeight}
                                             onChange={(e) => setEditWeight(e.target.value)}
-                                            className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-purple-500"
+                                            className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-amber-500"
                                             placeholder="65"
                                         />
                                     </div>
@@ -8031,7 +8031,7 @@ query = query.eq('region', region.toUpperCase());
                                             type="number"
                                             value={editHeight}
                                             onChange={(e) => setEditHeight(e.target.value)}
-                                            className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-purple-500"
+                                            className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-amber-500"
                                             placeholder="165"
                                         />
                                     </div>
@@ -8044,7 +8044,7 @@ query = query.eq('region', region.toUpperCase());
                                             type="number"
                                             value={editAge}
                                             onChange={(e) => setEditAge(e.target.value)}
-                                            className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-purple-500"
+                                            className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-amber-500"
                                             placeholder="45"
                                         />
                                     </div>
@@ -8056,7 +8056,7 @@ query = query.eq('region', region.toUpperCase());
                                         <select
                                             value={editActivityLevel}
                                             onChange={(e) => setEditActivityLevel(e.target.value)}
-                                            className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-purple-500"
+                                            className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-amber-500"
                                         >
                                             <option value="sedentary">{language === 'es' ? 'Sedentario (poco ejercicio)' : 'Sedentary (little exercise)'}</option>
                                             <option value="light">{language === 'es' ? 'Ligero (1-3 días/semana)' : 'Light (1-3 days/week)'}</option>
@@ -8073,7 +8073,7 @@ query = query.eq('region', region.toUpperCase());
                                         <select
                                             value={editGoal}
                                             onChange={(e) => setEditGoal(e.target.value)}
-                                            className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-purple-500"
+                                            className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-amber-500"
                                         >
                                             <option value="lose">{language === 'es' ? 'Perder peso' : 'Lose weight'}</option>
                                             <option value="maintain">{language === 'es' ? 'Mantener peso' : 'Maintain weight'}</option>
