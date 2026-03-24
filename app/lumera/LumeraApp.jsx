@@ -6488,9 +6488,9 @@ query = query.eq('region', region.toUpperCase());
                         <div style={{width:'60px',height:'1px',background:'linear-gradient(90deg,transparent,#B87333,transparent)',margin:'0 auto 2rem'}}/>
 
                         {/* Video de Shula en círculo */}
-                        <div style={{width:'180px',height:'180px',borderRadius:'50%',overflow:'hidden',margin:'0 auto 2rem',border:'2px solid rgba(184,115,51,0.5)',boxShadow:'0 0 40px rgba(184,115,51,0.2)'}}>
+                        <div style={{width:'220px',height:'220px',borderRadius:'50%',overflow:'hidden',margin:'0 auto 2rem',border:'2px solid rgba(184,115,51,0.5)',boxShadow:'0 0 40px rgba(184,115,51,0.2)',position:'relative'}}>
                             <video autoPlay loop muted playsInline src="/videos/shula_day3.mp4"
-                                style={{width:'100%',height:'100%',objectFit:'cover'}}/>
+                                style={{width:'140%',height:'140%',objectFit:'cover',position:'absolute',top:'-20%',left:'-20%'}}/>
                         </div>
 
                         {/* Mensaje */}
