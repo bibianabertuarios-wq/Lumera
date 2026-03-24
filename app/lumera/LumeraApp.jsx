@@ -3787,15 +3787,15 @@ query = query.eq('region', region.toUpperCase());
                                     <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.75rem'}}>{language==='es'?'TU ESPACIO':'YOUR SPACE'}</p>
                                     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.6rem'}}>
                                         {[
-                                            {icon:'🌿',es:'Síntomas',en:'Symptoms',page:'symptoms',des:'Registra tu día',den:'Log your day'},
-                                            {icon:'🍽',es:'Nutrición',en:'Nutrition',page:'nutrition',des:'Tu menú hoy',den:'Your menu today'},
-                                            {icon:'💪',es:'Ejercicio',en:'Exercise',page:'exercise',des:'Movimiento',den:'Movement'},
-                                            {icon:'✨',es:'LUMI',en:'LUMI',page:'chat',des:'Tu guía amiga',den:'Your guide'},
-                                            {icon:'📊',es:'Progreso',en:'Progress',page:'progreso',des:'Tus patrones',den:'Your patterns'},
-                                            {icon:'🌙',es:'Período',en:'Period',page:'period',des:'Tu ciclo',den:'Your cycle'},
+                                            {img:'/images/modo_ritual.png',es:'Síntomas',en:'Symptoms',page:'symptoms',des:'Registra tu día',den:'Log your day'},
+                                            {img:'/images/nutri_huevo.png',es:'Nutrición',en:'Nutrition',page:'nutrition',des:'Tu menú hoy',den:'Your menu today'},
+                                            {img:'/images/ejer_fuerza.png',es:'Ejercicio',en:'Exercise',page:'exercise',des:'Movimiento',den:'Movement'},
+                                            {img:'/images/lumi.png',es:'LUMI',en:'LUMI',page:'chat',des:'Tu guía amiga',den:'Your guide'},
+                                            {img:'/images/nutri_progreso.png',es:'Progreso',en:'Progress',page:'progreso',des:'Tus patrones',den:'Your patterns'},
+                                            {img:'/images/modo_cueva.png',es:'Período',en:'Period',page:'period',des:'Tu ciclo',den:'Your cycle'},
                                         ].map((item,i)=>(
                                             <div key={i} className="gc gch" onClick={()=>setCurrentPage(item.page)} style={{padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem'}}>
-                                                <div style={{width:'38px',height:'38px',borderRadius:'50%',background:'rgba(184,115,51,0.12)',border:'1px solid rgba(184,115,51,0.25)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.1rem',flexShrink:0}}>{item.icon}</div>
+                                                <img src={item.img} style={{width:'42px',height:'42px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'1px solid rgba(184,115,51,0.3)',boxShadow:'0 0 12px rgba(184,115,51,0.15)'}}/>
                                                 <div>
                                                     <p style={{fontSize:'0.88rem',fontWeight:600,color:'#F5E6D3',fontFamily:"'Cormorant',serif"}}>{language==='es'?item.es:item.en}</p>
                                                     <p style={{fontSize:'0.7rem',color:'rgba(184,115,51,0.7)'}}>{language==='es'?item.des:item.den}</p>
