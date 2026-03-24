@@ -3678,19 +3678,28 @@ query = query.eq('region', region.toUpperCase());
                 // (useEffect movido al nivel de LumeraApp para cumplir reglas de hooks)
 
                 return (
-                    <div className="pb-32" key={language} style={{background:'#0A0A0A',minHeight:'100vh',position:'relative',overflowX:'hidden'}}>
+                    <div className="pb-32" key={language} style={{background:'#050303',minHeight:'100vh',position:'relative',overflowX:'hidden'}}>
                         <video autoPlay loop muted playsInline src="/videos/premium_bg.mp4"
                             style={{position:'fixed',top:0,left:0,width:'100%',height:'100%',objectFit:'cover',zIndex:0,opacity:0.45,pointerEvents:'none'}}/>
-                        <div style={{position:'fixed',inset:0,zIndex:1,pointerEvents:'none',background:'linear-gradient(180deg,rgba(10,6,2,0.55) 0%,rgba(10,6,2,0.3) 40%,rgba(10,6,2,0.65) 100%)'}}>
+                        <div style={{position:'fixed',inset:0,zIndex:1,pointerEvents:'none',background:'linear-gradient(180deg,rgba(5,3,2,0.75) 0%,rgba(5,3,2,0.5) 40%,rgba(5,3,2,0.8) 100%)'}}>
                             <div style={{position:'absolute',inset:0,backgroundImage:'repeating-linear-gradient(90deg,transparent,transparent 80px,rgba(184,115,51,0.04) 80px,rgba(184,115,51,0.04) 81px)'}}/>
                         </div>
 
                         <style>{`
                             @keyframes gpulse{0%,100%{transform:scale(1);opacity:1}33%{transform:scale(1.08);opacity:.85}66%{transform:scale(.95);opacity:.95}}
                             @keyframes gshimmer{0%{background-position:-200% center}100%{background-position:200% center}}
-                            .gc{background:rgba(22,16,10,0.85);border:1px solid rgba(184,115,51,0.25);border-radius:1.25rem;backdrop-filter:blur(12px);box-shadow:0 8px 32px rgba(0,0,0,0.5)}
+                            .gc{
+                                background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 50%, rgba(0,0,0,0.2) 100%);
+                                border: 1px solid rgba(184,115,51,0.35);
+                                border-top: 1px solid rgba(255,255,255,0.12);
+                                border-left: 1px solid rgba(255,255,255,0.08);
+                                border-radius: 1.25rem;
+                                backdrop-filter: blur(20px) saturate(1.4);
+                                -webkit-backdrop-filter: blur(20px) saturate(1.4);
+                                box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 1px rgba(184,115,51,0.1);
+                            }
                             .gch{transition:all 0.3s ease;cursor:pointer}
-                            .gch:hover{border-color:rgba(184,115,51,0.55)!important;transform:translateY(-2px)}
+                            .gch:hover{border-color:rgba(184,115,51,0.7)!important;transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.12),0 0 20px rgba(184,115,51,0.1)!important}
                         `}</style>
 
                         <div style={{position:'relative',zIndex:2,padding:'0 0 2rem'}}>
