@@ -3689,13 +3689,10 @@ query = query.eq('region', region.toUpperCase());
                             @keyframes gpulse{0%,100%{transform:scale(1);opacity:1}33%{transform:scale(1.08);opacity:.85}66%{transform:scale(.95);opacity:.95}}
                             @keyframes gshimmer{0%{background-position:-200% center}100%{background-position:200% center}}
                             .gc{
-                                background: linear-gradient(145deg, rgba(40,28,16,0.92) 0%, rgba(20,14,8,0.96) 40%, rgba(30,20,10,0.94) 100%);
-                                border-top: 1px solid rgba(255,255,255,0.1);
-                                border-left: 1px solid rgba(255,255,255,0.06);
-                                border-right: 1px solid rgba(0,0,0,0.4);
-                                border-bottom: 1px solid rgba(0,0,0,0.5);
+                                background: linear-gradient(145deg, rgba(28,28,28,0.95) 0%, rgba(18,18,18,0.98) 100%);
+                                border: 1.5px solid rgba(184,115,51,0.55);
                                 border-radius: 1.25rem;
-                                box-shadow: 0 8px 32px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.07), inset 0 -1px 0 rgba(0,0,0,0.3), 0 0 0 1px rgba(184,115,51,0.18);
+                                box-shadow: 0 4px 24px rgba(0,0,0,0.6), 0 0 0 1px rgba(184,115,51,0.08);
                             }
                             .gch{transition:all 0.3s ease;cursor:pointer}
                             .gch:hover{border-color:rgba(184,115,51,0.7)!important;transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.12),0 0 20px rgba(184,115,51,0.1)!important}
@@ -3706,7 +3703,7 @@ query = query.eq('region', region.toUpperCase());
                             <div style={{background:'linear-gradient(160deg,rgba(184,115,51,0.18) 0%,rgba(22,16,10,0.95) 60%)',borderBottom:'1px solid rgba(184,115,51,0.20)',padding:'2.5rem 1.5rem 2rem',position:'relative',overflow:'hidden'}}>
                                 <div style={{position:'absolute',top:0,left:'50%',transform:'translateX(-50%)',width:'120px',height:'3px',background:'linear-gradient(90deg,transparent,#B87333,transparent)'}}/>
                                 <div style={{display:'inline-flex',alignItems:'center',background:'linear-gradient(135deg,rgba(184,115,51,0.25),rgba(232,200,120,0.15))',border:'1px solid rgba(184,115,51,0.45)',borderRadius:'9999px',padding:'0.3rem 1rem',marginBottom:'1.25rem'}}>
-                                    <span style={{fontSize:'0.65rem',fontWeight:700,color:'#E8C878',letterSpacing:'0.18em',textTransform:'uppercase'}}>PREMIUM</span>
+                                    <span style={{fontSize:'0.65rem',fontWeight:700,color:'#B87333',letterSpacing:'0.18em',textTransform:'uppercase'}}>PREMIUM</span>
                                 </div>
                                 <h1 style={{fontFamily:"'Cormorant',serif",fontSize:'2.5rem',fontWeight:500,color:'#F5E6D3',lineHeight:1.1,marginBottom:'0.75rem'}}>
                                     {language==='es'?'Bienvenida,':'Welcome,'}<br/>
@@ -3720,7 +3717,7 @@ query = query.eq('region', region.toUpperCase());
                                         {[{label:'IMC',value:currentUser.bmi,sub:getBMICategory(currentUser.bmi,language)},{label:'TDEE',value:currentUser.tdee,sub:'kcal/día'}].map(({label,value,sub})=>(
                                             <div key={label} style={{background:'rgba(184,115,51,0.12)',border:'1px solid rgba(184,115,51,0.30)',borderRadius:'0.75rem',padding:'0.6rem 1rem',minWidth:'90px'}}>
                                                 <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:'2px'}}>{label}</p>
-                                                <p style={{fontSize:'1.4rem',fontWeight:700,color:'#E8C878',lineHeight:1}}>{value}</p>
+                                                <p style={{fontSize:'1.4rem',fontWeight:700,color:'#B87333',lineHeight:1}}>{value}</p>
                                                 <p style={{fontSize:'0.65rem',color:'rgba(245,230,211,0.55)',marginTop:'2px'}}>{sub}</p>
                                             </div>
                                         ))}
@@ -3819,7 +3816,7 @@ query = query.eq('region', region.toUpperCase());
                                             <span style={{fontSize:'0.8rem',color:'#0D0D0D',fontWeight:700}}>P</span>
                                         </div>
                                         <div style={{flex:1}}>
-                                            <p style={{fontSize:'0.78rem',fontWeight:600,color:'#E8C878'}}>{isTrialDay3?(language==='es'?'Último día de prueba':'Last trial day'):isInTrial?(language==='es'?`Trial activo · ${trialDaysLeft} días`:`Trial · ${trialDaysLeft} days`):(language==='es'?'Premium activa':'Premium active')}</p>
+                                            <p style={{fontSize:'0.78rem',fontWeight:600,color:'#B87333'}}>{isTrialDay3?(language==='es'?'Último día de prueba':'Last trial day'):isInTrial?(language==='es'?`Trial activo · ${trialDaysLeft} días`:`Trial · ${trialDaysLeft} days`):(language==='es'?'Premium activa':'Premium active')}</p>
                                             <p style={{fontSize:'0.72rem',color:'rgba(184,115,51,0.65)'}}>{language==='es'?'Acceso completo a Lumera':'Full access to Lumera'}</p>
                                         </div>
                                     </div>
@@ -4427,7 +4424,7 @@ query = query.eq('region', region.toUpperCase());
                                     display:'flex',alignItems:'center',justifyContent:'center',
                                     fontSize:'1.1rem',
                                 }}>🔒</div>
-                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.95rem',color:'#E8C878',margin:0,fontWeight:500}}>
+                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.95rem',color:'#B87333',margin:0,fontWeight:500}}>
                                     {language==='es'?'LUMI Predictiva — Premium':'LUMI Predictive — Premium'}
                                 </p>
                                 <p style={{fontSize:'0.72rem',color:'rgba(232,200,120,0.6)',margin:0}}>
@@ -6581,7 +6578,7 @@ query = query.eq('region', region.toUpperCase());
                                     <div key={i} style={{display:'flex',alignItems:'center',gap:'1rem'}}>
                                         <img src={item.img} style={{width:'44px',height:'44px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'1px solid rgba(184,115,51,0.35)'}}/>
                                         <div>
-                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1rem',fontWeight:600,color:'#E8C878',margin:'0 0 2px'}}>{language==='es'?item.es:item.en}</p>
+                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1rem',fontWeight:600,color:'#B87333',margin:'0 0 2px'}}>{language==='es'?item.es:item.en}</p>
                                             <p style={{fontSize:'0.8rem',color:'rgba(245,230,211,0.65)',margin:0,lineHeight:1.5}}>{language==='es'?item.d_es:item.d_en}</p>
                                         </div>
                                     </div>
@@ -7380,7 +7377,7 @@ query = query.eq('region', region.toUpperCase());
                                     <div style={{display:'flex',alignItems:'center',gap:'0.75rem'}}>
                                         <img src="/images/lumi.png" style={{width:'40px',height:'40px',borderRadius:'50%',objectFit:'cover',border:'2px solid rgba(184,115,51,0.5)'}} onError={e=>{e.target.style.display='none'}} alt="LUMI"/>
                                         <div>
-                                            <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.15rem',fontWeight:600,color:'#E8C878',margin:0}}>LUMI</h3>
+                                            <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.15rem',fontWeight:600,color:'#B87333',margin:0}}>LUMI</h3>
                                             <p style={{fontSize:'0.72rem',color:'rgba(184,115,51,0.65)',margin:0}}>
                                                 {!isPremium() ? `${dailyQuestions}/5 ${language === 'es' ? 'preguntas hoy' : 'questions today'}` : (language==='es'?'✦ Tu reflejo biológico':'✦ Your biological reflection')}
                                             </p>
@@ -7487,7 +7484,7 @@ query = query.eq('region', region.toUpperCase());
                                     <div className="flex items-center gap-3">
                                         <img src="/images/lumi.png" style={{width:'44px',height:'44px',borderRadius:'50%',objectFit:'cover',border:'2px solid rgba(184,115,51,0.5)',flexShrink:0}} onError={e=>{e.target.style.display='none'}} alt="LUMI"/>
                                         <div>
-                                            <h3 style={{fontFamily:"'Cormorant',serif",fontWeight:600,fontSize:'1.15rem',color:'#E8C878',margin:0}}>
+                                            <h3 style={{fontFamily:"'Cormorant',serif",fontWeight:600,fontSize:'1.15rem',color:'#B87333',margin:0}}>
                                                 {proactiveMessages[0]?.message_type === 'pattern_insight'
                                                     ? (language === 'es' ? 'LUMI encontró tus patrones' : 'LUMI found your patterns')
                                                     : (language === 'es' ? 'LUMI' : 'LUMI')}
@@ -7671,7 +7668,7 @@ query = query.eq('region', region.toUpperCase());
                                 {/* Header */}
                                 <div style={{background:'linear-gradient(135deg,#0D0A06,#1a1008)',borderBottom:'1px solid rgba(184,115,51,0.3)',padding:'1.75rem 1.5rem',textAlign:'center'}}>
                                     <img src="/images/lumi.png" style={{width:'52px',height:'52px',borderRadius:'50%',objectFit:'cover',margin:'0 auto 0.75rem',display:'block',border:'2px solid rgba(184,115,51,0.5)'}} onError={e=>{e.target.style.display='none'}}/>
-                                    <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.6rem',fontWeight:400,marginBottom:'0.25rem',color:'#E8C878'}}>
+                                    <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.6rem',fontWeight:400,marginBottom:'0.25rem',color:'#B87333'}}>
                                         {language === 'es'
                                             ? `${currentUser?.profile_name || ''}, he estado observando`
                                             : `${currentUser?.profile_name || ''}, I have been paying attention`}
