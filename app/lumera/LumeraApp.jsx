@@ -5897,7 +5897,7 @@ query = query.eq('region', region.toUpperCase());
                                                 <div key={i} className={`flex gap-4 p-4 rounded-xl ${darkMode ? 'bg-gray-700' : 'bg-rose-50'}`}>
                                                     <span className="text-2xl flex-shrink-0">{tip.emoji}</span>
                                                     <div>
-                                                        <p className="font-semibold text-sm mb-1" style={{color: '#f43f5e'}}>{tip.title}</p>
+                                                        <p className="font-semibold text-sm mb-1" style={{color: '#C9935A'}}>{tip.title}</p>
                                                         <p className={`text-sm leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{tip.text}</p>
                                                     </div>
                                                 </div>
@@ -5951,7 +5951,7 @@ query = query.eq('region', region.toUpperCase());
                                                             <p className="text-xs" style={{color: '#a8a29e'}}>{item.ingredients.join(' · ')}</p>
                                                         )}
                                                         {item.why && (
-                                                            <p className="text-xs mt-2 italic" style={{color: '#f43f5e'}}>{item.why}</p>
+                                                            <p className="text-xs mt-2 italic" style={{color: '#C9935A'}}>{item.why}</p>
                                                         )}
                                                     </div>
                                                 );
@@ -7658,18 +7658,18 @@ query = query.eq('region', region.toUpperCase());
                     )}
                     {showPatternModal && patternResult && patternResult[0]?.type !== 'no_data' && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60">
-                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl w-full max-w-md overflow-hidden max-h-[92vh] overflow-y-auto`}>
+                            <div style={{background:darkMode?'#1c1917':'#fdf8f3',borderRadius:'1rem',boxShadow:'0 25px 60px rgba(0,0,0,0.5)',width:'100%',maxWidth:'28rem',overflow:'hidden',maxHeight:'92vh',overflowY:'auto',border:'1px solid rgba(184,115,51,0.2)'}}>
 
                                 {/* Header */}
-                                <div style={{background: 'linear-gradient(135deg, #C9935A, #f43f5e)', padding: '1.75rem 1.5rem', textAlign: 'center', color: 'white'}}>
-                                    <div style={{fontSize: '2.5rem', marginBottom: '0.5rem'}}>🌙</div>
-                                    <h3 style={{fontFamily: "'Cormorant', serif", fontSize: '1.6rem', fontWeight: 400, marginBottom: '0.25rem'}}>
+                                <div style={{background:'linear-gradient(135deg,#0D0A06,#1a1008)',borderBottom:'1px solid rgba(184,115,51,0.3)',padding:'1.75rem 1.5rem',textAlign:'center'}}>
+                                    <img src="/images/lumi.png" style={{width:'52px',height:'52px',borderRadius:'50%',objectFit:'cover',margin:'0 auto 0.75rem',display:'block',border:'2px solid rgba(184,115,51,0.5)'}} onError={e=>{e.target.style.display='none'}}/>
+                                    <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.6rem',fontWeight:400,marginBottom:'0.25rem',color:'#E8C878'}}>
                                         {language === 'es'
                                             ? `${currentUser?.profile_name || ''}, he estado observando`
-                                            : `${currentUser?.profile_name || ''}, I've been paying attention`}
+                                            : `${currentUser?.profile_name || ''}, I have been paying attention`}
                                     </h3>
-                                    <p style={{fontSize: '0.85rem', opacity: 0.9}}>
-                                        {language === 'es' ? 'Aquí está lo que he visto en tus primeros 3 días' : 'Here is what I noticed in your first 3 days'}
+                                    <p style={{fontSize:'0.85rem',color:'rgba(184,115,51,0.7)'}}>
+                                        {language === 'es' ? '✦ Aquí está lo que he visto en tus primeros 3 días' : '✦ Here is what I noticed in your first 3 days'}
                                     </p>
                                 </div>
 
@@ -7688,16 +7688,16 @@ query = query.eq('region', region.toUpperCase());
                                     const sf = (s, c, k) => s[c] !== undefined ? s[c] : (s[k] !== undefined ? s[k] : 0);
                                     const avg = (c, k) => (last3.reduce((a, s) => a + sf(s, c, k), 0) / last3.length);
                                     const metrics = [
-                                        { label: language === 'es' ? 'Sueño' : 'Sleep', val: avg('sleep','sleep'), icon: '😴', good: v => v >= 6, goodText: language === 'es' ? 'Descansando bien' : 'Resting well', badText: language === 'es' ? 'Necesita atención' : 'Needs attention', color: '#6366f1' },
-                                        { label: language === 'es' ? 'Energía' : 'Energy', val: avg('energy','energy'), icon: '⚡', good: v => v >= 5, goodText: language === 'es' ? 'Estable' : 'Stable', badText: language === 'es' ? 'Baja estos días' : 'Low these days', color: '#f59e0b' },
-                                        { label: language === 'es' ? 'Ánimo' : 'Mood', val: avg('mood','mood'), icon: '🪨', good: v => v >= 5, goodText: language === 'es' ? 'Equilibrado' : 'Balanced', badText: language === 'es' ? 'Días difíciles' : 'Tough days', color: '#C9935A' },
-                                        { label: language === 'es' ? 'Sofocos' : 'Hot flashes', val: avg('hotFlashes','hot_flashes'), icon: '🌡️', good: v => v <= 4, goodText: language === 'es' ? 'Manejables' : 'Manageable', badText: language === 'es' ? 'Frecuentes' : 'Frequent', color: '#f43f5e' },
+                                        { label: language === 'es' ? 'Sueño' : 'Sleep', val: avg('sleep','sleep'), img: '/images/modo_cueva.png', good: v => v >= 6, goodText: language === 'es' ? 'Descansando bien' : 'Resting well', badText: language === 'es' ? 'Necesita atención' : 'Needs attention', color: '#B87333' },
+                                        { label: language === 'es' ? 'Energía' : 'Energy', val: avg('energy','energy'), img: '/images/ejer_espiral.png', good: v => v >= 5, goodText: language === 'es' ? 'Estable' : 'Stable', badText: language === 'es' ? 'Baja estos días' : 'Low these days', color: '#C9935A' },
+                                        { label: language === 'es' ? 'Ánimo' : 'Mood', val: avg('mood','mood'), img: '/images/modo_ritual.png', good: v => v >= 5, goodText: language === 'es' ? 'Equilibrado' : 'Balanced', badText: language === 'es' ? 'Días difíciles' : 'Tough days', color: '#C9935A' },
+                                        { label: language === 'es' ? 'Sofocos' : 'Hot flashes', val: avg('hotFlashes','hot_flashes'), img: '/images/modo_tormenta.png', good: v => v <= 4, goodText: language === 'es' ? 'Manejables' : 'Manageable', badText: language === 'es' ? 'Frecuentes' : 'Frequent', color: '#B87333' },
                                     ];
                                     return (
                                         <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem', margin: '1rem'}}>
                                             {metrics.map((m, i) => (
                                                 <div key={i} style={{background: darkMode ? 'rgba(255,255,255,0.05)' : '#fff', border: `1px solid ${m.color}30`, borderRadius: '0.75rem', padding: '0.75rem', textAlign: 'center'}}>
-                                                    <div style={{fontSize: '1.4rem'}}>{m.icon}</div>
+                                                    <img src={m.img} style={{width:'36px',height:'36px',borderRadius:'50%',objectFit:'cover',margin:'0 auto 4px',display:'block',border:'1px solid rgba(184,115,51,0.3)'}}/>
                                                     <div style={{fontSize: '1.5rem', fontWeight: 700, color: m.color, lineHeight: 1.1}}>{m.val.toFixed(1)}<span style={{fontSize: '0.65rem', fontWeight: 400, color: '#a8a29e'}}>/10</span></div>
                                                     <div style={{fontSize: '0.7rem', color: '#a8a29e', marginTop: '0.1rem'}}>{m.label}</div>
                                                     <div style={{fontSize: '0.65rem', marginTop: '0.3rem', color: m.good(m.val) ? '#10b981' : '#f43f5e', fontWeight: 600}}>
