@@ -3689,14 +3689,13 @@ query = query.eq('region', region.toUpperCase());
                             @keyframes gpulse{0%,100%{transform:scale(1);opacity:1}33%{transform:scale(1.08);opacity:.85}66%{transform:scale(.95);opacity:.95}}
                             @keyframes gshimmer{0%{background-position:-200% center}100%{background-position:200% center}}
                             .gc{
-                                background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 50%, rgba(0,0,0,0.2) 100%);
-                                border: 1px solid rgba(184,115,51,0.35);
-                                border-top: 1px solid rgba(255,255,255,0.12);
-                                border-left: 1px solid rgba(255,255,255,0.08);
+                                background: linear-gradient(145deg, rgba(40,28,16,0.92) 0%, rgba(20,14,8,0.96) 40%, rgba(30,20,10,0.94) 100%);
+                                border-top: 1px solid rgba(255,255,255,0.1);
+                                border-left: 1px solid rgba(255,255,255,0.06);
+                                border-right: 1px solid rgba(0,0,0,0.4);
+                                border-bottom: 1px solid rgba(0,0,0,0.5);
                                 border-radius: 1.25rem;
-                                backdrop-filter: blur(20px) saturate(1.4);
-                                -webkit-backdrop-filter: blur(20px) saturate(1.4);
-                                box-shadow: 0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 1px rgba(184,115,51,0.1);
+                                box-shadow: 0 8px 32px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.07), inset 0 -1px 0 rgba(0,0,0,0.3), 0 0 0 1px rgba(184,115,51,0.18);
                             }
                             .gch{transition:all 0.3s ease;cursor:pointer}
                             .gch:hover{border-color:rgba(184,115,51,0.7)!important;transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.12),0 0 20px rgba(184,115,51,0.1)!important}
