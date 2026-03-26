@@ -3680,8 +3680,8 @@ query = query.eq('region', region.toUpperCase());
                 return (
                     <div className="pb-32" key={language} style={{background:'#050303',minHeight:'100vh',position:'relative',overflowX:'hidden'}}>
                         <video autoPlay loop muted playsInline src="/videos/premium_bg.mp4"
-                            style={{position:'fixed',top:0,left:0,width:'100%',height:'100%',objectFit:'cover',zIndex:0,opacity:0.5,pointerEvents:'none',filter:'saturate(0.6) brightness(0.7)'}}/>
-                        <div style={{position:'fixed',inset:0,zIndex:1,pointerEvents:'none',background:'linear-gradient(180deg,rgba(6,6,8,0.6) 0%,rgba(6,6,8,0.4) 40%,rgba(6,6,8,0.65) 100%)'}}>
+                            style={{position:'fixed',top:0,left:0,width:'100%',height:'100%',objectFit:'cover',zIndex:0,opacity:0.6,pointerEvents:'none'}}/>
+                        <div style={{position:'fixed',inset:0,zIndex:1,pointerEvents:'none',background:'rgba(4,2,1,0.35)'}}>
                             <div style={{position:'absolute',inset:0,backgroundImage:'repeating-linear-gradient(90deg,transparent,transparent 80px,rgba(184,115,51,0.04) 80px,rgba(184,115,51,0.04) 81px)'}}/>
                         </div>
 
@@ -3689,7 +3689,7 @@ query = query.eq('region', region.toUpperCase());
                             @keyframes gpulse{0%,100%{transform:scale(1);opacity:1}33%{transform:scale(1.08);opacity:.85}66%{transform:scale(.95);opacity:.95}}
                             @keyframes gshimmer{0%{background-position:-200% center}100%{background-position:200% center}}
                             .gc{
-                                background: rgba(16,16,18,0.92);
+                                background: rgba(8,5,3,0.25);
                                 border: 1.5px solid rgba(184,115,51,0.65);
                                 border-radius: 1.25rem;
                                 box-shadow: 0 8px 32px rgba(0,0,0,0.8), 0 0 0 1px rgba(184,115,51,0.12), inset 0 1px 0 rgba(255,255,255,0.06);
