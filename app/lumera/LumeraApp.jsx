@@ -3805,6 +3805,9 @@ query = query.eq('region', region.toUpperCase());
                                             {img:'/images/reirme.png',es:'Reírme',en:'Laugh',sub_es:'La risa es medicina',sub_en:'Laughter is medicine',
                                              rec_es:'Frutos rojos · Baile libre 10 min · "Fleabag" en Prime',
                                              rec_en:'Mixed berries · Free dance 10 min · "Fleabag" on Prime'},
+                                            {img:'/images/florecer.png',es:'Florecer',en:'Blossom',sub_es:'Activa tu serotonina',sub_en:'Activate your serotonin',
+                                             rec_es:'Plátano + avena · Meditación 10 min · Frecuencias 528hz en Spotify',
+                                             rec_en:'Banana + oats · Meditation 10 min · 528hz frequencies on Spotify'},
                                         ].map((item,i)=>{
                                             const [open, setOpen] = React.useState(false);
                                             return (
