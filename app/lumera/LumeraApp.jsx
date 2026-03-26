@@ -3788,6 +3788,67 @@ query = query.eq('region', region.toUpperCase());
                                     </div>
                                 </div>
 
+                                {/* ESTADOS EMOCIONALES */}
+                                <div style={{marginBottom:'1.25rem'}}>
+                                    <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.75rem'}}>{language==='es'?'HOY QUIERO...':'TODAY I WANT TO...'}</p>
+                                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.6rem'}}>
+                                        {[
+                                            {img:'/images/descanso.png',es:'Descansar',en:'Rest',sub_es:'Tu ritual de calma',sub_en:'Your calm ritual',
+                                             rec_es:'Infusión de valeriana · Yoga Nidra · "El arte de la siesta" de Louise Hay',
+                                             rec_en:'Valerian tea · Yoga Nidra · "The Art of Rest" by Claudia Hammond'},
+                                            {img:'/images/dopamina.png',es:'Activarme',en:'Get energised',sub_es:'Genera tu dopamina',sub_en:'Generate your dopamine',
+                                             rec_es:'Chocolate negro 85% · Caminata rápida 20 min · Playlist: Lizzo, Shakira, Beyóncé',
+                                             rec_en:'Dark chocolate 85% · Brisk walk 20 min · Playlist: Lizzo, Shakira, Beyoncé'},
+                                            {img:'/images/lagrima.png',es:'Soltar',en:'Let it out',sub_es:'A veces llorar es sanar',sub_en:'Sometimes tears heal',
+                                             rec_es:'Sopa caliente con cúrcuma · Respiración 4-7-8 · "Eat Pray Love" — peli',
+                                             rec_en:'Warm turmeric soup · 4-7-8 breathing · "Eat Pray Love" — film'},
+                                            {img:'/images/reirme.png',es:'Reírme',en:'Laugh',sub_es:'La risa es medicina',sub_en:'Laughter is medicine',
+                                             rec_es:'Frutos rojos · Baile libre 10 min · "Fleabag" en Prime',
+                                             rec_en:'Mixed berries · Free dance 10 min · "Fleabag" on Prime'},
+                                        ].map((item,i)=>{
+                                            const [open, setOpen] = React.useState(false);
+                                            return (
+                                                <div key={i}>
+                                                    <div className="gc gch" onClick={()=>setOpen(!open)} style={{padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem'}}>
+                                                        <img src={item.img} style={{width:'42px',height:'42px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'1px solid rgba(184,115,51,0.3)',boxShadow:'0 0 12px rgba(184,115,51,0.15)'}}/>
+                                                        <div>
+                                                            <p style={{fontSize:'0.88rem',fontWeight:600,color:'#F5E6D3',fontFamily:"'Cormorant',serif",margin:0}}>{language==='es'?item.es:item.en}</p>
+                                                            <p style={{fontSize:'0.7rem',color:'rgba(184,115,51,0.7)',margin:0}}>{language==='es'?item.sub_es:item.sub_en}</p>
+                                                        </div>
+                                                    </div>
+                                                    {open&&<div style={{background:'rgba(184,115,51,0.08)',border:'1px solid rgba(184,115,51,0.2)',borderRadius:'0.75rem',padding:'0.75rem',marginTop:'0.35rem',fontSize:'0.78rem',color:'rgba(245,230,211,0.8)',lineHeight:1.6,fontStyle:'italic'}}>
+                                                        {language==='es'?item.rec_es:item.rec_en}
+                                                    </div>}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                {/* DATO DE LA SEMANA */}
+                                {(()=>{
+                                    const tips = language==='es'?[
+                                        'El magnesio reduce los sofocos en un 50% en mujeres de 40+. Toma 300mg antes de dormir.',
+                                        'Tu cerebro cambia en la perimenopausia: la memoria mejora si duermes 7-8h. No es edad, es cortisol.',
+                                        'El estrógeno protege el corazón. Después de los 40, el ejercicio cardiovascular es tu mejor aliado.',
+                                        'Las mujeres con perimenopausia tienen microbioma intestinal diferente. Los fermentados son tu medicina.',
+                                        'La proteína en el desayuno estabiliza el azúcar en sangre todo el día. 30g antes de las 10am.',
+                                    ]:[
+                                        'Magnesium reduces hot flashes by 50% in women 40+. Take 300mg before sleep.',
+                                        'Your brain changes in perimenopause: memory improves with 7-8h sleep. It is not age, it is cortisol.',
+                                        'Oestrogen protects the heart. After 40, cardiovascular exercise is your best ally.',
+                                        'Women in perimenopause have a different gut microbiome. Fermented foods are your medicine.',
+                                        'Protein at breakfast stabilises blood sugar all day. 30g before 10am.',
+                                    ];
+                                    const tip = tips[Math.floor(Date.now()/604800000)%tips.length];
+                                    return (
+                                        <div className="gc" style={{marginBottom:'1rem',padding:'1.1rem 1.25rem'}}>
+                                            <p style={{fontSize:'0.6rem',color:'rgba(184,115,51,0.6)',letterSpacing:'0.18em',textTransform:'uppercase',marginBottom:'0.5rem'}}>{language==='es'?'✦ SABIÁS QUE...':'✦ DID YOU KNOW...'}</p>
+                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1rem',color:'rgba(245,230,211,0.85)',lineHeight:1.65,fontStyle:'italic'}}>{tip}</p>
+                                        </div>
+                                    );
+                                })()}
+
                                 <div style={{marginBottom:'1rem'}}>
                                     <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.75rem'}}>{language==='es'?'TU ESPACIO':'YOUR SPACE'}</p>
                                     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.6rem'}}>
