@@ -3689,10 +3689,10 @@ query = query.eq('region', region.toUpperCase());
                             @keyframes gpulse{0%,100%{transform:scale(1);opacity:1}33%{transform:scale(1.08);opacity:.85}66%{transform:scale(.95);opacity:.95}}
                             @keyframes gshimmer{0%{background-position:-200% center}100%{background-position:200% center}}
                             .gc{
-                                background: linear-gradient(145deg, rgba(28,28,28,0.95) 0%, rgba(18,18,18,0.98) 100%);
-                                border: 1.5px solid rgba(184,115,51,0.55);
+                                background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(10,8,6,0.97) 35%, rgba(8,6,4,0.99) 100%);
+                                border: 1.5px solid rgba(184,115,51,0.65);
                                 border-radius: 1.25rem;
-                                box-shadow: 0 4px 24px rgba(0,0,0,0.6), 0 0 0 1px rgba(184,115,51,0.08);
+                                box-shadow: 0 8px 32px rgba(0,0,0,0.8), 0 0 0 1px rgba(184,115,51,0.12), inset 0 1px 0 rgba(255,255,255,0.06);
                             }
                             .gch{transition:all 0.3s ease;cursor:pointer}
                             .gch:hover{border-color:rgba(184,115,51,0.7)!important;transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.12),0 0 20px rgba(184,115,51,0.1)!important}
