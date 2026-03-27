@@ -3706,31 +3706,50 @@ query = query.eq('region', region.toUpperCase());
                                 <div style={{display:'inline-flex',alignItems:'center',background:'linear-gradient(135deg,rgba(184,115,51,0.25),rgba(232,200,120,0.15))',border:'1px solid rgba(184,115,51,0.45)',borderRadius:'9999px',padding:'0.3rem 1rem',marginBottom:'1.25rem'}}>
                                     <span style={{fontSize:'0.65rem',fontWeight:700,color:'#B87333',letterSpacing:'0.18em',textTransform:'uppercase'}}>PREMIUM</span>
                                 </div>
-                                <h1 style={{fontFamily:"'Cormorant',serif",fontSize:'2.5rem',fontWeight:500,color:'#F5E6D3',lineHeight:1.1,marginBottom:'0.75rem'}}>
+                                <h1 style={{fontFamily:"'Cormorant',serif",fontSize:'3rem',fontWeight:400,color:'#F5E6D3',lineHeight:1.05,marginBottom:'0.5rem',letterSpacing:'-0.01em'}}>
                                     {language==='es'?'Bienvenida,':'Welcome,'}<br/>
-                                    <span style={{background:'linear-gradient(135deg,#B87333,#E8C878,#D4956A)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundSize:'200%',animation:'gshimmer 4s linear infinite'}}>{userName}</span>
+                                    <span style={{background:'linear-gradient(135deg,#B87333,#E8C878,#D4956A)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundSize:'200%',animation:'gshimmer 4s linear infinite',fontSize:'3.4rem'}}>{userName}</span>
                                 </h1>
-                                <p style={{fontSize:'0.92rem',color:'rgba(212,149,106,0.85)',lineHeight:1.6,marginBottom:'1.5rem',fontStyle:'italic',fontFamily:"'Cormorant',serif"}}>
+                                <p style={{fontSize:'1rem',color:'rgba(212,149,106,0.75)',lineHeight:1.6,marginBottom:'1rem',fontStyle:'italic',fontFamily:"'Cormorant',serif",letterSpacing:'0.02em'}}>
                                     {language==='es'?'Tu santuario. Tu ritmo. Tu transformación.':'Your sanctuary. Your rhythm. Your transformation.'}
                                 </p>
-                                {currentUser && currentUser.bmi && currentUser.tdee && (
-                                    <div style={{display:'flex',gap:'0.75rem',flexWrap:'wrap'}}>
-                                        {[{label:'IMC',value:currentUser.bmi,sub:getBMICategory(currentUser.bmi,language)},{label:'TDEE',value:currentUser.tdee,sub:'kcal/día'}].map(({label,value,sub})=>(
-                                            <div key={label} style={{background:'rgba(184,115,51,0.12)',border:'1px solid rgba(184,115,51,0.30)',borderRadius:'0.75rem',padding:'0.6rem 1rem',minWidth:'90px'}}>
-                                                <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:'2px'}}>{label}</p>
-                                                <p style={{fontSize:'1.4rem',fontWeight:700,color:'#B87333',lineHeight:1}}>{value}</p>
-                                                <p style={{fontSize:'0.65rem',color:'rgba(245,230,211,0.55)',marginTop:'2px'}}>{sub}</p>
-                                            </div>
-                                        ))}
-                                        <div onClick={()=>setShowEditProfile(true)} style={{background:'rgba(184,115,51,0.08)',border:'1px solid rgba(184,115,51,0.20)',borderRadius:'0.75rem',padding:'0.6rem 1rem',cursor:'pointer',display:'flex',alignItems:'center',gap:'0.4rem'}}>
-                                            <span style={{fontSize:'0.72rem',color:'#B87333',fontWeight:600}}>{language==='es'?'Editar perfil':'Edit profile'}</span>
-                                        </div>
-                                    </div>
-                                )}
+                                {/* FRASE DEL DÍA — FRIDA */}
+                                {(()=>{
+                                    const day = new Date().getDay();
+                                    const msgs = language==='es'?[
+                                        {q:'"Pies, ¿para qué los quiero si tengo alas para volar?"',a:'Frida Kahlo'},
+                                        {q:'"Hoy te pintas tú. Con los colores que elijas."',a:'Lumera'},
+                                        {q:'"Me pinto a mí misma porque soy a quien mejor conozco."',a:'Frida Kahlo'},
+                                        {q:'"Tu cuerpo es el lienzo más honesto que existe."',a:'Lumera'},
+                                        {q:'"No nací para complacer. Nací para florecer."',a:'Lumera'},
+                                        {q:'"El dolor informa. La belleza transforma."',a:'Lumera'},
+                                        {q:'"Soy la artista de mi propio universo."',a:'Lumera'},
+                                    ]:[
+                                        {q:'"Feet, what do I need them for if I have wings to fly?"',a:'Frida Kahlo'},
+                                        {q:'"Today you paint yourself. With whatever colours you choose."',a:'Lumera'},
+                                        {q:'"I paint myself because I am the subject I know best."',a:'Frida Kahlo'},
+                                        {q:'"Your body is the most honest canvas that exists."',a:'Lumera'},
+                                        {q:'"I was not born to please. I was born to blossom."',a:'Lumera'},
+                                        {q:'"Pain informs. Beauty transforms."',a:'Lumera'},
+                                        {q:'"I am the artist of my own universe."',a:'Lumera'},
+                                    ];
+                                    const m=msgs[day];
+                                    return <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.88rem',fontStyle:'italic',color:'rgba(232,200,120,0.6)',lineHeight:1.5,marginBottom:'0.75rem'}}>{m.q} <span style={{fontSize:'0.72rem',opacity:0.7}}>— {m.a}</span></p>;
+                                })()}
+                                <div onClick={()=>setShowEditProfile(true)} style={{display:'inline-flex',alignItems:'center',gap:'0.4rem',background:'rgba(184,115,51,0.08)',border:'1px solid rgba(184,115,51,0.20)',borderRadius:'9999px',padding:'0.35rem 0.9rem',cursor:'pointer',marginBottom:'0.5rem'}}>
+                                    <span style={{fontSize:'0.72rem',color:'rgba(184,115,51,0.7)'}}>{language==='es'?'Editar perfil':'Edit profile'}</span>
+                                </div>
                             </div>
 
                             <div style={{padding:'1.25rem'}}>
 
+                                {/* RECORDATORIO */}
+                                {(!symptoms || symptoms.length === 0) && (
+                                    <div style={{background:'rgba(184,115,51,0.08)',border:'1px solid rgba(184,115,51,0.25)',borderRadius:'1rem',padding:'0.875rem 1.1rem',marginBottom:'0.75rem',display:'flex',alignItems:'center',gap:'0.75rem',cursor:'pointer'}} onClick={()=>setCurrentPage('symptoms')}>
+                                        <img src="/images/lumi.png" style={{width:'32px',height:'32px',borderRadius:'50%',objectFit:'cover',flexShrink:0}}/>
+                                        <p style={{fontSize:'0.82rem',color:'rgba(245,230,211,0.8)',fontStyle:'italic',fontFamily:"'Cormorant',serif",lineHeight:1.5}}>{language==='es'?'Registra cómo te sientes hoy — LUMI ajusta todo a tu ritmo.':'Log how you feel today — LUMI adjusts everything to your rhythm.'}</p>
+                                    </div>
+                                )}
                                 {symptoms && symptoms.length >= 2 && (()=>{
                                     const last7=symptoms.slice(-7);
                                     const avg=(k)=>{const v=last7.map(s=>s[k]||0).filter(x=>x>0);return v.length?v.reduce((a,b)=>a+b,0)/v.length:0};
@@ -3788,35 +3807,6 @@ query = query.eq('region', region.toUpperCase());
                                         </div>
                                     </div>
                                 </div>
-
-                                {/* FRIDA — MENSAJE DEL DÍA */}
-                                {(()=>{
-                                    const day = new Date().getDay();
-                                    const msgs = language==='es'?[
-                                        {quote:'"Pies, ¿para qué los quiero si tengo alas para volar?"',author:'Frida Kahlo'},
-                                        {quote:'"Hoy te pintas tú. Con los colores que elijas."',author:'Lumera'},
-                                        {quote:'"Me pinto a mí misma porque soy a quien mejor conozco."',author:'Frida Kahlo'},
-                                        {quote:'"Tu cuerpo es el lienzo más honesto que existe."',author:'Lumera'},
-                                        {quote:'"No nací para complacer. Nací para florecer."',author:'Lumera'},
-                                        {quote:'"El dolor informa. La belleza transforma."',author:'Lumera'},
-                                        {quote:'"Soy la artista de mi propio universo."',author:'Lumera'},
-                                    ]:[
-                                        {quote:'"Feet, what do I need them for if I have wings to fly?"',author:'Frida Kahlo'},
-                                        {quote:'"Today you paint yourself. With whatever colours you choose."',author:'Lumera'},
-                                        {quote:'"I paint myself because I am the subject I know best."',author:'Frida Kahlo'},
-                                        {quote:'"Your body is the most honest canvas that exists."',author:'Lumera'},
-                                        {quote:'"I was not born to please. I was born to blossom."',author:'Lumera'},
-                                        {quote:'"Pain informs. Beauty transforms."',author:'Lumera'},
-                                        {quote:'"I am the artist of my own universe."',author:'Lumera'},
-                                    ];
-                                    const m = msgs[day];
-                                    return (
-                                        <div style={{textAlign:'center',padding:'1.25rem 1rem',marginBottom:'1rem',borderTop:'1px solid rgba(184,115,51,0.12)',borderBottom:'1px solid rgba(184,115,51,0.12)'}}>
-                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.15rem',fontStyle:'italic',color:'rgba(245,230,211,0.9)',lineHeight:1.75,marginBottom:'0.4rem'}}>{m.quote}</p>
-                                            <p style={{fontSize:'0.68rem',color:'rgba(184,115,51,0.55)',letterSpacing:'0.12em'}}>— {m.author}</p>
-                                        </div>
-                                    );
-                                })()}
 
                                 {/* ESTADOS EMOCIONALES — HOY QUIERO */}
                                 <div style={{marginBottom:'1.25rem'}}>
