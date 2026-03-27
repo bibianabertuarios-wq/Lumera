@@ -3769,7 +3769,7 @@ query = query.eq('region', region.toUpperCase());
                                         <div className="gc" style={{marginBottom:'1rem',padding:'1.5rem',position:'relative',overflow:'hidden'}}>
                                             <div style={{position:'absolute',top:0,left:0,right:0,height:'3px',background:'linear-gradient(90deg,#B87333,#E8C878,#B87333)'}}/>
                                             <div style={{display:'flex',alignItems:'center',gap:'0.6rem',marginBottom:'1rem'}}>
-                                                <div style={{width:'36px',height:'36px',borderRadius:'50%',background:'linear-gradient(135deg,#B87333,#E8C878)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1rem',flexShrink:0}}>🔮</div>
+                                                <img src="/images/lumi.png" style={{width:'40px',height:'40px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'2px solid rgba(184,115,51,0.5)',boxShadow:'0 0 12px rgba(184,115,51,0.3)'}} onError={e=>{e.target.style.display='none'}} alt="LUMI"/>
                                                 <div>
                                                     <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase'}}>LUMI PREDICTIVA</p>
                                                     <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.1rem',color:'#F5E6D3',fontWeight:500}}>{language==='es'?'Esta semana te espera esto':'This week ahead for you'}</p>
