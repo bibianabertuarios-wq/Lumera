@@ -125,6 +125,7 @@ import './lumera.css'
             const [showWelcomePremium, setShowWelcomePremium] = useState(false);
             const [showWelcomeTrial, setShowWelcomeTrial] = useState(false);
             const [showShulaDay3, setShowShulaDay3] = useState(false);
+            const [openEstado, setOpenEstado] = useState(null);
             const [showOraclePopup, setShowOraclePopup] = useState(false);
             const [welcomeAct, setWelcomeAct] = useState(1);
             const [chartData, setChartData] = useState(null);
@@ -3787,6 +3788,96 @@ query = query.eq('region', region.toUpperCase());
                                         </div>
                                     </div>
                                 </div>
+
+                                {/* FRIDA — MENSAJE DEL DÍA */}
+                                {(()=>{
+                                    const day = new Date().getDay();
+                                    const msgs = language==='es'?[
+                                        {quote:'"Pies, ¿para qué los quiero si tengo alas para volar?"',author:'Frida Kahlo'},
+                                        {quote:'"Hoy te pintas tú. Con los colores que elijas."',author:'Lumera'},
+                                        {quote:'"Me pinto a mí misma porque soy a quien mejor conozco."',author:'Frida Kahlo'},
+                                        {quote:'"Tu cuerpo es el lienzo más honesto que existe."',author:'Lumera'},
+                                        {quote:'"No nací para complacer. Nací para florecer."',author:'Lumera'},
+                                        {quote:'"El dolor informa. La belleza transforma."',author:'Lumera'},
+                                        {quote:'"Soy la artista de mi propio universo."',author:'Lumera'},
+                                    ]:[
+                                        {quote:'"Feet, what do I need them for if I have wings to fly?"',author:'Frida Kahlo'},
+                                        {quote:'"Today you paint yourself. With whatever colours you choose."',author:'Lumera'},
+                                        {quote:'"I paint myself because I am the subject I know best."',author:'Frida Kahlo'},
+                                        {quote:'"Your body is the most honest canvas that exists."',author:'Lumera'},
+                                        {quote:'"I was not born to please. I was born to blossom."',author:'Lumera'},
+                                        {quote:'"Pain informs. Beauty transforms."',author:'Lumera'},
+                                        {quote:'"I am the artist of my own universe."',author:'Lumera'},
+                                    ];
+                                    const m = msgs[day];
+                                    return (
+                                        <div style={{textAlign:'center',padding:'1.25rem 1rem',marginBottom:'1rem',borderTop:'1px solid rgba(184,115,51,0.12)',borderBottom:'1px solid rgba(184,115,51,0.12)'}}>
+                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.15rem',fontStyle:'italic',color:'rgba(245,230,211,0.9)',lineHeight:1.75,marginBottom:'0.4rem'}}>{m.quote}</p>
+                                            <p style={{fontSize:'0.68rem',color:'rgba(184,115,51,0.55)',letterSpacing:'0.12em'}}>— {m.author}</p>
+                                        </div>
+                                    );
+                                })()}
+
+                                {/* ESTADOS EMOCIONALES — HOY QUIERO */}
+                                <div style={{marginBottom:'1.25rem'}}>
+                                    <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.75rem'}}>{language==='es'?'HOY QUIERO...':'TODAY I WANT TO...'}</p>
+                                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.6rem'}}>
+                                        {[
+                                            {img:'/images/descanso.png',es:'Descansar',en:'Rest',sub_es:'Tu ritual de calma',sub_en:'Your calm ritual',
+                                             rec_es:'Infusión de valeriana · Yoga Nidra · "El arte de la siesta"',
+                                             rec_en:'Valerian tea · Yoga Nidra · "The Art of Rest"'},
+                                            {img:'/images/dopamina.png',es:'Activarme',en:'Get energised',sub_es:'Genera tu dopamina',sub_en:'Generate your dopamine',
+                                             rec_es:'Chocolate negro 85% · Caminata 20 min · Playlist: Shakira, Beyóncé',
+                                             rec_en:'Dark chocolate 85% · Brisk walk 20 min · Playlist: Shakira, Beyoncé'},
+                                            {img:'/images/lagrima.png',es:'Soltar',en:'Let it out',sub_es:'A veces llorar es sanar',sub_en:'Sometimes tears heal',
+                                             rec_es:'Sopa con cúrcuma · Respiración 4-7-8 · "Eat Pray Love" — peli',
+                                             rec_en:'Turmeric soup · 4-7-8 breathing · "Eat Pray Love" — film'},
+                                            {img:'/images/reirme.png',es:'Reírme',en:'Laugh',sub_es:'La risa es medicina',sub_en:'Laughter is medicine',
+                                             rec_es:'Frutos rojos · Baile libre 10 min · "Fleabag" en Prime',
+                                             rec_en:'Mixed berries · Free dance 10 min · "Fleabag" on Prime'},
+                                            {img:'/images/florecer.png',es:'Florecer',en:'Blossom',sub_es:'Activa tu serotonina',sub_en:'Activate your serotonin',
+                                             rec_es:'Plátano + avena · Meditación 10 min · Frecuencias 528hz',
+                                             rec_en:'Banana + oats · Meditation 10 min · 528hz frequencies'},
+                                        ].map((item,i)=>(
+                                            <div key={i}>
+                                                <div className="gc gch" onClick={()=>setOpenEstado(openEstado===i?null:i)} style={{padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem'}}>
+                                                    <img src={item.img} style={{width:'42px',height:'42px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'1px solid rgba(184,115,51,0.3)',boxShadow:'0 0 12px rgba(184,115,51,0.15)'}}/>
+                                                    <div>
+                                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.88rem',fontWeight:600,color:'#F5E6D3',margin:0}}>{language==='es'?item.es:item.en}</p>
+                                                        <p style={{fontSize:'0.7rem',color:'rgba(184,115,51,0.7)',margin:0}}>{language==='es'?item.sub_es:item.sub_en}</p>
+                                                    </div>
+                                                </div>
+                                                {openEstado===i&&<div style={{background:'rgba(184,115,51,0.08)',border:'1px solid rgba(184,115,51,0.2)',borderRadius:'0.75rem',padding:'0.75rem',marginTop:'0.35rem',fontSize:'0.78rem',color:'rgba(245,230,211,0.85)',lineHeight:1.7,fontStyle:'italic'}}>
+                                                    {language==='es'?item.rec_es:item.rec_en}
+                                                </div>}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* SABIAS QUE */}
+                                {(()=>{
+                                    const tips = language==='es'?[
+                                        'El magnesio reduce los sofocos en un 50% en mujeres de 40+. Toma 300mg antes de dormir.',
+                                        'Tu cerebro en la perimenopausia: la memoria mejora si duermes 7-8h. No es edad, es cortisol.',
+                                        'El estrógeno protege el corazón. Después de los 40, el ejercicio cardiovascular es tu mejor aliado.',
+                                        'Las mujeres con perimenopausia tienen microbioma intestinal diferente. Los fermentados son tu medicina.',
+                                        'La proteína en el desayuno estabiliza el azúcar en sangre todo el día. 30g antes de las 10am.',
+                                    ]:[
+                                        'Magnesium reduces hot flashes by 50% in women 40+. Take 300mg before sleep.',
+                                        'Your brain in perimenopause: memory improves with 7-8h sleep. It is not age, it is cortisol.',
+                                        'Oestrogen protects the heart. After 40, cardiovascular exercise is your best ally.',
+                                        'Women in perimenopause have a different gut microbiome. Fermented foods are your medicine.',
+                                        'Protein at breakfast stabilises blood sugar all day. 30g before 10am.',
+                                    ];
+                                    const tip = tips[Math.floor(Date.now()/604800000)%tips.length];
+                                    return (
+                                        <div className="gc" style={{marginBottom:'1rem',padding:'1.1rem 1.25rem'}}>
+                                            <p style={{fontSize:'0.6rem',color:'rgba(184,115,51,0.6)',letterSpacing:'0.18em',textTransform:'uppercase',marginBottom:'0.5rem'}}>{language==='es'?'✦ ¿Sabías que...?':'✦ Did you know...'}</p>
+                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1rem',color:'rgba(245,230,211,0.85)',lineHeight:1.65,fontStyle:'italic'}}>{tip}</p>
+                                        </div>
+                                    );
+                                })()}
 
                                 <div style={{marginBottom:'1rem'}}>
                                     <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.75rem'}}>{language==='es'?'TU ESPACIO':'YOUR SPACE'}</p>
