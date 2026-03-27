@@ -127,6 +127,7 @@ import './lumera.css'
             const [showShulaDay3, setShowShulaDay3] = useState(false);
             const [openEstado, setOpenEstado] = useState(null);
             const [showOraclePopup, setShowOraclePopup] = useState(false);
+            const [lumiPhotoLoading, setLumiPhotoLoading] = useState(false);
             const [welcomeAct, setWelcomeAct] = useState(1);
             const [chartData, setChartData] = useState(null);
             const [aiCookingTips, setAiCookingTips] = useState({}); // {recipeName: [tip1, tip2, tip3]}
@@ -3220,6 +3221,45 @@ query = query.eq('region', region.toUpperCase());
 
                 setUnreadLumiMessages(0);
                 setProactiveMessages([]);
+            };
+
+            const analyzeFood = async (file) => {
+                if (!file) return;
+                setLumiPhotoLoading(true);
+                if (!showLumiChat) setShowLumiChat(true);
+                try {
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        const base64 = e.target.result.split(',')[1];
+                        const mediaType = file.type || 'image/jpeg';
+                        const userMsg = {role:'user', content: language==='es'?'[Foto de mi comida]':'[Photo of my meal]'};
+                        setLumiMessages(prev => [...prev, userMsg]);
+                        const systemPrompt = language==='es'
+                            ? `Eres LUMI, coach de bienestar hormonal de Lumera. La usuaria te ha enviado una foto de su comida. Analiza los nutrientes visibles y responde en este formato exacto, con tipografía poética pero precisa:\n\n✦ LO QUE VEO\n[describe el plato en 1 línea]\n\n✦ MACROS ESTIMADOS\nProteína: ~Xg | Carbohidratos: ~Xg | Grasas: ~Xg | Calorías: ~X kcal\n\n✦ MICRONUTRIENTES CLAVE\n[2-3 micronutrientes relevantes para hormonas femeninas 40+]\n\n✦ EFECTO HORMONAL\n[1-2 frases sobre cómo este plato afecta al GLP-1, cortisol o estrógeno]\n\n✦ MI RECOMENDACIÓN\n[1 ajuste simple para optimizar el plato]\n\nSé empática, científica y elegante. Máximo 150 palabras.`
+                            : `You are LUMI, Lumera's hormonal wellness coach. The user has sent you a photo of their meal. Analyse the visible nutrients and respond in this exact format:\n\n✦ WHAT I SEE\n[describe the dish in 1 line]\n\n✦ ESTIMATED MACROS\nProtein: ~Xg | Carbs: ~Xg | Fats: ~Xg | Calories: ~X kcal\n\n✦ KEY MICRONUTRIENTS\n[2-3 micronutrients relevant for female hormones 40+]\n\n✦ HORMONAL EFFECT\n[1-2 sentences on how this meal affects GLP-1, cortisol or oestrogen]\n\n✦ MY RECOMMENDATION\n[1 simple adjustment to optimise the meal]\n\nBe empathetic, scientific and elegant. Maximum 150 words.`;
+                        const response = await fetch('/api/lumi', {
+                            method: 'POST',
+                            headers: {'Content-Type':'application/json'},
+                            body: JSON.stringify({
+                                messages: [{role:'user', content:[
+                                    {type:'image', source:{type:'base64', media_type:mediaType, data:base64}},
+                                    {type:'text', text: language==='es'?'Analiza esta comida para mis hormonas':'Analyse this meal for my hormones'}
+                                ]}],
+                                system: systemPrompt,
+                                userId: currentUser?.id,
+                                language
+                            })
+                        });
+                        const data = await response.json();
+                        const reply = data.content?.[0]?.text || (language==='es'?'No pude analizar la imagen.':'Could not analyse the image.');
+                        setLumiMessages(prev => [...prev, {role:'assistant', content:reply}]);
+                        setLumiPhotoLoading(false);
+                    };
+                    reader.readAsDataURL(file);
+                } catch(err) {
+                    console.error(err);
+                    setLumiPhotoLoading(false);
+                }
             };
 
             const sendToLumi = async () => {
@@ -7505,6 +7545,14 @@ query = query.eq('region', region.toUpperCase());
                                         </div>
                                     ))}
 
+                                    {lumiPhotoLoading && (
+                                        <div style={{display:'flex',justifyContent:'center',padding:'1rem'}}>
+                                            <div style={{textAlign:'center'}}>
+                                                <img src="/images/lente_alquimica.png" style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',margin:'0 auto 0.5rem',display:'block',animation:'pulse 2s infinite'}}/>
+                                                <p style={{fontSize:'0.78rem',color:'#C9935A',fontStyle:'italic',fontFamily:"'Cormorant',serif"}}>{language==='es'?'Analizando tu plato...':'Analysing your meal...'}</p>
+                                            </div>
+                                        </div>
+                                    )}
                                     {lumiLoading && (
                                         <div className="flex justify-start">
                                             <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-100'} rounded-2xl px-4 py-2`}>
@@ -7532,6 +7580,12 @@ query = query.eq('region', region.toUpperCase());
                                             } focus:outline-none focus:ring-2 focus:ring-amber-600`}
                                             disabled={lumiLoading}
                                         />
+                                        <label style={{cursor:'pointer',flexShrink:0}}>
+                                            <input type="file" accept="image/*" capture="environment" style={{display:'none'}} onChange={e=>e.target.files?.[0]&&analyzeFood(e.target.files[0])}/>
+                                            <div style={{width:'44px',height:'44px',borderRadius:'50%',background:'rgba(184,115,51,0.12)',border:'1px solid rgba(184,115,51,0.4)',display:'flex',alignItems:'center',justifyContent:'center',transition:'all 0.2s'}}>
+                                                <img src="/images/lente_alquimica.png" style={{width:'26px',height:'26px',borderRadius:'50%',objectFit:'cover'}}/>
+                                            </div>
+                                        </label>
                                         <button
                                             onClick={sendToLumi}
                                             disabled={!lumiInput.trim() || lumiLoading}
