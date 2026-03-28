@@ -22,7 +22,7 @@ export async function POST(request) {
     }
 
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-3-5-sonnet-20241022',
       max_tokens: 1024,
       system: system || 'You are LUMI, a hormonal wellness coach for women 40+.',
       messages: messages,
