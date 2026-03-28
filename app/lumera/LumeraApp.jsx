@@ -4815,6 +4815,13 @@ query = query.eq('region', region.toUpperCase());
 
                 return (
                     <div className="pb-32 space-y-8" key={`nutrition-${language}`} style={{position: 'relative'}}>
+                        {/* HEADER NUTRICIÓN */}
+                        <div style={{marginBottom:'0.5rem'}}>
+                            <h1 style={{fontFamily:"'Cormorant',serif",fontSize:'2.2rem',fontWeight:400,color:darkMode?'#fdf8f3':'#1c1917',lineHeight:1.2,marginBottom:'0.35rem'}}>
+                                {language==='es'?'Tu alquimia nutricional':'Your nutritional alchemy'}
+                            </h1>
+                            <p style={{fontSize:'0.85rem',color:'#C9935A',fontStyle:'italic'}}>{language==='es'?'Cada plato, una decisión hormonal.':'Every meal, a hormonal decision.'}</p>
+                        </div>
                         <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.3)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
                             <summary style={{listStyle:'none',cursor:'pointer'}}>
                                 <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(184,115,51,0.15),rgba(232,200,120,0.08))'}}>
