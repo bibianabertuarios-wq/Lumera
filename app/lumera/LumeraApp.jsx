@@ -6666,7 +6666,7 @@ query = query.eq('region', region.toUpperCase());
                         {/* Video de Shula en círculo */}
                         <div style={{width:'220px',height:'220px',borderRadius:'50%',overflow:'hidden',margin:'0 auto 2rem',border:'2px solid rgba(184,115,51,0.5)',boxShadow:'0 0 40px rgba(184,115,51,0.2)',position:'relative'}}>
                             <video autoPlay loop muted playsInline src="/videos/shula_day3.mp4"
-                                style={{width:'140%',height:'140%',objectFit:'cover',position:'absolute',top:'-20%',left:'-20%'}}/>
+                                style={{width:'140%',height:'140%',objectFit:'cover',position:'absolute',top:'-5%',left:'-20%'}}/>
                         </div>
 
                         {/* Mensaje */}
@@ -7569,7 +7569,7 @@ query = query.eq('region', region.toUpperCase());
                                                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                                             </svg>
                                             <p className={`text-sm font-semibold ${darkMode ? 'text-amber-300' : 'text-amber-700'} mb-3`}>
-                                                {language === 'es' ? '💜 Hola, soy LUMI' : '💜 Hi, I\'m LUMI'}
+                                                {language === 'es' ? 'Hola, soy LUMI' : '💜 Hi, I\'m LUMI'}
                                             </p>
                                             <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'} leading-relaxed px-2`}>
                                                 {currentUser?.profile_name 
