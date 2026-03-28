@@ -4844,16 +4844,25 @@ query = query.eq('region', region.toUpperCase());
                                         <span key={i} style={{fontSize:'0.72rem',color:'#C9935A',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'9999px',padding:'0.25rem 0.75rem'}}>{tag}</span>
                                     ))}
                                 </div>
-                                <label style={{cursor:'pointer',display:'inline-block'}}>
-                                    <input type="file" accept="image/*" capture="environment" style={{display:'none'}}
-                                        onChange={e=>{if(e.target.files?.[0]){analyzeFood(e.target.files[0]);setShowLumiChat(true);}}}/>
-                                    <div style={{background:'linear-gradient(135deg,#B87333,#E8C878)',borderRadius:'9999px',padding:'0.875rem 2rem',display:'inline-flex',alignItems:'center',gap:'0.5rem',boxShadow:'0 4px 20px rgba(184,115,51,0.3)'}}>
-                                        <img src="/images/lente_alquimica.png" style={{width:'20px',height:'20px',borderRadius:'50%',objectFit:'cover'}}/>
-                                        <span style={{color:'#0A0A0A',fontFamily:"'Cormorant',serif",fontWeight:600,fontSize:'1rem'}}>
-                                            {language==='es'?'Fotografiar mi plato':'Photograph my meal'}
+                                {getUserTier() === 'free' ? (
+                                    <div onClick={()=>setCurrentPage('upgrade')} style={{background:'rgba(184,115,51,0.1)',border:'1px solid rgba(184,115,51,0.3)',borderRadius:'9999px',padding:'0.875rem 2rem',display:'inline-flex',alignItems:'center',gap:'0.5rem',cursor:'pointer'}}>
+                                        <span style={{fontSize:'0.9rem'}}>✦</span>
+                                        <span style={{color:'#C9935A',fontFamily:"'Cormorant',serif",fontWeight:600,fontSize:'1rem'}}>
+                                            {language==='es'?'Hazte Premium para activar':'Go Premium to activate'}
                                         </span>
                                     </div>
-                                </label>
+                                ) : (
+                                    <label style={{cursor:'pointer',display:'inline-block'}}>
+                                        <input type="file" accept="image/*" capture="environment" style={{display:'none'}}
+                                            onChange={e=>{if(e.target.files?.[0]){analyzeFood(e.target.files[0]);setShowLumiChat(true);}}}/>
+                                        <div style={{background:'linear-gradient(135deg,#B87333,#E8C878)',borderRadius:'9999px',padding:'0.875rem 2rem',display:'inline-flex',alignItems:'center',gap:'0.5rem',boxShadow:'0 4px 20px rgba(184,115,51,0.3)'}}>
+                                            <img src="/images/lente_alquimica.png" style={{width:'20px',height:'20px',borderRadius:'50%',objectFit:'cover'}}/>
+                                            <span style={{color:'#0A0A0A',fontFamily:"'Cormorant',serif",fontWeight:600,fontSize:'1rem'}}>
+                                                {language==='es'?'Fotografiar mi plato':'Photograph my meal'}
+                                            </span>
+                                        </div>
+                                    </label>
+                                )}
                             </div>
                         </details>
                         <video autoPlay loop muted playsInline src="/videos/menu.mp4"
