@@ -1,5 +1,13 @@
 import Anthropic from '@anthropic-ai/sdk';
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
+  },
+};
+
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
@@ -7,7 +15,11 @@ const client = new Anthropic({
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { messages, system, userId, language } = body;
+    const { messages, system } = body;
+
+    if (!messages || !Array.isArray(messages)) {
+      return Response.json({ error: 'Invalid messages' }, { status: 400 });
+    }
 
     const response = await client.messages.create({
       model: 'claude-sonnet-4-20250514',
@@ -18,9 +30,12 @@ export async function POST(request) {
 
     return Response.json(response);
   } catch (error) {
-    console.error('LUMI API error:', error);
+    console.error('LUMI API error:', error.message);
     return Response.json(
-      { error: 'Failed to process request', content: [{ text: 'Lo siento, no pude procesar tu solicitud.' }] },
+      { 
+        error: 'Failed to process request', 
+        content: [{ type: 'text', text: 'Lo siento, no pude procesar tu solicitud. Inténtalo de nuevo.' }] 
+      },
       { status: 500 }
     );
   }
