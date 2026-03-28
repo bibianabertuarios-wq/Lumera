@@ -4815,6 +4815,40 @@ query = query.eq('region', region.toUpperCase());
 
                 return (
                     <div className="pb-32 space-y-8" key={`nutrition-${language}`} style={{position: 'relative'}}>
+                        <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.3)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
+                            <summary style={{listStyle:'none',cursor:'pointer'}}>
+                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(184,115,51,0.15),rgba(232,200,120,0.08))'}}>
+                                    <img src="/images/lente_alquimica.png" style={{width:'52px',height:'52px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 12px rgba(184,115,51,0.4)',border:'1px solid rgba(184,115,51,0.4)'}}/>
+                                    <div style={{flex:1}}>
+                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'La Lente Alquímica':'The Alchemical Lens'}</p>
+                                        <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'Fotografía tu comida. LUMI la convierte en medicina.':'Photograph your meal. LUMI turns it into medicine.'}</p>
+                                    </div>
+                                </div>
+                            </summary>
+                            <div style={{padding:'1.5rem',textAlign:'center'}}>
+                                <img src="/images/lente_alquimica.png" style={{width:'120px',height:'120px',borderRadius:'50%',objectFit:'cover',margin:'0 auto 1rem',display:'block',border:'2px solid rgba(184,115,51,0.4)',boxShadow:'0 0 30px rgba(184,115,51,0.2)'}}/>
+                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'1rem',color:darkMode?'rgba(245,230,211,0.8)':'#57534e',lineHeight:1.7,marginBottom:'1rem',fontStyle:'italic'}}>
+                                    {language==='es'
+                                        ?'Análisis completo: calorías, macros, micronutrientes y efecto hormonal.'
+                                        :'Full analysis: calories, macros, micronutrients and hormonal effect.'}
+                                </p>
+                                <div style={{display:'flex',gap:'0.5rem',justifyContent:'center',marginBottom:'1.25rem',flexWrap:'wrap'}}>
+                                    {['Calorías','Macros','Micros','GLP-1'].map((tag,i)=>(
+                                        <span key={i} style={{fontSize:'0.72rem',color:'#C9935A',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'9999px',padding:'0.25rem 0.75rem'}}>{tag}</span>
+                                    ))}
+                                </div>
+                                <label style={{cursor:'pointer',display:'inline-block'}}>
+                                    <input type="file" accept="image/*" capture="environment" style={{display:'none'}}
+                                        onChange={e=>{if(e.target.files?.[0]){analyzeFood(e.target.files[0]);setShowLumiChat(true);}}}/>
+                                    <div style={{background:'linear-gradient(135deg,#B87333,#E8C878)',borderRadius:'9999px',padding:'0.875rem 2rem',display:'inline-flex',alignItems:'center',gap:'0.5rem',boxShadow:'0 4px 20px rgba(184,115,51,0.3)'}}>
+                                        <img src="/images/lente_alquimica.png" style={{width:'20px',height:'20px',borderRadius:'50%',objectFit:'cover'}}/>
+                                        <span style={{color:'#0A0A0A',fontFamily:"'Cormorant',serif",fontWeight:600,fontSize:'1rem'}}>
+                                            {language==='es'?'Fotografiar mi plato':'Photograph my meal'}
+                                        </span>
+                                    </div>
+                                </label>
+                            </div>
+                        </details>
                         <video autoPlay loop muted playsInline src="/videos/menu.mp4"
                             style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none', opacity: 0.18}} />
                         {/* HEADER NUTRICIÓN */}
@@ -7580,12 +7614,7 @@ query = query.eq('region', region.toUpperCase());
                                             } focus:outline-none focus:ring-2 focus:ring-amber-600`}
                                             disabled={lumiLoading}
                                         />
-                                        <label style={{cursor:'pointer',flexShrink:0}}>
-                                            <input type="file" accept="image/*" capture="environment" style={{display:'none'}} onChange={e=>e.target.files?.[0]&&analyzeFood(e.target.files[0])}/>
-                                            <div style={{width:'44px',height:'44px',borderRadius:'50%',background:'rgba(184,115,51,0.12)',border:'1px solid rgba(184,115,51,0.4)',display:'flex',alignItems:'center',justifyContent:'center',transition:'all 0.2s'}}>
-                                                <img src="/images/lente_alquimica.png" style={{width:'26px',height:'26px',borderRadius:'50%',objectFit:'cover'}}/>
-                                            </div>
-                                        </label>
+
                                         <button
                                             onClick={sendToLumi}
                                             disabled={!lumiInput.trim() || lumiLoading}
