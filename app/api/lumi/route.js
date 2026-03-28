@@ -1,12 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '10mb',
-    },
-  },
-};
 
 const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
