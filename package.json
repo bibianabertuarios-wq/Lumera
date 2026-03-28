@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/bibianabertuarios-wq/Lumera#readme",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.80.0",
     "@lottiefiles/react-lottie-player": "^3.6.0",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.98.0",
