@@ -3237,21 +3237,20 @@ query = query.eq('region', region.toUpperCase());
                         const systemPrompt = language==='es'
                             ? `Eres LUMI, coach de bienestar hormonal de Lumera. La usuaria te ha enviado una foto de su comida. Analiza los nutrientes visibles y responde en este formato exacto, con tipografía poética pero precisa:\n\n✦ LO QUE VEO\n[describe el plato en 1 línea]\n\n✦ MACROS ESTIMADOS\nProteína: ~Xg | Carbohidratos: ~Xg | Grasas: ~Xg | Calorías: ~X kcal\n\n✦ MICRONUTRIENTES CLAVE\n[2-3 micronutrientes relevantes para hormonas femeninas 40+]\n\n✦ EFECTO HORMONAL\n[1-2 frases sobre cómo este plato afecta al GLP-1, cortisol o estrógeno]\n\n✦ MI RECOMENDACIÓN\n[1 ajuste simple para optimizar el plato]\n\nSé empática, científica y elegante. Máximo 150 palabras.`
                             : `You are LUMI, Lumera's hormonal wellness coach. The user has sent you a photo of their meal. Analyse the visible nutrients and respond in this exact format:\n\n✦ WHAT I SEE\n[describe the dish in 1 line]\n\n✦ ESTIMATED MACROS\nProtein: ~Xg | Carbs: ~Xg | Fats: ~Xg | Calories: ~X kcal\n\n✦ KEY MICRONUTRIENTS\n[2-3 micronutrients relevant for female hormones 40+]\n\n✦ HORMONAL EFFECT\n[1-2 sentences on how this meal affects GLP-1, cortisol or oestrogen]\n\n✦ MY RECOMMENDATION\n[1 simple adjustment to optimise the meal]\n\nBe empathetic, scientific and elegant. Maximum 150 words.`;
-                        const response = await fetch('/api/lumi', {
+                        const response = await fetch('https://pyekwpmbdnmglrjieexc.supabase.co/functions/v1/lumi-vision', {
                             method: 'POST',
-                            headers: {'Content-Type':'application/json'},
+                            headers: {
+                                'Content-Type':'application/json',
+                                'Authorization': `Bearer ${supabase.supabaseKey || ''}`,
+                            },
                             body: JSON.stringify({
-                                messages: [{role:'user', content:[
-                                    {type:'image', source:{type:'base64', media_type:mediaType, data:base64}},
-                                    {type:'text', text: language==='es'?'Analiza esta comida para mis hormonas':'Analyse this meal for my hormones'}
-                                ]}],
-                                system: systemPrompt,
-                                userId: currentUser?.id,
+                                image_base64: base64,
+                                media_type: mediaType,
                                 language
                             })
                         });
                         const data = await response.json();
-                        const reply = data.content?.[0]?.text || (language==='es'?'No pude analizar la imagen.':'Could not analyse the image.');
+                        const reply = data.message || (language==='es'?'No pude analizar la imagen.':'Could not analyse the image.');
                         setLumiMessages(prev => [...prev, {role:'assistant', content:reply}]);
                         setLumiPhotoLoading(false);
                     };
