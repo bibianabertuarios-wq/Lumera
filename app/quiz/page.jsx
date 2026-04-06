@@ -53,17 +53,13 @@ Analiza su patrón hormonal y metabólico en máximo 4 líneas. Habla directamen
 Analyze her hormonal and metabolic pattern in maximum 4 lines. Speak directly to her, in second person, with a warm, scientific and empowering tone. Mention cortisol, GLP-1, oestrogen or progesterone as appropriate. Do NOT use emojis. Do NOT mention medical diagnoses. End by telling her how Lumera can help her specifically.`;
 
       try {
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
+        const response = await fetch('/api/quiz', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
-            max_tokens: 1000,
-            messages: [{ role: 'user', content: prompt }]
-          })
+          body: JSON.stringify({ prompt })
         });
         const data = await response.json();
-        const text = data.content?.[0]?.text || '';
+        const text = data.text || '';
         setResult(text);
       } catch (e) {
         setResult(lang === 'es'
