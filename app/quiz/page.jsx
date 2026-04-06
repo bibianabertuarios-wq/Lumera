@@ -80,7 +80,7 @@ Analyze her hormonal and metabolic pattern in maximum 4 lines. Speak directly to
   };
 
   return (
-    <div style={{minHeight:'100vh',background:'linear-gradient(135deg,#0A0806 0%,#1A1008 50%,#0A0806 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'1.5rem',fontFamily:"Georgia, serif"}}>
+    <div style={{minHeight:'100vh',background:'linear-gradient(135deg,rgba(10,8,6,0.92) 0%,rgba(26,16,8,0.88) 100%)',backgroundImage:'url(/images/quiz-bg.png)',backgroundSize:'cover',backgroundPosition:'center',backgroundBlendMode:'multiply',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'1.5rem',fontFamily:"Georgia, serif"}}>
       <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet"/>
 
       {/* Logo */}
