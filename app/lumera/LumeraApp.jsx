@@ -51,7 +51,7 @@ import './lumera.css'
         };
 
         const LumeraApp = () => {
-            const [language, setLanguage] = useState('es');
+            const [language, setLanguage] = useState(() => { if (typeof window === 'undefined') return 'es'; const saved = localStorage.getItem('lumeraLang'); if (saved) return saved; const browserLang = navigator.language || navigator.userLanguage || 'es'; return browserLang.startsWith('es') ? 'es' : 'en'; });
 
             // Sync idioma con Supabase cuando cambia
             useEffect(() => {
