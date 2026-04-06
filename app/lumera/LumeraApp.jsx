@@ -7338,7 +7338,7 @@ query = query.eq('region', region.toUpperCase());
                 return null;
             }
 
-            if (showPreQuiz && !session) {
+            if (showPreQuiz && !localStorage.getItem('lumeraQuizDone')) {
                 const quizQs = [
                     { q: language==='es' ? 'Cual es tu mayor problema ahora mismo?' : 'What is your biggest challenge right now?', opts: language==='es' ? ['Agotamiento constante aunque duerma','Mi cuerpo cambia y no se por que','No puedo perder peso aunque lo intente','Mi animo es impredecible'] : ['Exhausted no matter how much I sleep','My body is changing and I do not know why','Cannot lose weight despite trying everything','My mood is all over the place'] },
                     { q: language==='es' ? 'Cuando lo notas mas?' : 'When do you notice it most?', opts: language==='es' ? ['Por la manana, me levanto ya cansada','Por la tarde, bajon de energia diario','Todo el dia, nunca para','Por la noche, no puedo desconectar'] : ['Morning, I wake up already tired','Afternoon, energy crash every day','All day, it never stops','At night, I cannot switch off'] },
@@ -7380,7 +7380,7 @@ query = query.eq('region', region.toUpperCase());
                                 React.createElement('div', {style:{background:'rgba(201,147,90,0.08)',border:'0.5px solid rgba(201,147,90,0.2)',borderRadius:'0.75rem',padding:'1rem',marginBottom:'1.75rem'}},
                                     React.createElement('p', {style:{fontSize:'0.95rem',color:'rgba(240,232,220,0.65)',fontStyle:'italic',lineHeight:1.5}}, result.insight)
                                 ),
-                                React.createElement('button', {onClick:()=>{ setShowPreQuiz(false); setAuthMode('register'); }, style:{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.1rem',fontFamily:"'Cormorant',serif",fontWeight:500,cursor:'pointer',letterSpacing:'0.05em',boxShadow:'0 4px 20px rgba(201,147,90,0.3)',marginBottom:'0.75rem'}}, language==='es'?'✦ Empezar mi santuario gratis':'✦ Start my free sanctuary'),
+                                React.createElement('button', {onClick:()=>{ localStorage.setItem('lumeraQuizDone','1'); setShowPreQuiz(false); setAuthMode('register'); }, style:{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.1rem',fontFamily:"'Cormorant',serif",fontWeight:500,cursor:'pointer',letterSpacing:'0.05em',boxShadow:'0 4px 20px rgba(201,147,90,0.3)',marginBottom:'0.75rem'}}, language==='es'?'✦ Empezar mi santuario gratis':'✦ Start my free sanctuary'),
                                 React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
                             )
                         )
