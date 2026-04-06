@@ -69,6 +69,10 @@ import './lumera.css'
             const [currentUser, setCurrentUser] = useState(null);
             const [currentPage, setCurrentPage] = useState('home');
             const [showQuiz, setShowQuiz] = useState(false);
+            const [showPreQuiz, setShowPreQuiz] = useState(true);
+            const [preQuizStep, setPreQuizStep] = useState(0);
+            const [preQuizAnswers, setPreQuizAnswers] = useState([]);
+            const [preQuizResult, setPreQuizResult] = useState(null);
             const [quizStep, setQuizStep] = useState(1);
             const [symptoms, setSymptoms] = useState([]);
             const [periodLog, setPeriodLog] = useState([]);
@@ -7333,6 +7337,57 @@ query = query.eq('region', region.toUpperCase());
                 setShowAuth(true);
                 return null;
             }
+
+            if (showPreQuiz && !session) {
+                const quizQs = [
+                    { q: language==='es' ? 'Cual es tu mayor problema ahora mismo?' : 'What is your biggest challenge right now?', opts: language==='es' ? ['Agotamiento constante aunque duerma','Mi cuerpo cambia y no se por que','No puedo perder peso aunque lo intente','Mi animo es impredecible'] : ['Exhausted no matter how much I sleep','My body is changing and I do not know why','Cannot lose weight despite trying everything','My mood is all over the place'] },
+                    { q: language==='es' ? 'Cuando lo notas mas?' : 'When do you notice it most?', opts: language==='es' ? ['Por la manana, me levanto ya cansada','Por la tarde, bajon de energia diario','Todo el dia, nunca para','Por la noche, no puedo desconectar'] : ['Morning, I wake up already tired','Afternoon, energy crash every day','All day, it never stops','At night, I cannot switch off'] },
+                    { q: language==='es' ? 'Que has intentado ya?' : 'What have you already tried?', opts: language==='es' ? ['Dietas y ejercicio, nada funciona','Suplementos, sin resultado real','Aun no he intentado nada','Todo, estoy desesperada'] : ['Diets and exercise, nothing works','Supplements, no real change','Nothing yet','Everything, I am desperate'] }
+                ];
+                const profiles = {
+                    cave: { name: language==='es'?'Modo Cueva':'Cave Mode', emoji:'🌑', desc: language==='es'?'Tu cuerpo esta en modo conservacion. El cortisol elevado bloquea tu energia y metabolismo. No es falta de voluntad, es biologia.':'Your body is in conservation mode. Elevated cortisol is blocking your energy and metabolism. This is not willpower, it is biology.', insight: language==='es'?'Lumera adapta tu nutricion y movimiento para salir del modo cueva gradualmente.':'Lumera adapts your nutrition and movement to gradually exit cave mode.' },
+                    storm: { name: language==='es'?'Modo Tormenta':'Storm Mode', emoji:'⚡', desc: language==='es'?'Tus hormonas fluctuan intensamente. La progesterona y el estrogeno estan en desequilibrio, afectando tu animo y energia.':'Your hormones are fluctuating intensely. Progesterone and oestrogen are out of balance, affecting your mood and energy.', insight: language==='es'?'Lumera analiza tus sintomas diarios y te guia con nutricion especifica para estabilizar estas fluctuaciones.':'Lumera analyzes your daily symptoms and guides you with specific nutrition to stabilize these fluctuations.' },
+                    ritual: { name: language==='es'?'Modo Ritual':'Ritual Mode', emoji:'🌿', desc: language==='es'?'Tu cuerpo pide un reset metabolico. La resistencia a la insulina y el GLP-1 bajo explican por que nada parece funcionar.':'Your body is asking for a metabolic reset. Insulin resistance and low GLP-1 explain why nothing seems to work.', insight: language==='es'?'La Lente Alquimica de Lumera analiza tu comida y activa tu GLP-1 natural con cada plato.':'Lumera Alchemical Lens analyzes your food and activates your natural GLP-1 with every meal.' },
+                    goddess: { name: language==='es'?'Modo Diosa':'Goddess Mode', emoji:'✨', desc: language==='es'?'Tienes potencial para el Modo Diosa. Tu cuerpo necesita el plan correcto para desbloquear tu energia y vitalidad maxima.':'You have the potential for Goddess Mode. Your body needs the right plan to unlock your peak energy and vitality.', insight: language==='es'?'Lumera te da el plan personalizado para llegar ahi, nutricion, movimiento y guia emocional adaptados a ti.':'Lumera gives you the personalized plan to get there, nutrition, movement and emotional guidance adapted to you.' }
+                };
+                const getProfile = (ans) => { if ((ans[0]===0||ans[0]===1) && ans[1]<=1) return profiles.cave; if (ans[0]===3 || ans[1]===3) return profiles.storm; if (ans[0]===2) return profiles.ritual; return profiles.goddess; };
+                const result = preQuizResult;
+                return (
+                    React.createElement('div', {style:{minHeight:'100vh',background:'linear-gradient(135deg,#0A0806 0%,#1A1008 50%,#0A0806 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'1.5rem',fontFamily:"'Cormorant',serif"}},
+                        React.createElement('div', {style:{position:'absolute',top:'1.5rem',left:'50%',transform:'translateX(-50%)',display:'flex',alignItems:'center',gap:'0.5rem'}},
+                            React.createElement('span', {style:{color:'#C9935A',fontSize:'1.2rem',letterSpacing:'0.2em',fontWeight:300}}, '✦ Lumera')
+                        ),
+                        React.createElement('div', {style:{width:'100%',maxWidth:'520px',marginTop:'3rem'}},
+                            !result ? React.createElement('div', {style:{background:'rgba(255,255,255,0.04)',border:'0.5px solid rgba(201,147,90,0.25)',borderRadius:'1.5rem',padding:'2.5rem 2rem'}},
+                                React.createElement('div', {style:{textAlign:'center',marginBottom:'2rem'}},
+                                    React.createElement('div', {style:{fontSize:'0.75rem',letterSpacing:'0.3em',color:'rgba(201,147,90,0.7)',textTransform:'uppercase',marginBottom:'0.75rem'}}, language==='es' ? 'Pregunta '+(preQuizStep+1)+' de 3' : 'Question '+(preQuizStep+1)+' of 3'),
+                                    React.createElement('div', {style:{display:'flex',gap:'0.5rem',justifyContent:'center',marginBottom:'1.5rem'}},
+                                        [0,1,2].map(i => React.createElement('div', {key:i, style:{height:'3px',width:'60px',borderRadius:'2px',background:i<=preQuizStep?'#C9935A':'rgba(201,147,90,0.2)'}}))
+                                    ),
+                                    React.createElement('h2', {style:{fontSize:'1.6rem',fontWeight:300,fontStyle:'italic',color:'#F0E8DC',lineHeight:1.3}}, quizQs[preQuizStep].q)
+                                ),
+                                React.createElement('div', {style:{display:'flex',flexDirection:'column',gap:'0.75rem'}},
+                                    quizQs[preQuizStep].opts.map((opt,i) => React.createElement('button', {key:i, onClick:()=>{ const a=[...preQuizAnswers,i]; setPreQuizAnswers(a); if(preQuizStep<2){setPreQuizStep(preQuizStep+1);}else{setPreQuizResult(getProfile(a));} }, style:{background:'rgba(201,147,90,0.06)',border:'0.5px solid rgba(201,147,90,0.25)',borderRadius:'0.75rem',padding:'1rem 1.25rem',textAlign:'left',color:'#F0E8DC',fontSize:'1rem',fontFamily:"'Cormorant',serif",cursor:'pointer'}}, '✦ '+opt))
+                                ),
+                                React.createElement('div', {style:{textAlign:'center',marginTop:'1.5rem'}},
+                                    React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
+                                )
+                            ) : React.createElement('div', {style:{background:'rgba(255,255,255,0.04)',border:'0.5px solid rgba(201,147,90,0.35)',borderRadius:'1.5rem',padding:'2.5rem 2rem',textAlign:'center'}},
+                                React.createElement('div', {style:{fontSize:'3rem',marginBottom:'1rem'}}, result.emoji),
+                                React.createElement('div', {style:{fontSize:'0.75rem',letterSpacing:'0.3em',color:'rgba(201,147,90,0.7)',textTransform:'uppercase',marginBottom:'0.5rem'}}, language==='es'?'Tu perfil metabolico':'Your metabolic profile'),
+                                React.createElement('h2', {style:{fontSize:'2rem',fontWeight:300,fontStyle:'italic',color:'#C9935A',marginBottom:'1.25rem'}}, result.name),
+                                React.createElement('p', {style:{fontSize:'1.05rem',color:'rgba(240,232,220,0.8)',lineHeight:1.65,marginBottom:'1.25rem',fontWeight:300}}, result.desc),
+                                React.createElement('div', {style:{background:'rgba(201,147,90,0.08)',border:'0.5px solid rgba(201,147,90,0.2)',borderRadius:'0.75rem',padding:'1rem',marginBottom:'1.75rem'}},
+                                    React.createElement('p', {style:{fontSize:'0.95rem',color:'rgba(240,232,220,0.65)',fontStyle:'italic',lineHeight:1.5}}, result.insight)
+                                ),
+                                React.createElement('button', {onClick:()=>{ setShowPreQuiz(false); setAuthMode('register'); }, style:{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.1rem',fontFamily:"'Cormorant',serif",fontWeight:500,cursor:'pointer',letterSpacing:'0.05em',boxShadow:'0 4px 20px rgba(201,147,90,0.3)',marginBottom:'0.75rem'}}, language==='es'?'✦ Empezar mi santuario gratis':'✦ Start my free sanctuary'),
+                                React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
+                            )
+                        )
+                    )
+                );
+            }
+
 
             return (
                 <div className={darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50'}>
