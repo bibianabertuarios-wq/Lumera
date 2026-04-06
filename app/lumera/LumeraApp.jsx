@@ -7338,7 +7338,7 @@ query = query.eq('region', region.toUpperCase());
                 return null;
             }
 
-            if (showPreQuiz && typeof window !== 'undefined' && !localStorage.getItem('lumeraQuizDone') && !session) {
+            if (showPreQuiz && typeof window !== 'undefined' && !localStorage.getItem('lumeraQuizDone')) {
                 const quizQs = [
                     { q: language==='es' ? 'Cual es tu mayor problema ahora mismo?' : 'What is your biggest challenge right now?', opts: language==='es' ? ['Agotamiento constante aunque duerma','Mi cuerpo cambia y no se por que','No puedo perder peso aunque lo intente','Mi animo es impredecible'] : ['Exhausted no matter how much I sleep','My body is changing and I do not know why','Cannot lose weight despite trying everything','My mood is all over the place'] },
                     { q: language==='es' ? 'Cuando lo notas mas?' : 'When do you notice it most?', opts: language==='es' ? ['Por la manana, me levanto ya cansada','Por la tarde, bajon de energia diario','Todo el dia, nunca para','Por la noche, no puedo desconectar'] : ['Morning, I wake up already tired','Afternoon, energy crash every day','All day, it never stops','At night, I cannot switch off'] },
