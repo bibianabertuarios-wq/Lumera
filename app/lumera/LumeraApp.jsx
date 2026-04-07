@@ -6575,7 +6575,7 @@ query = query.eq('region', region.toUpperCase());
 
             // RENDERIZAR CONTENIDO
             const renderContent = () => {
-                if (!currentUser) return null;
+                if (!currentUser) return renderLanding();
 
                 // Páginas premium que requieren suscripción
                 const premiumPages = ['workshops', 'community']; // nutrition y exercise tienen freemium interno
