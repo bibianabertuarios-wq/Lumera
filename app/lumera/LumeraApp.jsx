@@ -65,7 +65,7 @@ import './lumera.css'
             const [authData, setAuthData] = useState({ email: '', password: '' });
             const [showPasswordReset, setShowPasswordReset] = useState(false);
             const [resetEmail, setResetEmail] = useState('');
-            const [showAuth, setShowAuth] = useState(true); // FORZAR TRUE AL INICIO
+            const [showAuth, setShowAuth] = useState(false); // quiz primero, auth despues
             const [loading, setLoading] = useState(true);
             const [currentUser, setCurrentUser] = useState(null);
             const [currentPage, setCurrentPage] = useState('home');
