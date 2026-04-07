@@ -74,7 +74,7 @@ Analyze her hormonal and metabolic pattern in maximum 4 lines. Speak directly to
     question: lang === 'es' ? `Pregunta ${step + 1} de 3` : `Question ${step + 1} of 3`,
     analyzing: lang === 'es' ? 'LUMI está analizando tu patrón...' : 'LUMI is analyzing your pattern...',
     profile: lang === 'es' ? '✦ Tu análisis de LUMI' : '✦ Your LUMI analysis',
-    cta: lang === 'es' ? 'Empezar mi santuario gratis' : 'Start my free sanctuary',
+    cta: lang === 'es' ? 'Quiero mi prueba gratis' : 'Start my free trial',
     login: lang === 'es' ? 'Ya tengo cuenta →' : 'Already have an account →',
     sub: lang === 'es' ? '3 días gratis · Sin tarjeta' : '3 days free · No card needed'
   };
@@ -112,13 +112,13 @@ Analyze her hormonal and metabolic pattern in maximum 4 lines. Speak directly to
                   <div key={i} style={{height:'3px',width:'70px',borderRadius:'2px',background:i<=step?'#C9935A':'rgba(201,147,90,0.15)',transition:'background 0.3s'}}/>
                 ))}
               </div>
-              <h2 style={{fontSize:'1.65rem',fontWeight:300,fontStyle:'italic',color:'#F0E8DC',lineHeight:1.3,fontFamily:"'Cormorant',serif"}}>
+              <h2 style={{fontSize:'2rem',fontWeight:400,fontStyle:'italic',color:'#FFFFFF',lineHeight:1.3,fontFamily:"'Cormorant',serif"}}>
                 {qs[step].q}
               </h2>
             </div>
             <div style={{display:'flex',flexDirection:'column',gap:'0.75rem'}}>
               {qs[step].opts.map((opt, i) => (
-                <button key={i} onClick={() => handleAnswer(i)} style={{background:'rgba(201,147,90,0.05)',border:'0.5px solid rgba(201,147,90,0.2)',borderRadius:'0.875rem',padding:'1.1rem 1.25rem',textAlign:'left',color:'rgba(240,232,220,0.9)',fontSize:'1.05rem',fontFamily:"'Cormorant',serif",cursor:'pointer',transition:'all 0.2s',display:'flex',alignItems:'center',gap:'0.75rem'}}
+                <button key={i} onClick={() => handleAnswer(i)} style={{background:'rgba(201,147,90,0.12)',border:'1px solid rgba(201,147,90,0.4)',borderRadius:'0.875rem',padding:'1.1rem 1.25rem',textAlign:'left',color:'#FFFFFF',fontSize:'1.15rem',fontFamily:"'Cormorant',serif",cursor:'pointer',transition:'all 0.2s',display:'flex',alignItems:'center',gap:'0.75rem'}}
                 onMouseEnter={e=>{e.currentTarget.style.background='rgba(201,147,90,0.12)';e.currentTarget.style.borderColor='rgba(201,147,90,0.5)';}}
                 onMouseLeave={e=>{e.currentTarget.style.background='rgba(201,147,90,0.05)';e.currentTarget.style.borderColor='rgba(201,147,90,0.2)';}}>
                   <span style={{color:'#C9935A',fontSize:'0.75rem',flexShrink:0}}>✦</span>{opt}
