@@ -3424,8 +3424,8 @@ query = query.eq('region', region.toUpperCase());
     setPreQuizResult({...p,lumiLoading:true});
     const sel=a.map((idx,qi)=>quizQs[qi].opts[idx]);
     const prompt=language==='es'
-        ? 'Eres LUMI, guia biologica de Lumera. Mujer 40+ respondio: 1. '+sel[0]+' 2. '+sel[1]+' 3. '+sel[2]+'. Perfil: '+p.name+'. Analiza su patron hormonal en 3 lineas. Tono calido y cientifico. Menciona cortisol GLP-1 estrogeno o progesterona. Sin emojis ni diagnosticos. Termina diciendo como Lumera puede ayudarla.'
-        : 'You are LUMI, biological guide of Lumera. Woman 40+ answered: 1. '+sel[0]+' 2. '+sel[1]+' 3. '+sel[2]+'. Profile: '+p.name+'. Analyze hormonal pattern in 3 lines. Warm scientific tone. Mention cortisol GLP-1 oestrogen or progesterone. No emojis or diagnoses. End saying how Lumera can help.';
+        ? 'Eres LUMI, guia biologica de Lumera. Mujer 40+ respondio: 1. '+sel[0]+' 2. '+sel[1]+' 3. '+sel[2]+'. Perfil: '+p.name+'. En 2 lineas explica su patron hormonal con tono calido y cientifico, menciona cortisol GLP-1 estrogeno o progesterona. Luego da UN solo consejo sorprendente y especifico que ella no sepa — algo que genere un momento wow, que sea util pero que deje claro que hay mucho mas por descubrir. Sin emojis ni diagnosticos.'
+        : 'You are LUMI, biological guide of Lumera. Woman 40+ answered: 1. '+sel[0]+' 2. '+sel[1]+' 3. '+sel[2]+'. Profile: '+p.name+'. In 2 lines explain her hormonal pattern with warm scientific tone, mention cortisol GLP-1 oestrogen or progesterone. Then give ONE surprising specific tip she likely does not know — a real wow moment, useful but that makes clear there is so much more to discover. No emojis or diagnoses.';
     fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})})
         .then(r=>r.json())
         .then(d=>setPreQuizResult(prev=>({...prev,insight:d.text||prev.insight,lumiLoading:false})))
@@ -7434,8 +7434,8 @@ query = query.eq('region', region.toUpperCase());
     setPreQuizResult({...p,lumiLoading:true});
     const sel=a.map((idx,qi)=>quizQs[qi].opts[idx]);
     const prompt=language==='es'
-        ? 'Eres LUMI, guia biologica de Lumera. Mujer 40+ respondio: 1. '+sel[0]+' 2. '+sel[1]+' 3. '+sel[2]+'. Perfil: '+p.name+'. Analiza su patron hormonal en 3 lineas. Tono calido y cientifico. Menciona cortisol GLP-1 estrogeno o progesterona. Sin emojis ni diagnosticos. Termina diciendo como Lumera puede ayudarla.'
-        : 'You are LUMI, biological guide of Lumera. Woman 40+ answered: 1. '+sel[0]+' 2. '+sel[1]+' 3. '+sel[2]+'. Profile: '+p.name+'. Analyze hormonal pattern in 3 lines. Warm scientific tone. Mention cortisol GLP-1 oestrogen or progesterone. No emojis or diagnoses. End saying how Lumera can help.';
+        ? 'Eres LUMI, guia biologica de Lumera. Mujer 40+ respondio: 1. '+sel[0]+' 2. '+sel[1]+' 3. '+sel[2]+'. Perfil: '+p.name+'. En 2 lineas explica su patron hormonal con tono calido y cientifico, menciona cortisol GLP-1 estrogeno o progesterona. Luego da UN solo consejo sorprendente y especifico que ella no sepa — algo que genere un momento wow, que sea util pero que deje claro que hay mucho mas por descubrir. Sin emojis ni diagnosticos.'
+        : 'You are LUMI, biological guide of Lumera. Woman 40+ answered: 1. '+sel[0]+' 2. '+sel[1]+' 3. '+sel[2]+'. Profile: '+p.name+'. In 2 lines explain her hormonal pattern with warm scientific tone, mention cortisol GLP-1 oestrogen or progesterone. Then give ONE surprising specific tip she likely does not know — a real wow moment, useful but that makes clear there is so much more to discover. No emojis or diagnoses.';
     fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})})
         .then(r=>r.json())
         .then(d=>setPreQuizResult(prev=>({...prev,insight:d.text||prev.insight,lumiLoading:false})))
