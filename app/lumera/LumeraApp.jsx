@@ -3405,7 +3405,7 @@ query = query.eq('region', region.toUpperCase());
                 const getProfile = (ans) => { if ((ans[0]===0||ans[0]===1) && ans[1]<=1) return profiles.cave; if (ans[0]===3 || ans[1]===3) return profiles.storm; if (ans[0]===2) return profiles.ritual; return profiles.goddess; };
                 const result = preQuizResult;
                 return (
-                    React.createElement('div', {style:{minHeight:'100vh',background:'linear-gradient(135deg,#0A0806 0%,#1A1008 50%,#0A0806 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'1.5rem',fontFamily:"'Cormorant',serif"}},
+                    React.createElement('div', {style:{minHeight:'100vh',background:'linear-gradient(135deg,rgba(10,8,6,0.82) 0%,rgba(26,16,8,0.78) 100%)',backgroundImage:'url(/images/quiz-bg.png)',backgroundSize:'cover',backgroundPosition:'center',backgroundBlendMode:'multiply',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'1.5rem',fontFamily:"'Cormorant',serif"}},
                         React.createElement('div', {style:{position:'absolute',top:'1.5rem',left:'50%',transform:'translateX(-50%)',display:'flex',alignItems:'center',gap:'0.5rem'}},
                             React.createElement('span', {style:{color:'#C9935A',fontSize:'1.2rem',letterSpacing:'0.2em',fontWeight:300}}, '✦ Lumera')
                         ),
@@ -3416,10 +3416,10 @@ query = query.eq('region', region.toUpperCase());
                                     React.createElement('div', {style:{display:'flex',gap:'0.5rem',justifyContent:'center',marginBottom:'1.5rem'}},
                                         [0,1,2].map(i => React.createElement('div', {key:i, style:{height:'3px',width:'60px',borderRadius:'2px',background:i<=preQuizStep?'#C9935A':'rgba(201,147,90,0.2)'}}))
                                     ),
-                                    React.createElement('h2', {style:{fontSize:'1.6rem',fontWeight:300,fontStyle:'italic',color:'#F0E8DC',lineHeight:1.3}}, quizQs[preQuizStep].q)
+                                    React.createElement('h2', {style:{fontSize:'2rem',fontWeight:400,fontStyle:'italic',color:'#FFFFFF',lineHeight:1.3}}, quizQs[preQuizStep].q)
                                 ),
                                 React.createElement('div', {style:{display:'flex',flexDirection:'column',gap:'0.75rem'}},
-                                    quizQs[preQuizStep].opts.map((opt,i) => React.createElement('button', {key:i, onClick:()=>{ const a=[...preQuizAnswers,i]; setPreQuizAnswers(a); if(preQuizStep<2){setPreQuizStep(preQuizStep+1);}else{setPreQuizResult(getProfile(a));} }, style:{background:'rgba(201,147,90,0.06)',border:'0.5px solid rgba(201,147,90,0.25)',borderRadius:'0.75rem',padding:'1rem 1.25rem',textAlign:'left',color:'#F0E8DC',fontSize:'1rem',fontFamily:"'Cormorant',serif",cursor:'pointer'}}, '✦ '+opt))
+                                    quizQs[preQuizStep].opts.map((opt,i) => React.createElement('button', {key:i, onClick:()=>{ const a=[...preQuizAnswers,i]; setPreQuizAnswers(a); if(preQuizStep<2){setPreQuizStep(preQuizStep+1);}else{setPreQuizResult(getProfile(a));} }, style:{background:'rgba(201,147,90,0.14)',border:'1px solid rgba(201,147,90,0.45)',borderRadius:'0.875rem',padding:'1.1rem 1.25rem',textAlign:'left',color:'#FFFFFF',fontSize:'1.15rem',fontFamily:"'Cormorant',serif",cursor:'pointer'}}, '✦ '+opt))
                                 ),
                                 React.createElement('div', {style:{textAlign:'center',marginTop:'1.5rem'}},
                                     React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
@@ -3432,7 +3432,7 @@ query = query.eq('region', region.toUpperCase());
                                 React.createElement('div', {style:{background:'rgba(201,147,90,0.08)',border:'0.5px solid rgba(201,147,90,0.2)',borderRadius:'0.75rem',padding:'1rem',marginBottom:'1.75rem'}},
                                     React.createElement('p', {style:{fontSize:'0.95rem',color:'rgba(240,232,220,0.65)',fontStyle:'italic',lineHeight:1.5}}, result.insight)
                                 ),
-                                React.createElement('button', {onClick:()=>{ setShowPreQuiz(false); setAuthMode('register'); }, style:{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.1rem',fontFamily:"'Cormorant',serif",fontWeight:500,cursor:'pointer',letterSpacing:'0.05em',boxShadow:'0 4px 20px rgba(201,147,90,0.3)',marginBottom:'0.75rem'}}, language==='es'?'✦ Empezar mi santuario gratis':'✦ Start my free sanctuary'),
+                                React.createElement('button', {onClick:()=>{ setShowPreQuiz(false); setAuthMode('register'); }, style:{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.1rem',fontFamily:"'Cormorant',serif",fontWeight:500,cursor:'pointer',letterSpacing:'0.05em',boxShadow:'0 4px 20px rgba(201,147,90,0.3)',marginBottom:'0.75rem'}}, language==='es'?'✦ Quiero mi prueba gratis':'✦ Start my free trial'),
                                 React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
                             )
                         )
@@ -7404,7 +7404,7 @@ query = query.eq('region', region.toUpperCase());
                 const getProfile = (ans) => { if ((ans[0]===0||ans[0]===1) && ans[1]<=1) return profiles.cave; if (ans[0]===3 || ans[1]===3) return profiles.storm; if (ans[0]===2) return profiles.ritual; return profiles.goddess; };
                 const result = preQuizResult;
                 return (
-                    React.createElement('div', {style:{minHeight:'100vh',background:'linear-gradient(135deg,#0A0806 0%,#1A1008 50%,#0A0806 100%)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'1.5rem',fontFamily:"'Cormorant',serif"}},
+                    React.createElement('div', {style:{minHeight:'100vh',background:'linear-gradient(135deg,rgba(10,8,6,0.82) 0%,rgba(26,16,8,0.78) 100%)',backgroundImage:'url(/images/quiz-bg.png)',backgroundSize:'cover',backgroundPosition:'center',backgroundBlendMode:'multiply',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'1.5rem',fontFamily:"'Cormorant',serif"}},
                         React.createElement('div', {style:{position:'absolute',top:'1.5rem',left:'50%',transform:'translateX(-50%)',display:'flex',alignItems:'center',gap:'0.5rem'}},
                             React.createElement('span', {style:{color:'#C9935A',fontSize:'1.2rem',letterSpacing:'0.2em',fontWeight:300}}, '✦ Lumera')
                         ),
@@ -7415,10 +7415,10 @@ query = query.eq('region', region.toUpperCase());
                                     React.createElement('div', {style:{display:'flex',gap:'0.5rem',justifyContent:'center',marginBottom:'1.5rem'}},
                                         [0,1,2].map(i => React.createElement('div', {key:i, style:{height:'3px',width:'60px',borderRadius:'2px',background:i<=preQuizStep?'#C9935A':'rgba(201,147,90,0.2)'}}))
                                     ),
-                                    React.createElement('h2', {style:{fontSize:'1.6rem',fontWeight:300,fontStyle:'italic',color:'#F0E8DC',lineHeight:1.3}}, quizQs[preQuizStep].q)
+                                    React.createElement('h2', {style:{fontSize:'2rem',fontWeight:400,fontStyle:'italic',color:'#FFFFFF',lineHeight:1.3}}, quizQs[preQuizStep].q)
                                 ),
                                 React.createElement('div', {style:{display:'flex',flexDirection:'column',gap:'0.75rem'}},
-                                    quizQs[preQuizStep].opts.map((opt,i) => React.createElement('button', {key:i, onClick:()=>{ const a=[...preQuizAnswers,i]; setPreQuizAnswers(a); if(preQuizStep<2){setPreQuizStep(preQuizStep+1);}else{setPreQuizResult(getProfile(a));} }, style:{background:'rgba(201,147,90,0.06)',border:'0.5px solid rgba(201,147,90,0.25)',borderRadius:'0.75rem',padding:'1rem 1.25rem',textAlign:'left',color:'#F0E8DC',fontSize:'1rem',fontFamily:"'Cormorant',serif",cursor:'pointer'}}, '✦ '+opt))
+                                    quizQs[preQuizStep].opts.map((opt,i) => React.createElement('button', {key:i, onClick:()=>{ const a=[...preQuizAnswers,i]; setPreQuizAnswers(a); if(preQuizStep<2){setPreQuizStep(preQuizStep+1);}else{setPreQuizResult(getProfile(a));} }, style:{background:'rgba(201,147,90,0.14)',border:'1px solid rgba(201,147,90,0.45)',borderRadius:'0.875rem',padding:'1.1rem 1.25rem',textAlign:'left',color:'#FFFFFF',fontSize:'1.15rem',fontFamily:"'Cormorant',serif",cursor:'pointer'}}, '✦ '+opt))
                                 ),
                                 React.createElement('div', {style:{textAlign:'center',marginTop:'1.5rem'}},
                                     React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
@@ -7431,7 +7431,7 @@ query = query.eq('region', region.toUpperCase());
                                 React.createElement('div', {style:{background:'rgba(201,147,90,0.08)',border:'0.5px solid rgba(201,147,90,0.2)',borderRadius:'0.75rem',padding:'1rem',marginBottom:'1.75rem'}},
                                     React.createElement('p', {style:{fontSize:'0.95rem',color:'rgba(240,232,220,0.65)',fontStyle:'italic',lineHeight:1.5}}, result.insight)
                                 ),
-                                React.createElement('button', {onClick:()=>{ localStorage.setItem('lumeraQuizDone','1'); setShowPreQuiz(false); setAuthMode('register'); }, style:{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.1rem',fontFamily:"'Cormorant',serif",fontWeight:500,cursor:'pointer',letterSpacing:'0.05em',boxShadow:'0 4px 20px rgba(201,147,90,0.3)',marginBottom:'0.75rem'}}, language==='es'?'✦ Empezar mi santuario gratis':'✦ Start my free sanctuary'),
+                                React.createElement('button', {onClick:()=>{ localStorage.setItem('lumeraQuizDone','1'); setShowPreQuiz(false); setAuthMode('register'); }, style:{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.1rem',fontFamily:"'Cormorant',serif",fontWeight:500,cursor:'pointer',letterSpacing:'0.05em',boxShadow:'0 4px 20px rgba(201,147,90,0.3)',marginBottom:'0.75rem'}}, language==='es'?'✦ Quiero mi prueba gratis':'✦ Start my free trial'),
                                 React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
                             )
                         )
