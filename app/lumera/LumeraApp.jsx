@@ -1,4 +1,5 @@
 'use client'
+import React from 'react'
 import PelvicFloorChallenge from "../components/PelvicFloorChallenge";
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@supabase/supabase-js'
