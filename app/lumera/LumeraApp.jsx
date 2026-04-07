@@ -3416,10 +3416,21 @@ query = query.eq('region', region.toUpperCase());
                                     React.createElement('div', {style:{display:'flex',gap:'0.5rem',justifyContent:'center',marginBottom:'1.5rem'}},
                                         [0,1,2].map(i => React.createElement('div', {key:i, style:{height:'3px',width:'60px',borderRadius:'2px',background:i<=preQuizStep?'#C9935A':'rgba(201,147,90,0.2)'}}))
                                     ),
-                                    React.createElement('h2', {style:{fontSize:'2rem',fontWeight:400,fontStyle:'italic',color:'#FFFFFF',lineHeight:1.3}}, quizQs[preQuizStep].q)
+                                    React.createElement('h2', {style:{fontSize:'2rem',fontWeight:500,fontStyle:'italic',color:'#FFFFFF',lineHeight:1.3,textShadow:'0 2px 8px rgba(0,0,0,0.9)'}}, quizQs[preQuizStep].q)
                                 ),
                                 React.createElement('div', {style:{display:'flex',flexDirection:'column',gap:'0.75rem'}},
-                                    quizQs[preQuizStep].opts.map((opt,i) => React.createElement('button', {key:i, onClick:()=>{ const a=[...preQuizAnswers,i]; setPreQuizAnswers(a); if(preQuizStep<2){setPreQuizStep(preQuizStep+1);}else{setPreQuizResult(getProfile(a));} }, style:{background:'rgba(201,147,90,0.14)',border:'1px solid rgba(201,147,90,0.45)',borderRadius:'0.875rem',padding:'1.1rem 1.25rem',textAlign:'left',color:'#FFFFFF',fontSize:'1.15rem',fontFamily:"'Cormorant',serif",cursor:'pointer'}}, '✦ '+opt))
+                                    quizQs[preQuizStep].opts.map((opt,i) => React.createElement('button', {key:i, onClick:()=>{ const a=[...preQuizAnswers,i]; setPreQuizAnswers(a); if(preQuizStep<2){setPreQuizStep(preQuizStep+1);}else{
+    const p=getProfile(a);
+    setPreQuizResult({...p,lumiLoading:true});
+    const sel=a.map((idx,qi)=>quizQs[qi].opts[idx]);
+    const prompt=language==='es'
+        ? 'Eres LUMI, guia biologica de Lumera. Mujer 40+ respondio: 1. '+sel[0]+' 2. '+sel[1]+' 3. '+sel[2]+'. Perfil: '+p.name+'. Analiza su patron hormonal en 3 lineas. Tono calido y cientifico. Menciona cortisol GLP-1 estrogeno o progesterona. Sin emojis ni diagnosticos. Termina diciendo como Lumera puede ayudarla.'
+        : 'You are LUMI, biological guide of Lumera. Woman 40+ answered: 1. '+sel[0]+' 2. '+sel[1]+' 3. '+sel[2]+'. Profile: '+p.name+'. Analyze hormonal pattern in 3 lines. Warm scientific tone. Mention cortisol GLP-1 oestrogen or progesterone. No emojis or diagnoses. End saying how Lumera can help.';
+    fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})})
+        .then(r=>r.json())
+        .then(d=>setPreQuizResult(prev=>({...prev,insight:d.text||prev.insight,lumiLoading:false})))
+        .catch(()=>setPreQuizResult(prev=>({...prev,lumiLoading:false})));
+} }, style:{background:'rgba(30,20,10,0.75)',border:'1.5px solid rgba(201,147,90,0.6)',borderRadius:'0.875rem',padding:'1.1rem 1.25rem',textAlign:'left',color:'#FFFFFF',fontSize:'1.2rem',fontWeight:500,fontFamily:"'Cormorant',serif",cursor:'pointer',textShadow:'0 1px 4px rgba(0,0,0,0.8)'}}, '✦ '+opt))
                                 ),
                                 React.createElement('div', {style:{textAlign:'center',marginTop:'1.5rem'}},
                                     React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
@@ -3430,7 +3441,7 @@ query = query.eq('region', region.toUpperCase());
                                 React.createElement('h2', {style:{fontSize:'2rem',fontWeight:300,fontStyle:'italic',color:'#C9935A',marginBottom:'1.25rem'}}, result.name),
                                 React.createElement('p', {style:{fontSize:'1.05rem',color:'rgba(240,232,220,0.8)',lineHeight:1.65,marginBottom:'1.25rem',fontWeight:300}}, result.desc),
                                 React.createElement('div', {style:{background:'rgba(201,147,90,0.08)',border:'0.5px solid rgba(201,147,90,0.2)',borderRadius:'0.75rem',padding:'1rem',marginBottom:'1.75rem'}},
-                                    React.createElement('p', {style:{fontSize:'0.95rem',color:'rgba(240,232,220,0.65)',fontStyle:'italic',lineHeight:1.5}}, result.insight)
+                                    result.lumiLoading ? React.createElement('p', {style:{fontSize:'0.95rem',color:'rgba(201,147,90,0.7)',fontStyle:'italic',lineHeight:1.5}}, language==='es'?'LUMI esta analizando tu patron...':'LUMI is analyzing your pattern...') : React.createElement('p', {style:{fontSize:'0.95rem',color:'rgba(240,232,220,0.65)',fontStyle:'italic',lineHeight:1.5}}, result.insight)
                                 ),
                                 React.createElement('button', {onClick:()=>{ setShowPreQuiz(false); setAuthMode('register'); }, style:{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.1rem',fontFamily:"'Cormorant',serif",fontWeight:500,cursor:'pointer',letterSpacing:'0.05em',boxShadow:'0 4px 20px rgba(201,147,90,0.3)',marginBottom:'0.75rem'}}, language==='es'?'✦ Quiero mi prueba gratis':'✦ Start my free trial'),
                                 React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
@@ -7415,10 +7426,21 @@ query = query.eq('region', region.toUpperCase());
                                     React.createElement('div', {style:{display:'flex',gap:'0.5rem',justifyContent:'center',marginBottom:'1.5rem'}},
                                         [0,1,2].map(i => React.createElement('div', {key:i, style:{height:'3px',width:'60px',borderRadius:'2px',background:i<=preQuizStep?'#C9935A':'rgba(201,147,90,0.2)'}}))
                                     ),
-                                    React.createElement('h2', {style:{fontSize:'2rem',fontWeight:400,fontStyle:'italic',color:'#FFFFFF',lineHeight:1.3}}, quizQs[preQuizStep].q)
+                                    React.createElement('h2', {style:{fontSize:'2rem',fontWeight:500,fontStyle:'italic',color:'#FFFFFF',lineHeight:1.3,textShadow:'0 2px 8px rgba(0,0,0,0.9)'}}, quizQs[preQuizStep].q)
                                 ),
                                 React.createElement('div', {style:{display:'flex',flexDirection:'column',gap:'0.75rem'}},
-                                    quizQs[preQuizStep].opts.map((opt,i) => React.createElement('button', {key:i, onClick:()=>{ const a=[...preQuizAnswers,i]; setPreQuizAnswers(a); if(preQuizStep<2){setPreQuizStep(preQuizStep+1);}else{setPreQuizResult(getProfile(a));} }, style:{background:'rgba(201,147,90,0.14)',border:'1px solid rgba(201,147,90,0.45)',borderRadius:'0.875rem',padding:'1.1rem 1.25rem',textAlign:'left',color:'#FFFFFF',fontSize:'1.15rem',fontFamily:"'Cormorant',serif",cursor:'pointer'}}, '✦ '+opt))
+                                    quizQs[preQuizStep].opts.map((opt,i) => React.createElement('button', {key:i, onClick:()=>{ const a=[...preQuizAnswers,i]; setPreQuizAnswers(a); if(preQuizStep<2){setPreQuizStep(preQuizStep+1);}else{
+    const p=getProfile(a);
+    setPreQuizResult({...p,lumiLoading:true});
+    const sel=a.map((idx,qi)=>quizQs[qi].opts[idx]);
+    const prompt=language==='es'
+        ? 'Eres LUMI, guia biologica de Lumera. Mujer 40+ respondio: 1. '+sel[0]+' 2. '+sel[1]+' 3. '+sel[2]+'. Perfil: '+p.name+'. Analiza su patron hormonal en 3 lineas. Tono calido y cientifico. Menciona cortisol GLP-1 estrogeno o progesterona. Sin emojis ni diagnosticos. Termina diciendo como Lumera puede ayudarla.'
+        : 'You are LUMI, biological guide of Lumera. Woman 40+ answered: 1. '+sel[0]+' 2. '+sel[1]+' 3. '+sel[2]+'. Profile: '+p.name+'. Analyze hormonal pattern in 3 lines. Warm scientific tone. Mention cortisol GLP-1 oestrogen or progesterone. No emojis or diagnoses. End saying how Lumera can help.';
+    fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})})
+        .then(r=>r.json())
+        .then(d=>setPreQuizResult(prev=>({...prev,insight:d.text||prev.insight,lumiLoading:false})))
+        .catch(()=>setPreQuizResult(prev=>({...prev,lumiLoading:false})));
+} }, style:{background:'rgba(30,20,10,0.75)',border:'1.5px solid rgba(201,147,90,0.6)',borderRadius:'0.875rem',padding:'1.1rem 1.25rem',textAlign:'left',color:'#FFFFFF',fontSize:'1.2rem',fontWeight:500,fontFamily:"'Cormorant',serif",cursor:'pointer',textShadow:'0 1px 4px rgba(0,0,0,0.8)'}}, '✦ '+opt))
                                 ),
                                 React.createElement('div', {style:{textAlign:'center',marginTop:'1.5rem'}},
                                     React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
@@ -7429,7 +7451,7 @@ query = query.eq('region', region.toUpperCase());
                                 React.createElement('h2', {style:{fontSize:'2rem',fontWeight:300,fontStyle:'italic',color:'#C9935A',marginBottom:'1.25rem'}}, result.name),
                                 React.createElement('p', {style:{fontSize:'1.05rem',color:'rgba(240,232,220,0.8)',lineHeight:1.65,marginBottom:'1.25rem',fontWeight:300}}, result.desc),
                                 React.createElement('div', {style:{background:'rgba(201,147,90,0.08)',border:'0.5px solid rgba(201,147,90,0.2)',borderRadius:'0.75rem',padding:'1rem',marginBottom:'1.75rem'}},
-                                    React.createElement('p', {style:{fontSize:'0.95rem',color:'rgba(240,232,220,0.65)',fontStyle:'italic',lineHeight:1.5}}, result.insight)
+                                    result.lumiLoading ? React.createElement('p', {style:{fontSize:'0.95rem',color:'rgba(201,147,90,0.7)',fontStyle:'italic',lineHeight:1.5}}, language==='es'?'LUMI esta analizando tu patron...':'LUMI is analyzing your pattern...') : React.createElement('p', {style:{fontSize:'0.95rem',color:'rgba(240,232,220,0.65)',fontStyle:'italic',lineHeight:1.5}}, result.insight)
                                 ),
                                 React.createElement('button', {onClick:()=>{ localStorage.setItem('lumeraQuizDone','1'); setShowPreQuiz(false); setAuthMode('register'); }, style:{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.1rem',fontFamily:"'Cormorant',serif",fontWeight:500,cursor:'pointer',letterSpacing:'0.05em',boxShadow:'0 4px 20px rgba(201,147,90,0.3)',marginBottom:'0.75rem'}}, language==='es'?'✦ Quiero mi prueba gratis':'✦ Start my free trial'),
                                 React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
