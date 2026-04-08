@@ -6831,7 +6831,7 @@ query = query.eq('region', region.toUpperCase());
                 </div>
             );
 
-            if (showAuth) return (
+            if (showAuth && !showPreQuiz) return (
                 <div className="min-h-screen" style={{background: '#fafaf9'}}>
                     {/* NAVBAR ELEGANTE */}
                     <nav className="navbar-elegant fixed top-0 w-full z-50">
