@@ -117,6 +117,13 @@ import './lumera.css'
 
             // TRIAL BANNER
             const [trialDaysRemaining, setTrialDaysRemaining] = useState(3);
+            // Detectar bonus PDF al cargar
+            if (typeof window !== 'undefined') {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('bonus') === 'glp1') {
+                    localStorage.setItem('lumeraBonus', 'glp1');
+                }
+            }
             const [showTrialBanner, setShowTrialBanner] = useState(true);
 
             // DASHBOARD PREMIUM - NUEVO
@@ -384,7 +391,9 @@ import './lumera.css'
                     if (!currentUser?.created_at) return 99;
                     const created = new Date(currentUser.created_at);
                     const daysPassed = (new Date() - created) / (1000 * 60 * 60 * 24);
-                    return Math.max(0, Math.ceil(3 - daysPassed));
+                    const bonusFromPDF = typeof window !== 'undefined' && localStorage.getItem('lumeraBonus') === 'glp1';
+                    const trialLength = bonusFromPDF ? 7 : 3;
+                    return Math.max(0, Math.ceil(trialLength - daysPassed));
                 })();
                 const isDay3Trial = trialDaysLeftNow <= 1 && !['active','paid'].includes(currentUser.subscription_status);
 
@@ -526,7 +535,9 @@ import './lumera.css'
                 const trialStartDate = new Date(currentUser.created_at);
                 const today = new Date();
                 const daysSinceStart = Math.floor((today - trialStartDate) / (1000 * 60 * 60 * 24));
-                const daysLeft = Math.max(0, 3 - daysSinceStart);
+                const bonusActive = typeof window !== 'undefined' && localStorage.getItem('lumeraBonus') === 'glp1';
+                const trialTotal = bonusActive ? 7 : 3;
+                const daysLeft = Math.max(0, trialTotal - daysSinceStart);
 
                 setTrialDaysRemaining(daysLeft);
 
