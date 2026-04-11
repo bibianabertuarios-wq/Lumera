@@ -34,7 +34,7 @@ export default function Bienvenida() {
       btn: is_es ? 'OBTENER PREMIUM' : 'GET PREMIUM',
       micro: is_es ? 'Descarga instantánea · Sin suscripción' : 'Instant download · No subscription',
       color: 'linear-gradient(135deg,#C9935A,#A06030)',
-      action: () => window.open('https://getlumera.gumroad.com', '_blank'),
+      action: () => window.open(is_es ? 'https://getlumera.gumroad.com/l/yndiyy' : 'https://getlumera.gumroad.com/l/hkbpn', '_blank'),
     },
     {
       icon: '✨',
