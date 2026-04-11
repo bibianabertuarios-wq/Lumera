@@ -54,7 +54,7 @@ export default function Bienvenida() {
       <div style={{textAlign:'center',marginBottom:'1.5rem'}}>
         <div style={{color:'#C9935A',fontSize:'1rem',letterSpacing:'0.25em',fontWeight:300,marginBottom:'0.5rem'}}>{'✦ LUMERA'}</div>
         <div style={{color:'white',fontSize:'1.9rem',fontWeight:700,lineHeight:1.2,marginBottom:'0.5rem'}}>{is_es ? 'Tu Siguiente Paso Empieza Aquí' : 'Your Next Step Starts Here'}</div>
-        <div style={{color:'rgba(240,232,220,0.7)',fontSize:'1rem',fontStyle:'italic'}}>{is_es ? 'Elige cómo quieres apoyar tu GLP-1 natural' : 'Choose how you want to support your natural GLP-1'}</div>
+        <div style={{color:'rgba(240,232,220,0.95)',fontSize:'1rem',fontStyle:'italic'}}>{is_es ? 'Elige cómo quieres apoyar tu GLP-1 natural' : 'Choose how you want to support your natural GLP-1'}</div>
       </div>
       <div style={{width:'100%',maxWidth:'500px',display:'flex',flexDirection:'column',gap:'0.85rem'}}>
         {options.map((opt, idx) => (
@@ -64,16 +64,16 @@ export default function Bienvenida() {
               <span style={{fontSize:'1.3rem'}}>{opt.icon}</span>
               <span style={{color:'white',fontSize:'1.15rem',fontWeight:700}}>{opt.title}</span>
             </div>
-            <div style={{color:'rgba(240,232,220,0.7)',fontSize:'0.95rem',fontStyle:'italic',marginBottom:'0.75rem',marginLeft:'1.8rem'}}>{opt.sub}</div>
+            <div style={{color:'rgba(240,232,220,0.9)',fontSize:'0.95rem',fontStyle:'italic',marginBottom:'0.75rem',marginLeft:'1.8rem'}}>{opt.sub}</div>
             <div style={{marginBottom:'0.85rem'}}>
               {opt.checks.map((c,i) => (
-                <div key={i} style={{color:'rgba(240,232,220,0.85)',fontSize:'0.95rem',marginBottom:'0.25rem',display:'flex',gap:'0.5rem'}}>
+                <div key={i} style={{color:'rgba(255,255,255,0.95)',fontSize:'0.95rem',marginBottom:'0.25rem',display:'flex',gap:'0.5rem'}}>
                   <span style={{color:'#C9935A',flexShrink:0}}>{'✓'}</span><span>{c}</span>
                 </div>
               ))}
             </div>
             <button onClick={opt.action} style={{width:'100%',background:opt.color,border:'none',borderRadius:'0.6rem',padding:'0.8rem',color:'white',fontSize:'0.95rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,letterSpacing:'1px',cursor:'pointer',marginBottom:'0.4rem'}}>{opt.btn}</button>
-            <div style={{textAlign:'center',color:'rgba(240,232,220,0.35)',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif'}}>{opt.micro}</div>
+            <div style={{textAlign:'center',color:'rgba(240,232,220,0.6)',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif'}}>{opt.micro}</div>
           </div>
         ))}
       </div>
