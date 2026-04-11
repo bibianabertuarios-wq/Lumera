@@ -117,7 +117,7 @@ export default function GuiaGLP1() {
             <div style={{fontSize:'1rem',color:'rgba(240,232,220,0.7)',marginBottom:'2rem',fontStyle:'italic'}}>
               {is_es ? 'Haz clic para descargarla ahora' : 'Click to download now'}
             </div>
-            <a href={pdfUrl} download style={{display:'block',background:'linear-gradient(135deg,#C9935A,#A06030)',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.1rem',fontFamily:"'Cormorant Garamond',serif",fontWeight:600,textDecoration:'none',marginBottom:'1.5rem'}}>
+            <a href={pdfUrl} target="_blank" rel="noopener noreferrer" style={{display:'block',background:'linear-gradient(135deg,#C9935A,#A06030)',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.1rem',fontFamily:"'Cormorant Garamond',serif",fontWeight:600,textDecoration:'none',marginBottom:'1.5rem'}}>
               {is_es ? '⬇️ Descargar PDF' : '⬇️ Download PDF'}
             </a>
             <div style={{borderTop:'1px solid rgba(201,147,90,0.2)',paddingTop:'1.5rem'}}>
