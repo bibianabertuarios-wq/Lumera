@@ -62,10 +62,10 @@ export default function Start() {
   ];
 
   const sections = [
-    { id:0, emoji:'🧠', title: is_es?'LUMI — Tu guia biologica 24/7':'LUMI — Your biological guide 24/7', body: is_es?'No es un chatbot. Es una guia biologica personal que aprende como te sientes, recuerda tu historial y te acompana en tiempo real. Disponible a las 3am si hace falta.':'Not a chatbot. A personal biological guide that learns how you feel, remembers your history and supports you in real time. Available at 3am if needed.' },
-    { id:1, emoji:'🥗', title: is_es?'Nutricion adaptada a tus hormonas':'Nutrition adapted to your hormones', body: is_es?'Menus que cambian cada semana segun tus sintomas reales. Tu ciclo, tu energia, tus restricciones alimentarias. Nunca el mismo plan dos semanas seguidas.':'Menus that change every week based on your real symptoms. Your cycle, your energy, your food restrictions. Never the same plan two weeks in a row.' },
-    { id:2, emoji:'📊', title: is_es?'Seguimiento de sintomas y ciclo':'Symptom and cycle tracking', body: is_es?'Registra tu energia, sueno, animo y sintomas. Lumera detecta patrones y te explica la conexion con tus hormonas. Lo que sientes tiene una razon biologica.':'Track your energy, sleep, mood and symptoms. Lumera detects patterns and explains the connection with your hormones. What you feel has a biological reason.' },
-    { id:3, emoji:'📚', title: is_es?'Recursos y guias descargables':'Resources and downloadable guides', body: is_es?'Guias GLP-1, planes de 7 dias, retos y herramientas practicas. Todo lo que necesitas, cuando lo necesitas. Y mas contenido cada mes.':'GLP-1 guides, 7-day plans, challenges and practical tools. Everything you need, when you need it. And more content every month.' },
+    { id:0, emoji:'🧠', title: is_es?'LUMI — Tu guía y confidente 24/7, solo para ti':'LUMI — Your biological guide 24/7', body: is_es?'No es un chatbot. Es una guía biológica personal que aprende cómo te sientes, recuerda tu historial y te acompaña en tiempo real. Disponible a las 3am si hace falta..':'Not a chatbot. A personal biological guide that learns how you feel, remembers your history and supports you in real time. Available at 3am if needed.' },
+    { id:1, emoji:'🥗', title: is_es?'Nutrición personalizada — sin magia, con resultados reales':'Nutrition adapted to your hormones', body: is_es?'Menús que cambian cada semana según tus síntomas reales. Tu ciclo, tu energía, tus restricciones alimentarias. Nunca el mismo plan dos semanas seguidas..':'Menus that change every week based on your real symptoms. Your cycle, your energy, your food restrictions. Never the same plan two weeks in a row.' },
+    { id:2, emoji:'📊', title: is_es?'Seguimiento de síntomas y ciclo hormonal':'Symptom and cycle tracking', body: is_es?'Registra tu energia, sueno, animo y sintomas. Lumera detecta patrones y te explica la conexión con tus hormonas. Lo que sientes tiene una razón biológica..':'Track your energy, sleep, mood and symptoms. Lumera detects patterns and explains the connection with your hormones. What you feel has a biological reason.' },
+    { id:3, emoji:'📚', title: is_es?'Recursos y guías descargables':'Resources and downloadable guides', body: is_es?'Guías GLP-1, planes de 7 días, retos y herramientas practicas. Todo lo que necesitas, cuando lo necesitas. Y mas contenido cada mes.':'GLP-1 guides, 7-day plans, challenges and practical tools. Everything you need, when you need it. And more content every month.' },
   ];
 
   return (
@@ -76,8 +76,13 @@ export default function Start() {
         <div style={{maxWidth:'500px',width:'100%'}}>
           <img src="/images/shula-lagrima.jpg" alt="Lumera" style={{width:'180px',height:'220px',objectFit:'cover',objectPosition:'top center',borderRadius:'50% 50% 40% 40%',border:`3px solid ${copper}`,marginBottom:'1.5rem',boxShadow:'0 8px 32px rgba(201,147,90,0.25)'}}/>
           <div style={{color:copper,fontSize:'0.85rem',letterSpacing:'0.3em',marginBottom:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:700}}>{'✦ LUMERA'}</div>
+          <div style={{display:'flex',gap:'0.5rem',justifyContent:'center',marginBottom:'0.75rem',flexWrap:'wrap'}}>
+            <span style={{background:'rgba(13,61,61,0.08)',border:'1px solid rgba(13,61,61,0.15)',borderRadius:'20px',padding:'3px 10px',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,color:'#0D3D3D',letterSpacing:'0.5px'}}>📱 App descargable</span>
+            <span style={{background:'rgba(13,61,61,0.08)',border:'1px solid rgba(13,61,61,0.15)',borderRadius:'20px',padding:'3px 10px',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,color:'#0D3D3D',letterSpacing:'0.5px'}}>🌍 ES · EN</span>
+            <span style={{background:'rgba(201,147,90,0.12)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'20px',padding:'3px 10px',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,color:'#C9935A',letterSpacing:'0.5px'}}>✦ 3 días gratis</span>
+          </div>
           <h1 style={{fontSize:'2.3rem',fontWeight:700,lineHeight:1.15,marginBottom:'1rem',color:teal}}>
-            {is_es ? '¿No sabes si tu cansancio es fisico, emocional u hormonal?' : 'Not sure if your fatigue is physical, emotional or hormonal?'}
+            {is_es ? '¿¿No sabes si tu cansancio es físico, emocional u hormonal?' : 'Not sure if your fatigue is physical, emotional or hormonal?'}
           </h1>
           <p style={{fontSize:'1.15rem',fontStyle:'italic',color:'rgba(13,61,61,0.7)',marginBottom:'2rem',lineHeight:1.6}}>
             {is_es ? 'Lumera te da claridad en 45 segundos.' : 'Lumera gives you clarity in 45 seconds.'}
@@ -125,14 +130,14 @@ export default function Start() {
             {is_es ? '¿Esto te suena?' : 'Does this sound familiar?'}
           </div>
           <h2 style={{fontSize:'1.8rem',fontWeight:700,marginBottom:'1.5rem',color:teal}}>
-            {is_es ? 'No estas rota.' : 'You are not broken.'}
+            {is_es ? 'No estás rota.' : 'You are not broken.'}
           </h2>
           {(is_es ? [
-            'Hambre 2h despues de comer aunque hayas comido bien',
+            'Hambre 2h después de comer aunque hayas comido bien',
             'Antojos de dulce a las 4pm que no puedes controlar',
-            'Energia que cae despues de comer',
-            'Hinchazon constante por las tardes',
-            'Comes bien pero sin resultados en la bascula',
+            'Energía que cae después de comer',
+            'Hinchazón constante por las tardes',
+            'Comes bien pero sin resultados en la báscula',
           ] : [
             'Hungry again 2h after eating even a full meal',
             'Sweet cravings at 4pm you cannot control',
@@ -146,7 +151,7 @@ export default function Start() {
             </div>
           ))}
           <div style={{marginTop:'1.5rem',fontSize:'1.15rem',fontStyle:'italic',color:copper,fontWeight:600,lineHeight:1.5}}>
-            {is_es ? '"Tu cuerpo solo necesita las senales correctas."' : '"Your body just needs the right signals."'}
+            {is_es ? '"Tu cuerpo solo necesita las señales correctas."' : '"Your body just needs the right signals."'}
           </div>
         </div>
       </div>
@@ -158,13 +163,13 @@ export default function Start() {
             {is_es ? 'Prueba gratuita — solo una vez' : 'Free trial — one time only'}
           </div>
           <h2 style={{fontSize:'1.8rem',fontWeight:700,color:teal,marginBottom:'0.5rem'}}>
-            {'📸 '}{is_es ? 'La Lente Alquimica' : 'The Alchemical Lens'}
+            {'📸 '}{is_es ? 'La Lente Alquímica' : 'The Alchemical Lens'}
           </h2>
           <p style={{fontSize:'1.05rem',fontStyle:'italic',color:'rgba(13,61,61,0.7)',marginBottom:'0.5rem',lineHeight:1.6}}>
-            {is_es ? 'Fotografia tu comida y LUMI analiza como afecta a tus hormonas — en segundos.' : 'Photograph your food and LUMI analyses how it affects your hormones — in seconds.'}
+            {is_es ? 'Fotografía tu plato ahora mismo. LUMI analiza cómo afecta a tus hormonas — y te lo ajusta — en segundos.' : 'Photograph your food and LUMI analyses how it affects your hormones — in seconds.'}
           </p>
           <p style={{fontSize:'0.95rem',color:copper,fontWeight:600,marginBottom:'1.5rem',fontStyle:'italic'}}>
-            {is_es ? 'Esto es solo una parte de lo que Lumera puede hacer por ti.' : 'This is just a part of what Lumera can do for you.'}
+            {is_es ? '✦ Esto es solo una muestra de lo que LUMI puede hacer por ti cada día.' : 'This is just a part of what Lumera can do for you.'}
           </p>
 
           {!lenteProbada && !analisis && (
@@ -172,10 +177,10 @@ export default function Start() {
               <input type="file" accept="image/*" capture="environment" ref={fileRef} onChange={handleFoto} style={{display:'none'}}/>
               <div style={{fontSize:'3rem',marginBottom:'1rem'}}>🍽️</div>
               <button onClick={() => fileRef.current.click()} disabled={cargando} style={{width:'100%',background:`linear-gradient(135deg,${teal},#1A6B6B)`,border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.05rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer',marginBottom:'0.5rem'}}>
-                {cargando ? (is_es?'Analizando tu comida...':'Analysing your food...') : (is_es?'📷 Fotografiar mi comida':'📷 Photograph my food')}
+                {cargando ? (is_es?'Analizando tu plato...':'Analysing your food...') : (is_es?'📷 📷 Fotografía tu plato — obtén tu análisis gratis':'📷 Photograph my food')}
               </button>
               <div style={{fontSize:'0.8rem',color:'rgba(13,61,61,0.4)',fontFamily:'Montserrat,sans-serif'}}>
-                {is_es ? 'Una sola prueba gratuita · Sin registro' : 'One free trial · No sign up'}
+                {is_es ? 'Sin registro · Solo una vez · Resultado inmediato' : 'One free trial · No sign up'}
               </div>
             </div>
           )}
@@ -184,7 +189,7 @@ export default function Start() {
             <div style={{textAlign:'center',padding:'2rem'}}>
               <img src={foto} alt="tu comida" style={{width:'120px',height:'120px',objectFit:'cover',borderRadius:'0.75rem',border:`2px solid ${copper}`,marginBottom:'1rem',display:'block',margin:'0 auto 1rem'}}/>
               <div style={{fontSize:'1.1rem',fontStyle:'italic',color:teal}}>
-                {is_es ? 'LUMI esta analizando tu comida...' : 'LUMI is analysing your food...'}
+                {is_es ? 'LUMI está analizando tu plato...' : 'LUMI is analysing your food...'}
               </div>
             </div>
           )}
@@ -208,7 +213,7 @@ export default function Start() {
           {lenteProbada && !analisis && (
             <div style={{background:'white',border:`1px solid rgba(201,147,90,0.3)`,borderRadius:'1rem',padding:'1.5rem'}}>
               <div style={{fontSize:'1.05rem',fontStyle:'italic',color:teal,marginBottom:'1rem',lineHeight:1.6}}>
-                {is_es ? 'Ya has usado tu prueba gratuita de la Lente Alquimica. Empieza tu plan completo personalizado para analisis ilimitados.' : 'You have used your free Alchemical Lens trial. Start your full personalised plan for unlimited analyses.'}
+                {is_es ? 'Ya has usado tu prueba gratuita de la Lente Alquímica. Empieza tu plan completo personalizado para análisis ilimitados.' : 'You have used your free Alchemical Lens trial. Start your full personalised plan for unlimited analyses.'}
               </div>
               <button onClick={() => router.push('/quiz')} style={{width:'100%',background:`linear-gradient(135deg,${copper},#A06030)`,border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.05rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
                 {is_es ? '✨ Empezar mi plan gratis — 3 dias' : '✨ Start my free plan — 3 days'}
@@ -225,7 +230,7 @@ export default function Start() {
             {is_es ? 'Dentro de Lumera' : 'Inside Lumera'}
           </div>
           <h2 style={{fontSize:'1.8rem',fontWeight:700,color:teal,marginBottom:'1.5rem',textAlign:'center'}}>
-            {is_es ? 'Todo lo que necesitas en un lugar' : 'Everything you need in one place'}
+            {is_es ? 'Todo lo que necesitas, en un lugar' : 'Everything you need in one place'}
           </h2>
           {sections.map((sec) => (
             <div key={sec.id} style={{marginBottom:'0.75rem'}}>
@@ -253,9 +258,9 @@ export default function Start() {
             {is_es ? '3 formas de empezar hoy' : '3 ways to start today'}
           </h2>
           {[
-            { emoji:'📥', badge:is_es?'GRATIS':'FREE', title:is_es?'3 Habitos GLP-1 Naturales':'3 Natural GLP-1 Habits', sub:is_es?'Empieza hoy. Energia estable esta semana.':'Start today. Stable energy this week.', btn:is_es?'Descargar gratis':'Download free', color:green, action:()=>router.push('/guia-glp1') },
+            { emoji:'📥', badge:is_es?'GRATIS':'FREE', title:is_es?'3 Hábitos GLP-1 Naturales':'3 Natural GLP-1 Habits', sub:is_es?'Empieza hoy. Energía estable esta semana.':'Start today. Stable energy this week.', btn:is_es?'Descargar gratis':'Download free', color:green, action:()=>window.open(lang==='es'?'/guia-glp1-es.pdf':'/guia-glp1-en.pdf','_blank') },
             { emoji:'👑', badge:'€6.99', title:is_es?'Plan Completo 7 Dias':'Complete 7-Day Plan', sub:is_es?'21 comidas · Lista compra · Anti-antojos':'21 meals · Shopping list · Cravings reset', btn:is_es?'Obtener €6.99':'Get €6.99', color:`linear-gradient(135deg,${copper},#A06030)`, action:()=>window.open(is_es?'https://getlumera.gumroad.com/l/yndiyy':'https://getlumera.gumroad.com/l/hkbpn','_blank') },
-            { emoji:'✨', badge:is_es?'3 DIAS GRATIS':'3 DAYS FREE', title:is_es?'Transformacion Completa':'Complete Transformation', sub:is_es?'Plan personalizado · LUMI · Lente · Seguimiento':'Personalised plan · LUMI · Lens · Tracking', btn:is_es?'Empezar gratis':'Start free', color:`linear-gradient(135deg,#1A6B6B,${teal})`, action:()=>router.push('/quiz') },
+            { emoji:'✨', badge:is_es?'3 DIAS GRATIS':'3 DAYS FREE', title:is_es?'Transformación Completa':'Complete Transformation', sub:is_es?'Plan personalizado · LUMI · Lente · Seguimiento':'Personalised plan · LUMI · Lens · Tracking', btn:is_es?'Empezar gratis':'Start free', color:`linear-gradient(135deg,#1A6B6B,${teal})`, action:()=>router.push('/quiz') },
           ].map((opt,i) => (
             <div key={i} style={{background:'white',border:`1px solid rgba(201,147,90,0.25)`,borderRadius:'1rem',padding:'1.25rem',marginBottom:'1rem',position:'relative',textAlign:'left',boxShadow:'0 2px 12px rgba(13,61,61,0.06)'}}>
               <div style={{position:'absolute',top:'-10px',right:'1rem',background:i===1?`linear-gradient(135deg,${copper},#A06030)`:i===0?green:'#1A6B6B',color:'white',fontSize:'0.7rem',fontWeight:700,padding:'2px 10px',borderRadius:'20px',fontFamily:'Montserrat,sans-serif',letterSpacing:'1px'}}>{opt.badge}</div>
@@ -271,11 +276,11 @@ export default function Start() {
       <div style={{background:'white',padding:'3rem 1.5rem',textAlign:'center'}}>
         <div style={{maxWidth:'500px',margin:'0 auto'}}>
           <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',fontWeight:700,color:copper,letterSpacing:'3px',textTransform:'uppercase',marginBottom:'1rem'}}>
-            {is_es ? 'Por que Lumera funciona' : 'Why Lumera works'}
+            {is_es ? 'Por qué Lumera funciona' : 'Why Lumera works'}
           </div>
           {(is_es?[
-            'Sin dieta ni pastillas — solo biologia real',
-            'Se adapta a tu vida real, no al reves',
+            'Sin dieta ni pastillas — solo biología real',
+            'Se adapta a tu vida real, no al revés',
             'Resultados desde la semana 1',
             'Cancela cuando quieras, sin compromiso',
             '100% privacidad de tus datos',
@@ -298,7 +303,7 @@ export default function Start() {
       <div style={{background:`linear-gradient(135deg,${teal},#1A6B6B)`,padding:'3.5rem 1.5rem',textAlign:'center'}}>
         <div style={{maxWidth:'500px',margin:'0 auto'}}>
           <div style={{fontSize:'2rem',fontWeight:700,color:'white',lineHeight:1.2,marginBottom:'0.75rem'}}>
-            {is_es ? 'Tu cuerpo es unico.\nLumera lo sabe.' : 'Your body is unique.\nLumera knows it.'}
+            {is_es ? 'Tu cuerpo es único.\nLumera lo sabe.' : 'Your body is unique.\nLumera knows it.'}
           </div>
           <div style={{fontSize:'1.1rem',fontStyle:'italic',color:'rgba(240,232,220,0.7)',marginBottom:'2rem',lineHeight:1.6}}>
             {is_es ? 'Empieza a entenderte hoy.' : 'Start understanding yourself today.'}
