@@ -1,87 +1,323 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Start() {
   const [lang, setLang] = useState('es');
-  const [open, setOpen] = useState(null);
+  const [lenteProbada, setLenteProbada] = useState(false);
+  const [foto, setFoto] = useState(null);
+  const [analisis, setAnalisis] = useState('');
+  const [cargando, setCargando] = useState(false);
+  const [openSection, setOpenSection] = useState(null);
+  const fileRef = useRef();
   const router = useRouter();
 
   useEffect(() => {
     const bl = navigator.language || 'es';
     setLang(bl.startsWith('es') ? 'es' : 'en');
+    setLenteProbada(!!localStorage.getItem('lente_usada'));
   }, []);
 
   const is_es = lang === 'es';
+  const cream = '#FBF7F0';
+  const teal = '#0D3D3D';
+  const copper = '#C9935A';
+  const green = '#2A7A4A';
+  const mint = '#EAF5EF';
+
+  const handleFoto = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (ev) => {
+      const base64 = ev.target.result.split(',')[1];
+      setFoto(ev.target.result);
+      setCargando(true);
+      try {
+        const res = await fetch('/api/lente', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: base64, lang })
+        });
+        const data = await res.json();
+        setAnalisis(data.analisis || (is_es ? 'No se pudo analizar.' : 'Could not analyse.'));
+        localStorage.setItem('lente_usada', '1');
+        setLenteProbada(true);
+      } catch {
+        setAnalisis(is_es ? 'Error al analizar. Intenta de nuevo.' : 'Analysis error. Please try again.');
+      }
+      setCargando(false);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const weeks = is_es ? [
+    { w:'Semana 1', icon:'⚡', result:'Menos antojos a las 4pm', sub:'Tu GLP-1 empieza a activarse' },
+    { w:'Semana 2', icon:'☀️', result:'Energía estable sin café extra', sub:'Tu metabolismo se recalibra' },
+    { w:'Semana 3', icon:'✨', result:'Tu ropa te queda diferente', sub:'Tu cuerpo encuentra su equilibrio' },
+  ] : [
+    { w:'Week 1', icon:'⚡', result:'Fewer 4pm cravings', sub:'Your GLP-1 starts activating' },
+    { w:'Week 2', icon:'☀️', result:'Stable energy without extra coffee', sub:'Your metabolism recalibrates' },
+    { w:'Week 3', icon:'✨', result:'Your clothes fit differently', sub:'Your body finds its balance' },
+  ];
 
   const sections = [
-    { id:0, emoji:'🧠', title: is_es?'LUMI, tu confidente 24/7':'LUMI, your confidante 24/7', body: is_es?'No es un chatbot. Es una guia biologica personal que aprende como te sientes y te acompana en tiempo real. A las 3am si hace falta.':'Not a chatbot. A personal biological guide that learns how you feel and supports you in real time. At 3am if needed.' },
-    { id:1, emoji:'🥗', title: is_es?'Nutricion que equilibra tus hormonas':'Nutrition that balances your hormones', body: is_es?'Menus adaptados a como te sientes esa semana. Tu ciclo, tus sintomas, tu energia real. Con La Lente Alquimica: fotografia tu comida y sabe al instante si te ayuda o te perjudica.':'Menus adapted to how you feel that week. Your cycle, symptoms, real energy. With the Alchemical Lens: photograph your meal and instantly know if it helps or hurts.' },
-    { id:2, emoji:'🔍', title: is_es?'Entiende lo que te pasa de verdad':'Understand what is happening for real', body: is_es?'Brain fog, fatiga, antojos, insomnio. Lumera conecta tus sintomas con tu biologia y te explica el porque. Sin alarmar. Sin diagnosticar.':'Brain fog, fatigue, cravings, insomnia. Lumera connects your symptoms with your biology and explains why. Without alarming. Without diagnosing.' },
-    { id:3, emoji:'📚', title: is_es?'Recursos para tu vida real':'Resources for your real life', body: is_es?'Guias descargables, planes de 7 dias y herramientas practicas.':'Downloadable guides, 7-day plans and practical tools.', resources:true },
+    { id:0, emoji:'🧠', title: is_es?'LUMI — Tu guia biologica 24/7':'LUMI — Your biological guide 24/7', body: is_es?'No es un chatbot. Es una guia biologica personal que aprende como te sientes, recuerda tu historial y te acompana en tiempo real. Disponible a las 3am si hace falta.':'Not a chatbot. A personal biological guide that learns how you feel, remembers your history and supports you in real time. Available at 3am if needed.' },
+    { id:1, emoji:'🥗', title: is_es?'Nutricion adaptada a tus hormonas':'Nutrition adapted to your hormones', body: is_es?'Menus que cambian cada semana segun tus sintomas reales. Tu ciclo, tu energia, tus restricciones alimentarias. Nunca el mismo plan dos semanas seguidas.':'Menus that change every week based on your real symptoms. Your cycle, your energy, your food restrictions. Never the same plan two weeks in a row.' },
+    { id:2, emoji:'📊', title: is_es?'Seguimiento de sintomas y ciclo':'Symptom and cycle tracking', body: is_es?'Registra tu energia, sueno, animo y sintomas. Lumera detecta patrones y te explica la conexion con tus hormonas. Lo que sientes tiene una razon biologica.':'Track your energy, sleep, mood and symptoms. Lumera detects patterns and explains the connection with your hormones. What you feel has a biological reason.' },
+    { id:3, emoji:'📚', title: is_es?'Recursos y guias descargables':'Resources and downloadable guides', body: is_es?'Guias GLP-1, planes de 7 dias, retos y herramientas practicas. Todo lo que necesitas, cuando lo necesitas. Y mas contenido cada mes.':'GLP-1 guides, 7-day plans, challenges and practical tools. Everything you need, when you need it. And more content every month.' },
   ];
-
-  const res = [
-    { emoji:'📥', title: is_es?'Guia GLP-1 Natural Gratis':'Natural GLP-1 Guide Free', sub: is_es?'3 habitos que cambian tu energia':'3 habits that change your energy', btn: is_es?'Descargar gratis':'Download free', color:'#2A7A4A', url:'/guia-glp1', ext:false },
-    { emoji:'⭐', title: is_es?'Plan GLP-1 Completo 7 Dias':'Complete GLP-1 7-Day Plan', sub: is_es?'21 comidas · Lista compra · Anti-antojos':'21 meals · Shopping list · Cravings reset', btn: is_es?'Obtener €6.99':'Get €6.99', color:'linear-gradient(135deg,#C9935A,#A06030)', url: is_es?'https://getlumera.gumroad.com/l/yndiyy':'https://getlumera.gumroad.com/l/hkbpn', ext:true },
-  ];
-
-  const pg = {minHeight:'100vh',background:'linear-gradient(135deg,rgba(8,6,4,0.96),rgba(20,12,6,0.94))',backgroundImage:'url(/images/quiz-bg.png)',backgroundSize:'cover',backgroundPosition:'center',backgroundBlendMode:'multiply',fontFamily:"'Cormorant Garamond',Georgia,serif",color:'white'};
 
   return (
-    <div style={pg}>
-      <div style={{maxWidth:'540px',margin:'0 auto',padding:'2rem 1.25rem 4rem',display:'flex',flexDirection:'column',alignItems:'center'}}>
-        <div style={{textAlign:'center',marginBottom:'2rem'}}>
-          <div style={{color:'#C9935A',fontSize:'0.95rem',letterSpacing:'0.3em',fontWeight:300,marginBottom:'0.5rem'}}>{'✦ LUMERA'}</div>
-          <div style={{fontSize:'2.2rem',fontWeight:700,lineHeight:1.15,marginBottom:'0.75rem'}}>{is_es?'Tu santuario para los 40+':'Your sanctuary for 40+'}</div>
-          <div style={{fontSize:'1.1rem',fontStyle:'italic',color:'rgba(240,232,220,0.8)',lineHeight:1.6}}>{is_es?'La app que se adapta a ti, a lo que sientes y necesitas, para que transites este camino acompanada.':'The app that adapts to you, to what you feel and need, so you never walk this path alone.'}</div>
+    <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",background:cream,color:teal,overflowX:'hidden'}}>
+
+      {/* HERO */}
+      <div style={{minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'2.5rem 1.25rem',textAlign:'center',background:`linear-gradient(180deg,white 0%,${cream} 100%)`}}>
+        <div style={{maxWidth:'500px',width:'100%'}}>
+          <img src="/images/shula-lagrima.jpg" alt="Lumera" style={{width:'180px',height:'220px',objectFit:'cover',objectPosition:'top center',borderRadius:'50% 50% 40% 40%',border:`3px solid ${copper}`,marginBottom:'1.5rem',boxShadow:'0 8px 32px rgba(201,147,90,0.25)'}}/>
+          <div style={{color:copper,fontSize:'0.85rem',letterSpacing:'0.3em',marginBottom:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:700}}>{'✦ LUMERA'}</div>
+          <h1 style={{fontSize:'2.3rem',fontWeight:700,lineHeight:1.15,marginBottom:'1rem',color:teal}}>
+            {is_es ? '¿No sabes si tu cansancio es fisico, emocional u hormonal?' : 'Not sure if your fatigue is physical, emotional or hormonal?'}
+          </h1>
+          <p style={{fontSize:'1.15rem',fontStyle:'italic',color:'rgba(13,61,61,0.7)',marginBottom:'2rem',lineHeight:1.6}}>
+            {is_es ? 'Lumera te da claridad en 45 segundos.' : 'Lumera gives you clarity in 45 seconds.'}
+          </p>
+          <button onClick={() => router.push('/quiz')} style={{width:'100%',background:`linear-gradient(135deg,${copper},#A06030)`,border:'none',borderRadius:'0.75rem',padding:'1.1rem',color:'white',fontSize:'1.1rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,letterSpacing:'1px',cursor:'pointer',marginBottom:'0.6rem',boxShadow:'0 4px 20px rgba(201,147,90,0.35)'}}>
+            {is_es ? '✨ EMPEZAR MI QUIZ GRATIS — 45s' : '✨ START MY FREE QUIZ — 45s'}
+          </button>
+          <div style={{fontSize:'0.8rem',color:'rgba(13,61,61,0.4)',fontFamily:'Montserrat,sans-serif'}}>
+            {is_es ? 'Sin tarjeta · Cancela cuando quieras' : 'No card · Cancel anytime'}
+          </div>
         </div>
-        <button onClick={() => router.push('/quiz')} style={{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1.1rem',color:'white',fontSize:'1.1rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,letterSpacing:'1px',cursor:'pointer',marginBottom:'0.5rem'}}>{is_es?'✨ EMPIEZA TU SANTUARIO — 3 DIAS GRATIS':'✨ START YOUR SANCTUARY — 3 DAYS FREE'}</button>
-        <div style={{fontSize:'0.8rem',color:'rgba(240,232,220,0.4)',fontFamily:'Montserrat,sans-serif',marginBottom:'2.5rem'}}>{is_es?'Sin tarjeta · Cancela cuando quieras':'No card · Cancel anytime'}</div>
-        <div style={{width:'100%',marginBottom:'2rem'}}>
-          <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',fontWeight:700,color:'#C9935A',letterSpacing:'3px',textTransform:'uppercase',marginBottom:'1rem',textAlign:'center'}}>{is_es?'Por que Lumera?':'Why Lumera?'}</div>
-          {(is_es?['✦  Porque aqui no estas sola','✦  Porque no te hablan como a una paciente','✦  Porque alguien te acompana dia a dia']:['✦  Because here you are not alone','✦  Because you are not treated like a patient','✦  Because someone walks with you every day']).map((t,i)=>(
-            <div key={i} style={{fontSize:'1.05rem',fontStyle:'italic',color:'rgba(240,232,220,0.88)',marginBottom:'0.6rem',lineHeight:1.5}}>{t}</div>
-          ))}
-        </div>
-        <div style={{width:'100%',marginBottom:'2rem'}}>
-          <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',fontWeight:700,color:'#C9935A',letterSpacing:'3px',textTransform:'uppercase',marginBottom:'1rem',textAlign:'center'}}>{is_es?'Dentro de Lumera':'Inside Lumera'}</div>
-          {sections.map((sec)=>(
-            <div key={sec.id} style={{marginBottom:'0.75rem'}}>
-              <div onClick={()=>setOpen(open===sec.id?null:sec.id)} style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(201,147,90,0.25)',borderLeft:open===sec.id?'3px solid #C9935A':'3px solid rgba(201,147,90,0.4)',borderRadius:'0 0.75rem 0.75rem 0',padding:'0.9rem 1rem',cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                <div style={{fontSize:'1.05rem',fontWeight:700}}>{sec.emoji} {sec.title}</div>
-                <div style={{color:'#C9935A',fontSize:'1.2rem'}}>{open===sec.id?'−':'+'}</div>
+      </div>
+
+      {/* TIMELINE RESULTADOS */}
+      <div style={{background:teal,padding:'3rem 1.5rem',textAlign:'center'}}>
+        <div style={{maxWidth:'500px',margin:'0 auto'}}>
+          <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',fontWeight:700,color:copper,letterSpacing:'3px',textTransform:'uppercase',marginBottom:'0.5rem'}}>
+            {is_es ? 'Lo que notan las mujeres' : 'What women notice'}
+          </div>
+          <h2 style={{fontSize:'1.8rem',fontWeight:700,color:'white',marginBottom:'0.5rem'}}>
+            {is_es ? 'Resultados reales, semana a semana' : 'Real results, week by week'}
+          </h2>
+          <p style={{fontSize:'0.9rem',color:'rgba(240,232,220,0.5)',fontStyle:'italic',marginBottom:'2rem',fontFamily:'Montserrat,sans-serif'}}>
+            {is_es ? 'Resultados individuales pueden variar.' : 'Individual results may vary.'}
+          </p>
+          <div style={{display:'flex',flexDirection:'column',gap:'1rem'}}>
+            {weeks.map((w,i) => (
+              <div key={i} style={{background:'rgba(255,255,255,0.06)',border:`1px solid rgba(201,147,90,${0.3+i*0.15})`,borderLeft:`4px solid ${copper}`,borderRadius:'0 0.75rem 0.75rem 0',padding:'1rem 1.25rem',textAlign:'left',display:'flex',alignItems:'center',gap:'1rem'}}>
+                <div style={{fontSize:'2rem',flexShrink:0}}>{w.icon}</div>
+                <div>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',fontWeight:700,color:copper,letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.25rem'}}>{w.w}</div>
+                  <div style={{fontSize:'1.1rem',fontWeight:700,color:'white',marginBottom:'0.2rem'}}>{w.result}</div>
+                  <div style={{fontSize:'0.9rem',fontStyle:'italic',color:'rgba(240,232,220,0.6)'}}>{w.sub}</div>
+                </div>
               </div>
-              {open===sec.id&&(
-                <div style={{background:'rgba(255,255,255,0.02)',border:'1px solid rgba(201,147,90,0.15)',borderTop:'none',borderRadius:'0 0 0.75rem 0.75rem',padding:'0.9rem 1rem'}}>
-                  <div style={{fontSize:'1rem',fontStyle:'italic',color:'rgba(240,232,220,0.82)',lineHeight:1.7,marginBottom:sec.resources?'1rem':0}}>{sec.body}</div>
-                  {sec.resources&&(
-                    <div style={{display:'flex',flexDirection:'column',gap:'0.6rem'}}>
-                      {res.map((r,i)=>(
-                        <div key={i} style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'0.6rem',padding:'0.75rem 1rem',display:'flex',justifyContent:'space-between',alignItems:'center',gap:'0.5rem'}}>
-                          <div>
-                            <div style={{fontSize:'0.95rem',fontWeight:700,marginBottom:'0.2rem'}}>{r.emoji} {r.title}</div>
-                            <div style={{fontSize:'0.85rem',color:'rgba(240,232,220,0.6)',fontStyle:'italic'}}>{r.sub}</div>
-                          </div>
-                          <button onClick={()=>r.ext?window.open(r.url,'_blank'):router.push(r.url)} style={{background:r.color,border:'none',borderRadius:'0.5rem',padding:'0.5rem 0.75rem',color:'white',fontSize:'0.8rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer',whiteSpace:'nowrap',flexShrink:0}}>{r.btn}</button>
-                        </div>
-                      ))}
-                      <div style={{fontSize:'0.8rem',color:'rgba(201,147,90,0.4)',fontStyle:'italic',textAlign:'center'}}>{is_es?'Proximamente mas guias...':'More guides coming soon...'}</div>
-                    </div>
-                  )}
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* PROBLEMA */}
+      <div style={{background:'white',padding:'3rem 1.5rem',textAlign:'center'}}>
+        <div style={{maxWidth:'500px',margin:'0 auto'}}>
+          <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',fontWeight:700,color:copper,letterSpacing:'3px',textTransform:'uppercase',marginBottom:'1rem'}}>
+            {is_es ? '¿Esto te suena?' : 'Does this sound familiar?'}
+          </div>
+          <h2 style={{fontSize:'1.8rem',fontWeight:700,marginBottom:'1.5rem',color:teal}}>
+            {is_es ? 'No estas rota.' : 'You are not broken.'}
+          </h2>
+          {(is_es ? [
+            'Hambre 2h despues de comer aunque hayas comido bien',
+            'Antojos de dulce a las 4pm que no puedes controlar',
+            'Energia que cae despues de comer',
+            'Hinchazon constante por las tardes',
+            'Comes bien pero sin resultados en la bascula',
+          ] : [
+            'Hungry again 2h after eating even a full meal',
+            'Sweet cravings at 4pm you cannot control',
+            'Energy crash after eating',
+            'Constant afternoon bloating',
+            'Eating well but no results on the scale',
+          ]).map((t,i) => (
+            <div key={i} style={{display:'flex',alignItems:'flex-start',gap:'0.75rem',marginBottom:'0.6rem',textAlign:'left',background:mint,borderRadius:'0.5rem',padding:'0.75rem 1rem'}}>
+              <span style={{color:green,fontWeight:700,flexShrink:0,fontSize:'1.1rem'}}>{'✓'}</span>
+              <span style={{fontSize:'1rem',color:teal,lineHeight:1.5}}>{t}</span>
+            </div>
+          ))}
+          <div style={{marginTop:'1.5rem',fontSize:'1.15rem',fontStyle:'italic',color:copper,fontWeight:600,lineHeight:1.5}}>
+            {is_es ? '"Tu cuerpo solo necesita las senales correctas."' : '"Your body just needs the right signals."'}
+          </div>
+        </div>
+      </div>
+
+      {/* LENTE ALQUIMICA */}
+      <div style={{background:cream,padding:'3rem 1.5rem',textAlign:'center'}}>
+        <div style={{maxWidth:'500px',margin:'0 auto'}}>
+          <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',fontWeight:700,color:copper,letterSpacing:'3px',textTransform:'uppercase',marginBottom:'0.5rem'}}>
+            {is_es ? 'Prueba gratuita — solo una vez' : 'Free trial — one time only'}
+          </div>
+          <h2 style={{fontSize:'1.8rem',fontWeight:700,color:teal,marginBottom:'0.5rem'}}>
+            {'📸 '}{is_es ? 'La Lente Alquimica' : 'The Alchemical Lens'}
+          </h2>
+          <p style={{fontSize:'1.05rem',fontStyle:'italic',color:'rgba(13,61,61,0.7)',marginBottom:'0.5rem',lineHeight:1.6}}>
+            {is_es ? 'Fotografia tu comida y LUMI analiza como afecta a tus hormonas — en segundos.' : 'Photograph your food and LUMI analyses how it affects your hormones — in seconds.'}
+          </p>
+          <p style={{fontSize:'0.95rem',color:copper,fontWeight:600,marginBottom:'1.5rem',fontStyle:'italic'}}>
+            {is_es ? 'Esto es solo una parte de lo que Lumera puede hacer por ti.' : 'This is just a part of what Lumera can do for you.'}
+          </p>
+
+          {!lenteProbada && !analisis && (
+            <div style={{background:'white',border:`1px solid rgba(201,147,90,0.3)`,borderRadius:'1rem',padding:'1.5rem'}}>
+              <input type="file" accept="image/*" capture="environment" ref={fileRef} onChange={handleFoto} style={{display:'none'}}/>
+              <div style={{fontSize:'3rem',marginBottom:'1rem'}}>🍽️</div>
+              <button onClick={() => fileRef.current.click()} disabled={cargando} style={{width:'100%',background:`linear-gradient(135deg,${teal},#1A6B6B)`,border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.05rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer',marginBottom:'0.5rem'}}>
+                {cargando ? (is_es?'Analizando tu comida...':'Analysing your food...') : (is_es?'📷 Fotografiar mi comida':'📷 Photograph my food')}
+              </button>
+              <div style={{fontSize:'0.8rem',color:'rgba(13,61,61,0.4)',fontFamily:'Montserrat,sans-serif'}}>
+                {is_es ? 'Una sola prueba gratuita · Sin registro' : 'One free trial · No sign up'}
+              </div>
+            </div>
+          )}
+
+          {foto && cargando && (
+            <div style={{textAlign:'center',padding:'2rem'}}>
+              <img src={foto} alt="tu comida" style={{width:'120px',height:'120px',objectFit:'cover',borderRadius:'0.75rem',border:`2px solid ${copper}`,marginBottom:'1rem',display:'block',margin:'0 auto 1rem'}}/>
+              <div style={{fontSize:'1.1rem',fontStyle:'italic',color:teal}}>
+                {is_es ? 'LUMI esta analizando tu comida...' : 'LUMI is analysing your food...'}
+              </div>
+            </div>
+          )}
+
+          {analisis && (
+            <div>
+              {foto && <img src={foto} alt="tu comida" style={{width:'120px',height:'120px',objectFit:'cover',borderRadius:'0.75rem',border:`2px solid ${copper}`,margin:'0 auto 1rem',display:'block'}}/>}
+              <div style={{background:'white',border:`1px solid rgba(201,147,90,0.3)`,borderLeft:`4px solid ${copper}`,borderRadius:'0 1rem 1rem 0',padding:'1.25rem',textAlign:'left',marginBottom:'1rem'}}>
+                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',fontWeight:700,color:copper,letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>{'✦ LUMI dice:'}</div>
+                <div style={{fontSize:'1.05rem',color:teal,lineHeight:1.75,fontStyle:'italic'}}>{analisis}</div>
+              </div>
+              <div style={{background:mint,borderRadius:'0.75rem',padding:'1rem',marginBottom:'1rem',fontSize:'0.95rem',color:teal,fontStyle:'italic'}}>
+                {is_es ? '✦ Esto es una muestra. Con Lumera, LUMI analiza tu comida cada dia y adapta tu plan semanal a tus hormonas reales.' : '✦ This is a sample. With Lumera, LUMI analyses your food every day and adapts your weekly plan to your real hormones.'}
+              </div>
+              <button onClick={() => router.push('/quiz')} style={{width:'100%',background:`linear-gradient(135deg,${copper},#A06030)`,border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.05rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
+                {is_es ? '✨ Quiero mi plan personalizado completo' : '✨ I want my complete personalised plan'}
+              </button>
+            </div>
+          )}
+
+          {lenteProbada && !analisis && (
+            <div style={{background:'white',border:`1px solid rgba(201,147,90,0.3)`,borderRadius:'1rem',padding:'1.5rem'}}>
+              <div style={{fontSize:'1.05rem',fontStyle:'italic',color:teal,marginBottom:'1rem',lineHeight:1.6}}>
+                {is_es ? 'Ya has usado tu prueba gratuita de la Lente Alquimica. Empieza tu plan completo personalizado para analisis ilimitados.' : 'You have used your free Alchemical Lens trial. Start your full personalised plan for unlimited analyses.'}
+              </div>
+              <button onClick={() => router.push('/quiz')} style={{width:'100%',background:`linear-gradient(135deg,${copper},#A06030)`,border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.05rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
+                {is_es ? '✨ Empezar mi plan gratis — 3 dias' : '✨ Start my free plan — 3 days'}
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* LO QUE LUMERA HACE - DESPLEGABLES */}
+      <div style={{background:'white',padding:'3rem 1.5rem'}}>
+        <div style={{maxWidth:'500px',margin:'0 auto'}}>
+          <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',fontWeight:700,color:copper,letterSpacing:'3px',textTransform:'uppercase',marginBottom:'0.5rem',textAlign:'center'}}>
+            {is_es ? 'Dentro de Lumera' : 'Inside Lumera'}
+          </div>
+          <h2 style={{fontSize:'1.8rem',fontWeight:700,color:teal,marginBottom:'1.5rem',textAlign:'center'}}>
+            {is_es ? 'Todo lo que necesitas en un lugar' : 'Everything you need in one place'}
+          </h2>
+          {sections.map((sec) => (
+            <div key={sec.id} style={{marginBottom:'0.75rem'}}>
+              <div onClick={() => setOpenSection(openSection===sec.id?null:sec.id)} style={{background:cream,border:`1px solid rgba(201,147,90,0.25)`,borderLeft:`3px solid ${openSection===sec.id?copper:'rgba(201,147,90,0.4)'}`,borderRadius:'0 0.75rem 0.75rem 0',padding:'1rem 1.1rem',cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                <div style={{fontSize:'1.05rem',fontWeight:700,color:teal}}>{sec.emoji} &nbsp;{sec.title}</div>
+                <div style={{color:copper,fontSize:'1.3rem',fontWeight:300,flexShrink:0}}>{openSection===sec.id?'−':'+'}</div>
+              </div>
+              {openSection===sec.id && (
+                <div style={{background:'rgba(234,245,239,0.5)',border:`1px solid rgba(201,147,90,0.15)`,borderTop:'none',borderRadius:'0 0 0.75rem 0.75rem',padding:'1rem 1.1rem'}}>
+                  <div style={{fontSize:'1rem',fontStyle:'italic',color:'rgba(13,61,61,0.8)',lineHeight:1.75}}>{sec.body}</div>
                 </div>
               )}
             </div>
           ))}
         </div>
-        <div style={{width:'100%',textAlign:'center',borderTop:'1px solid rgba(201,147,90,0.2)',paddingTop:'2rem'}}>
-          <div style={{fontSize:'1.4rem',fontWeight:700,marginBottom:'0.5rem'}}>{is_es?'Tu cuerpo es unico. Lumera lo sabe.':'Your body is unique. Lumera knows it.'}</div>
-          <div style={{fontSize:'1rem',fontStyle:'italic',color:'rgba(240,232,220,0.6)',marginBottom:'1.5rem'}}>{is_es?'Empieza a entenderte.':'Start understanding yourself.'}</div>
-          <button onClick={()=>router.push('/quiz')} style={{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1.1rem',color:'white',fontSize:'1.1rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,letterSpacing:'1px',cursor:'pointer',marginBottom:'0.5rem'}}>{is_es?'✨ EMPIEZA TU SANTUARIO — 3 DIAS GRATIS':'✨ START YOUR SANCTUARY — 3 DAYS FREE'}</button>
-          <div style={{fontSize:'0.8rem',color:'rgba(240,232,220,0.4)',fontFamily:'Montserrat,sans-serif'}}>{is_es?'Sin tarjeta · Cancela cuando quieras':'No card · Cancel anytime'}</div>
-        </div>
-        <div style={{marginTop:'2rem',color:'rgba(201,147,90,0.3)',fontSize:'0.8rem',fontStyle:'italic',letterSpacing:'0.1em',textAlign:'center'}}>{'✦ Lumera — Decoding Women\'s Biology'}</div>
       </div>
+
+      {/* 3 OPCIONES */}
+      <div style={{background:cream,padding:'3rem 1.5rem',textAlign:'center'}}>
+        <div style={{maxWidth:'500px',margin:'0 auto'}}>
+          <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',fontWeight:700,color:copper,letterSpacing:'3px',textTransform:'uppercase',marginBottom:'0.5rem'}}>
+            {is_es ? 'Elige tu siguiente paso' : 'Choose your next step'}
+          </div>
+          <h2 style={{fontSize:'1.8rem',fontWeight:700,color:teal,marginBottom:'1.5rem'}}>
+            {is_es ? '3 formas de empezar hoy' : '3 ways to start today'}
+          </h2>
+          {[
+            { emoji:'📥', badge:is_es?'GRATIS':'FREE', title:is_es?'3 Habitos GLP-1 Naturales':'3 Natural GLP-1 Habits', sub:is_es?'Empieza hoy. Energia estable esta semana.':'Start today. Stable energy this week.', btn:is_es?'Descargar gratis':'Download free', color:green, action:()=>router.push('/guia-glp1') },
+            { emoji:'👑', badge:'€6.99', title:is_es?'Plan Completo 7 Dias':'Complete 7-Day Plan', sub:is_es?'21 comidas · Lista compra · Anti-antojos':'21 meals · Shopping list · Cravings reset', btn:is_es?'Obtener €6.99':'Get €6.99', color:`linear-gradient(135deg,${copper},#A06030)`, action:()=>window.open(is_es?'https://getlumera.gumroad.com/l/yndiyy':'https://getlumera.gumroad.com/l/hkbpn','_blank') },
+            { emoji:'✨', badge:is_es?'3 DIAS GRATIS':'3 DAYS FREE', title:is_es?'Transformacion Completa':'Complete Transformation', sub:is_es?'Plan personalizado · LUMI · Lente · Seguimiento':'Personalised plan · LUMI · Lens · Tracking', btn:is_es?'Empezar gratis':'Start free', color:`linear-gradient(135deg,#1A6B6B,${teal})`, action:()=>router.push('/quiz') },
+          ].map((opt,i) => (
+            <div key={i} style={{background:'white',border:`1px solid rgba(201,147,90,0.25)`,borderRadius:'1rem',padding:'1.25rem',marginBottom:'1rem',position:'relative',textAlign:'left',boxShadow:'0 2px 12px rgba(13,61,61,0.06)'}}>
+              <div style={{position:'absolute',top:'-10px',right:'1rem',background:i===1?`linear-gradient(135deg,${copper},#A06030)`:i===0?green:'#1A6B6B',color:'white',fontSize:'0.7rem',fontWeight:700,padding:'2px 10px',borderRadius:'20px',fontFamily:'Montserrat,sans-serif',letterSpacing:'1px'}}>{opt.badge}</div>
+              <div style={{fontSize:'1.15rem',fontWeight:700,color:teal,marginBottom:'0.3rem'}}>{opt.emoji} &nbsp;{opt.title}</div>
+              <div style={{fontSize:'0.95rem',fontStyle:'italic',color:'rgba(13,61,61,0.6)',marginBottom:'0.85rem',lineHeight:1.5}}>{opt.sub}</div>
+              <button onClick={opt.action} style={{width:'100%',background:opt.color,border:'none',borderRadius:'0.5rem',padding:'0.8rem',color:'white',fontSize:'0.95rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>{opt.btn}</button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* OBJECIONES */}
+      <div style={{background:'white',padding:'3rem 1.5rem',textAlign:'center'}}>
+        <div style={{maxWidth:'500px',margin:'0 auto'}}>
+          <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',fontWeight:700,color:copper,letterSpacing:'3px',textTransform:'uppercase',marginBottom:'1rem'}}>
+            {is_es ? 'Por que Lumera funciona' : 'Why Lumera works'}
+          </div>
+          {(is_es?[
+            'Sin dieta ni pastillas — solo biologia real',
+            'Se adapta a tu vida real, no al reves',
+            'Resultados desde la semana 1',
+            'Cancela cuando quieras, sin compromiso',
+            '100% privacidad de tus datos',
+          ]:[
+            'No diet or pills — just real biology',
+            'Adapts to your real life, not the other way around',
+            'Results from week 1',
+            'Cancel anytime, no commitment',
+            '100% data privacy',
+          ]).map((t,i) => (
+            <div key={i} style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'0.75rem',textAlign:'left',padding:'0.75rem 0',borderBottom:`1px solid rgba(201,147,90,0.1)`}}>
+              <span style={{color:green,fontWeight:700,fontSize:'1.1rem',flexShrink:0}}>{'✓'}</span>
+              <span style={{fontSize:'1.05rem',color:teal}}>{t}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA FINAL */}
+      <div style={{background:`linear-gradient(135deg,${teal},#1A6B6B)`,padding:'3.5rem 1.5rem',textAlign:'center'}}>
+        <div style={{maxWidth:'500px',margin:'0 auto'}}>
+          <div style={{fontSize:'2rem',fontWeight:700,color:'white',lineHeight:1.2,marginBottom:'0.75rem'}}>
+            {is_es ? 'Tu cuerpo es unico.\nLumera lo sabe.' : 'Your body is unique.\nLumera knows it.'}
+          </div>
+          <div style={{fontSize:'1.1rem',fontStyle:'italic',color:'rgba(240,232,220,0.7)',marginBottom:'2rem',lineHeight:1.6}}>
+            {is_es ? 'Empieza a entenderte hoy.' : 'Start understanding yourself today.'}
+          </div>
+          <button onClick={() => router.push('/quiz')} style={{width:'100%',maxWidth:'400px',background:`linear-gradient(135deg,${copper},#A06030)`,border:'none',borderRadius:'0.75rem',padding:'1.15rem',color:'white',fontSize:'1.15rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,letterSpacing:'1px',cursor:'pointer',marginBottom:'0.75rem',boxShadow:'0 4px 20px rgba(201,147,90,0.4)'}}>
+            {is_es ? '✨ EMPEZAR MI QUIZ GRATIS — 45s' : '✨ START MY FREE QUIZ — 45s'}
+          </button>
+          <div style={{fontSize:'0.8rem',color:'rgba(240,232,220,0.35)',fontFamily:'Montserrat,sans-serif',marginBottom:'1rem'}}>
+            {is_es ? 'Sin tarjeta · Cancela cuando quieras' : 'No card · Cancel anytime'}
+          </div>
+          <div style={{fontSize:'0.8rem',color:'rgba(240,232,220,0.3)',fontStyle:'italic',maxWidth:'360px',margin:'0 auto',lineHeight:1.5}}>
+            {is_es ? 'Resultados individuales pueden variar. Lumera no diagnostica ni sustituye consejo medico profesional.' : 'Individual results may vary. Lumera does not diagnose or replace professional medical advice.'}
+          </div>
+          <div style={{marginTop:'2rem',fontSize:'0.85rem',color:'rgba(201,147,90,0.4)',fontStyle:'italic',letterSpacing:'0.1em'}}>
+            {'✦ Lumera — Decoding Women\'s Biology'}
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 }
