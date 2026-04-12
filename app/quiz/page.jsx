@@ -126,7 +126,7 @@ In the FIRST sentence tell her whether her fatigue is mainly PHYSICAL, EMOTIONAL
               ))}
             </div>
             <div style={{textAlign:'center',marginTop:'1.75rem'}}>
-              <a href="/" style={{color:'rgba(240,232,220,0.3)',fontSize:'0.82rem',textDecoration:'none',fontFamily:"'Cormorant',serif"}}>{t.login}</a>
+              <a href="/?showAuth=true" style={{color:'rgba(240,232,220,0.3)',fontSize:'0.82rem',textDecoration:'none',fontFamily:"'Cormorant',serif"}}>{t.login}</a>
             </div>
           </div>
         ) : (
@@ -140,12 +140,12 @@ In the FIRST sentence tell her whether her fatigue is mainly PHYSICAL, EMOTIONAL
             </div>
             <div style={{fontSize:'0.7rem',letterSpacing:'0.35em',color:'rgba(201,147,90,0.6)',textTransform:'uppercase',marginBottom:'1rem'}}>{t.profile}</div>
             <p style={{fontSize:'1.08rem',color:'rgba(240,232,220,0.88)',lineHeight:1.75,fontWeight:300,fontFamily:"'Cormorant',serif",marginBottom:'2rem',borderLeft:'2px solid rgba(201,147,90,0.3)',paddingLeft:'1rem'}}>{result}</p>
-            <a href="/?register=true" style={{display:'block',width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.875rem',padding:'1.1rem',color:'white',fontSize:'1.15rem',fontFamily:"'Cormorant',serif",fontWeight:500,cursor:'pointer',letterSpacing:'0.05em',boxShadow:'0 4px 24px rgba(201,147,90,0.35)',marginBottom:'0.75rem',textDecoration:'none',textAlign:'center'}}>
+            <a href="/?showAuth=true&register=true" style={{display:'block',width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.875rem',padding:'1.1rem',color:'white',fontSize:'1.15rem',fontFamily:"'Cormorant',serif",fontWeight:500,cursor:'pointer',letterSpacing:'0.05em',boxShadow:'0 4px 24px rgba(201,147,90,0.35)',marginBottom:'0.75rem',textDecoration:'none',textAlign:'center'}}>
               ✦ {t.cta}
             </a>
             <div style={{textAlign:'center',fontSize:'0.78rem',color:'rgba(240,232,220,0.25)',fontFamily:"'Cormorant',serif",marginBottom:'1rem'}}>{t.sub}</div>
             <div style={{textAlign:'center'}}>
-              <a href="/" style={{color:'rgba(240,232,220,0.3)',fontSize:'0.82rem',textDecoration:'none',fontFamily:"'Cormorant',serif"}}>{t.login}</a>
+              <a href="/?showAuth=true" style={{color:'rgba(240,232,220,0.3)',fontSize:'0.82rem',textDecoration:'none',fontFamily:"'Cormorant',serif"}}>{t.login}</a>
             </div>
           </div>
         )}

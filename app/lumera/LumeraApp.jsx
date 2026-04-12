@@ -6917,6 +6917,7 @@ query = query.eq('region', region.toUpperCase());
                             <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
                                 {/* CONTENIDO IZQUIERDO - COMPACTO */}
                                 <div style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
+                                    <img src="/images/pendulo.png" alt="Lumera" style={{width:'100%',maxWidth:'320px',margin:'0 auto',display:'block',borderRadius:'1rem',opacity:0.92}}/>
                                     <div className="badge-subtle" style={{display: 'inline-block', width: 'fit-content'}}>
                                         {language === 'es' ? 'Para mujeres que están viviendo una transformación' : 'For women experiencing transformation'}
                                     </div>
