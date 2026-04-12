@@ -44,13 +44,13 @@ export default function QuizPage() {
 2. Cuándo lo siente más: "${selectedAnswers[1]}"
 3. Qué ha intentado: "${selectedAnswers[2]}"
 
-Analiza su patrón hormonal y metabólico en máximo 4 líneas. Habla directamente a ella, en segunda persona, con tono cálido, científico y empoderador. Menciona cortisol, GLP-1, estrógeno o progesterona según corresponda. NO uses emojis. NO menciones diagnósticos médicos. Termina diciéndole cómo Lumera puede ayudarla específicamente.`
+En la PRIMERA frase dile si su cansancio es principalmente FÍSICO, EMOCIONAL u HORMONAL — o una combinación de ellos. Luego explica brevemente el porqué en 2 frases simples, cálidas y empoderadoras. Sin tecnicismos excesivos. Sin emojis. Sin diagnósticos médicos. Termina con una frase corta sobre cómo Lumera puede ayudarla. Máximo 4 frases en total.`
         : `You are LUMI, the biological guide of Lumera — a wellness app for women 40+. A woman just answered these questions:
 1. Biggest challenge: "${selectedAnswers[0]}"
 2. When she feels it most: "${selectedAnswers[1]}"
 3. What she has tried: "${selectedAnswers[2]}"
 
-Analyze her hormonal and metabolic pattern in maximum 4 lines. Speak directly to her, in second person, with a warm, scientific and empowering tone. Mention cortisol, GLP-1, oestrogen or progesterone as appropriate. Do NOT use emojis. Do NOT mention medical diagnoses. End by telling her how Lumera can help her specifically.`;
+In the FIRST sentence tell her whether her fatigue is mainly PHYSICAL, EMOTIONAL or HORMONAL — or a combination. Then briefly explain why in 2 simple, warm and empowering sentences. No excessive technical terms. No emojis. No medical diagnoses. End with one short sentence about how Lumera can help her. Maximum 4 sentences total.`;
 
       try {
         const response = await fetch('/api/quiz', {
