@@ -9,6 +9,7 @@ export default function Start() {
   const [analisis, setAnalisis] = useState('');
   const [cargando, setCargando] = useState(false);
   const [openSection, setOpenSection] = useState(null);
+  const [showInstall, setShowInstall] = useState(false);
   const fileRef = useRef();
   const router = useRouter();
 
@@ -71,13 +72,61 @@ export default function Start() {
   return (
     <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",background:cream,color:teal,overflowX:'hidden'}}>
 
+      {/* POPUP INSTALACION */}
+      {showInstall && (
+        <div onClick={()=>setShowInstall(false)} style={{position:'fixed',top:0,left:0,right:0,bottom:0,background:'rgba(0,0,0,0.5)',zIndex:1000,display:'flex',alignItems:'center',justifyContent:'center',padding:'1.5rem'}}>
+          <div onClick={e=>e.stopPropagation()} style={{background:'white',borderRadius:'1.25rem',padding:'2rem 1.5rem',maxWidth:'400px',width:'100%',fontFamily:"'Cormorant Garamond',Georgia,serif"}}>
+            <div style={{textAlign:'center',marginBottom:'1.5rem'}}>
+              <div style={{fontSize:'2rem',marginBottom:'0.5rem'}}>📱</div>
+              <div style={{fontSize:'1.4rem',fontWeight:700,color:'#0D3D3D',marginBottom:'0.25rem'}}>
+                {is_es ? 'Instala Lumera en tu móvil' : 'Install Lumera on your phone'}
+              </div>
+              <div style={{fontSize:'0.95rem',fontStyle:'italic',color:'rgba(13,61,61,0.6)'}}>
+                {is_es ? 'Sin App Store · Gratis · En segundos' : 'No App Store · Free · In seconds'}
+              </div>
+            </div>
+            <div style={{background:'#EAF5EF',borderRadius:'0.75rem',padding:'1.25rem',marginBottom:'1rem'}}>
+              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',fontWeight:700,color:'#2A7A4A',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>🍎 iPhone / iPad</div>
+              <div style={{fontSize:'0.95rem',color:'#0D3D3D',lineHeight:1.7}}>
+                {is_es
+                  ? '1. Abre getlumera.app en Safari
+2. Pulsa el botón Compartir ↑
+3. Selecciona "Añadir a pantalla de inicio"
+4. Pulsa "Añadir" — ¡lista!'
+                  : '1. Open getlumera.app in Safari
+2. Tap the Share button ↑
+3. Select "Add to Home Screen"
+4. Tap "Add" — done!'}
+              </div>
+            </div>
+            <div style={{background:'#EAF5EF',borderRadius:'0.75rem',padding:'1.25rem',marginBottom:'1.5rem'}}>
+              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',fontWeight:700,color:'#2A7A4A',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>🤖 Android</div>
+              <div style={{fontSize:'0.95rem',color:'#0D3D3D',lineHeight:1.7}}>
+                {is_es
+                  ? '1. Abre getlumera.app en Chrome
+2. Pulsa el menú ⋮ arriba a la derecha
+3. Selecciona "Añadir a pantalla de inicio"
+4. Pulsa "Añadir" — ¡lista!'
+                  : '1. Open getlumera.app in Chrome
+2. Tap the menu ⋮ top right
+3. Select "Add to Home Screen"
+4. Tap "Add" — done!'}
+              </div>
+            </div>
+            <button onClick={()=>setShowInstall(false)} style={{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'0.9rem',color:'white',fontSize:'1rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
+              {is_es ? 'Entendido ✦' : 'Got it ✦'}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* HERO */}
       <div style={{minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'2.5rem 1.25rem',textAlign:'center',background:`linear-gradient(180deg,white 0%,${cream} 100%)`}}>
         <div style={{maxWidth:'500px',width:'100%'}}>
           <img src="/images/shula-lagrima.jpg" alt="Lumera" style={{width:'180px',height:'220px',objectFit:'cover',objectPosition:'top center',borderRadius:'50% 50% 40% 40%',border:`3px solid ${copper}`,marginBottom:'1.5rem',boxShadow:'0 8px 32px rgba(201,147,90,0.25)'}}/>
           <div style={{color:copper,fontSize:'0.85rem',letterSpacing:'0.3em',marginBottom:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:700}}>{'✦ LUMERA'}</div>
           <div style={{display:'flex',gap:'0.5rem',justifyContent:'center',marginBottom:'0.75rem',flexWrap:'wrap'}}>
-            <span style={{background:'rgba(13,61,61,0.08)',border:'1px solid rgba(13,61,61,0.15)',borderRadius:'20px',padding:'3px 10px',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,color:'#0D3D3D',letterSpacing:'0.5px'}}>📱 App descargable</span>
+            <span onClick={()=>setShowInstall(true)} style={{background:'rgba(13,61,61,0.08)',border:'1px solid rgba(13,61,61,0.15)',borderRadius:'20px',padding:'3px 10px',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,color:'#0D3D3D',letterSpacing:'0.5px',cursor:'pointer'}}>📱 App descargable</span>
             <span style={{background:'rgba(13,61,61,0.08)',border:'1px solid rgba(13,61,61,0.15)',borderRadius:'20px',padding:'3px 10px',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,color:'#0D3D3D',letterSpacing:'0.5px'}}>🌍 ES · EN</span>
             <span style={{background:'rgba(201,147,90,0.12)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'20px',padding:'3px 10px',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,color:'#C9935A',letterSpacing:'0.5px'}}>✦ 3 días gratis</span>
           </div>
