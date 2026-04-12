@@ -89,28 +89,16 @@ export default function Start() {
               <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',fontWeight:700,color:'#2A7A4A',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>🍎 iPhone / iPad</div>
               <div style={{fontSize:'0.95rem',color:'#0D3D3D',lineHeight:1.7}}>
                 {is_es
-                  ? '1. Abre getlumera.app en Safari
-2. Pulsa el botón Compartir ↑
-3. Selecciona "Añadir a pantalla de inicio"
-4. Pulsa "Añadir" — ¡lista!'
-                  : '1. Open getlumera.app in Safari
-2. Tap the Share button ↑
-3. Select "Add to Home Screen"
-4. Tap "Add" — done!'}
+                  ? <span>1. Abre getlumera.app en Safari<br/>2. Pulsa el botón Compartir ↑<br/>3. Selecciona "Añadir a pantalla de inicio"<br/>4. Pulsa "Añadir" — ¡lista!</span>
+                  : <span>1. Open getlumera.app in Safari<br/>2. Tap the Share button ↑<br/>3. Select "Add to Home Screen"<br/>4. Tap "Add" — done!</span>}
               </div>
             </div>
             <div style={{background:'#EAF5EF',borderRadius:'0.75rem',padding:'1.25rem',marginBottom:'1.5rem'}}>
               <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',fontWeight:700,color:'#2A7A4A',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>🤖 Android</div>
               <div style={{fontSize:'0.95rem',color:'#0D3D3D',lineHeight:1.7}}>
                 {is_es
-                  ? '1. Abre getlumera.app en Chrome
-2. Pulsa el menú ⋮ arriba a la derecha
-3. Selecciona "Añadir a pantalla de inicio"
-4. Pulsa "Añadir" — ¡lista!'
-                  : '1. Open getlumera.app in Chrome
-2. Tap the menu ⋮ top right
-3. Select "Add to Home Screen"
-4. Tap "Add" — done!'}
+                  ? <span>1. Abre getlumera.app en Chrome<br/>2. Pulsa el menú ⋮ arriba a la derecha<br/>3. Selecciona "Añadir a pantalla de inicio"<br/>4. Pulsa "Añadir" — ¡lista!</span>
+                  : <span>1. Open getlumera.app in Chrome<br/>2. Tap the menu ⋮ top right<br/>3. Select "Add to Home Screen"<br/>4. Tap "Add" — done!</span>}
               </div>
             </div>
             <button onClick={()=>setShowInstall(false)} style={{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'0.9rem',color:'white',fontSize:'1rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
