@@ -3441,7 +3441,7 @@ query = query.eq('region', region.toUpperCase());
         .then(r=>r.json())
         .then(d=>setPreQuizResult(prev=>({...prev,insight:d.text||prev.insight,lumiLoading:false})))
         .catch(()=>setPreQuizResult(prev=>({...prev,lumiLoading:false})));
-} }, style:{background:'rgba(30,20,10,0.75)',border:'1.5px solid rgba(201,147,90,0.6)',borderRadius:'0.875rem',padding:'1.1rem 1.25rem',textAlign:'left',color:'#FFFFFF',fontSize:'1.2rem',fontWeight:500,fontFamily:"'Cormorant',serif",cursor:'pointer',textShadow:'0 1px 4px rgba(0,0,0,0.8)'}}, '✦ '+opt))
+} }, style:{background:'rgba(40,20,5,0.92)',border:'2px solid rgba(201,147,90,0.7)',borderRadius:'0.875rem',padding:'1.2rem 1.5rem',textAlign:'left',color:'#FFFFFF',fontSize:'1.25rem',fontWeight:600,fontFamily:"'Georgia',serif",cursor:'pointer',textShadow:'0 2px 10px rgba(0,0,0,1)',letterSpacing:'0.02em',backdropFilter:'blur(8px)',WebkitBackdropFilter:'blur(8px)'}}, '✦ '+opt))
                                 ),
                                 React.createElement('div', {style:{textAlign:'center',marginTop:'1.5rem'}},
                                     React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
@@ -7453,7 +7453,7 @@ query = query.eq('region', region.toUpperCase());
         .then(r=>r.json())
         .then(d=>setPreQuizResult(prev=>({...prev,insight:d.text||prev.insight,lumiLoading:false})))
         .catch(()=>setPreQuizResult(prev=>({...prev,lumiLoading:false})));
-} }, style:{background:'rgba(30,20,10,0.75)',border:'1.5px solid rgba(201,147,90,0.6)',borderRadius:'0.875rem',padding:'1.1rem 1.25rem',textAlign:'left',color:'#FFFFFF',fontSize:'1.2rem',fontWeight:500,fontFamily:"'Cormorant',serif",cursor:'pointer',textShadow:'0 1px 4px rgba(0,0,0,0.8)'}}, '✦ '+opt))
+} }, style:{background:'rgba(40,20,5,0.92)',border:'2px solid rgba(201,147,90,0.7)',borderRadius:'0.875rem',padding:'1.2rem 1.5rem',textAlign:'left',color:'#FFFFFF',fontSize:'1.25rem',fontWeight:600,fontFamily:"'Georgia',serif",cursor:'pointer',textShadow:'0 2px 10px rgba(0,0,0,1)',letterSpacing:'0.02em',backdropFilter:'blur(8px)',WebkitBackdropFilter:'blur(8px)'}}, '✦ '+opt))
                                 ),
                                 React.createElement('div', {style:{textAlign:'center',marginTop:'1.5rem'}},
                                     React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
