@@ -3239,6 +3239,40 @@ query = query.eq('region', region.toUpperCase());
                 setProactiveMessages([]);
             };
 
+            const analyzeLabel = async (file) => {
+                if (!file) return;
+                setLumiPhotoLoading(true);
+                if (!showLumiChat) setShowLumiChat(true);
+                try {
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        const base64 = e.target.result.split(',')[1];
+                        const mediaType = file.type || 'image/jpeg';
+                        const userMsg = {role:'user', content: language==='es'?'[Foto de etiqueta nutricional]':'[Photo of nutrition label]'};
+                        setLumiMessages(prev => [...prev, userMsg]);
+                        const response = await fetch('https://pyekwpmbdnmglrjieexc.supabase.co/functions/v1/lumi-label', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type':'application/json',
+                                'Authorization': `Bearer ${supabase.supabaseKey || ''}`,
+                            },
+                            body: JSON.stringify({
+                                image_base64: base64,
+                                media_type: mediaType,
+                                language
+                            })
+                        });
+                        const data = await response.json();
+                        const reply = data.message || (language==='es'?'No pude analizar la etiqueta.':'Could not analyse the label.');
+                        setLumiMessages(prev => [...prev, {role:'assistant', content:reply}]);
+                        setLumiPhotoLoading(false);
+                    };
+                    reader.readAsDataURL(file);
+                } catch(err) {
+                    console.error(err);
+                    setLumiPhotoLoading(false);
+                }
+            };
             const analyzeFood = async (file) => {
                 if (!file) return;
                 setLumiPhotoLoading(true);
@@ -4928,6 +4962,7 @@ query = query.eq('region', region.toUpperCase());
                                         </span>
                                     </div>
                                 ) : (
+                                    <div style={{display:'flex',flexDirection:'column',gap:'0.75rem'}}>
                                     <label style={{cursor:'pointer',display:'inline-block'}}>
                                         <input type="file" accept="image/*" capture="environment" style={{display:'none'}}
                                             onChange={e=>{if(e.target.files?.[0]){analyzeFood(e.target.files[0]);setShowLumiChat(true);}}}/>
@@ -4938,6 +4973,17 @@ query = query.eq('region', region.toUpperCase());
                                             </span>
                                         </div>
                                     </label>
+                                    <label style={{cursor:'pointer',display:'inline-block'}}>
+                                        <input type="file" accept="image/*" capture="environment" style={{display:'none'}}
+                                            onChange={e=>{if(e.target.files?.[0]){analyzeLabel(e.target.files[0]);setShowLumiChat(true);}}}/>
+                                        <div style={{background:'linear-gradient(135deg,#2D4A3E,#4A7C6F)',borderRadius:'9999px',padding:'0.875rem 2rem',display:'inline-flex',alignItems:'center',gap:'0.5rem',boxShadow:'0 4px 20px rgba(45,74,62,0.3)'}}>
+                                            <img src="/images/lente_alquimica.png" style={{width:'20px',height:'20px',borderRadius:'50%',objectFit:'cover'}}/>
+                                            <span style={{color:'#0A0A0A',fontFamily:"'Cormorant',serif",fontWeight:600,fontSize:'1rem'}}>
+                                                {language==='es'?'Leer etiqueta':'Read label'}
+                                            </span>
+                                        </div>
+                                    </label>
+                                    </div>
                                 )}
                             </div>
                         </details>
