@@ -572,7 +572,7 @@ import './lumera.css'
                             type: 'line',
                             data: {
                                 labels: labels,
-                                datasets: [{ label: language === 'es' ? 'Sueño' : 'Sleep', data: sleepData, borderColor: '#C9935A', backgroundColor: 'rgba(201,147,90,0.1)', borderWidth: 2, fill: true, tension: 0.4 }]
+                                datasets: [{ label: language === 'es' ? 'Sueño' : 'Sleep', data: sleepData, borderColor: '#C4A882', backgroundColor: 'rgba(201,147,90,0.1)', borderWidth: 2, fill: true, tension: 0.4 }]
                             },
                             options: chartOptions
                         });
@@ -584,7 +584,7 @@ import './lumera.css'
                             type: 'line',
                             data: {
                                 labels: labels,
-                                datasets: [{ label: language === 'es' ? 'Energía' : 'Energy', data: energyData, borderColor: '#B87333', backgroundColor: 'rgba(184,115,51,0.1)', borderWidth: 2, fill: true, tension: 0.4 }]
+                                datasets: [{ label: language === 'es' ? 'Energía' : 'Energy', data: energyData, borderColor: '#B8997A', backgroundColor: 'rgba(184,115,51,0.1)', borderWidth: 2, fill: true, tension: 0.4 }]
                             },
                             options: chartOptions
                         });
@@ -639,7 +639,7 @@ import './lumera.css'
                             data: {
                                 labels: labels,
                                 datasets: [
-                                    { label: language === 'es' ? 'Intensidad' : 'Intensity', data: intensityData, backgroundColor: '#C9935A', borderColor: '#B87333', borderWidth: 1 },
+                                    { label: language === 'es' ? 'Intensidad' : 'Intensity', data: intensityData, backgroundColor: '#C4A882', borderColor: '#B8997A', borderWidth: 1 },
                                     { label: language === 'es' ? 'Duración (días)' : 'Duration (days)', data: durationData, backgroundColor: '#f97316', borderColor: '#c2410c', borderWidth: 1 }
                                 ]
                             },
@@ -2675,7 +2675,7 @@ query = query.eq('region', region.toUpperCase());
                                 </div>
                                 {/* Logo y headline */}
                                 <div style={{textAlign: 'center', marginBottom: '2rem'}}>
-                                    <p style={{fontSize: '0.72rem', fontWeight: 700, color: '#C9935A', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '0.75rem'}}>✦ LUMERA</p>
+                                    <p style={{fontSize: '0.72rem', fontWeight: 700, color: '#C4A882', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '0.75rem'}}>✦ LUMERA</p>
                                     <h1 style={{fontFamily: "'Cormorant', Georgia, serif", fontSize: '2.4rem', fontWeight: 300, color: '#292524', lineHeight: 1.15, marginBottom: '1rem'}}>
                                         {language === 'es' ? 'Tu nuevo capítulo — comienza ahora' : 'Your new chapter — begins now'}
                                     </h1>
@@ -2701,7 +2701,7 @@ query = query.eq('region', region.toUpperCase());
                                 {/* CTA */}
                                 <button
                                     onClick={() => setQuizStep(2)}
-                                    style={{width: '100%', background: 'linear-gradient(135deg, #C9935A, #e8c89f)', border: 'none', borderRadius: '9999px', padding: '1rem', color: 'white', fontSize: '1rem', fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 24px rgba(124,58,237,0.5)', letterSpacing: '0.02em', marginBottom: '0.75rem'}}
+                                    style={{width: '100%', background: 'linear-gradient(135deg, #C4A882, #e8c89f)', border: 'none', borderRadius: '9999px', padding: '1rem', color: 'white', fontSize: '1rem', fontWeight: 700, cursor: 'pointer', boxShadow: '0 4px 24px rgba(124,58,237,0.5)', letterSpacing: '0.02em', marginBottom: '0.75rem'}}
                                 >
                                     {language === 'es' ? '✨ Comenzar mi transformación' : '✨ Start my transformation'}
                                 </button>
@@ -2763,7 +2763,7 @@ query = query.eq('region', region.toUpperCase());
                                     </div>
                                 </div>
 
-                                <button onClick={() => setQuizStep(3)} style={{width:"100%", background:"linear-gradient(135deg, #C9935A, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
+                                <button onClick={() => setQuizStep(3)} style={{width:"100%", background:"linear-gradient(135deg, #C4A882, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
                                     {language === 'es' ? 'Siguiente' : 'Next'} →
                                 </button>
                             </div>
@@ -2803,7 +2803,7 @@ query = query.eq('region', region.toUpperCase());
                                     ))}
                                 </div>
 
-                                <button onClick={() => setQuizStep(4)} style={{width:"100%", background:"linear-gradient(135deg, #C9935A, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
+                                <button onClick={() => setQuizStep(4)} style={{width:"100%", background:"linear-gradient(135deg, #C4A882, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
                                     {language === 'es' ? 'Siguiente' : 'Next'} →
                                 </button>
                             </div>
@@ -2839,7 +2839,7 @@ query = query.eq('region', region.toUpperCase());
                                     ))}
                                 </div>
 
-                                <button onClick={() => setQuizStep(5)} style={{width:"100%", background:"linear-gradient(135deg, #C9935A, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
+                                <button onClick={() => setQuizStep(5)} style={{width:"100%", background:"linear-gradient(135deg, #C4A882, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
                                     {language === 'es' ? 'Siguiente' : 'Next'} →
                                 </button>
                             </div>
@@ -2939,7 +2939,7 @@ query = query.eq('region', region.toUpperCase());
                                     setShowWelcomeTrial(true);
                                     setWelcomeAct(1);
                                     setCurrentPage('home');
-                                }} style={{width:"100%", background:"linear-gradient(135deg, #C9935A, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
+                                }} style={{width:"100%", background:"linear-gradient(135deg, #C4A882, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
                                     {language === 'es' ? '¡Comenzar!' : 'Let\'s Go!'} ✨
                                 </button>
                             </div>
@@ -2976,7 +2976,7 @@ query = query.eq('region', region.toUpperCase());
                             <p style={{fontSize:'0.88rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.7}}>
                                 {language==='es' ? 'Donde puedes confesar que algunos días no te reconoces. Que te asusta lo impredecible que eres. Que nadie entiende esta montaña rusa. Que te sientes sola en este proceso.' : 'Where you can admit that some days you do not recognise yourself. That your unpredictability scares you. That nobody understands this rollercoaster. That you feel alone.'}
                             </p>
-                            <p style={{fontSize:'0.9rem',color:'#C9935A',lineHeight:1.6,fontWeight:600}}>
+                            <p style={{fontSize:'0.9rem',color:'#C4A882',lineHeight:1.6,fontWeight:600}}>
                                 {language==='es' ? '¿Sabes qué? Eres de las valientes. ✦' : 'You know what? You are one of the brave ones. ✦'}
                             </p>
                             <p style={{fontSize:'0.88rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.7}}>
@@ -2985,7 +2985,7 @@ query = query.eq('region', region.toUpperCase());
                             <p style={{fontSize:'0.88rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.7}}>
                                 {language==='es' ? 'Voy a ayudarte con menús, ejercicio y entender tu cuerpo... pero también estaré aquí cuando quieras matar a alguien por masticar fuerte 😅, llores viendo un anuncio, o necesites que alguien te diga "no estás loca".' : "I'll help you with menus, exercise and understanding your body... but I'll also be here when you want to kill someone for chewing loudly 😅, cry at a commercial, or need someone to tell you you are not crazy."}
                             </p>
-                            <p style={{fontSize:'0.9rem',color:'#C9935A',fontWeight:600,lineHeight:1.5}}>
+                            <p style={{fontSize:'0.9rem',color:'#C4A882',fontWeight:600,lineHeight:1.5}}>
                                 {language==='es' ? 'Somos tú y yo. Tu espacio más seguro. 🌿 ¿Lista?' : 'It is just you and me. Your safest space. 🌿 Ready?'}
                             </p>
                         </div>
@@ -3452,14 +3452,14 @@ query = query.eq('region', region.toUpperCase());
                 return (
                     React.createElement('div', {style:{minHeight:'100vh',background:'linear-gradient(135deg,rgba(10,8,6,0.82) 0%,rgba(26,16,8,0.78) 100%)',backgroundImage:'url(/images/quiz-bg.png)',backgroundSize:'cover',backgroundPosition:'center',backgroundBlendMode:'multiply',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'1.5rem',fontFamily:"'Cormorant',serif"}},
                         React.createElement('div', {style:{position:'absolute',top:'1.5rem',left:'50%',transform:'translateX(-50%)',display:'flex',alignItems:'center',gap:'0.5rem'}},
-                            React.createElement('span', {style:{color:'#E8B06A',fontSize:'1.2rem',letterSpacing:'0.2em',fontWeight:500,textShadow:'0 2px 8px rgba(0,0,0,0.9)'}}, '✦ Lumera')
+                            React.createElement('span', {style:{color:'#D4B8A8',fontSize:'1.2rem',letterSpacing:'0.2em',fontWeight:500,textShadow:'0 2px 8px rgba(0,0,0,0.9)'}}, '✦ Lumera')
                         ),
                         React.createElement('div', {style:{width:'100%',maxWidth:'520px',marginTop:'3rem'}},
                             !result ? React.createElement('div', {style:{background:'rgba(255,255,255,0.04)',border:'0.5px solid rgba(201,147,90,0.25)',borderRadius:'1.5rem',padding:'2.5rem 2rem'}},
                                 React.createElement('div', {style:{textAlign:'center',marginBottom:'2rem'}},
                                     React.createElement('div', {style:{fontSize:'0.75rem',letterSpacing:'0.3em',color:'rgba(201,147,90,0.7)',textTransform:'uppercase',marginBottom:'0.75rem'}}, language==='es' ? 'Pregunta '+(preQuizStep+1)+' de 3' : 'Question '+(preQuizStep+1)+' of 3'),
                                     React.createElement('div', {style:{display:'flex',gap:'0.5rem',justifyContent:'center',marginBottom:'1.5rem'}},
-                                        [0,1,2].map(i => React.createElement('div', {key:i, style:{height:'3px',width:'60px',borderRadius:'2px',background:i<=preQuizStep?'#C9935A':'rgba(201,147,90,0.2)'}}))
+                                        [0,1,2].map(i => React.createElement('div', {key:i, style:{height:'3px',width:'60px',borderRadius:'2px',background:i<=preQuizStep?'#C4A882':'rgba(201,147,90,0.2)'}}))
                                     ),
                                     React.createElement('h2', {style:{fontSize:'2rem',fontWeight:500,fontStyle:'italic',color:'#FFFFFF',lineHeight:1.3,textShadow:'0 2px 8px rgba(0,0,0,0.9)'}}, quizQs[preQuizStep].q)
                                 ),
@@ -3483,12 +3483,12 @@ query = query.eq('region', region.toUpperCase());
                             ) : React.createElement('div', {style:{background:'rgba(255,255,255,0.04)',border:'0.5px solid rgba(201,147,90,0.35)',borderRadius:'1.5rem',padding:'2.5rem 2rem',textAlign:'center'}},
                                 React.createElement('div', {style:{fontSize:'3rem',marginBottom:'1rem'}}, result.emoji),
                                 React.createElement('div', {style:{fontSize:'0.75rem',letterSpacing:'0.3em',color:'rgba(201,147,90,0.7)',textTransform:'uppercase',marginBottom:'0.5rem'}}, language==='es'?'Tu perfil metabolico':'Your metabolic profile'),
-                                React.createElement('h2', {style:{fontSize:'2rem',fontWeight:300,fontStyle:'italic',color:'#C9935A',marginBottom:'1.25rem'}}, result.name),
+                                React.createElement('h2', {style:{fontSize:'2rem',fontWeight:300,fontStyle:'italic',color:'#C4A882',marginBottom:'1.25rem'}}, result.name),
                                 React.createElement('p', {style:{fontSize:'1.05rem',color:'rgba(255,255,255,0.95)',lineHeight:1.65,marginBottom:'1.25rem',fontWeight:400,textShadow:'0 1px 4px rgba(0,0,0,0.7)'}}, result.desc),
                                 React.createElement('div', {style:{background:'rgba(201,147,90,0.08)',border:'0.5px solid rgba(201,147,90,0.2)',borderRadius:'0.75rem',padding:'1rem',marginBottom:'1.75rem'}},
                                     result.lumiLoading ? React.createElement('p', {style:{fontSize:'0.95rem',color:'rgba(201,147,90,0.7)',fontStyle:'italic',lineHeight:1.5}}, language==='es'?'LUMI esta analizando tu patron...':'LUMI is analyzing your pattern...') : React.createElement('p', {style:{fontSize:'1rem',color:'rgba(240,232,220,0.95)',fontStyle:'italic',lineHeight:1.7,textShadow:'0 1px 4px rgba(0,0,0,0.8)'}}, result.insight)
                                 ),
-                                React.createElement('button', {onClick:()=>{ setShowPreQuiz(false); setAuthMode('register'); }, style:{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.1rem',fontFamily:"'Cormorant',serif",fontWeight:500,cursor:'pointer',letterSpacing:'0.05em',boxShadow:'0 4px 20px rgba(201,147,90,0.3)',marginBottom:'0.75rem'}}, language==='es'?'✦ Quiero mi prueba gratis':'✦ Start my free trial'),
+                                React.createElement('button', {onClick:()=>{ setShowPreQuiz(false); setAuthMode('register'); }, style:{width:'100%',background:'linear-gradient(135deg,#C4A882,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.1rem',fontFamily:"'Cormorant',serif",fontWeight:500,cursor:'pointer',letterSpacing:'0.05em',boxShadow:'0 4px 20px rgba(201,147,90,0.3)',marginBottom:'0.75rem'}}, language==='es'?'✦ Quiero mi prueba gratis':'✦ Start my free trial'),
                                 React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
                             )
                         )
@@ -3564,7 +3564,7 @@ query = query.eq('region', region.toUpperCase());
                                         </span>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <span style={{fontSize:"1.5rem",color:"#C9935A"}}>✦</span>
+                                        <span style={{fontSize:"1.5rem",color:"#C4A882"}}>✦</span>
                                         <span className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
                                             {language === 'es' ? 'Acompañamiento diario' : 'Daily support'}
                                         </span>
@@ -3851,14 +3851,14 @@ query = query.eq('region', region.toUpperCase());
 
                         <div style={{position:'relative',zIndex:2,padding:'0 0 2rem'}}>
 
-                            <div style={{background:'linear-gradient(160deg,rgba(184,115,51,0.18) 0%,rgba(22,16,10,0.95) 60%)',borderBottom:'1px solid rgba(184,115,51,0.20)',padding:'2.5rem 1.5rem 2rem',position:'relative',overflow:'hidden'}}>
-                                <div style={{position:'absolute',top:0,left:'50%',transform:'translateX(-50%)',width:'120px',height:'3px',background:'linear-gradient(90deg,transparent,#B87333,transparent)'}}/>
+                            <div style={{background:'linear-gradient(160deg,rgba(184,115,51,0.18) 0%,rgba(22,16,10,0.95) 60%)',borderBottom:'1px solid rgba(184,115,51,0.20)',padding:'2.5rem 1.5rem 2rem',position:'relative',overflow:'hidden',backgroundImage:'url(/images/shula_principal.jpg)',backgroundSize:'cover',backgroundPosition:'center top'}}><div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom, rgba(8,4,2,0.72) 0%, rgba(8,4,2,0.88) 100%)',zIndex:0}}/>
+                                <div style={{position:'absolute',top:0,left:'50%',transform:'translateX(-50%)',width:'120px',height:'3px',background:'linear-gradient(90deg,transparent,#B8997A,transparent)'}}/>
                                 <div style={{display:'inline-flex',alignItems:'center',background:'linear-gradient(135deg,rgba(184,115,51,0.25),rgba(232,200,120,0.15))',border:'1px solid rgba(184,115,51,0.45)',borderRadius:'9999px',padding:'0.3rem 1rem',marginBottom:'1.25rem'}}>
-                                    <span style={{fontSize:'0.65rem',fontWeight:700,color:'#B87333',letterSpacing:'0.18em',textTransform:'uppercase'}}>PREMIUM</span>
+                                    <span style={{fontSize:'0.65rem',fontWeight:700,color:'#B8997A',letterSpacing:'0.18em',textTransform:'uppercase'}}>PREMIUM</span>
                                 </div>
-                                <h1 style={{fontFamily:"'Cormorant',serif",fontSize:'3rem',fontWeight:400,color:'#F5E6D3',lineHeight:1.05,marginBottom:'0.5rem',letterSpacing:'-0.01em'}}>
+                                <h1 style={{fontFamily:"'Cormorant',serif",fontSize:'3rem',fontWeight:400,color:'#F0EDE8',lineHeight:1.05,marginBottom:'0.5rem',letterSpacing:'-0.01em'}}>
                                     {language==='es'?'Bienvenida,':'Welcome,'}<br/>
-                                    <span style={{background:'linear-gradient(135deg,#B87333,#E8C878,#D4956A)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundSize:'200%',animation:'gshimmer 4s linear infinite',fontSize:'3.4rem'}}>{userName}</span>
+                                    <span style={{background:'linear-gradient(135deg,#B8997A,#E8C878,#D4956A)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundSize:'200%',animation:'gshimmer 4s linear infinite',fontSize:'3.4rem'}}>{userName}</span>
                                 </h1>
                                 <p style={{fontSize:'1rem',color:'rgba(212,149,106,0.75)',lineHeight:1.6,marginBottom:'1rem',fontStyle:'italic',fontFamily:"'Cormorant',serif",letterSpacing:'0.02em'}}>
                                     {language==='es'?'Tu santuario. Tu ritmo. Tu transformación.':'Your sanctuary. Your rhythm. Your transformation.'}
@@ -3917,12 +3917,12 @@ query = query.eq('region', region.toUpperCase());
                                     const ac=[sA<3?(language==='es'?'Magnesio 300mg antes de dormir':'300mg magnesium before sleep'):null,eA<3?(language==='es'?'Proteína en desayuno':'Protein at breakfast'):null,aA>=3.5?(language==='es'?'Respiración 4-7-8 x3 al día':'4-7-8 breathing x3 daily'):null,mA<3?(language==='es'?'10 min luz solar por la mañana':'10 min morning sunlight'):null].filter(Boolean);
                                     return (
                                         <div className="gc" style={{marginBottom:'1rem',padding:'1.5rem',position:'relative',overflow:'hidden'}}>
-                                            <div style={{position:'absolute',top:0,left:0,right:0,height:'3px',background:'linear-gradient(90deg,#B87333,#E8C878,#B87333)'}}/>
+                                            <div style={{position:'absolute',top:0,left:0,right:0,height:'3px',background:'linear-gradient(90deg,#B8997A,#E8C878,#B8997A)'}}/>
                                             <div style={{display:'flex',alignItems:'center',gap:'0.6rem',marginBottom:'1rem'}}>
                                                 <img src="/images/lumi.png" style={{width:'40px',height:'40px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'2px solid rgba(184,115,51,0.5)',boxShadow:'0 0 12px rgba(184,115,51,0.3)'}} onError={e=>{e.target.style.display='none'}} alt="LUMI"/>
                                                 <div>
-                                                    <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase'}}>LUMI PREDICTIVA</p>
-                                                    <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.1rem',color:'#F5E6D3',fontWeight:500}}>{language==='es'?'Esta semana te espera esto':'This week ahead for you'}</p>
+                                                    <p style={{fontSize:'0.62rem',color:'#B8997A',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase'}}>LUMI PREDICTIVA</p>
+                                                    <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.1rem',color:'#F0EDE8',fontWeight:500}}>{language==='es'?'Esta semana te espera esto':'This week ahead for you'}</p>
                                                 </div>
                                             </div>
                                             {pr.slice(0,2).map((p,i)=>(
@@ -3931,10 +3931,10 @@ query = query.eq('region', region.toUpperCase());
                                                 </div>
                                             ))}
                                             {ac.length>0&&(<div style={{marginTop:'0.75rem'}}>
-                                                <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:'0.5rem'}}>ACCIONES ESTA SEMANA</p>
+                                                <p style={{fontSize:'0.62rem',color:'#B8997A',fontWeight:700,letterSpacing:'0.12em',textTransform:'uppercase',marginBottom:'0.5rem'}}>ACCIONES ESTA SEMANA</p>
                                                 {ac.slice(0,3).map((a,i)=>(
                                                     <div key={i} style={{display:'flex',alignItems:'center',gap:'0.5rem',marginBottom:'0.35rem'}}>
-                                                        <div style={{width:'5px',height:'5px',borderRadius:'50%',background:'#B87333',flexShrink:0}}/>
+                                                        <div style={{width:'5px',height:'5px',borderRadius:'50%',background:'#B8997A',flexShrink:0}}/>
                                                         <p style={{fontSize:'0.82rem',color:'rgba(212,149,106,0.9)'}}>{a}</p>
                                                     </div>
                                                 ))}
@@ -3960,7 +3960,7 @@ query = query.eq('region', region.toUpperCase());
 
                                 {/* ESTADOS EMOCIONALES — HOY QUIERO */}
                                 <div style={{marginBottom:'1.25rem'}}>
-                                    <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.75rem'}}>{language==='es'?'HOY QUIERO...':'TODAY I WANT TO...'}</p>
+                                    <p style={{fontSize:'0.62rem',color:'#B8997A',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.75rem'}}>{language==='es'?'HOY QUIERO...':'TODAY I WANT TO...'}</p>
                                     <div style={{display:'flex',flexDirection:'row',gap:'0.6rem',overflowX:'auto',paddingBottom:'0.5rem',scrollbarWidth:'none',WebkitOverflowScrolling:'touch'}}>
                                         {[
                                             {img:'/images/descanso.png',es:'Descansar',en:'Rest',sub_es:'Tu ritual de calma',sub_en:'Your calm ritual',
@@ -3983,7 +3983,7 @@ query = query.eq('region', region.toUpperCase());
                                                 <div className="gc gch" onClick={()=>setOpenEstado(openEstado===i?null:i)} style={{padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem'}}>
                                                     <img src={item.img} style={{width:'42px',height:'42px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'1px solid rgba(184,115,51,0.3)',boxShadow:'0 0 12px rgba(184,115,51,0.15)'}}/>
                                                     <div>
-                                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.88rem',fontWeight:600,color:'#F5E6D3',margin:0}}>{language==='es'?item.es:item.en}</p>
+                                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.88rem',fontWeight:600,color:'#F0EDE8',margin:0}}>{language==='es'?item.es:item.en}</p>
                                                         <p style={{fontSize:'0.7rem',color:'rgba(184,115,51,0.7)',margin:0}}>{language==='es'?item.sub_es:item.sub_en}</p>
                                                     </div>
                                                 </div>
@@ -4020,7 +4020,7 @@ query = query.eq('region', region.toUpperCase());
                                 })()}
 
                                 <div style={{marginBottom:'1rem'}}>
-                                    <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.75rem'}}>{language==='es'?'TU ESPACIO':'YOUR SPACE'}</p>
+                                    <p style={{fontSize:'0.62rem',color:'#B8997A',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.75rem'}}>{language==='es'?'TU ESPACIO':'YOUR SPACE'}</p>
                                     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.6rem'}}>
                                         {[
                                             {img:'/images/modo_ritual.png',es:'Síntomas',en:'Symptoms',page:'symptoms',des:'Registra tu día',den:'Log your day'},
@@ -4033,7 +4033,7 @@ query = query.eq('region', region.toUpperCase());
                                             <div key={i} className="gc gch" onClick={()=>setCurrentPage(item.page)} style={{padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem'}}>
                                                 <img src={item.img} style={{width:'42px',height:'42px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'1px solid rgba(184,115,51,0.3)',boxShadow:'0 0 12px rgba(184,115,51,0.15)'}}/>
                                                 <div>
-                                                    <p style={{fontSize:'0.88rem',fontWeight:600,color:'#F5E6D3',fontFamily:"'Cormorant',serif"}}>{language==='es'?item.es:item.en}</p>
+                                                    <p style={{fontSize:'0.88rem',fontWeight:600,color:'#F0EDE8',fontFamily:"'Cormorant',serif"}}>{language==='es'?item.es:item.en}</p>
                                                     <p style={{fontSize:'0.7rem',color:'rgba(184,115,51,0.7)'}}>{language==='es'?item.des:item.den}</p>
                                                 </div>
                                             </div>
@@ -4043,11 +4043,11 @@ query = query.eq('region', region.toUpperCase());
 
                                 <div className="gc" style={{marginBottom:'1rem',padding:'1.25rem'}}>
                                     <div style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:!isInTrial?'1rem':'0'}}>
-                                        <div style={{width:'32px',height:'32px',borderRadius:'50%',background:'linear-gradient(135deg,#B87333,#E8C878)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                                        <div style={{width:'32px',height:'32px',borderRadius:'50%',background:'linear-gradient(135deg,#B8997A,#E8C878)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
                                             <span style={{fontSize:'0.8rem',color:'#0D0D0D',fontWeight:700}}>P</span>
                                         </div>
                                         <div style={{flex:1}}>
-                                            <p style={{fontSize:'0.78rem',fontWeight:600,color:'#B87333'}}>{isTrialDay3?(language==='es'?'Último día de prueba':'Last trial day'):isInTrial?(language==='es'?`Trial activo · ${trialDaysLeft} días`:`Trial · ${trialDaysLeft} days`):(language==='es'?'Premium activa':'Premium active')}</p>
+                                            <p style={{fontSize:'0.78rem',fontWeight:600,color:'#B8997A'}}>{isTrialDay3?(language==='es'?'Último día de prueba':'Last trial day'):isInTrial?(language==='es'?`Trial activo · ${trialDaysLeft} días`:`Trial · ${trialDaysLeft} days`):(language==='es'?'Premium activa':'Premium active')}</p>
                                             <p style={{fontSize:'0.72rem',color:'rgba(184,115,51,0.65)'}}>{language==='es'?'Acceso completo a Lumera':'Full access to Lumera'}</p>
                                         </div>
                                     </div>
@@ -4088,7 +4088,7 @@ query = query.eq('region', region.toUpperCase());
                 const bgPage = isPremiumUser ? '#0D0A06' : (darkMode ? '#0c0a09' : '#fafaf9');
                 const bgAccent = isPremiumUser ? 'rgba(184,115,51,0.12)' : (darkMode ? 'rgba(201,147,90,0.08)' : 'rgba(253,248,243,0.95)');
                 const borderColor = isPremiumUser ? 'rgba(184,115,51,0.25)' : 'rgba(201,147,90,0.15)';
-                const tMain = isPremiumUser ? '#F5E6D3' : (darkMode ? '#fdf8f3' : '#1c1917');
+                const tMain = isPremiumUser ? '#F0EDE8' : (darkMode ? '#fdf8f3' : '#1c1917');
                 const tSub = isPremiumUser ? 'rgba(212,149,106,0.8)' : (darkMode ? '#a8a29e' : '#78716c');
                 const textMain = darkMode ? '#e7e5e4' : '#292524';
                 const textSub = darkMode ? '#a8a29e' : '#78716c';
@@ -4122,7 +4122,7 @@ query = query.eq('region', region.toUpperCase());
                                     msg: language==='es'?`Hoy no tienes que poder con todo, ${userName}. Tu cuerpo está procesando algo importante. Yo me encargo del resto.`:`You don't have to handle everything today, ${userName}. Your body is processing something important. I've got the rest.`,
                                 },
                                 diosa: {
-                                    bg: 'linear-gradient(135deg,#7a4f1a 0%,#C9935A 100%)',
+                                    bg: 'linear-gradient(135deg,#7a4f1a 0%,#C4A882 100%)',
                                     img: '/images/modo_diosa.png',
                                     label: language==='es'?'Modo diosa':'Goddess mode',
                                     msg: language==='es'?`Hoy tu cuerpo está brillando, ${userName}. Lo noto en tus datos. Aprovechamos esta energía juntas.`:`Your body is shining today, ${userName}. I can see it in your data. Let's use this energy together.`,
@@ -4180,10 +4180,10 @@ query = query.eq('region', region.toUpperCase());
                                                     gap:'5px',
                                                     transition:'all 0.2s',
                                                 }}
-                                                onMouseEnter={e=>{e.currentTarget.style.background='rgba(201,147,90,0.2)';e.currentTarget.style.color='#C9935A'}}
+                                                onMouseEnter={e=>{e.currentTarget.style.background='rgba(201,147,90,0.2)';e.currentTarget.style.color='#C4A882'}}
                                                 onMouseLeave={e=>{e.currentTarget.style.background=darkMode?'rgba(201,147,90,0.1)':'rgba(253,248,243,0.9)';e.currentTarget.style.color=darkMode?'#e8d5c0':'#57534e'}}
                                                 >
-                                                    <span style={{width:'6px',height:'6px',borderRadius:'50%',background:'#C9935A',display:'inline-block',marginRight:'5px',flexShrink:0}}/>
+                                                    <span style={{width:'6px',height:'6px',borderRadius:'50%',background:'#C4A882',display:'inline-block',marginRight:'5px',flexShrink:0}}/>
                                                     <span style={{fontSize:'0.82rem'}}>{language==='es'?s.es:s.en}</span>
                                                 </div>
                                             ))}
@@ -4246,7 +4246,7 @@ query = query.eq('region', region.toUpperCase());
                                                 <p style={{fontSize:'0.72rem',color:'rgba(201,147,90,0.9)',margin:0,fontWeight:600}}>{progressPct}%</p>
                                             </div>
                                             <div style={{background:'rgba(255,255,255,0.15)',borderRadius:'9999px',height:'5px'}}>
-                                                <div style={{background:'linear-gradient(to right,#C9935A,#e8c89f)',borderRadius:'9999px',height:'100%',width:`${progressPct}%`,transition:'width 0.5s ease'}}/>
+                                                <div style={{background:'linear-gradient(to right,#C4A882,#e8c89f)',borderRadius:'9999px',height:'100%',width:`${progressPct}%`,transition:'width 0.5s ease'}}/>
                                             </div>
                                         </div>
                                     </div>
@@ -4267,7 +4267,7 @@ query = query.eq('region', region.toUpperCase());
                                         };
                                         return (
                                             <div style={{background:darkMode?'rgba(201,147,90,0.08)':'rgba(253,248,243,0.95)',borderRadius:'1.1rem',padding:'0.85rem 1.1rem',marginBottom:'12px',border:'1px solid rgba(201,147,90,0.2)'}}>
-                                                <p style={{fontSize:'0.7rem',color:'#C9935A',fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',margin:'0 0 4px'}}>{language==='es'?'✦ Aprendizaje de hoy':'✦ Todays insight'}</p>
+                                                <p style={{fontSize:'0.7rem',color:'#C4A882',fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',margin:'0 0 4px'}}>{language==='es'?'✦ Aprendizaje de hoy':'✦ Todays insight'}</p>
                                                 <p style={{fontSize:'0.85rem',color:darkMode?'#e8d5c0':'#57534e',margin:0,lineHeight:1.55}}>{language==='es'?tips_es[mode]:tips_en[mode]}</p>
                                             </div>
                                         );
@@ -4325,7 +4325,7 @@ query = query.eq('region', region.toUpperCase());
                                                 </div>
                                                 <div style={{padding:'0.75rem'}}>
                                                     <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.05rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:'0 0 3px'}}>{language==='es'?action.es:action.en}</p>
-                                                    <p style={{fontSize:'0.75rem',color:'#C9935A',margin:0,lineHeight:1.3}}>{language==='es'?action.desc_es:action.desc_en}</p>
+                                                    <p style={{fontSize:'0.75rem',color:'#C4A882',margin:0,lineHeight:1.3}}>{language==='es'?action.desc_es:action.desc_en}</p>
                                                 </div>
                                             </div>
                                         ))}
@@ -4410,7 +4410,7 @@ query = query.eq('region', region.toUpperCase());
                                 },
                                 rayo: {
                                     symbol: '⚡', nombre_es: 'Carta Rayo', nombre_en: 'Lightning Card',
-                                    color_from: '#5c4a0a', color_to: '#C9935A',
+                                    color_from: '#5c4a0a', color_to: '#C4A882',
                                     variantes: {
                                         diosa: { titulo_es: 'Rayo Dorado', titulo_en: 'Golden Lightning', msg_es: 'Hoy tienes poder. Tu cuerpo está en su momento. Úsalo — no lo desperdicies en pequeñeces.', msg_en: 'Today you have power. Your body is in its moment. Use it.', menu_es: 'Huevos + aguacate + tostada integral. Energía 4 horas', menu_en: 'Eggs + avocado + wholegrain toast. Energy 4 hours', ej_es: 'Sube la intensidad hoy: HIIT suave 15 min o caminata rápida 30 min', ej_en: 'Increase intensity today: gentle HIIT 15 min or brisk walk 30 min' },
                                         ritual: { titulo_es: 'Rayo Sereno', titulo_en: 'Serene Lightning', msg_es: 'Energía tranquila y constante. No necesitas brillar fuerte — basta con brillar.', msg_en: 'Quiet and constant energy. You do not need to shine bright — shining is enough.', menu_es: 'Menú equilibrado de hoy — todo lo que necesitas está ahí', menu_en: 'Balanced menu today — everything you need is there', ej_es: 'Rutina de hoy completa — tu cuerpo está receptivo', ej_en: 'Full routine today — your body is receptive' },
@@ -4527,14 +4527,14 @@ query = query.eq('region', region.toUpperCase());
                                                         {btn.icon.startsWith('/') 
                                             ? <img src={btn.icon} style={{width:'32px',height:'32px',borderRadius:'50%',objectFit:'cover',margin:'0 auto 4px',display:'block',boxShadow:'0 2px 6px rgba(201,147,90,0.3)'}}/>
                                             : <span style={{fontSize:'1.1rem',display:'block',marginBottom:'2px'}}>{btn.icon}</span>}
-                                                        <p style={{fontSize:'0.72rem',color:oracleActiveMomento===btn.key?'rgba(255,255,255,0.9)':'#C9935A',margin:0,fontWeight:600}}>{language==='es'?btn.es:btn.en}</p>
+                                                        <p style={{fontSize:'0.72rem',color:oracleActiveMomento===btn.key?'rgba(255,255,255,0.9)':'#C4A882',margin:0,fontWeight:600}}>{language==='es'?btn.es:btn.en}</p>
                                                     </div>
                                                     {oracleActiveMomento===btn.key && (
                                                         <div style={{marginTop:'6px',background:darkMode?'rgba(255,255,255,0.04)':'rgba(253,248,243,0.95)',borderRadius:'0.75rem',padding:'0.75rem',border:'1px solid rgba(201,147,90,0.15)'}}>
                                                             <p style={{fontSize:'0.78rem',color:darkMode?'#e8d5c0':'#57534e',margin:'0 0 8px',lineHeight:1.5}}>
                                                                 {language==='es'?contenido[btn.key][sintoma].es:contenido[btn.key][sintoma].en}
                                                             </p>
-                                                            <p onClick={()=>setCurrentPage(btn.key==='aprender'?'chat':btn.key==='cuidarme'?'nutrition':'chat')} style={{fontSize:'0.72rem',color:'#C9935A',margin:0,cursor:'pointer',fontWeight:600,display:'flex',alignItems:'center',gap:'4px'}}>
+                                                            <p onClick={()=>setCurrentPage(btn.key==='aprender'?'chat':btn.key==='cuidarme'?'nutrition':'chat')} style={{fontSize:'0.72rem',color:'#C4A882',margin:0,cursor:'pointer',fontWeight:600,display:'flex',alignItems:'center',gap:'4px'}}>
                                                                 {btn.key==='aprender'
                                                                     ?(language==='es'?'Pregúntale a LUMI para ir más profundo →':'Ask LUMI to go deeper →')
                                                                     :btn.key==='cuidarme'
@@ -4591,13 +4591,13 @@ query = query.eq('region', region.toUpperCase());
                                         style={{width:'32px',height:'32px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'2px solid rgba(201,147,90,0.4)',marginTop:'2px'}}
                                         onError={e=>{e.target.style.display='none'}} alt="LUMI"/>
                                     <div>
-                                        <p style={{fontSize:'0.68rem',color:'#C9935A',fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'4px'}}>
+                                        <p style={{fontSize:'0.68rem',color:'#C4A882',fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'4px'}}>
                                             {language==='es'?'✦ LUMI se anticipa':'✦ LUMI anticipates'}
                                         </p>
                                         <p style={{fontSize:'0.87rem',color:darkMode?'#e8d5c0':'#44403c',lineHeight:1.6,margin:'0 0 10px'}}>
                                             {language==='es'?tip_es:tip_en}
                                         </p>
-                                        <p onClick={()=>setCurrentPage('chat')} style={{fontSize:'0.8rem',color:'#C9935A',margin:0,lineHeight:1.5,cursor:'pointer',fontStyle:'italic'}}>
+                                        <p onClick={()=>setCurrentPage('chat')} style={{fontSize:'0.8rem',color:'#C4A882',margin:0,lineHeight:1.5,cursor:'pointer',fontStyle:'italic'}}>
                                             {language==='es'
                                                 ?'Estoy en la esquina izquierda, 24/7, para lo que necesites — toca para hablar conmigo ✦'
                                                 :'I am in the bottom left corner, 24/7, for whatever you need — tap to talk to me ✦'}
@@ -4624,7 +4624,7 @@ query = query.eq('region', region.toUpperCase());
                                 userSelect:'none',
                                 pointerEvents:'none',
                             }}>
-                                <p style={{fontSize:'0.68rem',color:'#B87333',fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'4px'}}>
+                                <p style={{fontSize:'0.68rem',color:'#B8997A',fontWeight:700,letterSpacing:'0.1em',textTransform:'uppercase',marginBottom:'4px'}}>
                                     {language==='es'?'✦ PREDICCIÓN DE MAÑANA':'✦ TOMORROWS PREDICTION'}
                                 </p>
                                 <p style={{fontSize:'0.87rem',color:darkMode?'#e8d5c0':'#44403c',lineHeight:1.6,margin:'0 0 6px'}}>
@@ -4632,7 +4632,7 @@ query = query.eq('region', region.toUpperCase());
                                         ?'Tu estrógeno cae mañana. He ajustado tu plan de nutrición para evitar el hambre emocional y el pico de cortisol.'
                                         :'Your oestrogen drops tomorrow. I have adjusted your nutrition plan to prevent emotional hunger and cortisol spikes.'}
                                 </p>
-                                <p style={{fontSize:'0.78rem',color:'#B87333',fontStyle:'italic'}}>
+                                <p style={{fontSize:'0.78rem',color:'#B8997A',fontStyle:'italic'}}>
                                     {language==='es'?'Ritual recomendado: Chocolate 85% + estiramientos + magnesio.':'Recommended ritual: 85% dark chocolate + stretches + magnesium.'}
                                 </p>
                             </div>
@@ -4655,7 +4655,7 @@ query = query.eq('region', region.toUpperCase());
                                     display:'flex',alignItems:'center',justifyContent:'center',
                                     fontSize:'1.1rem',
                                 }}>🔒</div>
-                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.95rem',color:'#B87333',margin:0,fontWeight:500}}>
+                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.95rem',color:'#B8997A',margin:0,fontWeight:500}}>
                                     {language==='es'?'LUMI Predictiva — Premium':'LUMI Predictive — Premium'}
                                 </p>
                                 <p style={{fontSize:'0.72rem',color:'rgba(232,200,120,0.6)',margin:0}}>
@@ -4677,11 +4677,11 @@ query = query.eq('region', region.toUpperCase());
                                 position:'relative',
                                 overflow:'hidden',
                             }}>
-                                <div style={{position:'absolute',top:0,left:0,right:0,height:'2px',background:'linear-gradient(90deg,transparent,#B87333,#E8C878,#B87333,transparent)'}}/>
+                                <div style={{position:'absolute',top:0,left:0,right:0,height:'2px',background:'linear-gradient(90deg,transparent,#B8997A,#E8C878,#B8997A,transparent)'}}/>
                                 <p style={{fontSize:'0.62rem',color:'rgba(184,115,51,0.7)',fontWeight:700,letterSpacing:'0.2em',textTransform:'uppercase',marginBottom:'1rem'}}>
                                     {language==='es'?'TU SANTUARIO ESTÁ LISTO':'YOUR SANCTUARY IS READY'}
                                 </p>
-                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.6rem',fontWeight:400,color:'#F5E6D3',lineHeight:1.3,marginBottom:'0.75rem'}}>
+                                <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.6rem',fontWeight:400,color:'#F0EDE8',lineHeight:1.3,marginBottom:'0.75rem'}}>
                                     {language==='es'
                                         ?'Has aprendido a escuchar. Ahora es momento de dominar tu ritmo.'
                                         :'You have learned to listen. Now it is time to master your rhythm.'}
@@ -4692,7 +4692,7 @@ query = query.eq('region', region.toUpperCase());
                                         :'Leave the hormonal fog behind. Move from logging the past to predicting your wellbeing.'}
                                 </p>
                                 <div onClick={()=>setCurrentPage('upgrade')} style={{
-                                    background:'linear-gradient(135deg,#B87333,#E8C878)',
+                                    background:'linear-gradient(135deg,#B8997A,#E8C878)',
                                     borderRadius:'9999px',
                                     padding:'0.85rem 2.5rem',
                                     cursor:'pointer',
@@ -4712,7 +4712,7 @@ query = query.eq('region', region.toUpperCase());
 
                         {/* ── CTA PREMIUM ── */}
                         <div style={{
-                            background: 'linear-gradient(135deg, #C9935A 0%, #e8c89f 100%)',
+                            background: 'linear-gradient(135deg, #C4A882 0%, #e8c89f 100%)',
                             borderRadius: '1.5rem',
                             padding: '2rem 1.75rem',
                             textAlign: 'center',
@@ -4732,7 +4732,7 @@ query = query.eq('region', region.toUpperCase());
                                 onClick={() => setCurrentPage('premium')}
                                 style={{
                                     background: 'white',
-                                    color: '#C9935A',
+                                    color: '#C4A882',
                                     fontWeight: 800,
                                     fontSize: '1.05rem',
                                     padding: '0.9rem 2.5rem',
@@ -4930,7 +4930,7 @@ query = query.eq('region', region.toUpperCase());
                             <h1 style={{fontFamily:"'Cormorant',serif",fontSize:'2.2rem',fontWeight:400,color:darkMode?'#fdf8f3':'#1c1917',lineHeight:1.2,marginBottom:'0.35rem'}}>
                                 {language==='es'?'Tu alquimia nutricional':'Your nutritional alchemy'}
                             </h1>
-                            <p style={{fontSize:'0.85rem',color:'#C9935A',fontStyle:'italic'}}>{language==='es'?'Cada plato, una decisión hormonal.':'Every meal, a hormonal decision.'}</p>
+                            <p style={{fontSize:'0.85rem',color:'#C4A882',fontStyle:'italic'}}>{language==='es'?'Cada plato, una decisión hormonal.':'Every meal, a hormonal decision.'}</p>
                         </div>
                         <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.3)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
                             <summary style={{listStyle:'none',cursor:'pointer'}}>
@@ -4938,7 +4938,7 @@ query = query.eq('region', region.toUpperCase());
                                     <img src="/images/lente_alquimica.png" style={{width:'52px',height:'52px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 12px rgba(184,115,51,0.4)',border:'1px solid rgba(184,115,51,0.4)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'La Lente Alquímica':'The Alchemical Lens'}</p>
-                                        <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'Fotografía tu comida. LUMI la convierte en medicina.':'Photograph your meal. LUMI turns it into medicine.'}</p>
+                                        <p style={{fontSize:'0.78rem',color:'#C4A882',margin:0}}>{language==='es'?'Fotografía tu comida. LUMI la convierte en medicina.':'Photograph your meal. LUMI turns it into medicine.'}</p>
                                     </div>
                                 </div>
                             </summary>
@@ -4951,13 +4951,13 @@ query = query.eq('region', region.toUpperCase());
                                 </p>
                                 <div style={{display:'flex',gap:'0.5rem',justifyContent:'center',marginBottom:'1.25rem',flexWrap:'wrap'}}>
                                     {['Calorías','Macros','Micros','GLP-1'].map((tag,i)=>(
-                                        <span key={i} style={{fontSize:'0.72rem',color:'#C9935A',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'9999px',padding:'0.25rem 0.75rem'}}>{tag}</span>
+                                        <span key={i} style={{fontSize:'0.72rem',color:'#C4A882',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'9999px',padding:'0.25rem 0.75rem'}}>{tag}</span>
                                     ))}
                                 </div>
                                 {getUserTier() === 'free' ? (
                                     <div onClick={()=>setCurrentPage('upgrade')} style={{background:'rgba(184,115,51,0.1)',border:'1px solid rgba(184,115,51,0.3)',borderRadius:'9999px',padding:'0.875rem 2rem',display:'inline-flex',alignItems:'center',gap:'0.5rem',cursor:'pointer'}}>
                                         <span style={{fontSize:'0.9rem'}}>✦</span>
-                                        <span style={{color:'#C9935A',fontFamily:"'Cormorant',serif",fontWeight:600,fontSize:'1rem'}}>
+                                        <span style={{color:'#C4A882',fontFamily:"'Cormorant',serif",fontWeight:600,fontSize:'1rem'}}>
                                             {language==='es'?'Hazte Premium para activar':'Go Premium to activate'}
                                         </span>
                                     </div>
@@ -4966,7 +4966,7 @@ query = query.eq('region', region.toUpperCase());
                                     <label style={{cursor:'pointer',display:'inline-block'}}>
                                         <input type="file" accept="image/*" capture="environment" style={{display:'none'}}
                                             onChange={e=>{if(e.target.files?.[0]){analyzeFood(e.target.files[0]);setShowLumiChat(true);}}}/>
-                                        <div style={{background:'linear-gradient(135deg,#B87333,#E8C878)',borderRadius:'9999px',padding:'0.875rem 2rem',display:'inline-flex',alignItems:'center',gap:'0.5rem',boxShadow:'0 4px 20px rgba(184,115,51,0.3)'}}>
+                                        <div style={{background:'linear-gradient(135deg,#B8997A,#E8C878)',borderRadius:'9999px',padding:'0.875rem 2rem',display:'inline-flex',alignItems:'center',gap:'0.5rem',boxShadow:'0 4px 20px rgba(184,115,51,0.3)'}}>
                                             <img src="/images/lente_alquimica.png" style={{width:'20px',height:'20px',borderRadius:'50%',objectFit:'cover'}}/>
                                             <span style={{color:'#0A0A0A',fontFamily:"'Cormorant',serif",fontWeight:600,fontSize:'1rem'}}>
                                                 {language==='es'?'Fotografiar mi plato':'Photograph my meal'}
@@ -4994,7 +4994,7 @@ query = query.eq('region', region.toUpperCase());
                             <h1 style={{fontFamily:"'Cormorant',serif",fontSize:'2.2rem',fontWeight:400,color:darkMode?'#fdf8f3':'#1c1917',lineHeight:1.2,marginBottom:'0.5rem'}}>
                                 {language==='es'?'¿Qué necesitas hoy?':'What do you need today?'}
                             </h1>
-                            <p style={{fontSize:'0.85rem',color:'#C9935A',fontStyle:'italic',fontFamily:"'Cormorant',serif"}}>
+                            <p style={{fontSize:'0.85rem',color:'#C4A882',fontStyle:'italic',fontFamily:"'Cormorant',serif"}}>
                                 {language==='es'?'Elige y te llevo directa a lo que buscas.':'Choose and I will take you straight to what you need.'}
                             </p>
                         </div>
@@ -5005,7 +5005,7 @@ query = query.eq('region', region.toUpperCase());
                                     <img src='/images/nutri_huevo.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Tengo tiempo y ganas de cocinar':'I have time and feel like cooking'}</p>
-                                        <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'Tu menú del día personalizado':'Your personalised daily menu'}</p>
+                                        <p style={{fontSize:'0.78rem',color:'#C4A882',margin:0}}>{language==='es'?'Tu menú del día personalizado':'Your personalised daily menu'}</p>
                                     </div>
                                 </div>
                             </summary>
@@ -5025,7 +5025,7 @@ query = query.eq('region', region.toUpperCase());
 
                         <div className={`${darkMode ? 'bg-rose-900' : 'bg-amber-50'} rounded-xl shadow p-5 border-l-4 border-rose-400`}>
                             <div className="flex items-start gap-3">
-                                <span style={{fontSize:"1.5rem",color:"#C9935A"}}>✦</span>
+                                <span style={{fontSize:"1.5rem",color:"#C4A882"}}>✦</span>
                                 <p className={`text-sm ${darkMode ? 'text-amber-200' : 'text-rose-900'} font-medium leading-relaxed`}>
                                     {getLumiMessage('nutrition')}
                                 </p>
@@ -5089,10 +5089,10 @@ query = query.eq('region', region.toUpperCase());
                                         {/* INGREDIENTES — ACORDEON */}
                                         <details style={{borderRadius:'0.85rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)'}}>
                                             <summary style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0.9rem 1.1rem',cursor:'pointer',background:darkMode?'rgba(201,147,90,0.1)':'rgba(201,147,90,0.07)',listStyle:'none',userSelect:'none'}}>
-                                                <span style={{fontFamily:"'Cormorant', serif",fontSize:'1.05rem',fontWeight:600,color:darkMode?'#e8c89f':'#92580a',display:'flex',alignItems:'center',gap:'0.5rem'}}>
-                                                    <span style={{color:'#C9935A'}}>&#10022;</span> {t[language].ingredients}
+                                                <span style={{fontFamily:"'Cormorant', serif",fontSize:'1.05rem',fontWeight:600,color:darkMode?'#e8c89f':'#8A7055',display:'flex',alignItems:'center',gap:'0.5rem'}}>
+                                                    <span style={{color:'#C4A882'}}>&#10022;</span> {t[language].ingredients}
                                                 </span>
-                                                <span style={{color:'#C9935A',fontSize:'0.85rem'}}>&#9662;</span>
+                                                <span style={{color:'#C4A882',fontSize:'0.85rem'}}>&#9662;</span>
                                             </summary>
                                             <div style={{padding:'0.75rem 1rem 1rem',display:'flex',flexDirection:'column',gap:'0.6rem'}}>
                                                 {recipe.ingredients.map((ing, i) => {
@@ -5100,11 +5100,11 @@ query = query.eq('region', region.toUpperCase());
                                                     const ingredientName = isString ? ing : (ing.ingredient || ing.name);
                                                     const hasDetails = !isString && (ing.qty || ing.why);
                                                     return (
-                                                        <div key={i} style={{background:darkMode?'rgba(255,255,255,0.04)':'rgba(255,255,255,0.9)',borderRadius:'0.65rem',padding:'0.65rem 0.85rem',borderLeft:'3px solid #C9935A'}}>
+                                                        <div key={i} style={{background:darkMode?'rgba(255,255,255,0.04)':'rgba(255,255,255,0.9)',borderRadius:'0.65rem',padding:'0.65rem 0.85rem',borderLeft:'3px solid #C4A882'}}>
                                                             <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:hasDetails&&ing.why?'0.35rem':0}}>
                                                                 <span style={{fontWeight:600,fontSize:'0.88rem',color:darkMode?'#f5f0eb':'#292524'}}>{ingredientName}</span>
                                                                 {hasDetails && ing.qty && (
-                                                                    <span style={{background:'rgba(201,147,90,0.15)',color:'#92580a',padding:'0.15rem 0.6rem',borderRadius:'9999px',fontSize:'0.75rem',fontWeight:700}}>
+                                                                    <span style={{background:'rgba(201,147,90,0.15)',color:'#8A7055',padding:'0.15rem 0.6rem',borderRadius:'9999px',fontSize:'0.75rem',fontWeight:700}}>
                                                                         {ing.qty}{ing.unit||''}
                                                                     </span>
                                                                 )}
@@ -5114,8 +5114,8 @@ query = query.eq('region', region.toUpperCase());
                                                             )}
                                                             {hasDetails && (ing.eco || ing.gourmet) && (
                                                                 <div style={{display:'flex',gap:'0.4rem',flexWrap:'wrap',marginTop:'0.4rem'}}>
-                                                                    {ing.eco && <span style={{background:'rgba(201,147,90,0.1)',color:'#92580a',padding:'0.1rem 0.5rem',borderRadius:'9999px',fontSize:'0.7rem',fontWeight:600}}>{language==='es'?'Asequible':'Budget'}: {ing.eco}</span>}
-                                                                    {ing.gourmet && <span style={{background:'rgba(201,147,90,0.1)',color:'#92580a',padding:'0.1rem 0.5rem',borderRadius:'9999px',fontSize:'0.7rem',fontWeight:600}}>Gourmet: {ing.gourmet}</span>}
+                                                                    {ing.eco && <span style={{background:'rgba(201,147,90,0.1)',color:'#8A7055',padding:'0.1rem 0.5rem',borderRadius:'9999px',fontSize:'0.7rem',fontWeight:600}}>{language==='es'?'Asequible':'Budget'}: {ing.eco}</span>}
+                                                                    {ing.gourmet && <span style={{background:'rgba(201,147,90,0.1)',color:'#8A7055',padding:'0.1rem 0.5rem',borderRadius:'9999px',fontSize:'0.7rem',fontWeight:600}}>Gourmet: {ing.gourmet}</span>}
                                                                 </div>
                                                             )}
                                                         </div>
@@ -5126,15 +5126,15 @@ query = query.eq('region', region.toUpperCase());
                                         {/* PREPARACION — ACORDEON */}
                                         <details style={{borderRadius:'0.85rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)'}}>
                                             <summary style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0.9rem 1.1rem',cursor:'pointer',background:darkMode?'rgba(201,147,90,0.1)':'rgba(201,147,90,0.07)',listStyle:'none',userSelect:'none'}}>
-                                                <span style={{fontFamily:"'Cormorant', serif",fontSize:'1.05rem',fontWeight:600,color:darkMode?'#e8c89f':'#92580a',display:'flex',alignItems:'center',gap:'0.5rem'}}>
-                                                    <span style={{color:'#C9935A'}}>&#10022;</span> {t[language].preparation}
+                                                <span style={{fontFamily:"'Cormorant', serif",fontSize:'1.05rem',fontWeight:600,color:darkMode?'#e8c89f':'#8A7055',display:'flex',alignItems:'center',gap:'0.5rem'}}>
+                                                    <span style={{color:'#C4A882'}}>&#10022;</span> {t[language].preparation}
                                                 </span>
-                                                <span style={{color:'#C9935A',fontSize:'0.85rem'}}>&#9662;</span>
+                                                <span style={{color:'#C4A882',fontSize:'0.85rem'}}>&#9662;</span>
                                             </summary>
                                             <ol style={{padding:'0.75rem 1rem 1rem',display:'flex',flexDirection:'column',gap:'0.55rem',margin:0,listStyle:'none'}}>
                                                 {recipe.steps.map((step, i) => (
                                                     <li key={i} style={{display:'flex',gap:'0.65rem',alignItems:'flex-start'}}>
-                                                        <span style={{flexShrink:0,width:'1.4rem',height:'1.4rem',background:'linear-gradient(135deg,#C9935A,#e8c89f)',color:'white',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.7rem',fontWeight:700,marginTop:'0.1rem'}}>{i+1}</span>
+                                                        <span style={{flexShrink:0,width:'1.4rem',height:'1.4rem',background:'linear-gradient(135deg,#C4A882,#e8c89f)',color:'white',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.7rem',fontWeight:700,marginTop:'0.1rem'}}>{i+1}</span>
                                                         <span style={{fontSize:'0.85rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.5}}>{step}</span>
                                                     </li>
                                                 ))}
@@ -5242,7 +5242,7 @@ query = query.eq('region', region.toUpperCase());
                                     <img src='/images/nutri_reloj.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Sin tiempo — cocina el domingo':'No time — cook on Sunday'}</p>
-                                        <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'2 horas = comida sana toda la semana':'2 hours = healthy food all week'}</p>
+                                        <p style={{fontSize:'0.78rem',color:'#C4A882',margin:0}}>{language==='es'?'2 horas = comida sana toda la semana':'2 hours = healthy food all week'}</p>
                                     </div>
                                 </div>
                             </summary>
@@ -5253,7 +5253,7 @@ query = query.eq('region', region.toUpperCase());
                                         <div style={{flex:1}}>
                                             <div style={{display:'flex',justifyContent:'space-between',marginBottom:'4px'}}>
                                                 <p style={{fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',fontSize:'0.92rem',margin:0}}>{language==='es'?item.es:item.en}</p>
-                                                <span style={{fontSize:'0.72rem',color:'#C9935A',background:'rgba(201,147,90,0.1)',borderRadius:'9999px',padding:'2px 8px'}}>{item.time}</span>
+                                                <span style={{fontSize:'0.72rem',color:'#C4A882',background:'rgba(201,147,90,0.1)',borderRadius:'9999px',padding:'2px 8px'}}>{item.time}</span>
                                             </div>
                                             <p style={{fontSize:'0.8rem',color:'#78716c',margin:0,lineHeight:1.5}}>{language==='es'?item.d_es:item.d_en}</p>
                                         </div>
@@ -5267,7 +5267,7 @@ query = query.eq('region', region.toUpperCase());
                                     <img src='/images/nutri_chocolate.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Los Irresistibles':'The Irresistibles'}</p>
-                                        <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'Postres que activan tu GLP-1':'Desserts that activate your GLP-1'}</p>
+                                        <p style={{fontSize:'0.78rem',color:'#C4A882',margin:0}}>{language==='es'?'Postres que activan tu GLP-1':'Desserts that activate your GLP-1'}</p>
                                     </div>
                                 </div>
                             </summary>
@@ -5280,12 +5280,12 @@ query = query.eq('region', region.toUpperCase());
                                                 <p style={{fontFamily:"'Cormorant',serif",fontSize:'1rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?r.es:r.en}</p>
                                                 <div style={{display:'flex',gap:'0.5rem',marginTop:'2px'}}>
                                                     <span style={{fontSize:'0.7rem',color:'#78716c'}}>{r.cal}</span>
-                                                    <span style={{fontSize:'0.7rem',color:'#C9935A',fontWeight:600}}>{'⚡'.repeat(r.glp)} GLP-1</span>
+                                                    <span style={{fontSize:'0.7rem',color:'#C4A882',fontWeight:600}}>{'⚡'.repeat(r.glp)} GLP-1</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <p style={{fontSize:'0.8rem',color:darkMode?'#e8d5c0':'#57534e',margin:'0 0 4px',lineHeight:1.5}}>{language==='es'?r.p_es:r.p_en}</p>
-                                        <p style={{fontSize:'0.75rem',color:'#C9935A',margin:0,fontStyle:'italic'}}>✦ {language==='es'?r.w_es:r.w_en}</p>
+                                        <p style={{fontSize:'0.75rem',color:'#C4A882',margin:0,fontStyle:'italic'}}>✦ {language==='es'?r.w_es:r.w_en}</p>
                                     </div>
                                 ))}
                             </div>
@@ -5296,17 +5296,17 @@ query = query.eq('region', region.toUpperCase());
                                     <img src='/images/nutri_lista.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Voy de compras':'Shopping list'}</p>
-                                        <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'Los imprescindibles siempre en casa':'The essentials always at home'}</p>
+                                        <p style={{fontSize:'0.78rem',color:'#C4A882',margin:0}}>{language==='es'?'Los imprescindibles siempre en casa':'The essentials always at home'}</p>
                                     </div>
                                 </div>
                             </summary>
                             <div style={{padding:'1.25rem 1.5rem'}}>
                                 {[{cat_es:'Proteínas',cat_en:'Proteins',items_es:['Huevos (12u)','Yogur griego','Salmón o sardinas','Legumbres (botes)'],items_en:['Eggs (12)','Greek yogurt','Salmon or sardines','Legumes (tins)'],icon:'🥚'},{cat_es:'Grasas buenas',cat_en:'Good fats',items_es:['Aguacates','Nueces o almendras','Aceite oliva virgen extra','Lino o chía'],items_en:['Avocados','Walnuts or almonds','Extra virgin olive oil','Flax or chia'],icon:'🥑'},{cat_es:'Fibra',cat_en:'Fibre',items_es:['Brócoli','Boniato','Espinacas','Manzana con piel'],items_en:['Broccoli','Sweet potato','Spinach','Apple with skin'],icon:'🥦'},{cat_es:'Activadores GLP-1',cat_en:'GLP-1 activators',items_es:['Chocolate 85%+','Kéfir o kombucha','Jengibre fresco','Avena integral'],items_en:['85%+ chocolate','Kefir or kombucha','Fresh ginger','Whole oats'],icon:'⚡'}].map((cat,i)=>(
                                     <div key={i} style={{marginBottom:'1rem'}}>
-                                        <p style={{fontSize:'0.72rem',color:'#C9935A',fontWeight:700,letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:'0.5rem',display:'flex',alignItems:'center',gap:'6px'}}><span>{cat.icon}</span>{language==='es'?cat.cat_es:cat.cat_en}</p>
+                                        <p style={{fontSize:'0.72rem',color:'#C4A882',fontWeight:700,letterSpacing:'0.08em',textTransform:'uppercase',marginBottom:'0.5rem',display:'flex',alignItems:'center',gap:'6px'}}><span>{cat.icon}</span>{language==='es'?cat.cat_es:cat.cat_en}</p>
                                         {(language==='es'?cat.items_es:cat.items_en).map((item,j)=>(
                                             <div key={j} style={{display:'flex',alignItems:'center',gap:'8px',padding:'0.35rem 0',borderBottom:'1px solid rgba(201,147,90,0.08)'}}>
-                                                <div style={{width:'6px',height:'6px',borderRadius:'50%',background:'#C9935A',flexShrink:0}}/>
+                                                <div style={{width:'6px',height:'6px',borderRadius:'50%',background:'#C4A882',flexShrink:0}}/>
                                                 <p style={{fontSize:'0.85rem',color:darkMode?'#e8d5c0':'#44403c',margin:0}}>{item}</p>
                                             </div>
                                         ))}
@@ -5320,12 +5320,12 @@ query = query.eq('region', region.toUpperCase());
                                     <img src='/images/nutri_cerebro.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Aprendiendo':'Learning'}</p>
-                                        <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'GLP-1, IMC, TDEE y Cortisol explicados':'GLP-1, BMI, TDEE and Cortisol explained'}</p>
+                                        <p style={{fontSize:'0.78rem',color:'#C4A882',margin:0}}>{language==='es'?'GLP-1, IMC, TDEE y Cortisol explicados':'GLP-1, BMI, TDEE and Cortisol explained'}</p>
                                     </div>
                                 </div>
                             </summary>
                             <div style={{padding:'1.25rem 1.5rem'}}>
-                                {[{term:'GLP-1',icon:'🔬',color:'#C9935A',d_es:'Tu hormona del apetito natural.',d_en:'Your natural appetite hormone.',x_es:'Cuando está alta: te sacias más rápido, menos antojos, mejor metabolismo. Ozempic la imita artificialmente. Tú puedes activarla con comida real.',x_en:'When high: you feel full faster, fewer cravings, better metabolism. Ozempic mimics it artificially. You can activate it with real food.'},{term:'IMC',icon:'📊',color:'#B87333',d_es:'Índice de Masa Corporal. Una referencia, no un juicio.',d_en:'Body Mass Index. A reference, not a judgement.',x_es:'En la transición hormonal puede subir aunque comas igual: el estrógeno bajo redistribuye la grasa. No es tu fracaso, es biología.',x_en:'During hormonal transition it can rise even eating the same: low oestrogen redistributes fat. Not your failure, it is biology.'},{term:'TDEE',icon:'⚡',color:'#D97706',d_es:'Las calorías que tu cuerpo necesita cada día.',d_en:'The calories your body needs each day.',x_es:'Comer muy por debajo sube el cortisol y baja el metabolismo. Tu menú está calibrado a tu TDEE.',x_en:'Eating far below raises cortisol and slows metabolism. Your menu is calibrated to your TDEE.'},{term:'Cortisol',icon:'😤',color:'#78716c',d_es:'La hormona del estrés. El enemigo del GLP-1.',d_en:'The stress hormone. The enemy of GLP-1.',x_es:'Cuando sube bloquea el GLP-1 y almacena grasa en la cintura. Dormir bien y no saltarse comidas es tan importante como qué comes.',x_en:'When it rises it blocks GLP-1 and stores fat around the waist. Sleeping well and not skipping meals is as important as what you eat.'}].map((item,i)=>(
+                                {[{term:'GLP-1',icon:'🔬',color:'#C4A882',d_es:'Tu hormona del apetito natural.',d_en:'Your natural appetite hormone.',x_es:'Cuando está alta: te sacias más rápido, menos antojos, mejor metabolismo. Ozempic la imita artificialmente. Tú puedes activarla con comida real.',x_en:'When high: you feel full faster, fewer cravings, better metabolism. Ozempic mimics it artificially. You can activate it with real food.'},{term:'IMC',icon:'📊',color:'#B8997A',d_es:'Índice de Masa Corporal. Una referencia, no un juicio.',d_en:'Body Mass Index. A reference, not a judgement.',x_es:'En la transición hormonal puede subir aunque comas igual: el estrógeno bajo redistribuye la grasa. No es tu fracaso, es biología.',x_en:'During hormonal transition it can rise even eating the same: low oestrogen redistributes fat. Not your failure, it is biology.'},{term:'TDEE',icon:'⚡',color:'#C4A882',d_es:'Las calorías que tu cuerpo necesita cada día.',d_en:'The calories your body needs each day.',x_es:'Comer muy por debajo sube el cortisol y baja el metabolismo. Tu menú está calibrado a tu TDEE.',x_en:'Eating far below raises cortisol and slows metabolism. Your menu is calibrated to your TDEE.'},{term:'Cortisol',icon:'😤',color:'#78716c',d_es:'La hormona del estrés. El enemigo del GLP-1.',d_en:'The stress hormone. The enemy of GLP-1.',x_es:'Cuando sube bloquea el GLP-1 y almacena grasa en la cintura. Dormir bien y no saltarse comidas es tan importante como qué comes.',x_en:'When it rises it blocks GLP-1 and stores fat around the waist. Sleeping well and not skipping meals is as important as what you eat.'}].map((item,i)=>(
                                     <div key={i} style={{borderRadius:'0.875rem',padding:'1rem',marginBottom:'0.75rem',background:darkMode?'rgba(255,255,255,0.04)':'rgba(253,248,243,0.8)',border:'1px solid rgba(201,147,90,0.15)'}}>
                                         <div style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'0.5rem'}}>
                                             <span style={{fontSize:'1.4rem'}}>{item.icon}</span>
@@ -5345,7 +5345,7 @@ query = query.eq('region', region.toUpperCase());
                                     <img src='/images/nutri_progreso.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Mis datos metabólicos':'My metabolic data'}</p>
-                                        <p style={{fontSize:'0.78rem',color:'#C9935A',margin:0}}>{language==='es'?'IMC, TDEE y tendencias':'BMI, TDEE and trends'}</p>
+                                        <p style={{fontSize:'0.78rem',color:'#C4A882',margin:0}}>{language==='es'?'IMC, TDEE y tendencias':'BMI, TDEE and trends'}</p>
                                     </div>
                                 </div>
                             </summary>
@@ -5477,7 +5477,7 @@ query = query.eq('region', region.toUpperCase());
                                 {/* Mini tarjetas de promedio */}
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
                                     {[
-                                        { label: language === 'es' ? 'Sueño' : 'Sleep', key: 'sleep', color: '#C9935A', icon: '😴' },
+                                        { label: language === 'es' ? 'Sueño' : 'Sleep', key: 'sleep', color: '#C4A882', icon: '😴' },
                                         { label: language === 'es' ? 'Energía' : 'Energy', key: 'energy', color: 'pink', icon: '⚡' },
                                         { label: language === 'es' ? 'Ánimo' : 'Mood', key: 'mood', color: 'blue', icon: '🪨' },
                                         { label: language === 'es' ? 'Sofocos' : 'Hot flashes', key: 'hot_flashes', color: 'orange', icon: '🔥' }
@@ -5503,8 +5503,8 @@ query = query.eq('region', region.toUpperCase());
 
                                 {/* Barra visual simple para cada métrica */}
                                 {[
-                                    { label: language === 'es' ? 'Sueño' : 'Sleep', key: 'sleep', color: '#C9935A' },
-                                    { label: language === 'es' ? 'Energía' : 'Energy', key: 'energy', color: '#C9935A' },
+                                    { label: language === 'es' ? 'Sueño' : 'Sleep', key: 'sleep', color: '#C4A882' },
+                                    { label: language === 'es' ? 'Energía' : 'Energy', key: 'energy', color: '#C4A882' },
                                     { label: language === 'es' ? 'Ánimo' : 'Mood', key: 'mood', color: '#06b6d4' }
                                 ].map(metric => {
                                     const last7 = symptoms.slice(0, 7).reverse();
@@ -5695,7 +5695,7 @@ query = query.eq('region', region.toUpperCase());
                             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{objectives[exerciseGoal]}</p>
                         </div>
 
-                        <div style={{background:darkMode?'rgba(201,147,90,0.08)':'rgba(253,248,243,0.95)',borderRadius:'1.1rem',padding:'1rem 1.25rem',borderLeft:'3px solid #C9935A'}}>
+                        <div style={{background:darkMode?'rgba(201,147,90,0.08)':'rgba(253,248,243,0.95)',borderRadius:'1.1rem',padding:'1rem 1.25rem',borderLeft:'3px solid #C4A882'}}>
                             <div style={{display:'flex',alignItems:'flex-start',gap:'0.75rem'}}>
                                 <img src="/images/lumi.png" style={{width:'28px',height:'28px',borderRadius:'50%',objectFit:'cover',flexShrink:0}} alt="LUMI" />
                                 <p style={{fontSize:'0.88rem',color:darkMode?'#e8d5c0':'#57534e',fontStyle:'italic',lineHeight:1.6}}>
@@ -5815,9 +5815,9 @@ query = query.eq('region', region.toUpperCase());
                         {/* NUDGE FREE → PREMIUM */}
                         {getUserTier() === 'free' && (
                             <div style={{background:darkMode?'rgba(201,147,90,0.1)':'rgba(253,248,243,0.95)',borderRadius:'1.1rem',padding:'1rem 1.25rem',border:'1px solid rgba(201,147,90,0.25)',display:'flex',alignItems:'flex-start',gap:'0.75rem'}}>
-                                <span style={{color:'#C9935A',fontSize:'1.1rem',flexShrink:0}}>✦</span>
+                                <span style={{color:'#C4A882',fontSize:'1.1rem',flexShrink:0}}>✦</span>
                                 <div>
-                                    <p style={{fontSize:'0.85rem',fontWeight:600,color:darkMode?'#e8d5c0':'#92580a',marginBottom:'0.25rem'}}>
+                                    <p style={{fontSize:'0.85rem',fontWeight:600,color:darkMode?'#e8d5c0':'#8A7055',marginBottom:'0.25rem'}}>
                                         {language === 'es' ? 'Con Premium, estos ejercicios se adaptan cada día según cómo te sientes' : 'With Premium, these exercises adapt every day based on how you feel'}
                                     </p>
                                     <p style={{fontSize:'0.78rem',color:darkMode?'#a8a29e':'#78716c',lineHeight:1.5}}>
@@ -5839,8 +5839,8 @@ query = query.eq('region', region.toUpperCase());
                                     display:'flex',alignItems:'center',gap:'0.5rem',
                                     padding:'0.5rem 1.1rem',borderRadius:'9999px',fontWeight:600,
                                     whiteSpace:'nowrap',transition:'all 0.2s',border:'1px solid rgba(201,147,90,0.3)',cursor:'pointer',
-                                    background: exerciseGoal === obj.key ? 'linear-gradient(135deg,#C9935A,#e8c89f)' : darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(201,147,90,0.08)',
-                                    color: exerciseGoal === obj.key ? 'white' : darkMode ? '#e8d5c0' : '#92580a',
+                                    background: exerciseGoal === obj.key ? 'linear-gradient(135deg,#C4A882,#e8c89f)' : darkMode ? 'rgba(255,255,255,0.06)' : 'rgba(201,147,90,0.08)',
+                                    color: exerciseGoal === obj.key ? 'white' : darkMode ? '#e8d5c0' : '#8A7055',
                                     boxShadow: exerciseGoal === obj.key ? '0 2px 10px rgba(201,147,90,0.35)' : 'none',
                                     fontSize:'0.82rem',
                                 }}>
@@ -5856,28 +5856,28 @@ query = query.eq('region', region.toUpperCase());
                                     <summary style={{padding:'1rem 1.25rem',cursor:'pointer',listStyle:'none',display:'flex',justifyContent:'space-between',alignItems:'center',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(232,200,159,0.08))'}}>
                                         <div>
                                             <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.15rem',fontWeight:600,color:darkMode?'#e8d5c0':'#292524',marginBottom:'0.2rem'}}>
-                                                <span style={{color:'#C9935A',marginRight:'0.4rem'}}>✦</span>{ex.name}
+                                                <span style={{color:'#C4A882',marginRight:'0.4rem'}}>✦</span>{ex.name}
                                             </h3>
                                             <div style={{display:'flex',gap:'0.75rem',flexWrap:'wrap'}}>
-                                                <span style={{fontSize:'0.72rem',color:'#C9935A',fontWeight:600}}>{ex.duration}</span>
-                                                <span style={{fontSize:'0.72rem',color:'#92580a'}}>{ex.difficulty}</span>
+                                                <span style={{fontSize:'0.72rem',color:'#C4A882',fontWeight:600}}>{ex.duration}</span>
+                                                <span style={{fontSize:'0.72rem',color:'#8A7055'}}>{ex.difficulty}</span>
                                                 <span style={{fontSize:'0.72rem',color:'#78716c'}}>{ex.freq}</span>
                                             </div>
                                         </div>
-                                        <span style={{color:'#C9935A',fontSize:'1.1rem',flexShrink:0}}>›</span>
+                                        <span style={{color:'#C4A882',fontSize:'1.1rem',flexShrink:0}}>›</span>
                                     </summary>
                                     <div style={{padding:'1rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
-                                        <div style={{borderLeft:'3px solid #C9935A',paddingLeft:'0.75rem'}}>
-                                            <p style={{fontSize:'0.8rem',fontWeight:600,color:'#C9935A',marginBottom:'0.2rem'}}>{t[language].why}</p>
+                                        <div style={{borderLeft:'3px solid #C4A882',paddingLeft:'0.75rem'}}>
+                                            <p style={{fontSize:'0.8rem',fontWeight:600,color:'#C4A882',marginBottom:'0.2rem'}}>{t[language].why}</p>
                                             <p style={{fontSize:'0.85rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.5}}>{ex.why}</p>
                                         </div>
                                         {ex.steps && ex.steps.length > 0 && (
                                             <div style={{borderLeft:'3px solid rgba(201,147,90,0.4)',paddingLeft:'0.75rem'}}>
-                                                <p style={{fontSize:'0.8rem',fontWeight:600,color:'#92580a',marginBottom:'0.4rem'}}>{language==='es'?'Cómo hacerlo':'How to do it'}</p>
+                                                <p style={{fontSize:'0.8rem',fontWeight:600,color:'#8A7055',marginBottom:'0.4rem'}}>{language==='es'?'Cómo hacerlo':'How to do it'}</p>
                                                 <ol style={{paddingLeft:'1rem',margin:0}}>
                                                     {ex.steps.map((step, i) => (
                                                         <li key={i} style={{fontSize:'0.82rem',color:darkMode?'#a8a29e':'#78716c',lineHeight:1.5,marginBottom:'0.25rem'}}>
-                                                            <span style={{color:'#C9935A',fontWeight:700,marginRight:'0.3rem'}}>{i+1}.</span>{step}
+                                                            <span style={{color:'#C4A882',fontWeight:700,marginRight:'0.3rem'}}>{i+1}.</span>{step}
                                                         </li>
                                                     ))}
                                                 </ol>
@@ -5913,7 +5913,7 @@ query = query.eq('region', region.toUpperCase());
                             <h3 className="font-semibold text-lg">{language === 'es' ? 'Registra tu día' : 'Track your day'}</h3>
 
                             <div className="space-y-4">
-                                <style>{`.lumera-slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:9999px;outline:none;cursor:pointer;background:linear-gradient(to right,#C9935A calc(var(--val,5)*10%),#e8d5c0 calc(var(--val,5)*10%))}.lumera-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#C9935A,#e8c89f);cursor:pointer;box-shadow:0 1px 6px rgba(201,147,90,0.4)}.lumera-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#C9935A,#e8c89f);cursor:pointer;border:none}`}</style>
+                                <style>{`.lumera-slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:9999px;outline:none;cursor:pointer;background:linear-gradient(to right,#C4A882 calc(var(--val,5)*10%),#e8d5c0 calc(var(--val,5)*10%))}.lumera-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#C4A882,#e8c89f);cursor:pointer;box-shadow:0 1px 6px rgba(201,147,90,0.4)}.lumera-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#C4A882,#e8c89f);cursor:pointer;border:none}`}</style>
                                 {[
                                     { key: 'sleep', label: language === 'es' ? 'Calidad del sueño' : 'Sleep quality' },
                                     { key: 'energy', label: language === 'es' ? 'Nivel de energía' : 'Energy level' },
@@ -5927,9 +5927,9 @@ query = query.eq('region', region.toUpperCase());
                                     <div key={item.key}>
                                         <div style={{display:'flex',justifyContent:'space-between',marginBottom:'0.4rem'}}>
                                             <label style={{fontSize:'0.875rem',fontWeight:600,color:darkMode?'#e8d5c0':'#57534e',display:'flex',alignItems:'center',gap:'0.4rem'}}>
-                                                <span style={{color:'#C9935A',fontSize:'0.65rem'}}>✦</span>{item.label}
+                                                <span style={{color:'#C4A882',fontSize:'0.65rem'}}>✦</span>{item.label}
                                             </label>
-                                            <span style={{color:'#C9935A',fontWeight:700,fontSize:'0.875rem'}}>{symptomForm[item.key]}/10</span>
+                                            <span style={{color:'#C4A882',fontWeight:700,fontSize:'0.875rem'}}>{symptomForm[item.key]}/10</span>
                                         </div>
                                         <input type="range" min="0" max="10" value={symptomForm[item.key]} onChange={(e) => setSymptomForm({...symptomForm, [item.key]: parseInt(e.target.value)})} className="lumera-slider" style={{'--val':symptomForm[item.key]}}/>
                                     </div>
@@ -5999,7 +5999,7 @@ query = query.eq('region', region.toUpperCase());
                                 `;
                                 document.body.appendChild(notification);
                                 setTimeout(() => notification.remove(), 5000);
-                            }} style={{width:"100%", background:"linear-gradient(135deg, #C9935A, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
+                            }} style={{width:"100%", background:"linear-gradient(135deg, #C4A882, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
                                 {t[language].addRecord}
                             </button>
                         </div>
@@ -6100,13 +6100,13 @@ query = query.eq('region', region.toUpperCase());
                                 <div>
                                     <label className="block text-sm font-semibold mb-2">{language === 'es' ? 'Intensidad (1-10)' : 'Intensity (1-10)'}</label>
                                     <input type="range" min="1" max="10" value={periodForm.intensity} onChange={(e) => setPeriodForm({...periodForm, intensity: parseInt(e.target.value)})} className="lumera-slider w-full" style={{'--val':periodForm.intensity}}/>
-                                    <p style={{fontSize:'0.8rem',color:'#C9935A',fontWeight:600,marginTop:'0.25rem'}}>{periodForm.intensity}/10</p>
+                                    <p style={{fontSize:'0.8rem',color:'#C4A882',fontWeight:600,marginTop:'0.25rem'}}>{periodForm.intensity}/10</p>
                                 </div>
 
                                 <div>
                                     <label className="block text-sm font-semibold mb-2">{language === 'es' ? 'Duración (días)' : 'Duration (days)'}</label>
                                     <input type="range" min="1" max="10" value={periodForm.duration} onChange={(e) => setPeriodForm({...periodForm, duration: parseInt(e.target.value)})} className="lumera-slider w-full" style={{'--val':periodForm.duration}}/>
-                                    <p style={{fontSize:'0.8rem',color:'#C9935A',fontWeight:600,marginTop:'0.25rem'}}>{periodForm.duration} {language === 'es' ? 'días' : 'days'}</p>
+                                    <p style={{fontSize:'0.8rem',color:'#C4A882',fontWeight:600,marginTop:'0.25rem'}}>{periodForm.duration} {language === 'es' ? 'días' : 'days'}</p>
                                 </div>
 
                                 <div>
@@ -6155,7 +6155,7 @@ query = query.eq('region', region.toUpperCase());
                                 } finally {
                                     setPeriodGuidanceLoading(false);
                                 }
-                            }} style={{width:"100%", background:"linear-gradient(135deg, #C9935A, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
+                            }} style={{width:"100%", background:"linear-gradient(135deg, #C4A882, #e8c89f)", border:"none", borderRadius:"9999px", padding:"0.9rem", color:"white", fontSize:"1rem", fontWeight:700, cursor:"pointer", boxShadow:"0 4px 20px rgba(201,147,90,0.25)"}}>
                                 {language === 'es' ? 'Registrar y recibir guía de LUMI' : 'Record and get LUMI guidance'}
                             </button>
                         </div>
@@ -6167,7 +6167,7 @@ query = query.eq('region', region.toUpperCase());
                                 <p className="font-light text-lg gradient-text" style={{fontFamily: 'Cormorant, serif'}}>
                                     {language === 'es' ? 'LUMI está preparando tu guía...' : 'LUMI is preparing your guidance...'}
                                 </p>
-                                <div className="mt-4 w-12 h-1 mx-auto rounded-full animate-pulse" style={{background:"linear-gradient(135deg,#B87333,#E8C878)"}}></div>
+                                <div className="mt-4 w-12 h-1 mx-auto rounded-full animate-pulse" style={{background:"linear-gradient(135deg,#B8997A,#E8C878)"}}></div>
                             </div>
                         )}
 
@@ -6177,7 +6177,7 @@ query = query.eq('region', region.toUpperCase());
                                 {/* Mensaje LUMI */}
                                 <div className="rounded-2xl p-6" style={{background: 'linear-gradient(135deg, #fdf4ff, #fff7ed)', borderLeft: '4px solid #f43f5e'}}>
                                     <div className="flex items-start gap-3">
-                                        <span style={{fontSize:"1.5rem",color:"#C9935A"}}>✦</span>
+                                        <span style={{fontSize:"1.5rem",color:"#C4A882"}}>✦</span>
                                         <p className={`leading-relaxed ${darkMode ? 'text-gray-200' : 'text-rose-900'} font-medium`}>
                                             {periodGuidance.lumiMessage}
                                         </p>
@@ -6195,7 +6195,7 @@ query = query.eq('region', region.toUpperCase());
                                                 <div key={i} className={`flex gap-4 p-4 rounded-xl ${darkMode ? 'bg-gray-700' : 'bg-rose-50'}`}>
                                                     <span className="text-2xl flex-shrink-0">{tip.emoji}</span>
                                                     <div>
-                                                        <p className="font-semibold text-sm mb-1" style={{color: '#C9935A'}}>{tip.title}</p>
+                                                        <p className="font-semibold text-sm mb-1" style={{color: '#C4A882'}}>{tip.title}</p>
                                                         <p className={`text-sm leading-relaxed ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{tip.text}</p>
                                                     </div>
                                                 </div>
@@ -6249,7 +6249,7 @@ query = query.eq('region', region.toUpperCase());
                                                             <p className="text-xs" style={{color: '#a8a29e'}}>{item.ingredients.join(' · ')}</p>
                                                         )}
                                                         {item.why && (
-                                                            <p className="text-xs mt-2 italic" style={{color: '#C9935A'}}>{item.why}</p>
+                                                            <p className="text-xs mt-2 italic" style={{color: '#C4A882'}}>{item.why}</p>
                                                         )}
                                                     </div>
                                                 );
@@ -6399,21 +6399,21 @@ query = query.eq('region', region.toUpperCase());
                             <div key={idx} style={{background:darkMode?'rgba(255,255,255,0.05)':'rgba(255,255,255,0.9)',borderRadius:'1.1rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.15)',boxShadow:'0 2px 12px rgba(0,0,0,0.04)'}}>
                                 <div style={{padding:'1rem 1.25rem',borderBottom:'1px solid rgba(201,147,90,0.1)',background:darkMode?'rgba(201,147,90,0.08)':'rgba(201,147,90,0.05)'}}>
                                     <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.15rem',fontWeight:600,color:darkMode?'#e8d5c0':'#292524',lineHeight:1.3}}>
-                                        <span style={{color:'#C9935A',marginRight:'0.4rem'}}>✦</span>{myth.myth}
+                                        <span style={{color:'#C4A882',marginRight:'0.4rem'}}>✦</span>{myth.myth}
                                     </h3>
                                 </div>
                                 <div style={{padding:'1rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
-                                    <div style={{borderLeft:'3px solid #C9935A',paddingLeft:'0.75rem'}}>
-                                        <p style={{fontSize:'0.8rem',fontWeight:600,color:'#C9935A',marginBottom:'0.2rem'}}>{language==='es'?'La realidad':'The truth'}</p>
+                                    <div style={{borderLeft:'3px solid #C4A882',paddingLeft:'0.75rem'}}>
+                                        <p style={{fontSize:'0.8rem',fontWeight:600,color:'#C4A882',marginBottom:'0.2rem'}}>{language==='es'?'La realidad':'The truth'}</p>
                                         <p style={{fontSize:'0.85rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.5}}>{myth.truth}</p>
                                     </div>
                                     <div style={{borderLeft:'3px solid rgba(201,147,90,0.4)',paddingLeft:'0.75rem'}}>
-                                        <p style={{fontSize:'0.8rem',fontWeight:600,color:'#92580a',marginBottom:'0.2rem'}}>{language==='es'?'Base cientifica':'Science'}</p>
+                                        <p style={{fontSize:'0.8rem',fontWeight:600,color:'#8A7055',marginBottom:'0.2rem'}}>{language==='es'?'Base cientifica':'Science'}</p>
                                         <p style={{fontSize:'0.82rem',color:darkMode?'#a8a29e':'#78716c',lineHeight:1.5,marginBottom:'0.4rem'}}>{myth.science}</p>
-                                        {myth.source && <a href={myth.source} target="_blank" rel="noopener noreferrer" style={{fontSize:'0.75rem',color:'#C9935A',textDecoration:'underline'}}>{language==='es'?'Ver estudio':'View study'} →</a>}
+                                        {myth.source && <a href={myth.source} target="_blank" rel="noopener noreferrer" style={{fontSize:'0.75rem',color:'#C4A882',textDecoration:'underline'}}>{language==='es'?'Ver estudio':'View study'} →</a>}
                                     </div>
                                     <div style={{borderLeft:'3px solid rgba(201,147,90,0.4)',paddingLeft:'0.75rem'}}>
-                                        <p style={{fontSize:'0.8rem',fontWeight:600,color:'#92580a',marginBottom:'0.2rem'}}>{language==='es'?'Que hacer':'What to do'}</p>
+                                        <p style={{fontSize:'0.8rem',fontWeight:600,color:'#8A7055',marginBottom:'0.2rem'}}>{language==='es'?'Que hacer':'What to do'}</p>
                                         <p style={{fontSize:'0.82rem',color:darkMode?'#a8a29e':'#78716c',lineHeight:1.5}}>{myth.action}</p>
                                     </div>
                                 </div>
@@ -6447,20 +6447,20 @@ query = query.eq('region', region.toUpperCase());
                         <div style={{background:darkMode?'rgba(255,255,255,0.05)':'rgba(255,255,255,0.95)',borderRadius:'1.1rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 2px 12px rgba(0,0,0,0.06)'}}>
                             <div style={{padding:'1rem 1.25rem',borderBottom:'1px solid rgba(201,147,90,0.1)',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(232,200,159,0.08))'}}>
                                 <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.2rem',fontWeight:600,color:darkMode?'#e8d5c0':'#292524'}}>
-                                    <span style={{color:'#C9935A',marginRight:'0.4rem'}}>✦</span>{language==='es'?'GLP-1 Natural: por qué engordas aunque comas igual':'GLP-1 Natural: why you gain weight even eating the same'}
+                                    <span style={{color:'#C4A882',marginRight:'0.4rem'}}>✦</span>{language==='es'?'GLP-1 Natural: por qué engordas aunque comas igual':'GLP-1 Natural: why you gain weight even eating the same'}
                                 </h3>
                             </div>
                             <div style={{padding:'1rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
-                                <div style={{borderLeft:'3px solid #C9935A',paddingLeft:'0.75rem'}}>
-                                    <p style={{fontSize:'0.8rem',fontWeight:600,color:'#C9935A',marginBottom:'0.2rem'}}>{language==='es'?'Qué es el GLP-1':'What is GLP-1'}</p>
+                                <div style={{borderLeft:'3px solid #C4A882',paddingLeft:'0.75rem'}}>
+                                    <p style={{fontSize:'0.8rem',fontWeight:600,color:'#C4A882',marginBottom:'0.2rem'}}>{language==='es'?'Qué es el GLP-1':'What is GLP-1'}</p>
                                     <p style={{fontSize:'0.85rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.5}}>{language==='es'?'El GLP-1 es una hormona que produce tu propio cuerpo después de comer. Regula el apetito, reduce los antojos y controla el azúcar en sangre. En esta etapa, los cambios hormonales reducen su producción — y eso explica por qué sientes más hambre y acumulas más grasa abdominal aunque no hayas cambiado tus hábitos.':'GLP-1 is a hormone your own body produces after eating. It regulates appetite, reduces cravings and controls blood sugar. At this stage, hormonal changes reduce its production — which explains why you feel hungrier and accumulate more belly fat even without changing your habits.'}</p>
                                 </div>
                                 <div style={{borderLeft:'3px solid rgba(201,147,90,0.4)',paddingLeft:'0.75rem'}}>
-                                    <p style={{fontSize:'0.8rem',fontWeight:600,color:'#92580a',marginBottom:'0.2rem'}}>{language==='es'?'Cómo estimularlo de forma natural':'How to stimulate it naturally'}</p>
+                                    <p style={{fontSize:'0.8rem',fontWeight:600,color:'#8A7055',marginBottom:'0.2rem'}}>{language==='es'?'Cómo estimularlo de forma natural':'How to stimulate it naturally'}</p>
                                     <p style={{fontSize:'0.85rem',color:darkMode?'#a8a29e':'#78716c',lineHeight:1.5}}>{language==='es'?'Ciertos alimentos activan la producción de GLP-1 de forma natural — sin pastillas ni inyecciones. Son ingredientes comunes que ya tienes en tu despensa o puedes encontrar en cualquier supermercado.':'Certain foods naturally activate GLP-1 production — no pills or injections needed. They are common ingredients you already have in your pantry or can find in any supermarket.'}</p>
                                 </div>
                                 <div style={{background:'rgba(201,147,90,0.06)',borderRadius:'0.75rem',padding:'0.75rem 1rem',border:'1px solid rgba(201,147,90,0.15)'}}>
-                                    <p style={{fontSize:'0.78rem',fontWeight:700,color:'#C9935A',marginBottom:'0.5rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>✦ {language==='es'?'Alimentos que ↑ GLP-1':'Foods that ↑ GLP-1'}</p>
+                                    <p style={{fontSize:'0.78rem',fontWeight:700,color:'#C4A882',marginBottom:'0.5rem',textTransform:'uppercase',letterSpacing:'0.06em'}}>✦ {language==='es'?'Alimentos que ↑ GLP-1':'Foods that ↑ GLP-1'}</p>
                                     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.4rem'}}>
                                         {[
                                             {es:'Huevos',en:'Eggs',motivo_es:'Proteína completa',motivo_en:'Complete protein'},
@@ -6474,7 +6474,7 @@ query = query.eq('region', region.toUpperCase());
                                         ].map((item,i) => (
                                             <div key={i} style={{background:'rgba(255,255,255,0.7)',borderRadius:'0.5rem',padding:'0.4rem 0.6rem',border:'1px solid rgba(201,147,90,0.12)'}}>
                                                 <p style={{fontSize:'0.78rem',fontWeight:600,color:darkMode?'#e8d5c0':'#292524'}}>{language==='es'?item.es:item.en}</p>
-                                                <p style={{fontSize:'0.68rem',color:'#C9935A'}}>{language==='es'?item.motivo_es:item.motivo_en}</p>
+                                                <p style={{fontSize:'0.68rem',color:'#C4A882'}}>{language==='es'?item.motivo_es:item.motivo_en}</p>
                                             </div>
                                         ))}
                                     </div>
@@ -6489,16 +6489,16 @@ query = query.eq('region', region.toUpperCase());
                             <div key={idx} style={{background:darkMode?'rgba(255,255,255,0.05)':'rgba(255,255,255,0.9)',borderRadius:'1.1rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.15)',boxShadow:'0 2px 12px rgba(0,0,0,0.04)'}}>
                                 <div style={{padding:'1rem 1.25rem',borderBottom:'1px solid rgba(201,147,90,0.1)',background:'linear-gradient(135deg,rgba(201,147,90,0.08),rgba(232,200,159,0.06))'}}>
                                     <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.2rem',fontWeight:600,color:darkMode?'#e8d5c0':'#292524'}}>
-                                        <span style={{color:'#C9935A',marginRight:'0.4rem'}}>✦</span>{tip.title}
+                                        <span style={{color:'#C4A882',marginRight:'0.4rem'}}>✦</span>{tip.title}
                                     </h3>
                                 </div>
                                 <div style={{padding:'1rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
-                                    <div style={{borderLeft:'3px solid #C9935A',paddingLeft:'0.75rem'}}>
-                                        <p style={{fontSize:'0.8rem',fontWeight:600,color:'#C9935A',marginBottom:'0.2rem'}}>{language==='es'?'Por que importa':'Why it matters'}</p>
+                                    <div style={{borderLeft:'3px solid #C4A882',paddingLeft:'0.75rem'}}>
+                                        <p style={{fontSize:'0.8rem',fontWeight:600,color:'#C4A882',marginBottom:'0.2rem'}}>{language==='es'?'Por que importa':'Why it matters'}</p>
                                         <p style={{fontSize:'0.85rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.5}}>{tip.why}</p>
                                     </div>
                                     <div style={{borderLeft:'3px solid rgba(201,147,90,0.4)',paddingLeft:'0.75rem'}}>
-                                        <p style={{fontSize:'0.8rem',fontWeight:600,color:'#92580a',marginBottom:'0.2rem'}}>{language==='es'?'Como hacerlo':'How to do it'}</p>
+                                        <p style={{fontSize:'0.8rem',fontWeight:600,color:'#8A7055',marginBottom:'0.2rem'}}>{language==='es'?'Como hacerlo':'How to do it'}</p>
                                         <p style={{fontSize:'0.85rem',color:darkMode?'#a8a29e':'#78716c',lineHeight:1.5,whiteSpace:'pre-line'}}>{tip.how}</p>
                                     </div>
                                 </div>
@@ -6583,7 +6583,7 @@ query = query.eq('region', region.toUpperCase());
                             <button 
                                 onClick={handlePostMessage}
                                 disabled={!communityMessage.trim()}
-                                className="w-full text-white py-3 rounded-lg font-semibold hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" style={{background:"linear-gradient(135deg,#B87333,#E8C878)",color:"#0D0D0D"}}
+                                className="w-full text-white py-3 rounded-lg font-semibold hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed" style={{background:"linear-gradient(135deg,#B8997A,#E8C878)",color:"#0D0D0D"}}
                             >
                                 {language === 'es' ? 'Compartir Mensaje' : 'Share Message'}
                             </button>
@@ -6676,7 +6676,7 @@ query = query.eq('region', region.toUpperCase());
                                         <span>{language === 'es' ? 'Seguimiento de síntomas y análisis' : 'Symptom tracking and analysis'}</span>
                                     </li>
                                 </ul>
-                                <button onClick={() => setShowPlanModal(true)} className="w-full text-white py-4 rounded-lg font-semibold text-lg hover:shadow-lg" style={{background:"linear-gradient(135deg,#B87333,#E8C878)",color:"#0D0D0D"}}>
+                                <button onClick={() => setShowPlanModal(true)} className="w-full text-white py-4 rounded-lg font-semibold text-lg hover:shadow-lg" style={{background:"linear-gradient(135deg,#B8997A,#E8C878)",color:"#0D0D0D"}}>
                                     {language === 'es' ? 'Suscribirme' : 'Subscribe'}
                                 </button>
                             </div>
@@ -6714,7 +6714,7 @@ query = query.eq('region', region.toUpperCase());
                             <path d="M 40 32 Q 40 26 42 22 Q 42 28 40 35 Q 38 28 38 22 Q 40 26 40 32" fill="url(#flameGradLoad)"/>
                         </svg>
                         <h1 className="text-3xl font-light gradient-text" style={{fontFamily: 'Cormorant, serif'}}>Lumera</h1>
-                        <div className="mt-4 w-8 h-1 mx-auto rounded-full animate-pulse" style={{background:"linear-gradient(135deg,#B87333,#E8C878)"}}></div>
+                        <div className="mt-4 w-8 h-1 mx-auto rounded-full animate-pulse" style={{background:"linear-gradient(135deg,#B8997A,#E8C878)"}}></div>
                     </div>
                 </div>
             );
@@ -6750,7 +6750,7 @@ query = query.eq('region', region.toUpperCase());
                                 <div style={{position:'absolute',inset:0,background:`linear-gradient(to bottom, transparent 30%, rgba(15,10,5,0.95) 100%)`}}/>
                                 <div style={{position:'absolute',bottom:'1rem',left:'1.25rem'}}>
                                     <p style={{fontSize:'0.6rem',color:'rgba(184,115,51,0.7)',letterSpacing:'0.18em',textTransform:'uppercase',marginBottom:'4px'}}>✦ {language==='es'?cfg.label_es:cfg.label_en}</p>
-                                    <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.5rem',fontWeight:400,color:'#F5E6D3',margin:0}}>{language==='es'?'Tu carta de hoy':'Your card today'}</p>
+                                    <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.5rem',fontWeight:400,color:'#F0EDE8',margin:0}}>{language==='es'?'Tu carta de hoy':'Your card today'}</p>
                                 </div>
                             </div>
                             {/* Mensaje */}
@@ -6759,10 +6759,10 @@ query = query.eq('region', region.toUpperCase());
                                     {language==='es'?cfg.msg_es:cfg.msg_en}
                                 </p>
                                 <div style={{display:'flex',gap:'0.75rem'}}>
-                                    <button onClick={()=>{setShowOraclePopup(false);setCurrentPage('nutrition');}} style={{flex:1,background:'rgba(184,115,51,0.12)',border:'1px solid rgba(184,115,51,0.3)',borderRadius:'0.75rem',padding:'0.6rem',fontSize:'0.78rem',color:'#C9935A',cursor:'pointer',fontFamily:"'Cormorant',serif"}}>
+                                    <button onClick={()=>{setShowOraclePopup(false);setCurrentPage('nutrition');}} style={{flex:1,background:'rgba(184,115,51,0.12)',border:'1px solid rgba(184,115,51,0.3)',borderRadius:'0.75rem',padding:'0.6rem',fontSize:'0.78rem',color:'#C4A882',cursor:'pointer',fontFamily:"'Cormorant',serif"}}>
                                         {language==='es'?'Ver nutrición':'See nutrition'}
                                     </button>
-                                    <button onClick={()=>setShowOraclePopup(false)} style={{flex:1,background:'linear-gradient(135deg,#B87333,#E8C878)',border:'none',borderRadius:'0.75rem',padding:'0.6rem',fontSize:'0.78rem',color:'#0A0A0A',cursor:'pointer',fontWeight:600,fontFamily:"'Cormorant',serif"}}>
+                                    <button onClick={()=>setShowOraclePopup(false)} style={{flex:1,background:'linear-gradient(135deg,#B8997A,#E8C878)',border:'none',borderRadius:'0.75rem',padding:'0.6rem',fontSize:'0.78rem',color:'#0A0A0A',cursor:'pointer',fontWeight:600,fontFamily:"'Cormorant',serif"}}>
                                         {language==='es'?'Entendido':'Got it'}
                                     </button>
                                 </div>
@@ -6783,7 +6783,7 @@ query = query.eq('region', region.toUpperCase());
 
                     <div className="shula-in" style={{position:'relative',zIndex:1,maxWidth:'400px',width:'100%',padding:'2rem',textAlign:'center'}}>
                         {/* Ornamento top */}
-                        <div style={{width:'60px',height:'1px',background:'linear-gradient(90deg,transparent,#B87333,transparent)',margin:'0 auto 2rem'}}/>
+                        <div style={{width:'60px',height:'1px',background:'linear-gradient(90deg,transparent,#B8997A,transparent)',margin:'0 auto 2rem'}}/>
 
                         {/* Video de Shula en círculo */}
                         <div style={{width:'220px',height:'220px',borderRadius:'50%',overflow:'hidden',margin:'0 auto 2rem',border:'2px solid rgba(184,115,51,0.5)',boxShadow:'0 0 40px rgba(184,115,51,0.2)',position:'relative'}}>
@@ -6795,7 +6795,7 @@ query = query.eq('region', region.toUpperCase());
                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.68rem',color:'rgba(184,115,51,0.7)',letterSpacing:'0.2em',textTransform:'uppercase',marginBottom:'1.5rem'}}>
                             SHULA RÍOS · LUMERA
                         </p>
-                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.35rem',fontWeight:400,color:'#F5E6D3',lineHeight:1.8,marginBottom:'2rem',fontStyle:'italic'}}>
+                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.35rem',fontWeight:400,color:'#F0EDE8',lineHeight:1.8,marginBottom:'2rem',fontStyle:'italic'}}>
                             {language==='es'
                                 ?'"Algo ha cambiado en ti, lo noto. En estos días, tu cuerpo ha dejado de ser un misterio para empezar a ser tu mapa. Hoy nuestra prueba termina, pero este santuario es tuyo para siempre. No vuelvas al ruido exterior. Quédate aquí, conmigo... El viaje real comienza ahora."'
                                 :'"Something has changed in you, I can feel it. Over these days, your body has stopped being a mystery and started becoming your map. Today our trial ends, but this sanctuary is yours forever. Do not go back to the noise. Stay here, with me... The real journey begins now."'}
@@ -6805,7 +6805,7 @@ query = query.eq('region', region.toUpperCase());
                         <button
                             onClick={()=>{setShowShulaDay3(false);setCurrentPage('upgrade');}}
                             style={{
-                                background:'linear-gradient(135deg,#B87333,#E8C878)',
+                                background:'linear-gradient(135deg,#B8997A,#E8C878)',
                                 border:'none',borderRadius:'9999px',
                                 padding:'1rem 2.5rem',
                                 color:'#0A0A0A',
@@ -6823,7 +6823,7 @@ query = query.eq('region', region.toUpperCase());
                             {language==='es'?'Explorar un momento más':'Explore a little longer'}
                         </button>
 
-                        <div style={{width:'60px',height:'1px',background:'linear-gradient(90deg,transparent,#B87333,transparent)',margin:'2rem auto 0'}}/>
+                        <div style={{width:'60px',height:'1px',background:'linear-gradient(90deg,transparent,#B8997A,transparent)',margin:'2rem auto 0'}}/>
                     </div>
                 </div>
             );
@@ -6837,7 +6837,7 @@ query = query.eq('region', region.toUpperCase());
                     <div style={{position:'relative',zIndex:1,maxWidth:'380px',width:'100%',textAlign:'center'}}>
                         {welcomeAct===1&&(<div className="wact">
                             <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.68rem',color:'rgba(184,115,51,0.7)',letterSpacing:'0.22em',textTransform:'uppercase',marginBottom:'2.5rem'}}>LUMERA</p>
-                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.45rem',fontWeight:400,color:'#F5E6D3',lineHeight:1.75,marginBottom:'3rem'}}>
+                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.45rem',fontWeight:400,color:'#F0EDE8',lineHeight:1.75,marginBottom:'3rem'}}>
                                 {language==='es'
                                     ?'"Sé que eres una mujer ocupada. Sé que tienes preguntas sin respuesta y que, a veces, te sientes sola en tu propio cuerpo. Quieres cuidarte, pero no encuentras el cómo ni el cuándo."'
                                     :'"I know you are busy. I know you have questions that go unanswered, and that sometimes, you feel like a stranger in your own body. You want to prioritize yourself, but the how and when feel out of reach."'}
@@ -6848,7 +6848,7 @@ query = query.eq('region', region.toUpperCase());
                         </div>)}
                         {welcomeAct===2&&(<div className="wact">
                             <div style={{width:'40px',height:'1px',background:'rgba(184,115,51,0.4)',margin:'0 auto 2.5rem'}}/>
-                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.45rem',fontWeight:400,color:'#F5E6D3',lineHeight:1.75,marginBottom:'1.5rem'}}>
+                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.45rem',fontWeight:400,color:'#F0EDE8',lineHeight:1.75,marginBottom:'1.5rem'}}>
                                 {language==='es'
                                     ?'"Por eso nace Lumera. Un espacio por y para ti. Sin juicios, sin ruidos. Solo tú, yo y tu ritmo biológico."'
                                     :'"That is why Lumera was born. A space designed by and for you. No judgment, no noise. Just you, me, and your biological rhythm."'}
@@ -6871,13 +6871,13 @@ query = query.eq('region', region.toUpperCase());
                                     <div key={i} style={{display:'flex',alignItems:'center',gap:'1rem'}}>
                                         <img src={item.img} style={{width:'44px',height:'44px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'1px solid rgba(184,115,51,0.35)'}}/>
                                         <div>
-                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1rem',fontWeight:600,color:'#B87333',margin:'0 0 2px'}}>{language==='es'?item.es:item.en}</p>
+                                            <p style={{fontFamily:"'Cormorant',serif",fontSize:'1rem',fontWeight:600,color:'#B8997A',margin:'0 0 2px'}}>{language==='es'?item.es:item.en}</p>
                                             <p style={{fontSize:'0.8rem',color:'rgba(245,230,211,0.65)',margin:0,lineHeight:1.5}}>{language==='es'?item.d_es:item.d_en}</p>
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                            <button onClick={()=>setShowWelcomeTrial(false)} style={{background:'linear-gradient(135deg,#B87333,#E8C878)',border:'none',borderRadius:'9999px',padding:'0.85rem 2.5rem',color:'#0A0A0A',fontSize:'1rem',fontFamily:"'Cormorant',serif",fontWeight:600,cursor:'pointer',letterSpacing:'0.08em',boxShadow:'0 0 25px rgba(184,115,51,0.35)'}}>
+                            <button onClick={()=>setShowWelcomeTrial(false)} style={{background:'linear-gradient(135deg,#B8997A,#E8C878)',border:'none',borderRadius:'9999px',padding:'0.85rem 2.5rem',color:'#0A0A0A',fontSize:'1rem',fontFamily:"'Cormorant',serif",fontWeight:600,cursor:'pointer',letterSpacing:'0.08em',boxShadow:'0 0 25px rgba(184,115,51,0.35)'}}>
                                 {language==='es'?'Explórame':'Explore me'}
                             </button>
                             <p style={{fontSize:'0.7rem',color:'rgba(184,115,51,0.4)',marginTop:'1rem',fontStyle:'italic',fontFamily:"'Cormorant',serif"}}>
@@ -6897,7 +6897,7 @@ query = query.eq('region', region.toUpperCase());
                             <div className="flex items-center gap-3">
                                 <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M50 5 C25 5 5 25 5 50 C5 75 25 95 50 95 C35 85 25 68 25 50 C25 32 35 15 50 5Z" fill="#9b8ec4" opacity="0.85"/>
-                                    <path d="M50 22 L56 45 L50 78 L44 45 Z" fill="#C9935A"/>
+                                    <path d="M50 22 L56 45 L50 78 L44 45 Z" fill="#C4A882"/>
                                 </svg>
                                 <h1 className="text-2xl font-medium tracking-tight" style={{color: '#78716c', fontFamily: 'Cormorant, serif'}}>
                                     LUMERA
@@ -6993,7 +6993,7 @@ query = query.eq('region', region.toUpperCase());
 
                                 <div style={{background: "rgba(255,255,255,0.65)", backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", border: "1px solid rgba(255,255,255,0.85)", borderRadius: "2rem", padding: "2rem 1.75rem", boxShadow: "0 8px 48px rgba(124,58,237,0.12)"}}>
                                     <div style={{textAlign: "center", marginBottom: "1.5rem"}}>
-                                        <div style={{fontFamily:"'Cormorant', serif", fontSize:"1.2rem", color:"#C9935A", letterSpacing:"0.15em", marginBottom:"0.5rem"}}>✦ LUMERA</div>
+                                        <div style={{fontFamily:"'Cormorant', serif", fontSize:"1.2rem", color:"#C4A882", letterSpacing:"0.15em", marginBottom:"0.5rem"}}>✦ LUMERA</div>
                                         <h3 style={{fontFamily: "'Cormorant', serif", fontSize: "1.6rem", fontWeight: 400, color: "#292524", marginBottom: "0.25rem"}}>
                                             {language === 'es' ? 'Empieza tu prueba gratuita' : 'Start your free trial'}
                                         </h3>
@@ -7004,13 +7004,13 @@ query = query.eq('region', region.toUpperCase());
                                     <div style={{display: "flex", gap: "0.5rem", marginBottom: "1.25rem", background: "rgba(201,147,90,0.06)", borderRadius: "9999px", padding: "0.25rem"}}>
                                         <button
                                             onClick={() => setAuthMode('register')}
-                                            style={{flex: 1, padding: "0.6rem", borderRadius: "9999px", border: "none", fontWeight: 600, fontSize: "0.88rem", cursor: "pointer", background: authMode === "register" ? "linear-gradient(135deg, #C9935A, #e8c89f)" : "transparent", color: authMode === "register" ? "white" : "#78716c", boxShadow: authMode === "register" ? "0 2px 8px rgba(124,58,237,0.3)" : "none"}}
+                                            style={{flex: 1, padding: "0.6rem", borderRadius: "9999px", border: "none", fontWeight: 600, fontSize: "0.88rem", cursor: "pointer", background: authMode === "register" ? "linear-gradient(135deg, #C4A882, #e8c89f)" : "transparent", color: authMode === "register" ? "white" : "#78716c", boxShadow: authMode === "register" ? "0 2px 8px rgba(124,58,237,0.3)" : "none"}}
                                         >
                                             {language === 'es' ? 'Crear Cuenta' : 'Sign Up'}
                                         </button>
                                         <button 
                                             onClick={() => setAuthMode('login')} 
-                                            style={{flex: 1, padding: "0.6rem", borderRadius: "9999px", border: "none", fontWeight: 600, fontSize: "0.88rem", cursor: "pointer", background: authMode === "login" ? "linear-gradient(135deg, #C9935A, #e8c89f)" : "transparent", color: authMode === "login" ? "white" : "#78716c", boxShadow: authMode === "login" ? "0 2px 8px rgba(124,58,237,0.3)" : "none"}}
+                                            style={{flex: 1, padding: "0.6rem", borderRadius: "9999px", border: "none", fontWeight: 600, fontSize: "0.88rem", cursor: "pointer", background: authMode === "login" ? "linear-gradient(135deg, #C4A882, #e8c89f)" : "transparent", color: authMode === "login" ? "white" : "#78716c", boxShadow: authMode === "login" ? "0 2px 8px rgba(124,58,237,0.3)" : "none"}}
                                         >
                                             {language === 'es' ? 'Iniciar Sesión' : 'Login'}
                                         </button>
@@ -7109,7 +7109,7 @@ query = query.eq('region', region.toUpperCase());
                                     <button
                                         onClick={handleGoogleLogin}
                                         className="w-full border hover:opacity-90 py-3 px-4 rounded-xl font-medium transition flex items-center justify-center gap-2"
-                                        style={{background: 'linear-gradient(135deg, #f5f0ff, #fdf2f8)', borderColor: 'rgba(167,139,250,0.4)', color: '#C9935A'}}
+                                        style={{background: 'linear-gradient(135deg, #f5f0ff, #fdf2f8)', borderColor: 'rgba(167,139,250,0.4)', color: '#C4A882'}}
                                     >
                                         <span style={{fontFamily: "'Cormorant', serif", fontSize: '1.1rem', fontWeight: 600, letterSpacing: '0.05em'}}>✦ Lumera</span>
                                         <span style={{fontSize: '0.85rem', fontWeight: 500}}>
@@ -7126,7 +7126,7 @@ query = query.eq('region', region.toUpperCase());
                                             type="button"
                                             onClick={() => setAuthMode(authMode === 'signup' ? 'login' : 'signup')}
                                             className="font-medium"
-                                            style={{color: '#C9935A'}}
+                                            style={{color: '#C4A882'}}
                                         >
                                             {authMode === 'signup' 
                                                 ? (language === 'es' ? 'Inicia sesión' : 'Log in')
@@ -7292,15 +7292,15 @@ query = query.eq('region', region.toUpperCase());
                         <div className="max-w-4xl mx-auto">
                             <div className="grid grid-cols-3 gap-6 text-center">
                                 <div>
-                                    <p className="text-4xl font-light mb-1" style={{color: '#C9935A', fontFamily: 'Cormorant, serif'}}>120+</p>
+                                    <p className="text-4xl font-light mb-1" style={{color: '#C4A882', fontFamily: 'Cormorant, serif'}}>120+</p>
                                     <p className="text-sm" style={{color: '#78716c'}}>{language === 'es' ? 'Recetas científicas' : 'Science-based recipes'}</p>
                                 </div>
                                 <div>
-                                    <p className="text-4xl font-light mb-1" style={{color: '#C9935A', fontFamily: 'Cormorant, serif'}}>3</p>
+                                    <p className="text-4xl font-light mb-1" style={{color: '#C4A882', fontFamily: 'Cormorant, serif'}}>3</p>
                                     <p className="text-sm" style={{color: '#78716c'}}>{language === 'es' ? 'Regiones adaptadas' : 'Adapted regions'}</p>
                                 </div>
                                 <div>
-                                    <p className="text-4xl font-light mb-1" style={{color: '#C9935A', fontFamily: 'Cormorant, serif'}}>100%</p>
+                                    <p className="text-4xl font-light mb-1" style={{color: '#C4A882', fontFamily: 'Cormorant, serif'}}>100%</p>
                                     <p className="text-sm" style={{color: '#78716c'}}>{language === 'es' ? 'Personalizado' : 'Personalized'}</p>
                                 </div>
                             </div>
@@ -7476,14 +7476,14 @@ query = query.eq('region', region.toUpperCase());
                 return (
                     React.createElement('div', {style:{minHeight:'100vh',background:'linear-gradient(135deg,rgba(10,8,6,0.82) 0%,rgba(26,16,8,0.78) 100%)',backgroundImage:'url(/images/quiz-bg.png)',backgroundSize:'cover',backgroundPosition:'center',backgroundBlendMode:'multiply',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'1.5rem',fontFamily:"'Cormorant',serif"}},
                         React.createElement('div', {style:{position:'absolute',top:'1.5rem',left:'50%',transform:'translateX(-50%)',display:'flex',alignItems:'center',gap:'0.5rem'}},
-                            React.createElement('span', {style:{color:'#E8B06A',fontSize:'1.2rem',letterSpacing:'0.2em',fontWeight:500,textShadow:'0 2px 8px rgba(0,0,0,0.9)'}}, '✦ Lumera')
+                            React.createElement('span', {style:{color:'#D4B8A8',fontSize:'1.2rem',letterSpacing:'0.2em',fontWeight:500,textShadow:'0 2px 8px rgba(0,0,0,0.9)'}}, '✦ Lumera')
                         ),
                         React.createElement('div', {style:{width:'100%',maxWidth:'520px',marginTop:'3rem'}},
                             !result ? React.createElement('div', {style:{background:'rgba(255,255,255,0.04)',border:'0.5px solid rgba(201,147,90,0.25)',borderRadius:'1.5rem',padding:'2.5rem 2rem'}},
                                 React.createElement('div', {style:{textAlign:'center',marginBottom:'2rem'}},
                                     React.createElement('div', {style:{fontSize:'0.75rem',letterSpacing:'0.3em',color:'rgba(201,147,90,0.7)',textTransform:'uppercase',marginBottom:'0.75rem'}}, language==='es' ? 'Pregunta '+(preQuizStep+1)+' de 3' : 'Question '+(preQuizStep+1)+' of 3'),
                                     React.createElement('div', {style:{display:'flex',gap:'0.5rem',justifyContent:'center',marginBottom:'1.5rem'}},
-                                        [0,1,2].map(i => React.createElement('div', {key:i, style:{height:'3px',width:'60px',borderRadius:'2px',background:i<=preQuizStep?'#C9935A':'rgba(201,147,90,0.2)'}}))
+                                        [0,1,2].map(i => React.createElement('div', {key:i, style:{height:'3px',width:'60px',borderRadius:'2px',background:i<=preQuizStep?'#C4A882':'rgba(201,147,90,0.2)'}}))
                                     ),
                                     React.createElement('h2', {style:{fontSize:'2rem',fontWeight:500,fontStyle:'italic',color:'#FFFFFF',lineHeight:1.3,textShadow:'0 2px 8px rgba(0,0,0,0.9)'}}, quizQs[preQuizStep].q)
                                 ),
@@ -7507,12 +7507,12 @@ query = query.eq('region', region.toUpperCase());
                             ) : React.createElement('div', {style:{background:'rgba(255,255,255,0.04)',border:'0.5px solid rgba(201,147,90,0.35)',borderRadius:'1.5rem',padding:'2.5rem 2rem',textAlign:'center'}},
                                 React.createElement('div', {style:{fontSize:'3rem',marginBottom:'1rem'}}, result.emoji),
                                 React.createElement('div', {style:{fontSize:'0.75rem',letterSpacing:'0.3em',color:'rgba(201,147,90,0.7)',textTransform:'uppercase',marginBottom:'0.5rem'}}, language==='es'?'Tu perfil metabolico':'Your metabolic profile'),
-                                React.createElement('h2', {style:{fontSize:'2rem',fontWeight:300,fontStyle:'italic',color:'#C9935A',marginBottom:'1.25rem'}}, result.name),
+                                React.createElement('h2', {style:{fontSize:'2rem',fontWeight:300,fontStyle:'italic',color:'#C4A882',marginBottom:'1.25rem'}}, result.name),
                                 React.createElement('p', {style:{fontSize:'1.05rem',color:'rgba(255,255,255,0.95)',lineHeight:1.65,marginBottom:'1.25rem',fontWeight:400,textShadow:'0 1px 4px rgba(0,0,0,0.7)'}}, result.desc),
                                 React.createElement('div', {style:{background:'rgba(201,147,90,0.08)',border:'0.5px solid rgba(201,147,90,0.2)',borderRadius:'0.75rem',padding:'1rem',marginBottom:'1.75rem'}},
                                     result.lumiLoading ? React.createElement('p', {style:{fontSize:'0.95rem',color:'rgba(201,147,90,0.7)',fontStyle:'italic',lineHeight:1.5}}, language==='es'?'LUMI esta analizando tu patron...':'LUMI is analyzing your pattern...') : React.createElement('p', {style:{fontSize:'1rem',color:'rgba(240,232,220,0.95)',fontStyle:'italic',lineHeight:1.7,textShadow:'0 1px 4px rgba(0,0,0,0.8)'}}, result.insight)
                                 ),
-                                React.createElement('button', {onClick:()=>{ localStorage.setItem('lumeraQuizDone','1'); setShowPreQuiz(false); setAuthMode('register'); }, style:{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.1rem',fontFamily:"'Cormorant',serif",fontWeight:500,cursor:'pointer',letterSpacing:'0.05em',boxShadow:'0 4px 20px rgba(201,147,90,0.3)',marginBottom:'0.75rem'}}, language==='es'?'✦ Quiero mi prueba gratis':'✦ Start my free trial'),
+                                React.createElement('button', {onClick:()=>{ localStorage.setItem('lumeraQuizDone','1'); setShowPreQuiz(false); setAuthMode('register'); }, style:{width:'100%',background:'linear-gradient(135deg,#C4A882,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.1rem',fontFamily:"'Cormorant',serif",fontWeight:500,cursor:'pointer',letterSpacing:'0.05em',boxShadow:'0 4px 20px rgba(201,147,90,0.3)',marginBottom:'0.75rem'}}, language==='es'?'✦ Quiero mi prueba gratis':'✦ Start my free trial'),
                                 React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
                             )
                         )
@@ -7523,15 +7523,15 @@ query = query.eq('region', region.toUpperCase());
 
             return (
                 <div className={darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50'}>
-                    <style>{`.lumera-slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:9999px;outline:none;cursor:pointer;background:linear-gradient(to right,#C9935A calc(var(--val,5)*10%),#e8d5c0 calc(var(--val,5)*10%))}.lumera-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#C9935A,#e8c89f);cursor:pointer;box-shadow:0 1px 6px rgba(201,147,90,0.4)}.lumera-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#C9935A,#e8c89f);cursor:pointer;border:none}`}</style>
+                    <style>{`.lumera-slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:9999px;outline:none;cursor:pointer;background:linear-gradient(to right,#C4A882 calc(var(--val,5)*10%),#e8d5c0 calc(var(--val,5)*10%))}.lumera-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#C4A882,#e8c89f);cursor:pointer;box-shadow:0 1px 6px rgba(201,147,90,0.4)}.lumera-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#C4A882,#e8c89f);cursor:pointer;border:none}`}</style>
                     <header className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} shadow sticky top-0 z-40 border-b`}>
                         <div className="max-w-6xl mx-auto px-3 py-3 flex justify-between items-center" style={{gap:'0.5rem'}}>
                             <div className="flex items-center gap-3">
                                 <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M50 5 C25 5 5 25 5 50 C5 75 25 95 50 95 C35 85 25 68 25 50 C25 32 35 15 50 5Z" fill="#9b8ec4" opacity="0.85"/>
-                                    <path d="M50 22 L56 45 L50 78 L44 45 Z" fill="#C9935A"/>
+                                    <path d="M50 22 L56 45 L50 78 L44 45 Z" fill="#C4A882"/>
                                 </svg>
-                                <h1 style={{fontFamily:"'Cormorant',serif",fontSize:"1.25rem",fontWeight:500,background:"linear-gradient(135deg,#C9935A,#c4a882)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",whiteSpace:"nowrap"}}>Lumera</h1>
+                                <h1 style={{fontFamily:"'Cormorant',serif",fontSize:"1.25rem",fontWeight:500,background:"linear-gradient(135deg,#C4A882,#c4a882)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",whiteSpace:"nowrap"}}>Lumera</h1>
                             </div>
                             <div className="flex items-center gap-3">
                                 <select value={language} onChange={(e) => setLanguage(e.target.value)} className={`px-2 py-1 rounded text-xs border ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-gray-100 border-gray-300'}`}>
@@ -7542,11 +7542,11 @@ query = query.eq('region', region.toUpperCase());
                                     {darkMode ? '☀️' : '🌙'}
                                 </button>
                                 {getUserTier() === 'premium' ? (
-                                    <div style={{display:'flex',alignItems:'center',gap:'0.4rem',padding:'0.4rem 1rem',borderRadius:'9999px',background:'linear-gradient(135deg,#C9935A,#e8c89f)'}}>
+                                    <div style={{display:'flex',alignItems:'center',gap:'0.4rem',padding:'0.4rem 1rem',borderRadius:'9999px',background:'linear-gradient(135deg,#C4A882,#e8c89f)'}}>
                                         <span style={{color:'white',fontSize:'0.8rem',fontWeight:600}}>✦ Premium</span>
                                     </div>
                                 ) : (
-                                    <button onClick={() => setShowPlanModal(true)} style={{padding:'0.4rem 1rem',borderRadius:'9999px',fontSize:'0.8rem',fontWeight:600,background:'linear-gradient(135deg,#C9935A,#e8c89f)',color:'white',border:'none',cursor:'pointer',letterSpacing:'0.03em'}}>
+                                    <button onClick={() => setShowPlanModal(true)} style={{padding:'0.4rem 1rem',borderRadius:'9999px',fontSize:'0.8rem',fontWeight:600,background:'linear-gradient(135deg,#C4A882,#e8c89f)',color:'white',border:'none',cursor:'pointer',letterSpacing:'0.03em'}}>
                                         ✦ {language === 'es' ? 'Hazte Premium' : 'Go Premium'}
                                     </button>
                                 )}
@@ -7560,7 +7560,7 @@ query = query.eq('region', region.toUpperCase());
                         <div style={{background:darkMode?'rgba(201,147,90,0.12)':'linear-gradient(135deg,rgba(253,248,243,0.98),rgba(253,244,238,0.98))',borderBottom:'1px solid rgba(201,147,90,0.2)',padding:'0.75rem 1rem'}}>
                             <div style={{maxWidth:'900px',margin:'0 auto',display:'flex',alignItems:'center',justifyContent:'space-between',flexWrap:'wrap',gap:'0.75rem'}}>
                                 <div style={{display:'flex',alignItems:'center',gap:'0.75rem'}}>
-                                    <span style={{color:'#C9935A',fontSize:'1rem'}}>✦</span>
+                                    <span style={{color:'#C4A882',fontSize:'1rem'}}>✦</span>
                                     <div>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.95rem',fontWeight:600,color:darkMode?'#e8d5c0':'#292524'}}>
                                             {getTrialDaysLeft() === 3 && (language === 'es' 
@@ -7582,7 +7582,7 @@ query = query.eq('region', region.toUpperCase());
                                 </div>
                                 <button
                                     onClick={() => setShowPlanModal(true)}
-                                    style={{background:'linear-gradient(135deg,#C9935A,#e8c89f)',color:'white',border:'none',borderRadius:'9999px',padding:'0.45rem 1.1rem',fontSize:'0.8rem',fontWeight:600,cursor:'pointer',whiteSpace:'nowrap'}}
+                                    style={{background:'linear-gradient(135deg,#C4A882,#e8c89f)',color:'white',border:'none',borderRadius:'9999px',padding:'0.45rem 1.1rem',fontSize:'0.8rem',fontWeight:600,cursor:'pointer',whiteSpace:'nowrap'}}
                                     className={`px-4 py-2 rounded-full font-semibold whitespace-nowrap text-sm ${
                                         darkMode 
                                             ? 'bg-white text-amber-900 hover:bg-gray-100' 
@@ -7673,18 +7673,18 @@ query = query.eq('region', region.toUpperCase());
                                 <button key={item.page} onClick={() => setCurrentPage(item.page)}
                                     style={{
                                         padding: '0.5rem 0.6rem',
-                                        borderTop: currentPage === item.page ? '2px solid #C9935A' : '2px solid transparent',
+                                        borderTop: currentPage === item.page ? '2px solid #C4A882' : '2px solid transparent',
                                         background: currentPage === item.page ? 'rgba(201,147,90,0.08)' : 'transparent',
                                         border: 'none',
-                                        borderTop: currentPage === item.page ? '2px solid #C9935A' : '2px solid transparent',
+                                        borderTop: currentPage === item.page ? '2px solid #C4A882' : '2px solid transparent',
                                         cursor: 'pointer', whiteSpace: 'nowrap', minWidth: '56px',
                                         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px'
                                     }}>
                                     <div style={{position: 'relative'}}>
                                         <img src={item.img} style={{width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover', opacity: currentPage === item.page ? 1 : 0.6}} />
-                                        {item.premium && !isPremium() && <span style={{position: 'absolute', top: -4, right: -4, fontSize: '0.55rem', background: '#C9935A', color: 'white', borderRadius: '9999px', padding: '0 3px'}}>PRO</span>}
+                                        {item.premium && !isPremium() && <span style={{position: 'absolute', top: -4, right: -4, fontSize: '0.55rem', background: '#C4A882', color: 'white', borderRadius: '9999px', padding: '0 3px'}}>PRO</span>}
                                     </div>
-                                    <div style={{fontSize: '0.6rem', color: currentPage === item.page ? '#C9935A' : '#78716c', fontWeight: currentPage === item.page ? 600 : 400}}>{item.label}</div>
+                                    <div style={{fontSize: '0.6rem', color: currentPage === item.page ? '#C4A882' : '#78716c', fontWeight: currentPage === item.page ? 600 : 400}}>{item.label}</div>
                                 </button>
                             ))}
                         </div>
@@ -7734,7 +7734,7 @@ query = query.eq('region', region.toUpperCase());
                                     <div style={{display:'flex',alignItems:'center',gap:'0.75rem'}}>
                                         <img src="/images/lumi.png" style={{width:'40px',height:'40px',borderRadius:'50%',objectFit:'cover',border:'2px solid rgba(184,115,51,0.5)'}} onError={e=>{e.target.style.display='none'}} alt="LUMI"/>
                                         <div>
-                                            <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.15rem',fontWeight:600,color:'#B87333',margin:0}}>LUMI</h3>
+                                            <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.15rem',fontWeight:600,color:'#B8997A',margin:0}}>LUMI</h3>
                                             <p style={{fontSize:'0.72rem',color:'rgba(184,115,51,0.65)',margin:0}}>
                                                 {!isPremium() ? `${dailyQuestions}/5 ${language === 'es' ? 'preguntas hoy' : 'questions today'}` : (language==='es'?'✦ Tu reflejo biológico':'✦ Your biological reflection')}
                                             </p>
@@ -7785,7 +7785,7 @@ query = query.eq('region', region.toUpperCase());
                                         <div style={{display:'flex',justifyContent:'center',padding:'1rem'}}>
                                             <div style={{textAlign:'center'}}>
                                                 <img src="/images/lente_alquimica.png" style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',margin:'0 auto 0.5rem',display:'block',animation:'pulse 2s infinite'}}/>
-                                                <p style={{fontSize:'0.78rem',color:'#C9935A',fontStyle:'italic',fontFamily:"'Cormorant',serif"}}>{language==='es'?'Analizando tu plato...':'Analysing your meal...'}</p>
+                                                <p style={{fontSize:'0.78rem',color:'#C4A882',fontStyle:'italic',fontFamily:"'Cormorant',serif"}}>{language==='es'?'Analizando tu plato...':'Analysing your meal...'}</p>
                                             </div>
                                         </div>
                                     )}
@@ -7820,7 +7820,7 @@ query = query.eq('region', region.toUpperCase());
                                         <button
                                             onClick={sendToLumi}
                                             disabled={!lumiInput.trim() || lumiLoading}
-                                            style={{background:'linear-gradient(135deg,#B87333,#E8C878)',border:'none',borderRadius:'50%',padding:'0.75rem',cursor:'pointer',transition:'all 0.2s'}} className="disabled:opacity-50 hover:scale-105">
+                                            style={{background:'linear-gradient(135deg,#B8997A,#E8C878)',border:'none',borderRadius:'50%',padding:'0.75rem',cursor:'pointer',transition:'all 0.2s'}} className="disabled:opacity-50 hover:scale-105">
                                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                                             </svg>
@@ -7850,7 +7850,7 @@ query = query.eq('region', region.toUpperCase());
                                     <div className="flex items-center gap-3">
                                         <img src="/images/lumi.png" style={{width:'44px',height:'44px',borderRadius:'50%',objectFit:'cover',border:'2px solid rgba(184,115,51,0.5)',flexShrink:0}} onError={e=>{e.target.style.display='none'}} alt="LUMI"/>
                                         <div>
-                                            <h3 style={{fontFamily:"'Cormorant',serif",fontWeight:600,fontSize:'1.15rem',color:'#B87333',margin:0}}>
+                                            <h3 style={{fontFamily:"'Cormorant',serif",fontWeight:600,fontSize:'1.15rem',color:'#B8997A',margin:0}}>
                                                 {proactiveMessages[0]?.message_type === 'pattern_insight'
                                                     ? (language === 'es' ? 'LUMI encontró tus patrones' : 'LUMI found your patterns')
                                                     : (language === 'es' ? 'LUMI' : 'LUMI')}
@@ -7867,7 +7867,7 @@ query = query.eq('region', region.toUpperCase());
                                 {/* Messages */}
                                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
                                     {proactiveMessages.map((msg, idx) => (
-                                        <div key={msg.id} style={{background:darkMode?'rgba(184,115,51,0.08)':'rgba(253,248,243,0.95)',borderRadius:'0.75rem',padding:'1rem',borderLeft:'3px solid #C9935A'}}>
+                                        <div key={msg.id} style={{background:darkMode?'rgba(184,115,51,0.08)':'rgba(253,248,243,0.95)',borderRadius:'0.75rem',padding:'1rem',borderLeft:'3px solid #C4A882'}}>
                                             {/* Tipo de mensaje con emoji */}
                                             <div className="flex items-center gap-2 mb-2">
                                                 <span className="text-xl">
@@ -7925,7 +7925,7 @@ query = query.eq('region', region.toUpperCase());
                                             }}
                                             style={{
                                                 width: '100%',
-                                                background: 'linear-gradient(135deg, #C9935A, #C9935A)',
+                                                background: 'linear-gradient(135deg, #C4A882, #C4A882)',
                                                 color: 'white',
                                                 fontWeight: 700,
                                                 fontSize: '0.95rem',
@@ -7966,33 +7966,33 @@ query = query.eq('region', region.toUpperCase());
                     {showPlanModal && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" onClick={() => setShowPlanModal(false)}>
                             <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl w-full max-w-lg`} onClick={(e) => e.stopPropagation()}>
-                                <div style={{background:'linear-gradient(135deg,#C9935A,#e8c89f)',padding:'1.5rem',color:'white'}}>
+                                <div style={{background:'linear-gradient(135deg,#C4A882,#e8c89f)',padding:'1.5rem',color:'white'}}>
                                     <p style={{fontSize:'0.7rem',letterSpacing:'0.15em',opacity:0.85,marginBottom:'0.25rem'}}>✦ LUMERA</p>
                                     <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.8rem',fontWeight:500,marginBottom:'0.25rem'}}>{language === 'es' ? 'Elige tu plan' : 'Choose your plan'}</h3>
                                     <p style={{fontSize:'0.8rem',opacity:0.85}}>{language === 'es' ? 'Cancela cuando quieras · Precios + IVA' : 'Cancel anytime · Prices excl. VAT'}</p>
                                 </div>
                                 <div className="p-6 space-y-4">
-                                    <button onClick={() => { setShowPlanModal(false); handleSubscribe('monthly'); }} style={{width:'100%',background:darkMode?'rgba(255,255,255,0.05)':'rgba(253,248,243,0.8)',borderRadius:'1rem',padding:'1.1rem 1.25rem',textAlign:'left',border:'1.5px solid rgba(201,147,90,0.2)',cursor:'pointer',transition:'all 0.2s'}} onMouseOver={e=>e.currentTarget.style.borderColor='#C9935A'} onMouseOut={e=>e.currentTarget.style.borderColor='rgba(201,147,90,0.2)'}>
+                                    <button onClick={() => { setShowPlanModal(false); handleSubscribe('monthly'); }} style={{width:'100%',background:darkMode?'rgba(255,255,255,0.05)':'rgba(253,248,243,0.8)',borderRadius:'1rem',padding:'1.1rem 1.25rem',textAlign:'left',border:'1.5px solid rgba(201,147,90,0.2)',cursor:'pointer',transition:'all 0.2s'}} onMouseOver={e=>e.currentTarget.style.borderColor='#C4A882'} onMouseOut={e=>e.currentTarget.style.borderColor='rgba(201,147,90,0.2)'}>
                                         <div className="flex justify-between items-center">
                                             <div>
                                                 <h4 className={`font-bold text-lg ${darkMode ? 'text-white' : 'text-gray-900'}`}>{language === 'es' ? 'Mensual' : 'Monthly'}</h4>
                                                 <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{language === 'es' ? 'Máxima flexibilidad' : 'Maximum flexibility'}</p>
                                             </div>
                                             <div className="text-right">
-                                                <div style={{fontSize:'1.5rem',fontWeight:700,color:'#C9935A'}}>{PRICES[userRegion].monthly}</div>
+                                                <div style={{fontSize:'1.5rem',fontWeight:700,color:'#C4A882'}}>{PRICES[userRegion].monthly}</div>
                                                 <div style={{fontSize:'0.72rem',color:'#78716c'}}>{language === 'es' ? 'por mes + IVA' : 'per month + VAT'}</div>
                                             </div>
                                         </div>
                                     </button>
-                                    <button onClick={() => { setShowPlanModal(false); handleSubscribe('annual'); }} style={{width:'100%',background:darkMode?'rgba(201,147,90,0.08)':'rgba(253,248,243,0.95)',borderRadius:'1rem',padding:'1.1rem 1.25rem',textAlign:'left',border:'1.5px solid #C9935A',cursor:'pointer',position:'relative',transition:'all 0.2s'}}>
-                                        <div style={{position:'absolute',top:'0.5rem',right:'0.5rem',background:'linear-gradient(135deg,#C9935A,#e8c89f)',color:'white',fontSize:'0.7rem',fontWeight:700,padding:'0.2rem 0.6rem',borderRadius:'9999px'}}>{language === 'es' ? `Ahorra ${PRICES[userRegion].annualSavings}` : `Save ${PRICES[userRegion].annualSavings}`}</div>
+                                    <button onClick={() => { setShowPlanModal(false); handleSubscribe('annual'); }} style={{width:'100%',background:darkMode?'rgba(201,147,90,0.08)':'rgba(253,248,243,0.95)',borderRadius:'1rem',padding:'1.1rem 1.25rem',textAlign:'left',border:'1.5px solid #C4A882',cursor:'pointer',position:'relative',transition:'all 0.2s'}}>
+                                        <div style={{position:'absolute',top:'0.5rem',right:'0.5rem',background:'linear-gradient(135deg,#C4A882,#e8c89f)',color:'white',fontSize:'0.7rem',fontWeight:700,padding:'0.2rem 0.6rem',borderRadius:'9999px'}}>{language === 'es' ? `Ahorra ${PRICES[userRegion].annualSavings}` : `Save ${PRICES[userRegion].annualSavings}`}</div>
                                         <div className="flex justify-between items-center">
                                             <div>
                                                 <h4 className={`font-bold text-lg ${darkMode ? 'text-white' : 'text-gray-900'}`}>{language === 'es' ? 'Anual' : 'Annual'}</h4>
                                                 <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{language === 'es' ? 'Mejor precio' : 'Best value'}</p>
                                             </div>
                                             <div className="text-right">
-                                                <div style={{fontSize:'1.5rem',fontWeight:700,color:'#C9935A'}}>{PRICES[userRegion].annual}</div>
+                                                <div style={{fontSize:'1.5rem',fontWeight:700,color:'#C4A882'}}>{PRICES[userRegion].annual}</div>
                                                 <div style={{fontSize:'0.72rem',color:'#78716c'}}>{language === 'es' ? 'por año + IVA' : 'per year + VAT'}</div>
                                                 <div style={{fontSize:'0.72rem',textDecoration:'line-through',color:'#a8a29e'}}>{PRICES[userRegion].annualOriginal}</div>
                                             </div>
@@ -8010,7 +8010,7 @@ query = query.eq('region', region.toUpperCase());
                     {showPatternModal && patternResult && patternResult[0]?.type === 'no_data' && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" onClick={() => setShowPatternModal(false)}>
                             <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-2xl w-full max-w-md overflow-hidden`} onClick={e => e.stopPropagation()}>
-                                <div style={{background: 'linear-gradient(135deg, #C9935A, #C9935A)', padding: '1.75rem 1.5rem', textAlign: 'center', color: 'white'}}>
+                                <div style={{background: 'linear-gradient(135deg, #C4A882, #C4A882)', padding: '1.75rem 1.5rem', textAlign: 'center', color: 'white'}}>
                                     <div style={{fontSize: '2.5rem', marginBottom: '0.5rem'}}>🌱</div>
                                     <h3 style={{fontFamily: "'Cormorant', serif", fontSize: '1.6rem', fontWeight: 400, marginBottom: '0.25rem'}}>
                                         {language === 'es' ? 'Estamos empezando' : 'We are just starting'}
@@ -8020,7 +8020,7 @@ query = query.eq('region', region.toUpperCase());
                                     <p style={{fontSize: '0.95rem', lineHeight: 1.7, color: darkMode ? '#e7e5e4' : '#44403c', marginBottom: '1.5rem'}}>
                                         {patternResult[0].message}
                                     </p>
-                                    <button onClick={() => { setShowPatternModal(false); setCurrentPage('symptoms'); }} style={{background: 'linear-gradient(135deg, #C9935A, #C9935A)', color: 'white', border: 'none', borderRadius: '9999px', padding: '0.75rem 2rem', fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer', width: '100%'}}>
+                                    <button onClick={() => { setShowPatternModal(false); setCurrentPage('symptoms'); }} style={{background: 'linear-gradient(135deg, #C4A882, #C4A882)', color: 'white', border: 'none', borderRadius: '9999px', padding: '0.75rem 2rem', fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer', width: '100%'}}>
                                         {language === 'es' ? 'Registrar síntomas ahora →' : 'Log symptoms now →'}
                                     </button>
                                 </div>
@@ -8034,7 +8034,7 @@ query = query.eq('region', region.toUpperCase());
                                 {/* Header */}
                                 <div style={{background:'linear-gradient(135deg,#0D0A06,#1a1008)',borderBottom:'1px solid rgba(184,115,51,0.3)',padding:'1.75rem 1.5rem',textAlign:'center'}}>
                                     <img src="/images/lumi.png" style={{width:'52px',height:'52px',borderRadius:'50%',objectFit:'cover',margin:'0 auto 0.75rem',display:'block',border:'2px solid rgba(184,115,51,0.5)'}} onError={e=>{e.target.style.display='none'}}/>
-                                    <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.6rem',fontWeight:400,marginBottom:'0.25rem',color:'#B87333'}}>
+                                    <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.6rem',fontWeight:400,marginBottom:'0.25rem',color:'#B8997A'}}>
                                         {language === 'es'
                                             ? `${currentUser?.profile_name || ''}, he estado observando`
                                             : `${currentUser?.profile_name || ''}, I have been paying attention`}
@@ -8059,10 +8059,10 @@ query = query.eq('region', region.toUpperCase());
                                     const sf = (s, c, k) => s[c] !== undefined ? s[c] : (s[k] !== undefined ? s[k] : 0);
                                     const avg = (c, k) => (last3.reduce((a, s) => a + sf(s, c, k), 0) / last3.length);
                                     const metrics = [
-                                        { label: language === 'es' ? 'Sueño' : 'Sleep', val: avg('sleep','sleep'), img: '/images/modo_cueva.png', good: v => v >= 6, goodText: language === 'es' ? 'Descansando bien' : 'Resting well', badText: language === 'es' ? 'Necesita atención' : 'Needs attention', color: '#B87333' },
-                                        { label: language === 'es' ? 'Energía' : 'Energy', val: avg('energy','energy'), img: '/images/ejer_espiral.png', good: v => v >= 5, goodText: language === 'es' ? 'Estable' : 'Stable', badText: language === 'es' ? 'Baja estos días' : 'Low these days', color: '#C9935A' },
-                                        { label: language === 'es' ? 'Ánimo' : 'Mood', val: avg('mood','mood'), img: '/images/modo_ritual.png', good: v => v >= 5, goodText: language === 'es' ? 'Equilibrado' : 'Balanced', badText: language === 'es' ? 'Días difíciles' : 'Tough days', color: '#C9935A' },
-                                        { label: language === 'es' ? 'Sofocos' : 'Hot flashes', val: avg('hotFlashes','hot_flashes'), img: '/images/modo_tormenta.png', good: v => v <= 4, goodText: language === 'es' ? 'Manejables' : 'Manageable', badText: language === 'es' ? 'Frecuentes' : 'Frequent', color: '#B87333' },
+                                        { label: language === 'es' ? 'Sueño' : 'Sleep', val: avg('sleep','sleep'), img: '/images/modo_cueva.png', good: v => v >= 6, goodText: language === 'es' ? 'Descansando bien' : 'Resting well', badText: language === 'es' ? 'Necesita atención' : 'Needs attention', color: '#B8997A' },
+                                        { label: language === 'es' ? 'Energía' : 'Energy', val: avg('energy','energy'), img: '/images/ejer_espiral.png', good: v => v >= 5, goodText: language === 'es' ? 'Estable' : 'Stable', badText: language === 'es' ? 'Baja estos días' : 'Low these days', color: '#C4A882' },
+                                        { label: language === 'es' ? 'Ánimo' : 'Mood', val: avg('mood','mood'), img: '/images/modo_ritual.png', good: v => v >= 5, goodText: language === 'es' ? 'Equilibrado' : 'Balanced', badText: language === 'es' ? 'Días difíciles' : 'Tough days', color: '#C4A882' },
+                                        { label: language === 'es' ? 'Sofocos' : 'Hot flashes', val: avg('hotFlashes','hot_flashes'), img: '/images/modo_tormenta.png', good: v => v <= 4, goodText: language === 'es' ? 'Manejables' : 'Manageable', badText: language === 'es' ? 'Frecuentes' : 'Frequent', color: '#B8997A' },
                                     ];
                                     return (
                                         <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.6rem', margin: '1rem'}}>
@@ -8083,7 +8083,7 @@ query = query.eq('region', region.toUpperCase());
                                 {/* LO QUE LUMI OBSERVÓ — sin porcentajes, tono personal */}
                                 <div style={{margin: '0 1rem', display: 'flex', flexDirection: 'column', gap: '0.6rem'}}>
                                     {patternResult.map((p, idx) => (
-                                        <div key={idx} style={{background: darkMode ? 'rgba(124,58,237,0.15)' : '#faf5ff', borderLeft: '3px solid #C9935A', borderRadius: '0.75rem', padding: '0.875rem 1rem'}}>
+                                        <div key={idx} style={{background: darkMode ? 'rgba(124,58,237,0.15)' : '#faf5ff', borderLeft: '3px solid #C4A882', borderRadius: '0.75rem', padding: '0.875rem 1rem'}}>
                                             <p style={{fontSize: '0.85rem', lineHeight: 1.55, color: darkMode ? '#d8b4fe' : '#6b21a8'}}>
                                                 {p.message}
                                             </p>
@@ -8103,7 +8103,7 @@ query = query.eq('region', region.toUpperCase());
 
                                 {/* CTA conversión día 3 */}
                                 {getTrialDaysLeft() <= 1 && getUserTier() !== 'premium' && (
-                                    <div style={{margin: '0 1rem 1rem', background: 'linear-gradient(135deg, #C9935A, #C9935A)', borderRadius: '0.875rem', padding: '1.25rem', textAlign: 'center'}}>
+                                    <div style={{margin: '0 1rem 1rem', background: 'linear-gradient(135deg, #C4A882, #C4A882)', borderRadius: '0.875rem', padding: '1.25rem', textAlign: 'center'}}>
                                         <p style={{color: 'white', fontWeight: 700, fontSize: '1rem', marginBottom: '0.3rem'}}>
                                             {language === 'es' ? '¿Seguimos juntas?' : 'Shall we continue together?'}
                                         </p>
@@ -8114,7 +8114,7 @@ query = query.eq('region', region.toUpperCase());
                                         </p>
                                         <button
                                             onClick={() => { setShowPatternModal(false); setCurrentPage('premium'); }}
-                                            style={{background: 'white', color: '#C9935A', fontWeight: 700, fontSize: '0.9rem', padding: '0.6rem 1.75rem', borderRadius: '9999px', border: 'none', cursor: 'pointer'}}>
+                                            style={{background: 'white', color: '#C4A882', fontWeight: 700, fontSize: '0.9rem', padding: '0.6rem 1.75rem', borderRadius: '9999px', border: 'none', cursor: 'pointer'}}>
                                             {language === 'es' ? '✨ Quiero continuar' : '✨ I want to continue'}
                                         </button>
                                     </div>
@@ -8124,7 +8124,7 @@ query = query.eq('region', region.toUpperCase());
                                 <div style={{padding: '0 1rem 1.25rem', display: 'flex', gap: '0.75rem'}}>
                                     <button
                                         onClick={() => { setShowPatternModal(false); setCurrentPage('symptoms'); }}
-                                        style={{flex: 1, background: 'linear-gradient(135deg, #C9935A, #f43f5e)', color: 'white', border: 'none', borderRadius: '0.75rem', padding: '0.75rem', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer'}}>
+                                        style={{flex: 1, background: 'linear-gradient(135deg, #C4A882, #f43f5e)', color: 'white', border: 'none', borderRadius: '0.75rem', padding: '0.75rem', fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer'}}>
                                         {language === 'es' ? 'Ver mis gráficas' : 'See my charts'}
                                     </button>
                                     <button
