@@ -3961,7 +3961,7 @@ query = query.eq('region', region.toUpperCase());
                                 {/* ESTADOS EMOCIONALES — HOY QUIERO */}
                                 <div style={{marginBottom:'1.25rem'}}>
                                     <p style={{fontSize:'0.62rem',color:'#B87333',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.75rem'}}>{language==='es'?'HOY QUIERO...':'TODAY I WANT TO...'}</p>
-                                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.6rem'}}>
+                                    <div style={{display:'flex',flexDirection:'row',gap:'0.6rem',overflowX:'auto',paddingBottom:'0.5rem',scrollbarWidth:'none',WebkitOverflowScrolling:'touch'}}>
                                         {[
                                             {img:'/images/descanso.png',es:'Descansar',en:'Rest',sub_es:'Tu ritual de calma',sub_en:'Your calm ritual',
                                              rec_es:'Infusión de valeriana · Yoga Nidra · "El arte de la siesta"',
@@ -3979,7 +3979,7 @@ query = query.eq('region', region.toUpperCase());
                                              rec_es:'Plátano + avena · Meditación 10 min · Frecuencias 528hz',
                                              rec_en:'Banana + oats · Meditation 10 min · 528hz frequencies'},
                                         ].map((item,i)=>(
-                                            <div key={i}>
+                                            <div key={i} style={{flexShrink:0,width:'160px'}}>
                                                 <div className="gc gch" onClick={()=>setOpenEstado(openEstado===i?null:i)} style={{padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem'}}>
                                                     <img src={item.img} style={{width:'42px',height:'42px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'1px solid rgba(184,115,51,0.3)',boxShadow:'0 0 12px rgba(184,115,51,0.15)'}}/>
                                                     <div>
