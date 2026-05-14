@@ -3851,7 +3851,7 @@ query = query.eq('region', region.toUpperCase());
 
                         <div style={{position:'relative',zIndex:2,padding:'0 0 2rem'}}>
 
-                            <div style={{background:'linear-gradient(160deg,rgba(184,115,51,0.18) 0%,rgba(22,16,10,0.95) 60%)',borderBottom:'1px solid rgba(184,115,51,0.20)',padding:'2.5rem 1.5rem 2rem',position:'relative',overflow:'hidden',backgroundImage:'url(/images/shula_principal.jpg)',backgroundSize:'cover',backgroundPosition:'center top'}}><div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom, rgba(8,4,2,0.72) 0%, rgba(8,4,2,0.88) 100%)',zIndex:0}}/>
+                            <div style={{borderBottom:'1px solid rgba(184,115,51,0.20)',padding:'2.5rem 1.5rem 2rem',position:'relative',overflow:'hidden',backgroundImage:'url(/images/shula_flores_bg.jpg)',backgroundSize:'cover',backgroundPosition:'center'}}><div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,rgba(5,3,1,0.78) 0%,rgba(5,3,1,0.90) 100%)',zIndex:1}}/><div style={{position:'relative',zIndex:2}}>
                                 <div style={{position:'absolute',top:0,left:'50%',transform:'translateX(-50%)',width:'120px',height:'3px',background:'linear-gradient(90deg,transparent,#B8997A,transparent)'}}/>
                                 <div style={{display:'inline-flex',alignItems:'center',background:'linear-gradient(135deg,rgba(184,115,51,0.25),rgba(232,200,120,0.15))',border:'1px solid rgba(184,115,51,0.45)',borderRadius:'9999px',padding:'0.3rem 1rem',marginBottom:'1.25rem'}}>
                                     <span style={{fontSize:'0.65rem',fontWeight:700,color:'#B8997A',letterSpacing:'0.18em',textTransform:'uppercase'}}>PREMIUM</span>
@@ -3889,6 +3889,7 @@ query = query.eq('region', region.toUpperCase());
                                 <div onClick={()=>setShowEditProfile(true)} style={{display:'inline-flex',alignItems:'center',gap:'0.4rem',background:'rgba(184,115,51,0.08)',border:'1px solid rgba(184,115,51,0.20)',borderRadius:'9999px',padding:'0.35rem 0.9rem',cursor:'pointer',marginBottom:'0.5rem'}}>
                                     <span style={{fontSize:'0.72rem',color:'rgba(184,115,51,0.7)'}}>{language==='es'?'Editar perfil':'Edit profile'}</span>
                                 </div>
+                            </div>
                             </div>
 
                             <div style={{padding:'1.25rem'}}>
