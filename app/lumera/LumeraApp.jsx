@@ -409,8 +409,8 @@ import './lumera.css'
                             id: 'local-day3-' + Date.now(),
                             message_type: 'pattern_insight',
                             message_text: language === 'es'
-                                ? `${greetEs} ${userName} 💜 Es tu tercer día con Lumera y ya tengo algo importante para ti. He analizado tus registros y detecté patrones reales en tus síntomas. Ábrelos tocando el corazón abajo 🔍 — son datos de tu cuerpo, no suposiciones.`
-                                : `${greetEn} ${userName} 💜 It's your third day with Lumera and I already have something important for you. I've analyzed your records and found real patterns in your symptoms. Open them by tapping the heart below 🔍 — these are real data from your body, not guesses.`,
+                                ? `${greetEs} ${userName} ✦ Es tu tercer día con Lumera y ya tengo algo importante para ti. He analizado tus registros y detecté patrones reales en tus síntomas. Ábrelos tocando el corazón abajo 🔍 — son datos de tu cuerpo, no suposiciones.`
+                                : `${greetEn} ${userName} ✦ It's your third day with Lumera and I already have something important for you. I've analyzed your records and found real patterns in your symptoms. Open them by tapping the heart below 🔍 — these are real data from your body, not guesses.`,
                             created_at: new Date().toISOString(),
                             read_at: null
                         };
@@ -418,17 +418,17 @@ import './lumera.css'
 
                     const dayVariants = language === 'es'
                         ? [
-                            `${greetEs} ${userName} 💜 Estoy aquí para acompañarte hoy. ¿Cómo te encuentras?`,
+                            `${greetEs} ${userName} ✦ Estoy aquí para acompañarte hoy. ¿Cómo te encuentras?`,
                             `${greetEs} ${userName} 🌿 Un nuevo día para cuidarte. ¿Cómo dormiste anoche?`,
                             `${greetEs} ${userName} ✨ Me alegra verte. ¿Quieres registrar cómo te sientes hoy?`,
-                            `${greetEs} ${userName} 💜 Recuerda: pequeños pasos cada día marcan la diferencia. ¿Cómo estás hoy?`,
+                            `${greetEs} ${userName} ✦ Recuerda: pequeños pasos cada día marcan la diferencia. ¿Cómo estás hoy?`,
                             `${greetEs} ${userName} 🌸 Tu cuerpo hace algo increíble cada día. ¿Cómo te sientes ${new Date().getHours() < 12 ? "esta mañana" : new Date().getHours() < 20 ? "esta tarde" : "esta noche"}?`,
                         ]
                         : [
-                            `${greetEn} ${userName} 💜 I'm here for you today. How are you feeling?`,
+                            `${greetEn} ${userName} ✦ I'm here for you today. How are you feeling?`,
                             `${greetEn} ${userName} 🌿 A new day to take care of yourself. How did you sleep last night?`,
                             `${greetEn} ${userName} ✨ Good to see you. Would you like to log how you're feeling today?`,
-                            `${greetEn} ${userName} 💜 Remember: small steps every day make a big difference. How are you today?`,
+                            `${greetEn} ${userName} ✦ Remember: small steps every day make a big difference. How are you today?`,
                             `${greetEn} ${userName} 🌸 Your body does something incredible every day. How are you feeling ${new Date().getHours() < 12 ? "this morning" : new Date().getHours() < 20 ? "this afternoon" : "tonight"}?`,
                         ];
 
@@ -2464,7 +2464,7 @@ query = query.eq('region', region.toUpperCase());
 
             // Calcular días restantes de trial
             const getTrialDaysLeft = () => {
-                if (!currentUser?.created_at) return 0;
+                if (!currentUser?.created_at) return 3;
                 const createdDate = new Date(currentUser.created_at);
                 const now = new Date();
                 const daysPassed = (now - createdDate) / (1000 * 60 * 60 * 24);
@@ -3317,8 +3317,8 @@ query = query.eq('region', region.toUpperCase());
                 // Verificar límite
                 if (!checkDailyLimit()) {
                     const limitMsg = language === 'es' 
-                        ? 'Has usado tus 5 preguntas diarias. Hazte premium para preguntas ilimitadas 💜'
-                        : 'You\'ve used your 5 daily questions. Go premium for unlimited questions 💜';
+                        ? 'Has usado tus 5 preguntas diarias. Hazte premium para preguntas ilimitadas ✦'
+                        : 'You\'ve used your 5 daily questions. Go premium for unlimited questions ✦';
                     setLumiMessages([...lumiMessages, { role: 'assistant', content: limitMsg }]);
                     return;
                 }
@@ -3421,8 +3421,8 @@ query = query.eq('region', region.toUpperCase());
 
                 } catch (error) {
                     const errorMsg = language === 'es'
-                        ? 'Perdona, tuve un problemita. Intenta de nuevo en un momento 💜'
-                        : 'Sorry, I had a little issue. Try again in a moment 💜';
+                        ? 'Perdona, tuve un problemita. Intenta de nuevo en un momento ✦'
+                        : 'Sorry, I had a little issue. Try again in a moment ✦';
                     setLumiMessages([...lumiMessages, 
                         { role: 'user', content: userMessage },
                         { role: 'assistant', content: errorMsg }
@@ -3435,66 +3435,6 @@ query = query.eq('region', region.toUpperCase());
             // HOME
             // LANDING PAGE (sin usuario registrado) - OPTIMIZADO CONVERSIÓN
             const renderLanding = () => {
-            if (showPreQuiz && !session) {
-                const quizQs = [
-                    { q: language==='es' ? 'Cual es tu mayor problema ahora mismo?' : 'What is your biggest challenge right now?', opts: language==='es' ? ['Agotamiento constante aunque duerma','Mi cuerpo cambia y no se por que','No puedo perder peso aunque lo intente','Mi animo es impredecible'] : ['Exhausted no matter how much I sleep','My body is changing and I do not know why','Cannot lose weight despite trying everything','My mood is all over the place'] },
-                    { q: language==='es' ? 'Cuando lo notas mas?' : 'When do you notice it most?', opts: language==='es' ? ['Por la manana, me levanto ya cansada','Por la tarde, bajon de energia diario','Todo el dia, nunca para','Por la noche, no puedo desconectar'] : ['Morning, I wake up already tired','Afternoon, energy crash every day','All day, it never stops','At night, I cannot switch off'] },
-                    { q: language==='es' ? 'Que has intentado ya?' : 'What have you already tried?', opts: language==='es' ? ['Dietas y ejercicio, nada funciona','Suplementos, sin resultado real','Aun no he intentado nada','Todo, estoy desesperada'] : ['Diets and exercise, nothing works','Supplements, no real change','Nothing yet','Everything, I am desperate'] }
-                ];
-                const profiles = {
-                    cave: { name: language==='es'?'Modo Cueva':'Cave Mode', emoji:'🌑', desc: language==='es'?'Tu cuerpo esta en modo conservacion. El cortisol elevado bloquea tu energia y metabolismo. No es falta de voluntad, es biologia.':'Your body is in conservation mode. Elevated cortisol is blocking your energy and metabolism. This is not willpower, it is biology.', insight: language==='es'?'Lumera adapta tu nutricion y movimiento para salir del modo cueva gradualmente.':'Lumera adapts your nutrition and movement to gradually exit cave mode.' },
-                    storm: { name: language==='es'?'Modo Tormenta':'Storm Mode', emoji:'⚡', desc: language==='es'?'Tus hormonas fluctuan intensamente. La progesterona y el estrogeno estan en desequilibrio, afectando tu animo y energia.':'Your hormones are fluctuating intensely. Progesterone and oestrogen are out of balance, affecting your mood and energy.', insight: language==='es'?'Lumera analiza tus sintomas diarios y te guia con nutricion especifica para estabilizar estas fluctuaciones.':'Lumera analyzes your daily symptoms and guides you with specific nutrition to stabilize these fluctuations.' },
-                    ritual: { name: language==='es'?'Modo Ritual':'Ritual Mode', emoji:'🌿', desc: language==='es'?'Tu cuerpo pide un reset metabolico. La resistencia a la insulina y el GLP-1 bajo explican por que nada parece funcionar.':'Your body is asking for a metabolic reset. Insulin resistance and low GLP-1 explain why nothing seems to work.', insight: language==='es'?'La Lente Alquimica de Lumera analiza tu comida y activa tu GLP-1 natural con cada plato.':'Lumera Alchemical Lens analyzes your food and activates your natural GLP-1 with every meal.' },
-                    goddess: { name: language==='es'?'Modo Diosa':'Goddess Mode', emoji:'✨', desc: language==='es'?'Tienes potencial para el Modo Diosa. Tu cuerpo necesita el plan correcto para desbloquear tu energia y vitalidad maxima.':'You have the potential for Goddess Mode. Your body needs the right plan to unlock your peak energy and vitality.', insight: language==='es'?'Lumera te da el plan personalizado para llegar ahi, nutricion, movimiento y guia emocional adaptados a ti.':'Lumera gives you the personalized plan to get there, nutrition, movement and emotional guidance adapted to you.' }
-                };
-                const getProfile = (ans) => { if ((ans[0]===0||ans[0]===1) && ans[1]<=1) return profiles.cave; if (ans[0]===3 || ans[1]===3) return profiles.storm; if (ans[0]===2) return profiles.ritual; return profiles.goddess; };
-                const result = preQuizResult;
-                return (
-                    React.createElement('div', {style:{minHeight:'100vh',background:'linear-gradient(135deg,rgba(10,8,6,0.82) 0%,rgba(26,16,8,0.78) 100%)',backgroundImage:'url(/images/quiz-bg.png)',backgroundSize:'cover',backgroundPosition:'center',backgroundBlendMode:'multiply',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'1.5rem',fontFamily:"'Cormorant',serif"}},
-                        React.createElement('div', {style:{position:'absolute',top:'1.5rem',left:'50%',transform:'translateX(-50%)',display:'flex',alignItems:'center',gap:'0.5rem'}},
-                            React.createElement('span', {style:{color:'#D4B8A8',fontSize:'1.2rem',letterSpacing:'0.2em',fontWeight:500,textShadow:'0 2px 8px rgba(0,0,0,0.9)'}}, '✦ Lumera')
-                        ),
-                        React.createElement('div', {style:{width:'100%',maxWidth:'520px',marginTop:'3rem'}},
-                            !result ? React.createElement('div', {style:{background:'rgba(255,255,255,0.04)',border:'0.5px solid rgba(201,147,90,0.25)',borderRadius:'1.5rem',padding:'2.5rem 2rem'}},
-                                React.createElement('div', {style:{textAlign:'center',marginBottom:'2rem'}},
-                                    React.createElement('div', {style:{fontSize:'0.75rem',letterSpacing:'0.3em',color:'rgba(201,147,90,0.7)',textTransform:'uppercase',marginBottom:'0.75rem'}}, language==='es' ? 'Pregunta '+(preQuizStep+1)+' de 3' : 'Question '+(preQuizStep+1)+' of 3'),
-                                    React.createElement('div', {style:{display:'flex',gap:'0.5rem',justifyContent:'center',marginBottom:'1.5rem'}},
-                                        [0,1,2].map(i => React.createElement('div', {key:i, style:{height:'3px',width:'60px',borderRadius:'2px',background:i<=preQuizStep?'#C4A882':'rgba(201,147,90,0.2)'}}))
-                                    ),
-                                    React.createElement('h2', {style:{fontSize:'2rem',fontWeight:500,fontStyle:'italic',color:'#FFFFFF',lineHeight:1.3,textShadow:'0 2px 8px rgba(0,0,0,0.9)'}}, quizQs[preQuizStep].q)
-                                ),
-                                React.createElement('div', {style:{display:'flex',flexDirection:'column',gap:'0.75rem'}},
-                                    quizQs[preQuizStep].opts.map((opt,i) => React.createElement('button', {key:i, onClick:()=>{ const a=[...preQuizAnswers,i]; setPreQuizAnswers(a); if(preQuizStep<2){setPreQuizStep(preQuizStep+1);}else{
-    const p=getProfile(a);
-    setPreQuizResult({...p,lumiLoading:true});
-    const sel=a.map((idx,qi)=>quizQs[qi].opts[idx]);
-    const prompt=language==='es'
-        ? 'Eres LUMI, guia biologica de Lumera. Mujer 40+ respondio: 1. '+sel[0]+' 2. '+sel[1]+' 3. '+sel[2]+'. Perfil: '+p.name+'. En 2 lineas explica su patron hormonal con tono calido y cientifico, menciona cortisol GLP-1 estrogeno o progesterona. Luego da UN solo consejo sorprendente y especifico que ella no sepa — algo que genere un momento wow, que sea util pero que deje claro que hay mucho mas por descubrir. Sin emojis ni diagnosticos.'
-        : 'You are LUMI, biological guide of Lumera. Woman 40+ answered: 1. '+sel[0]+' 2. '+sel[1]+' 3. '+sel[2]+'. Profile: '+p.name+'. In 2 lines explain her hormonal pattern with warm scientific tone, mention cortisol GLP-1 oestrogen or progesterone. Then give ONE surprising specific tip she likely does not know — a real wow moment, useful but that makes clear there is so much more to discover. No emojis or diagnoses.';
-    fetch('/api/quiz',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt})})
-        .then(r=>r.json())
-        .then(d=>setPreQuizResult(prev=>({...prev,insight:d.text||prev.insight,lumiLoading:false})))
-        .catch(()=>setPreQuizResult(prev=>({...prev,lumiLoading:false})));
-} }, style:{background:'rgba(40,20,5,0.92)',border:'2px solid rgba(201,147,90,0.7)',borderRadius:'0.875rem',padding:'1.2rem 1.5rem',textAlign:'left',color:'#FFFFFF',fontSize:'1.25rem',fontWeight:600,fontFamily:"'Georgia',serif",cursor:'pointer',textShadow:'0 2px 10px rgba(0,0,0,1)',letterSpacing:'0.02em',backdropFilter:'blur(8px)',WebkitBackdropFilter:'blur(8px)'}}, '✦ '+opt))
-                                ),
-                                React.createElement('div', {style:{textAlign:'center',marginTop:'1.5rem'}},
-                                    React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
-                                )
-                            ) : React.createElement('div', {style:{background:'rgba(255,255,255,0.04)',border:'0.5px solid rgba(201,147,90,0.35)',borderRadius:'1.5rem',padding:'2.5rem 2rem',textAlign:'center'}},
-                                React.createElement('div', {style:{fontSize:'3rem',marginBottom:'1rem'}}, result.emoji),
-                                React.createElement('div', {style:{fontSize:'0.75rem',letterSpacing:'0.3em',color:'rgba(201,147,90,0.7)',textTransform:'uppercase',marginBottom:'0.5rem'}}, language==='es'?'Tu perfil metabolico':'Your metabolic profile'),
-                                React.createElement('h2', {style:{fontSize:'2rem',fontWeight:300,fontStyle:'italic',color:'#C4A882',marginBottom:'1.25rem'}}, result.name),
-                                React.createElement('p', {style:{fontSize:'1.05rem',color:'rgba(255,255,255,0.95)',lineHeight:1.65,marginBottom:'1.25rem',fontWeight:400,textShadow:'0 1px 4px rgba(0,0,0,0.7)'}}, result.desc),
-                                React.createElement('div', {style:{background:'rgba(201,147,90,0.08)',border:'0.5px solid rgba(201,147,90,0.2)',borderRadius:'0.75rem',padding:'1rem',marginBottom:'1.75rem'}},
-                                    result.lumiLoading ? React.createElement('p', {style:{fontSize:'0.95rem',color:'rgba(201,147,90,0.7)',fontStyle:'italic',lineHeight:1.5}}, language==='es'?'LUMI esta analizando tu patron...':'LUMI is analyzing your pattern...') : React.createElement('p', {style:{fontSize:'1rem',color:'rgba(240,232,220,0.95)',fontStyle:'italic',lineHeight:1.7,textShadow:'0 1px 4px rgba(0,0,0,0.8)'}}, result.insight)
-                                ),
-                                React.createElement('button', {onClick:()=>{ setShowPreQuiz(false); setAuthMode('register'); }, style:{width:'100%',background:'linear-gradient(135deg,#C4A882,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.1rem',fontFamily:"'Cormorant',serif",fontWeight:500,cursor:'pointer',letterSpacing:'0.05em',boxShadow:'0 4px 20px rgba(201,147,90,0.3)',marginBottom:'0.75rem'}}, language==='es'?'✦ Quiero mi prueba gratis':'✦ Start my free trial'),
-                                React.createElement('button', {onClick:()=>setShowPreQuiz(false), style:{background:'none',border:'none',color:'rgba(240,232,220,0.35)',fontSize:'0.85rem',cursor:'pointer',fontFamily:"'Cormorant',serif"}}, language==='es'?'Ya tengo cuenta, entrar →':'Already have an account →')
-                            )
-                        )
-                    )
-                );
-            }
 
                 return (
                     <div className="min-h-screen flex flex-col">
@@ -5082,7 +5022,7 @@ query = query.eq('region', region.toUpperCase());
                                         {/* POR QUÉ ESTE MENÚ - BENEFICIOS */}
                                         <div className={`${darkMode ? 'bg-stone-900' : 'bg-amber-50'} p-4 rounded-lg border-l-4 border-amber-500`}>
                                             <p className={`text-sm ${darkMode ? 'text-amber-200' : 'text-amber-900'} font-medium leading-relaxed`}>
-                                                <strong className="font-bold">💜 {language === 'es' ? '¿Por qué este menú?' : 'Why this menu?'}</strong><br/>
+                                                <strong className="font-bold">✦ {language === 'es' ? '¿Por qué este menú?' : 'Why this menu?'}</strong><br/>
                                                 {recipe.why}
                                             </p>
                                         </div>
@@ -5991,10 +5931,10 @@ query = query.eq('region', region.toUpperCase());
                                 notification.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 text-white px-6 py-4 rounded-xl shadow-2xl z-50 max-w-md'; notification.style.background='linear-gradient(135deg,#0D0D0D,#1a1008)'; notification.style.border='1px solid rgba(184,115,51,0.4)';
                                 notification.innerHTML = `
                                     <div class="flex items-start gap-3">
-                                        <div class="text-3xl">💜</div>
+                                        <div class="text-3xl">✦</div>
                                         <div>
                                             <p class="font-bold mb-1">${language === 'es' ? '¡Síntoma registrado!' : 'Symptom recorded!'}</p>
-                                            <p class="text-sm opacity-90">${newSymptoms.length >= 3 && !patternShown ? (language === 'es' ? '¡LUMI tiene algo que mostrarte! Revisa el aviso especial 💜' : 'LUMI has something to show you! Check the special notice 💜') : (language === 'es' ? 'Gracias. Esto me ayuda a acompañarte mejor. Tu menú te está esperando en 🥗 Nutrición' : 'Thank you. This helps me support you better. Your menu is waiting in 🥗 Nutrition')}</p>
+                                            <p class="text-sm opacity-90">${newSymptoms.length >= 3 && !patternShown ? (language === 'es' ? '¡LUMI tiene algo que mostrarte! Revisa el aviso especial ✦' : 'LUMI has something to show you! Check the special notice ✦') : (language === 'es' ? 'Gracias. Esto me ayuda a acompañarte mejor. Tu menú te está esperando en 🥗 Nutrición' : 'Thank you. This helps me support you better. Your menu is waiting in 🥗 Nutrition')}</p>
                                         </div>
                                     </div>
                                 `;
@@ -6544,7 +6484,7 @@ query = query.eq('region', region.toUpperCase());
                             notification.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 text-white px-6 py-4 rounded-xl shadow-2xl z-50 max-w-md'; notification.style.background='linear-gradient(135deg,#0D0D0D,#1a1008)'; notification.style.border='1px solid rgba(184,115,51,0.4)';
                             notification.innerHTML = `
                                 <div class="flex items-start gap-3">
-                                    <div class="text-3xl">💜</div>
+                                    <div class="text-3xl">✦</div>
                                     <div>
                                         <p class="font-bold mb-1">${language === 'es' ? '¡Mensaje compartido!' : 'Message shared!'}</p>
                                         <p class="text-sm opacity-90">${language === 'es' ? 'Gracias por compartir tu historia con la comunidad' : 'Thank you for sharing your story with the community'}</p>
@@ -6564,7 +6504,7 @@ query = query.eq('region', region.toUpperCase());
                         <h2 className="text-3xl font-light gradient-text">{t[language].community}</h2>
 
                         <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
-                            <h3 className="font-semibold text-lg mb-4">{language === 'es' ? '💜 Comparte tu Historia' : '💜 Share Your Story'}</h3>
+                            <h3 className="font-semibold text-lg mb-4">{language === 'es' ? '✦ Comparte tu Historia' : '✦ Share Your Story'}</h3>
                             <textarea 
                                 value={communityMessage} 
                                 onChange={(e) => setCommunityMessage(e.target.value)} 
@@ -6602,7 +6542,7 @@ query = query.eq('region', region.toUpperCase());
                             ) : communityPosts.length === 0 ? (
                                 <div className="text-center py-8">
                                     <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                                        {language === 'es' ? 'Sé la primera en compartir tu historia 💜' : 'Be the first to share your story 💜'}
+                                        {language === 'es' ? 'Sé la primera en compartir tu historia ✦' : 'Be the first to share your story ✦'}
                                     </p>
                                 </div>
                             ) : (
@@ -7756,7 +7696,7 @@ query = query.eq('region', region.toUpperCase());
                                                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                                             </svg>
                                             <p className={`text-sm font-semibold ${darkMode ? 'text-amber-300' : 'text-amber-700'} mb-3`}>
-                                                {language === 'es' ? 'Hola, soy LUMI' : '💜 Hi, I\'m LUMI'}
+                                                {language === 'es' ? 'Hola, soy LUMI' : '✦ Hi, I\'m LUMI'}
                                             </p>
                                             <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'} leading-relaxed px-2`}>
                                                 {currentUser?.profile_name 
@@ -7946,7 +7886,7 @@ query = query.eq('region', region.toUpperCase());
                                                 markMessagesAsRead();
                                                 setShowLumiChat(true);
                                             }}
-                                            className="flex-1 bg-gradient-to-r from-rose-400 to-amber-300 text-white py-3 rounded-xl font-semibold text-sm">
+                                            style={{flex:1,background:'linear-gradient(135deg,#C4A882,#A06030)',color:'white',padding:'0.75rem',borderRadius:'0.75rem',fontWeight:600,fontSize:'0.875rem',border:'none',cursor:'pointer'}}>
                                             💬 {language === 'es' ? 'Hablar con LUMI' : 'Talk to LUMI'}
                                         </button>
                                         <button 
