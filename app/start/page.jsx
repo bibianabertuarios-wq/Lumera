@@ -124,7 +124,7 @@ export default function Start() {
           <p style={{fontSize:'1.15rem',fontStyle:'italic',color:'rgba(13,61,61,0.7)',marginBottom:'2rem',lineHeight:1.6}}>
             {is_es ? 'Lumera te da claridad en 45 segundos.' : 'Lumera gives you clarity in 45 seconds.'}
           </p>
-          <button onClick={() => router.push('/quiz')} style={{width:'100%',background:`linear-gradient(135deg,${copper},#A06030)`,border:'none',borderRadius:'0.75rem',padding:'1.1rem',color:'white',fontSize:'1.1rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,letterSpacing:'1px',cursor:'pointer',marginBottom:'0.6rem',boxShadow:'0 4px 20px rgba(201,147,90,0.35)'}}>
+          <button onClick={() => router.push('/')} style={{width:'100%',background:`linear-gradient(135deg,${copper},#A06030)`,border:'none',borderRadius:'0.75rem',padding:'1.1rem',color:'white',fontSize:'1.1rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,letterSpacing:'1px',cursor:'pointer',marginBottom:'0.6rem',boxShadow:'0 4px 20px rgba(201,147,90,0.35)'}}>
             {is_es ? '✨ EMPEZAR MI QUIZ GRATIS — 45s' : '✨ START MY FREE QUIZ — 45s'}
           </button>
           <div style={{fontSize:'0.8rem',color:'rgba(13,61,61,0.4)',fontFamily:'Montserrat,sans-serif'}}>
@@ -241,7 +241,7 @@ export default function Start() {
               <div style={{background:mint,borderRadius:'0.75rem',padding:'1rem',marginBottom:'1rem',fontSize:'0.95rem',color:teal,fontStyle:'italic'}}>
                 {is_es ? '✦ Esto es una muestra. Con Lumera, LUMI analiza tu comida cada dia y adapta tu plan semanal a tus hormonas reales.' : '✦ This is a sample. With Lumera, LUMI analyses your food every day and adapts your weekly plan to your real hormones.'}
               </div>
-              <button onClick={() => router.push('/quiz')} style={{width:'100%',background:`linear-gradient(135deg,${copper},#A06030)`,border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.05rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
+              <button onClick={() => router.push('/')} style={{width:'100%',background:`linear-gradient(135deg,${copper},#A06030)`,border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.05rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
                 {is_es ? '✨ Quiero mi plan personalizado completo' : '✨ I want my complete personalised plan'}
               </button>
             </div>
@@ -252,7 +252,7 @@ export default function Start() {
               <div style={{fontSize:'1.05rem',fontStyle:'italic',color:teal,marginBottom:'1rem',lineHeight:1.6}}>
                 {is_es ? 'Ya has usado tu prueba gratuita de la Lente Alquímica. Empieza tu plan completo personalizado para análisis ilimitados.' : 'You have used your free Alchemical Lens trial. Start your full personalised plan for unlimited analyses.'}
               </div>
-              <button onClick={() => router.push('/quiz')} style={{width:'100%',background:`linear-gradient(135deg,${copper},#A06030)`,border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.05rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
+              <button onClick={() => router.push('/')} style={{width:'100%',background:`linear-gradient(135deg,${copper},#A06030)`,border:'none',borderRadius:'0.75rem',padding:'1rem',color:'white',fontSize:'1.05rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
                 {is_es ? '✨ Empezar mi plan gratis — 3 dias' : '✨ Start my free plan — 3 days'}
               </button>
             </div>
@@ -297,7 +297,7 @@ export default function Start() {
           {[
             { emoji:'📥', badge:is_es?'GRATIS':'FREE', title:is_es?'3 Hábitos GLP-1 Naturales':'3 Natural GLP-1 Habits', sub:is_es?'Empieza hoy. Energía estable esta semana.':'Start today. Stable energy this week.', btn:is_es?'Descargar gratis':'Download free', color:green, action:()=>window.open(lang==='es'?'/guia-glp1-es.pdf':'/guia-glp1-en.pdf','_blank') },
             { emoji:'👑', badge:'€6.99', title:is_es?'Plan Completo 7 Dias':'Complete 7-Day Plan', sub:is_es?'21 comidas · Lista compra · Anti-antojos':'21 meals · Shopping list · Cravings reset', btn:is_es?'Quiero el Plan Completo — €6.99':'I want the Complete Plan — €6.99', color:`linear-gradient(135deg,${copper},#A06030)`, action:()=>window.open(is_es?'https://getlumera.gumroad.com/l/yndiyy':'https://getlumera.gumroad.com/l/hkbpn','_blank') },
-            { emoji:'✨', badge:is_es?'3 DIAS GRATIS':'3 DAYS FREE', title:is_es?'Transformación Completa':'Complete Transformation', sub:is_es?'Plan personalizado · LUMI · Lente · Seguimiento':'Personalised plan · LUMI · Lens · Tracking', btn:is_es?'Empezar gratis':'Start free', color:`linear-gradient(135deg,#1A6B6B,${teal})`, action:()=>router.push('/quiz') },
+            { emoji:'✨', badge:is_es?'3 DIAS GRATIS':'3 DAYS FREE', title:is_es?'Transformación Completa':'Complete Transformation', sub:is_es?'Plan personalizado · LUMI · Lente · Seguimiento':'Personalised plan · LUMI · Lens · Tracking', btn:is_es?'Empezar gratis':'Start free', color:`linear-gradient(135deg,#1A6B6B,${teal})`, action:()=>router.push('/') },
           ].map((opt,i) => (
             <div key={i} style={{background:'white',border:`1px solid rgba(201,147,90,0.25)`,borderRadius:'1rem',padding:'1.25rem',marginBottom:'1rem',position:'relative',textAlign:'left',boxShadow:'0 2px 12px rgba(13,61,61,0.06)'}}>
               <div style={{position:'absolute',top:'-10px',right:'1rem',background:i===1?`linear-gradient(135deg,${copper},#A06030)`:i===0?green:'#1A6B6B',color:'white',fontSize:'0.7rem',fontWeight:700,padding:'2px 10px',borderRadius:'20px',fontFamily:'Montserrat,sans-serif',letterSpacing:'1px'}}>{opt.badge}</div>
@@ -345,7 +345,7 @@ export default function Start() {
           <div style={{fontSize:'1.1rem',fontStyle:'italic',color:'rgba(240,232,220,0.7)',marginBottom:'2rem',lineHeight:1.6}}>
             {is_es ? 'Empieza a entenderte hoy.' : 'Start understanding yourself today.'}
           </div>
-          <button onClick={() => router.push('/quiz')} style={{width:'100%',maxWidth:'400px',background:`linear-gradient(135deg,${copper},#A06030)`,border:'none',borderRadius:'0.75rem',padding:'1.15rem',color:'white',fontSize:'1.15rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,letterSpacing:'1px',cursor:'pointer',marginBottom:'0.75rem',boxShadow:'0 4px 20px rgba(201,147,90,0.4)'}}>
+          <button onClick={() => router.push('/')} style={{width:'100%',maxWidth:'400px',background:`linear-gradient(135deg,${copper},#A06030)`,border:'none',borderRadius:'0.75rem',padding:'1.15rem',color:'white',fontSize:'1.15rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,letterSpacing:'1px',cursor:'pointer',marginBottom:'0.75rem',boxShadow:'0 4px 20px rgba(201,147,90,0.4)'}}>
             {is_es ? '✨ EMPEZAR MI QUIZ GRATIS — 45s' : '✨ START MY FREE QUIZ — 45s'}
           </button>
           <div style={{fontSize:'0.8rem',color:'rgba(240,232,220,0.35)',fontFamily:'Montserrat,sans-serif',marginBottom:'1rem'}}>
