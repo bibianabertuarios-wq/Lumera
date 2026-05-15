@@ -6829,7 +6829,6 @@ query = query.eq('region', region.toUpperCase());
                 </div>
             );
 
-            if (!session && !currentUser && typeof window !== 'undefined' && !localStorage.getItem('lumeraVisited')) { localStorage.setItem('lumeraVisited','1'); window.location.href = '/start'; return null; }
             if (showAuth && !showPreQuiz) return (
                 <div className="min-h-screen" style={{background: '#fafaf9'}}>
                     {/* NAVBAR ELEGANTE */}
