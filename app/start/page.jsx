@@ -37,7 +37,7 @@ export default function Start() {
 
           <div className={`fade-in d2 ${visible?'visible':''}`}>
             <h1 style={{fontSize:'clamp(2rem,5vw,2.6rem)',fontWeight:700,lineHeight:1.15,marginBottom:'1.25rem',color:'#0D3D3D'}}>
-              {is_es?'Lumera se adapta a ti.\nNo al revés.':'Lumera adapts to you.\nNot the other way around.'}
+              {is_es?'¿Notas que tu cuerpo y tu energía han cambiado después de los 40?':'Have you noticed changes in your body and energy after 40?'}
             </h1>
           </div>
 
@@ -50,8 +50,7 @@ export default function Start() {
 
           <div className={`fade-in d3 ${visible?'visible':''}`}>
             <p style={{fontSize:'1.05rem',fontStyle:'italic',color:'rgba(13,61,61,0.6)',marginBottom:'2rem',lineHeight:1.7}}>
-              {is_es?'Cuéntame cómo te sientes y construiré el plan exacto para tu cuerpo.':'Tell me how you feel and I\'ll build the right plan for your body.'}
-            </p>
+              {is_es?'Descubre qué te está diciendo tu cuerpo y recibe un plan adaptado a ti — en 2 minutos.':'Discover what your body is telling you and get a plan adapted to you — in 2 minutes.'}
           </div>
 
           <div className={`fade-in d4 ${visible?'visible':''}`}>
