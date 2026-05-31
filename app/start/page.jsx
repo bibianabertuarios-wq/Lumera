@@ -50,7 +50,7 @@ export default function Start() {
 
           <div className={`fade-in d3 ${visible?'visible':''}`}>
             <p style={{fontSize:'1.05rem',fontStyle:'italic',color:'rgba(13,61,61,0.6)',marginBottom:'2rem',lineHeight:1.7}}>
-              {is_es?'Descubre qué te está diciendo tu cuerpo y recibe un plan adaptado a ti — en 2 minutos.':'Discover what your body is telling you and get a plan adapted to you — in 2 minutes.'}
+             {is_es?'Descubre qué te está diciendo tu cuerpo y recibe un plan adaptado a ti \u2014 en 2 minutos.':'Discover what your body is telling you and get a plan adapted to you \u2014 in 2 minutes.'}
           </div>
 
           <div className={`fade-in d4 ${visible?'visible':''}`}>
