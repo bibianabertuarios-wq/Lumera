@@ -65,7 +65,12 @@ function QuizInner() {
     } else {
       const params = new URLSearchParams();
       Object.entries(nuevas).forEach(([k, v]) => {
+        if (k === 'medidas' && typeof v === 'object') {
+        params.set('peso', v.peso || '');
+        params.set('talla', v.altura || '');
+      } else {
         params.set(k, Array.isArray(v) ? v.join('|') : v);
+      }
       });
       params.set('lang', lang);
       router.push('/quiz/resultado?' + params.toString());

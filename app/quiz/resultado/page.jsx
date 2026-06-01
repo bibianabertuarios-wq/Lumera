@@ -17,9 +17,10 @@ function ResultadoInner() {
   const nombre = params.get('nombre') || (is_es ? 'tú' : 'you');
 
   useEffect(() => {
-    const medidasStr = params.get('medidas') || '{}';
-    let medidas = {};
-    try { medidas = JSON.parse(medidasStr); } catch(e) {}
+    const medidas = {
+      peso: params.get('peso') || '65',
+      altura: params.get('talla') || '165'
+    };
     const nacimiento = params.get('nacimiento') || '';
     const ciclo = params.get('ciclo') || '';
     const objetivo = params.get('objetivo') || '';
