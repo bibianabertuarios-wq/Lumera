@@ -40,7 +40,7 @@ function ResultadoInner() {
           body: JSON.stringify({
             nombre,
             fechaNacimiento: nacimiento ? nacimiento + '-01' : '1984-01-01',
-            ciclo, objetivo, sintomas,
+            ciclo, objetivo, sintomas: sintomasPriorizados,
             peso: parseFloat(medidas.peso) || 65,
             talla: parseFloat(medidas.altura) || 165,
             actividad, restricciones, medicacion, condiciones,
