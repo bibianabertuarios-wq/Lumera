@@ -30,6 +30,7 @@ function ResultadoInner() {
     const condiciones = (params.get('condiciones') || '').split('|').filter(Boolean);
 
     const callLumi = async () => {
+      console.log('DEBUG sintomas:', sintoma, 'sintomaLanding:', params.get('sintoma'), 'sintomasPriorizados:', sintomasPriorizados);
       try {
         const res = await fetch('https://pyekwpmbdnmglrjieexc.supabase.co/functions/v1/lumi-onboarding', {
           method: 'POST',
