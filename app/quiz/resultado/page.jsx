@@ -10,6 +10,7 @@ function ResultadoInner() {
   const [imcCat, setImcCat] = useState('');
   const [cargando, setCargando] = useState(true);
   const [visible, setVisible] = useState(false);
+  const [openFeature, setOpenFeature] = useState(null);
   const router = useRouter();
   const params = useSearchParams();
   const lang = params.get('lang') || 'es';
@@ -17,10 +18,6 @@ function ResultadoInner() {
   const nombre = params.get('nombre') || (is_es ? 'tú' : 'you');
 
   useEffect(() => {
-    const medidas = {
-      peso: params.get('peso') || '65',
-      altura: params.get('talla') || '165'
-    };
     const nacimiento = params.get('nacimiento') || '';
     const ciclo = params.get('ciclo') || '';
     const objetivo = params.get('objetivo') || '';
@@ -32,8 +29,9 @@ function ResultadoInner() {
 
     const callLumi = async () => {
       const sintomaLanding = params.get('sintoma') || '';
-      const sintomasPriorizados = sintomaLanding && !sintomas.includes(sintomaLanding) ? [sintomaLanding, ...sintomas] : sintomas;
-      console.log('DEBUG sintomasPriorizados:', sintomasPriorizados);
+      const sintomasPriorizados = sintomaLanding && !sintomas.includes(sintomaLanding)
+        ? [sintomaLanding, ...sintomas]
+        : sintomas;
       try {
         const res = await fetch('https://pyekwpmbdnmglrjieexc.supabase.co/functions/v1/lumi-onboarding', {
           method: 'POST',
@@ -44,24 +42,22 @@ function ResultadoInner() {
           body: JSON.stringify({
             nombre,
             fechaNacimiento: nacimiento ? nacimiento + '-01' : '1984-01-01',
-            ciclo, objetivo, sintomas: sintomasPriorizados,
+            ciclo, objetivo,
+            sintomas: sintomasPriorizados,
             peso: parseFloat(params.get('peso')) || 65,
             talla: parseFloat(params.get('talla')) || 165,
             actividad, restricciones, medicacion, condiciones,
             language: lang
           })
         });
-        console.log('LUMI response status:', res.status);
         const data = await res.json();
-        console.log('LUMI data:', data);
         setLumiMsg(data.message || '');
         if(data.imc) setImc(parseFloat(data.imc));
         if(data.tmb) setTmb(data.tmb);
         if(data.tdee) setTdee(data.tdee);
         if(data.imcCategoria) setImcCat(data.imcCategoria);
       } catch(e) {
-        console.error('LUMI ERROR:', e);
-        setLumiMsg(is_es ? 'Tu plan está listo. Empieza hoy.' : 'Your plan is ready. Start today.');
+        setLumiMsg(is_es ? 'Tu plan está listo. Empecemos juntas.' : 'Your plan is ready. Let us start together.');
       }
       setCargando(false);
       setTimeout(() => setVisible(true), 100);
@@ -71,9 +67,35 @@ function ResultadoInner() {
 
   const imcColor = !imc ? '#C9935A' : imc < 18.5 ? '#3B82F6' : imc < 25 ? '#2A7A4A' : imc < 30 ? '#F59E0B' : '#EF4444';
 
+  const imcLabel = !imc ? '' : imc < 18.5
+    ? (is_es ? 'activar metabolismo' : 'activate metabolism')
+    : imc < 25
+    ? (is_es ? 'equilibrio óptimo' : 'optimal balance')
+    : imc < 30
+    ? (is_es ? 'equilibrar hormonas' : 'balance hormones')
+    : (is_es ? 'plan intensivo' : 'intensive plan');
+
+  const features = is_es ? [
+    {icon:'🥗', title:'Nutrición con inteligencia hormonal', body:'Menús que cambian cada semana según tus síntomas reales. Tu ciclo, tu objetivo, tu tiempo. Nunca el mismo plan dos veces.'},
+    {icon:'📸', title:'La Lente Alquímica', body:'Fotografía tu plato y LUMI analiza cómo afecta a tus hormonas en segundos. Cocción, nutrientes, combinaciones óptimas.'},
+    {icon:'📊', title:'Anticipa tus patrones hormonales', body:'Seguimiento que detecta tendencias y te avisa de lo que viene — no solo registra lo que ya pasó.'},
+    {icon:'💪', title:'Ejercicio adaptado a tu objetivo', body:'Rutinas diseñadas según tu condición física actual y lo que quieres conseguir. No al revés.'},
+    {icon:'🏷️', title:'Lee lo que comes de verdad', body:'Etiquetas, ingredientes, aditivos. LUMI te explica qué significa cada cosa.'},
+    {icon:'🤝', title:'LUMI contigo 24/7', body:'Tu guía, confidente y coach. Disponible cuando lo necesitas. Recuerda tu historial y aprende contigo.'},
+    {icon:'📅', title:'Adaptado a tu ciclo', body:'Si aún tienes periodo, tu plan cambia con cada fase. Si ya no, refleja tu nueva realidad hormonal.'},
+  ] : [
+    {icon:'🥗', title:'Hormone-smart nutrition', body:'Menus that change every week based on your real symptoms. Your cycle, your goal, your time.'},
+    {icon:'📸', title:'The Alchemical Lens', body:'Photograph your plate and LUMI analyses how it affects your hormones in seconds.'},
+    {icon:'📊', title:'Anticipate your hormonal patterns', body:'Tracking that detects trends and alerts you to what is coming.'},
+    {icon:'💪', title:'Exercise adapted to your goal', body:'Routines designed around your current fitness level and what you want to achieve.'},
+    {icon:'🏷️', title:'Read what you really eat', body:'Labels, ingredients, additives. LUMI explains what everything means.'},
+    {icon:'🤝', title:'LUMI with you 24/7', body:'Your guide, confidante and coach. Available when you need it.'},
+    {icon:'📅', title:'Adapted to your cycle', body:'If you still have your period, your plan shifts with each phase.'},
+  ];
+
   return (
     <>
-      <style>{`
+      <style dangerouslySetInnerHTML={{__html:`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;600;700&display=swap');
         *{box-sizing:border-box;margin:0;padding:0;}
         .fade{opacity:0;transform:translateY(20px);transition:opacity 0.7s ease,transform 0.7s ease;}
@@ -81,14 +103,15 @@ function ResultadoInner() {
         .d1{transition-delay:0.1s;} .d2{transition-delay:0.3s;} .d3{transition-delay:0.5s;} .d4{transition-delay:0.7s;} .d5{transition-delay:0.9s;}
         .btn{width:100%;background:linear-gradient(135deg,#C9935A,#A06030);border:none;border-radius:0.75rem;padding:1.15rem;color:white;font-size:1.05rem;font-family:Montserrat,sans-serif;font-weight:700;cursor:pointer;box-shadow:0 4px 24px rgba(201,147,90,0.35);transition:transform 0.2s ease;}
         .btn:hover{transform:translateY(-2px);}
-      `}</style>
-
+        .accordion{width:100%;background:none;border:none;border-bottom:1px solid rgba(201,147,90,0.1);padding:0.9rem 0;color:rgba(255,255,255,0.8);font-size:1rem;font-family:'Cormorant Garamond',Georgia,serif;cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:0.75rem;}
+        .accordion:hover{color:white;}
+      `}}/>
       <div style={{minHeight:'100vh',background:'linear-gradient(180deg,#1a0f2e 0%,#0D3D3D 60%,#FBF7F0 100%)',fontFamily:"'Cormorant Garamond',Georgia,serif",padding:'2.5rem 1.5rem'}}>
         <div style={{maxWidth:'480px',margin:'0 auto'}}>
 
           {cargando ? (
             <div style={{textAlign:'center',paddingTop:'5rem'}}>
-              <div style={{fontSize:'2.5rem',marginBottom:'1.5rem',animation:'spin 3s linear infinite'}}>✦</div>
+              <div style={{fontSize:'2.5rem',marginBottom:'1.5rem'}}>✦</div>
               <p style={{fontSize:'1.2rem',fontStyle:'italic',color:'rgba(255,255,255,0.8)',lineHeight:1.7}}>
                 {is_es ? `LUMI está analizando tu perfil, ${nombre}...` : `LUMI is analysing your profile, ${nombre}...`}
               </p>
@@ -106,7 +129,7 @@ function ResultadoInner() {
                 </h1>
               </div>
 
-              {/* LUMI MENSAJE */}
+              {/* LUMI */}
               <div className={`fade d1 ${visible?'in':''}`} style={{marginBottom:'2rem'}}>
                 <div style={{background:'rgba(255,255,255,0.05)',border:'1px solid rgba(201,147,90,0.3)',borderLeft:'4px solid #C9935A',borderRadius:'0 1rem 1rem 0',padding:'1.5rem'}}>
                   <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.68rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>✦ LUMI {is_es?'dice:':'says:'}</div>
@@ -114,16 +137,17 @@ function ResultadoInner() {
                 </div>
               </div>
 
-              <div style={{marginBottom:'2rem'}}>
-                <button style={{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1.15rem',color:'white',fontSize:'1.05rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer',boxShadow:'0 4px 24px rgba(201,147,90,0.35)'}} onClick={()=>router.push('/')}>
-                  {is_es ? '✨ Empezar mis 3 días gratis' : '✨ Start my 3 free days'}
+              {/* CTA PRINCIPAL */}
+              <div className={`fade d2 ${visible?'in':''}`} style={{marginBottom:'2rem'}}>
+                <button className="btn" onClick={()=>router.push('/')}>
+                  {is_es ? '✨ Comenzar mi Día 1 — gratis' : '✨ Start my Day 1 — free'}
                 </button>
                 <p style={{textAlign:'center',fontSize:'0.75rem',color:'rgba(255,255,255,0.3)',fontFamily:'Montserrat,sans-serif',marginTop:'0.5rem'}}>
                   {is_es ? 'Sin tarjeta · Cancela cuando quieras' : 'No card · Cancel anytime'}
                 </p>
               </div>
 
-              {/* MÉTRICAS */}
+              {/* PERFIL HORMONAL */}
               {imc && (
                 <div className={`fade d2 ${visible?'in':''}`} style={{marginBottom:'2rem'}}>
                   <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.68rem',fontWeight:700,color:'#C9935A',letterSpacing:'3px',marginBottom:'1rem',textAlign:'center'}}>
@@ -131,12 +155,12 @@ function ResultadoInner() {
                   </div>
                   <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'0.75rem'}}>
                     {[
-                      {label:'RITMO METABÓLICO', value:imc, unit:'', sub:imcCat, color:imcColor},
+                      {label:is_es?'RITMO METABÓLICO':'METABOLIC RHYTHM', value:imc, unit:'', sub:imcLabel, color:imcColor},
                       {label:is_es?'ENERGÍA BASE':'BASE ENERGY', value:tmb, unit:'kcal', sub:is_es?'necesidad real':'real need', color:'#C9935A'},
                       {label:is_es?'GASTO HORMONAL':'HORMONAL BURN', value:tdee, unit:'kcal', sub:is_es?'adaptado a ti':'adapted to you', color:'#2A7A4A'},
                     ].map((m,i) => (
                       <div key={i} style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'0.75rem',padding:'1rem',textAlign:'center'}}>
-                        <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.62rem',fontWeight:700,color:'rgba(255,255,255,0.4)',letterSpacing:'1px',marginBottom:'0.4rem'}}>{m.label}</div>
+                        <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.55rem',fontWeight:700,color:'rgba(255,255,255,0.4)',letterSpacing:'1px',marginBottom:'0.4rem'}}>{m.label}</div>
                         <div style={{fontSize:'1.4rem',fontWeight:700,color:m.color,marginBottom:'0.1rem'}}>{m.value}</div>
                         <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.35)'}}>{m.unit}</div>
                         <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.58rem',color:'rgba(255,255,255,0.25)',marginTop:'0.2rem',fontStyle:'italic'}}>{m.sub}</div>
@@ -184,50 +208,35 @@ function ResultadoInner() {
                 </p>
               </div>
 
-              {/* FEATURES */}
+              {/* FEATURES ACORDEÓN */}
               <div className={`fade d4 ${visible?'in':''}`} style={{marginBottom:'2rem'}}>
                 <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.68rem',fontWeight:700,color:'#C9935A',letterSpacing:'3px',marginBottom:'1.25rem',textAlign:'center'}}>
                   {is_es?'CON LUMERA VAS A PODER':'WITH LUMERA YOU WILL'}
                 </div>
-                {(is_es?[
-                  {icon:'🥗',t:'Nutrición con inteligencia hormonal'},
-                  {icon:'📸',t:'La Lente Alquímica — analiza tu plato'},
-                  {icon:'📊',t:'Anticipa tus patrones hormonales'},
-                  {icon:'💪',t:'Ejercicio adaptado a tu objetivo'},
-                  {icon:'🏷️',t:'Lee lo que comes de verdad'},
-                  {icon:'🤝',t:'LUMI contigo 24/7'},
-                  {icon:'📅',t:'Adaptado a tu ciclo'},
-                ]:[
-                  {icon:'🥗',t:'Hormone-smart nutrition'},
-                  {icon:'📸',t:'The Alchemical Lens — analyse your plate'},
-                  {icon:'📊',t:'Anticipate your hormonal patterns'},
-                  {icon:'💪',t:'Exercise adapted to your goal'},
-                  {icon:'🏷️',t:'Read what you really eat'},
-                  {icon:'🤝',t:'LUMI with you 24/7'},
-                  {icon:'📅',t:'Adapted to your cycle'},
-                ]).map((f,i)=>(
-                  <div key={i} style={{display:'flex',alignItems:'center',gap:'0.75rem',padding:'0.75rem 0',borderBottom:'1px solid rgba(255,255,255,0.05)'}}>
-                    <span style={{fontSize:'1.1rem',flexShrink:0}}>{f.icon}</span>
-                    <span style={{fontSize:'1rem',color:'rgba(255,255,255,0.8)'}}>{f.t}</span>
-                    <span style={{marginLeft:'auto',color:'rgba(201,147,90,0.5)',fontSize:'0.8rem'}}>✦</span>
+                {features.map((f,i)=>(
+                  <div key={i}>
+                    <button className="accordion" onClick={()=>setOpenFeature(openFeature===i?null:i)}>
+                      <span style={{display:'flex',alignItems:'center',gap:'0.75rem'}}>
+                        <span style={{fontSize:'1.1rem'}}>{f.icon}</span>
+                        <span>{f.title}</span>
+                      </span>
+                      <span style={{color:'#C9935A',fontSize:'1rem',flexShrink:0}}>{openFeature===i?'−':'+'}</span>
+                    </button>
+                    {openFeature===i && (
+                      <div style={{padding:'0.75rem 0 1rem 2rem',fontSize:'0.95rem',fontStyle:'italic',color:'rgba(255,255,255,0.55)',lineHeight:1.6,borderBottom:'1px solid rgba(201,147,90,0.1)'}}>
+                        {f.body}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
 
-              {/* BIO */}
-              <div className={`fade d4 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.03)',border:'1px solid rgba(201,147,90,0.12)',borderRadius:'1rem',padding:'1.5rem',marginBottom:'2rem',textAlign:'center'}}>
-                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>{is_es?'QUIÉN HAY DETRÁS':'WHO IS BEHIND LUMERA'}</div>
-                <p style={{fontSize:'0.95rem',lineHeight:1.7,fontStyle:'italic',color:'rgba(255,255,255,0.55)'}}>
-                  {is_es?'Soy Bibiana, fundadora de Lumera, mamá de dos peques y este año, orgullosamente cuarentona. Lumera nació de mi propia necesidad — y de las ganas de compartirlo con todas vosotras.':'I\'m Bibiana, founder of Lumera, mum of two and this year, proudly turning forty. Lumera was born from my own need — and the desire to share it with all of you.'}
-                </p>
-              </div>
-
-              {/* CTA */}
+              {/* CTA FINAL */}
               <div className={`fade d5 ${visible?'in':''}`} style={{marginBottom:'3rem'}}>
-                <button className="btn" onClick={() => router.push('/')}>
+                <button className="btn" onClick={()=>router.push('/')}>
                   {is_es?'✨ Comenzar mi Día 1 — gratis':'✨ Start my Day 1 — free'}
                 </button>
-                <p style={{textAlign:'center',fontSize:'0.78rem',color:'rgba(255,255,255,0.25)',fontFamily:'Montserrat,sans-serif',marginTop:'0.75rem'}}>
+                <p style={{textAlign:'center',fontSize:'0.75rem',color:'rgba(255,255,255,0.25)',fontFamily:'Montserrat,sans-serif',marginTop:'0.75rem'}}>
                   {is_es?'Sin tarjeta · Cancela cuando quieras':'No card · Cancel anytime'}
                 </p>
                 <p style={{textAlign:'center',fontSize:'0.72rem',color:'rgba(255,255,255,0.15)',fontStyle:'italic',marginTop:'1.5rem',lineHeight:1.5}}>
