@@ -107,6 +107,15 @@ function ResultadoInner() {
                 </div>
               </div>
 
+              <div style={{marginBottom:'2rem'}}>
+                <button style={{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'1.15rem',color:'white',fontSize:'1.05rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer',boxShadow:'0 4px 24px rgba(201,147,90,0.35)'}} onClick={()=>router.push('/')}>
+                  {is_es ? '✨ Empezar mis 3 días gratis' : '✨ Start my 3 free days'}
+                </button>
+                <p style={{textAlign:'center',fontSize:'0.75rem',color:'rgba(255,255,255,0.3)',fontFamily:'Montserrat,sans-serif',marginTop:'0.5rem'}}>
+                  {is_es ? 'Sin tarjeta · Cancela cuando quieras' : 'No card · Cancel anytime'}
+                </p>
+              </div>
+
               {/* MÉTRICAS */}
               {imc && (
                 <div className={`fade d2 ${visible?'in':''}`} style={{marginBottom:'2rem'}}>
