@@ -41,7 +41,7 @@ export default function Start() {
 
           <div className={['fade-in d2', visible?'visible':''].join(' ')}>
             <h1 style={{fontSize:'clamp(1.8rem,5vw,2.4rem)',fontWeight:700,lineHeight:1.2,marginBottom:'1.25rem',color:'#0D3D3D'}}>
-              {is_es ? '¿Notas que tu cuerpo y tu energía han cambiado después de los 40?' : 'Have you noticed changes in your body and energy after 40?'}
+              {is_es ? '¿Tu energía, tu sueño o tu ánimo ya no son los de antes?' : 'Is your energy, sleep or mood not what it used to be?'}
             </h1>
           </div>
 
