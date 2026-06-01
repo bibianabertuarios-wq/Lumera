@@ -127,13 +127,13 @@ function ResultadoInner() {
               {imc && (
                 <div className={`fade d2 ${visible?'in':''}`} style={{marginBottom:'2rem'}}>
                   <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.68rem',fontWeight:700,color:'#C9935A',letterSpacing:'3px',marginBottom:'1rem',textAlign:'center'}}>
-                    {is_es?'TU PERFIL METABÓLICO':'YOUR METABOLIC PROFILE'}
+                    {is_es?'TU PERFIL HORMONAL':'YOUR HORMONAL PROFILE'}
                   </div>
                   <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'0.75rem'}}>
                     {[
-                      {label:'IMC', value:imc, unit:'', sub:imcCat, color:imcColor},
-                      {label:is_es?'TMB':'BMR', value:tmb, unit:'kcal', sub:is_es?'en reposo':'at rest', color:'#C9935A'},
-                      {label:'TDEE', value:tdee, unit:'kcal', sub:is_es?'diarias':'daily', color:'#2A7A4A'},
+                      {label:'RITMO METABÓLICO', value:imc, unit:'', sub:imcCat, color:imcColor},
+                      {label:is_es?'ENERGÍA BASE':'BASE ENERGY', value:tmb, unit:'kcal', sub:is_es?'necesidad real':'real need', color:'#C9935A'},
+                      {label:is_es?'GASTO HORMONAL':'HORMONAL BURN', value:tdee, unit:'kcal', sub:is_es?'adaptado a ti':'adapted to you', color:'#2A7A4A'},
                     ].map((m,i) => (
                       <div key={i} style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'0.75rem',padding:'1rem',textAlign:'center'}}>
                         <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.62rem',fontWeight:700,color:'rgba(255,255,255,0.4)',letterSpacing:'1px',marginBottom:'0.4rem'}}>{m.label}</div>
@@ -225,7 +225,7 @@ function ResultadoInner() {
               {/* CTA */}
               <div className={`fade d5 ${visible?'in':''}`} style={{marginBottom:'3rem'}}>
                 <button className="btn" onClick={() => router.push('/')}>
-                  {is_es?'✨ Empezar mis 3 días gratis':'✨ Start my 3 free days'}
+                  {is_es?'✨ Comenzar mi Día 1 — gratis':'✨ Start my Day 1 — free'}
                 </button>
                 <p style={{textAlign:'center',fontSize:'0.78rem',color:'rgba(255,255,255,0.25)',fontFamily:'Montserrat,sans-serif',marginTop:'0.75rem'}}>
                   {is_es?'Sin tarjeta · Cancela cuando quieras':'No card · Cancel anytime'}
