@@ -43,8 +43,8 @@ function ResultadoInner() {
             nombre,
             fechaNacimiento: nacimiento ? nacimiento + '-01' : '1984-01-01',
             ciclo, objetivo, sintomas: sintomasPriorizados,
-            peso: parseFloat(medidas.peso) || 65,
-            talla: parseFloat(medidas.altura) || 165,
+            peso: parseFloat(params.get('peso')) || 65,
+            talla: parseFloat(params.get('talla')) || 165,
             actividad, restricciones, medicacion, condiciones,
             language: lang
           })
