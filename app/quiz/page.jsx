@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
 const PREGUNTAS_ES = [
@@ -28,7 +29,7 @@ const PREGUNTAS_EN = [
   { id:'condiciones', tipo:'multiple', pregunta:'Have you been diagnosed with any health condition?', sub:'You can choose several', opciones:['None','Hypo / Hyperthyroidism','Diabetes or insulin resistance','High blood pressure','Fibromyalgia','PCOS','Endometriosis','Fibroids','Surgical menopause','Other'] },
 ];
 
-export default function Quiz() {
+function QuizInner() {
   const [lang, setLang] = useState('es');
   const [paso, setPaso] = useState(0);
   const [respuestas, setRespuestas] = useState({});
@@ -37,6 +38,7 @@ export default function Quiz() {
   const [peso, setPeso] = useState('');
   const [visible, setVisible] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const bl = navigator.language || 'es';
@@ -215,5 +217,17 @@ export default function Quiz() {
 
       </div>
     </>
+  );
+}
+
+export default function Quiz() {
+  return (
+    <Suspense fallback={
+      <div style={{minHeight:'100vh',background:'linear-gradient(135deg,#1a0f2e,#0D3D3D)',display:'flex',alignItems:'center',justifyContent:'center'}}>
+        <p style={{color:'rgba(255,255,255,0.5)',fontFamily:'Montserrat,sans-serif',fontSize:'0.9rem'}}>Cargando...</p>
+      </div>
+    }>
+      <QuizInner/>
+    </Suspense>
   );
 }

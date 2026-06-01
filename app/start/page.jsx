@@ -15,8 +15,9 @@ const css = `
   .symp-btn{width:100%;background:white;border:1.5px solid rgba(201,147,90,0.25);border-radius:0.75rem;padding:0.9rem 1.1rem;color:#0D3D3D;font-size:0.95rem;font-family:'Cormorant Garamond',Georgia,serif;cursor:pointer;text-align:left;display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem;transition:all 0.2s ease;}
   .symp-btn:hover{border-color:#C9935A;background:rgba(201,147,90,0.05);}
   .symp-btn.sel{border-color:#C9935A;background:rgba(201,147,90,0.1);font-weight:600;}
-  .check{width:20px;height:20px;border-radius:50%;border:2px solid rgba(201,147,90,0.4);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;transition:all 0.2s ease;}
+  .check{width:20px;height:20px;border-radius:4px;border:2px solid rgba(201,147,90,0.4);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;transition:all 0.2s ease;}
   .check.on{background:#C9935A;border-color:#C9935A;color:white;}
+  .symp-btn.sel{border-color:#C9935A;background:rgba(201,147,90,0.12);font-weight:600;border-width:2px;}
 `;
 
 export default function Start() {
@@ -37,16 +38,16 @@ export default function Start() {
 
   const symptoms = es ? [
     {icon:'⚡', text:'Siento un cansancio que no se va'},
+    {icon:'⚖️', text:'Mi peso sube aunque no haya cambiado nada'},
     {icon:'😴', text:'Me despierto a mitad de la noche'},
     {icon:'🧠', text:'Me cuesta concentrarme — neblina mental'},
     {icon:'🎢', text:'Mi estado de ánimo es una montaña rusa'},
-    {icon:'⚖️', text:'Mi peso sube aunque no haya cambiado nada'},
   ] : [
     {icon:'⚡', text:'I feel a fatigue that never goes away'},
+    {icon:'⚖️', text:'My weight keeps going up even though nothing changed'},
     {icon:'😴', text:'I wake up in the middle of the night'},
     {icon:'🧠', text:'I struggle to concentrate — brain fog'},
     {icon:'🎢', text:'My mood is a rollercoaster'},
-    {icon:'⚖️', text:'My weight keeps going up even though nothing changed'},
   ];
 
   return (
@@ -94,7 +95,7 @@ export default function Start() {
           </div>
 
           <div className={['fi d4',v?'v':''].join(' ')}>
-            <button className={['btn-main', selected.length>0?'pulse':''].join(' ')} onClick={()=>router.push('/quiz')} style={{marginBottom:'0.75rem'}}>
+            <button className={['btn-main', selected.length>0?'pulse':''].join(' ')} onClick={()=>router.push('/quiz' + (selected.length>0 ? '?sintoma=' + encodeURIComponent(selected[0]) : ''))} style={{marginBottom:'0.75rem'}}>
               {es ? '→ Descubre qué le pasa a tu cuerpo y tu plan' : '→ Discover what is happening to your body'}
             </button>
             <p style={{fontSize:'0.78rem',color:'rgba(13,61,61,0.35)',fontFamily:'Montserrat,sans-serif'}}>
