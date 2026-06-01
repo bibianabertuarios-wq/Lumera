@@ -76,21 +76,19 @@ function ResultadoInner() {
     : (is_es ? 'plan intensivo' : 'intensive plan');
 
   const features = is_es ? [
-    {icon:'🥗', title:'Nutrición con inteligencia hormonal', body:'Menús que cambian cada semana según tus síntomas reales. Tu ciclo, tu objetivo, tu tiempo. Nunca el mismo plan dos veces.'},
-    {icon:'📸', title:'La Lente Alquímica', body:'Fotografía tu plato y LUMI analiza cómo afecta a tus hormonas en segundos. Cocción, nutrientes, combinaciones óptimas.'},
-    {icon:'📊', title:'Anticipa tus patrones hormonales', body:'Seguimiento que detecta tendencias y te avisa de lo que viene — no solo registra lo que ya pasó.'},
-    {icon:'💪', title:'Ejercicio adaptado a tu objetivo', body:'Rutinas diseñadas según tu condición física actual y lo que quieres conseguir. No al revés.'},
-    {icon:'🏷️', title:'Lee lo que comes de verdad', body:'Etiquetas, ingredientes, aditivos. LUMI te explica qué significa cada cosa.'},
-    {icon:'🤝', title:'LUMI contigo 24/7', body:'Tu guía, confidente y coach. Disponible cuando lo necesitas. Recuerda tu historial y aprende contigo.'},
-    {icon:'📅', title:'Adaptado a tu ciclo', body:'Si aún tienes periodo, tu plan cambia con cada fase. Si ya no, refleja tu nueva realidad hormonal.'},
+    {icon:'🥗', title:'Nutrición Metabólica e Integral', body:'Alimenta tus hormonas y cuida tu cuerpo por dentro para que se note por fuera — sin contar calorías ni pasar hambre.'},
+    {icon:'📸', title:'Tu Escáner Nutricional — La Lente Alquímica', body:'La herramienta definitiva para entender en segundos el impacto real de cada plato en tu energía y tus hormonas.'},
+    {icon:'📊', title:'Tu Brújula Hormonal Anticipatoria', body:'Obtén el control absoluto. Entiende por qué te sientes así hoy y anticípate a los cambios de tu cuerpo antes de que ocurran.'},
+    {icon:'💪', title:'Movilidad Inteligente y Fuerza Amable', body:'Muévete para activar tu metabolismo y ganar vitalidad — sin terminar agotada. Diseñado para tu cuerpo ahora.'},
+    {icon:'🤝', title:'LUMI: Tu Mentora de Bienestar 24/7', body:'La guía y el apoyo que necesitas en cada paso. Siempre a tu lado, recuerda tu historial y aprende contigo.'},
+    {icon:'📅', title:'Un Plan Adaptativo que Evoluciona Contigo', body:'Todas las herramientas reunidas en una estrategia flexible que cambia contigo, semana a semana, ciclo a ciclo.'},
   ] : [
-    {icon:'🥗', title:'Hormone-smart nutrition', body:'Menus that change every week based on your real symptoms. Your cycle, your goal, your time.'},
-    {icon:'📸', title:'The Alchemical Lens', body:'Photograph your plate and LUMI analyses how it affects your hormones in seconds.'},
-    {icon:'📊', title:'Anticipate your hormonal patterns', body:'Tracking that detects trends and alerts you to what is coming.'},
-    {icon:'💪', title:'Exercise adapted to your goal', body:'Routines designed around your current fitness level and what you want to achieve.'},
-    {icon:'🏷️', title:'Read what you really eat', body:'Labels, ingredients, additives. LUMI explains what everything means.'},
-    {icon:'🤝', title:'LUMI with you 24/7', body:'Your guide, confidante and coach. Available when you need it.'},
-    {icon:'📅', title:'Adapted to your cycle', body:'If you still have your period, your plan shifts with each phase.'},
+    {icon:'🥗', title:'Metabolic & Integral Nutrition', body:'Feed your hormones and care for your body from within so it shows on the outside — no calorie counting, no hunger.'},
+    {icon:'📸', title:'Your Nutritional Scanner — The Alchemical Lens', body:'The ultimate tool to instantly understand the real impact of every meal on your energy and hormones.'},
+    {icon:'📊', title:'Your Anticipatory Hormonal Compass', body:'Gain total control. Understand why you feel the way you do today and anticipate your body changes before they happen.'},
+    {icon:'💪', title:'Intelligent Movement & Gentle Strength', body:'Move to activate your metabolism and gain vitality — without ending up exhausted. Designed for your body right now.'},
+    {icon:'🤝', title:'LUMI: Your 24/7 Wellness Mentor', body:'The guidance and support you need at every step. Always by your side, remembering your history and learning with you.'},
+    {icon:'📅', title:'An Adaptive Plan That Evolves With You', body:'All the tools you need in one flexible strategy that changes with you, week by week, cycle by cycle.'},
   ];
 
   return (
