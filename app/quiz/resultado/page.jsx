@@ -49,13 +49,16 @@ function ResultadoInner() {
             language: lang
           })
         });
+        console.log('LUMI response status:', res.status);
         const data = await res.json();
+        console.log('LUMI data:', data);
         setLumiMsg(data.message || '');
         if(data.imc) setImc(parseFloat(data.imc));
         if(data.tmb) setTmb(data.tmb);
         if(data.tdee) setTdee(data.tdee);
         if(data.imcCategoria) setImcCat(data.imcCategoria);
       } catch(e) {
+        console.error('LUMI ERROR:', e);
         setLumiMsg(is_es ? 'Tu plan está listo. Empieza hoy.' : 'Your plan is ready. Start today.');
       }
       setCargando(false);
