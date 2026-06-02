@@ -95,16 +95,16 @@ function BienvenidaInner() {
         .btn-activar:hover{transform:translateY(-2px);}
         .btn-activar:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
       `}}/>
-      <div style={{minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'2.5rem 1.5rem',background:'linear-gradient(180deg,#1a0f2e 0%,#0D3D3D 100%)',fontFamily:"'Cormorant Garamond',Georgia,serif"}}>
+      <div style={{minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'2.5rem 1.5rem 2.5rem 1.5rem',background:'linear-gradient(180deg,#1a0f2e 0%,#0D3D3D 100%)',fontFamily:"'Cormorant Garamond',Georgia,serif"}}>
         <div style={{maxWidth:'440px',width:'100%'}}>
 
           <div className={`fade d1 ${visible?'in':''}`} style={{textAlign:'center',marginBottom:'2rem'}}>
             <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#C9935A',letterSpacing:'3px',marginBottom:'1rem'}}>✦ LUMERA</div>
-            <h1 style={{fontSize:'clamp(1.8rem,4vw,2.2rem)',fontWeight:700,color:'white',lineHeight:1.2,marginBottom:'0.75rem'}}>
-              {is_es ? `${nombre}, bienvenida a tu primer dia.` : `${nombre}, welcome to your first day.`}
+            <h1 style={{fontSize:'clamp(1.5rem,4vw,2rem)',fontWeight:700,color:'white',lineHeight:1.2,marginBottom:'0.75rem'}}>
+              {is_es ? `${nombre}, bienvenida a tu primer día.` : `${nombre}, welcome to your first day.`}
             </h1>
             <p style={{fontSize:'1.1rem',fontStyle:'italic',color:'#C9935A',lineHeight:1.6}}>
-              {is_es ? 'Tu reconexion empieza ahora.' : 'Your reconnection starts now.'}
+              {is_es ? 'Tu reconexión empieza ahora.' : 'Your reconnection starts now.'}
             </p>
           </div>
 
@@ -121,16 +121,16 @@ function BienvenidaInner() {
               {is_es ? 'Crea tu acceso seguro' : 'Create your secure access'}
             </div>
             <p style={{fontSize:'0.9rem',fontStyle:'italic',color:'rgba(255,255,255,0.45)',textAlign:'center',marginBottom:'1.25rem',lineHeight:1.6}}>
-              {is_es ? 'Para guardar tu plan hormonal y que solo tu puedas ver tu progreso.' : 'To save your hormonal plan so only you can see your progress.'}
+              {is_es ? 'Para guardar tu plan hormonal y que solo tú puedas ver tu progreso.' : 'To save your hormonal plan so only you can see your progress.'}
             </p>
-            <input type="email" className="input-field" placeholder={is_es ? 'Tu correo electronico...' : 'Your email address...'} value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleActivar()}/>
-            <input type="password" className="input-field" placeholder={is_es ? 'Crea una contrasena segura...' : 'Create a secure password...'} value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleActivar()}/>
+            <input type="email" className="input-field" placeholder={is_es ? 'Tu correo electrónico...' : 'Your email address...'} value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleActivar()}/>
+            <input type="password" className="input-field" placeholder={is_es ? 'Crea una contraseña segura...' : 'Create a secure password...'} value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleActivar()}/>
             {error && <p style={{color:'#F87171',fontSize:'0.85rem',fontFamily:'Montserrat,sans-serif',marginBottom:'0.75rem',textAlign:'center'}}>{error}</p>}
             <button className="btn-activar" onClick={handleActivar} disabled={loading}>
               {loading ? (is_es?'Activando tu plan...':'Activating your plan...') : (is_es?'Activar mi plan y entrar':'Activate my plan and enter')}
             </button>
             <p style={{textAlign:'center',fontSize:'0.75rem',color:'rgba(255,255,255,0.25)',fontFamily:'Montserrat,sans-serif',marginTop:'0.75rem',lineHeight:1.5}}>
-              {is_es ? 'Sin tarjeta de credito. Cancela cuando quieras.' : 'No credit card. Cancel anytime.'}
+              {is_es ? 'Sin tarjeta de crédito. Cancela cuando quieras.' : 'No credit card. Cancel anytime.'}
             </p>
           </div>
 
