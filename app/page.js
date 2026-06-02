@@ -1,2 +1,5 @@
-import LumeraApp from './lumera/LumeraApp'
-export default LumeraApp
+import { redirect } from 'next/navigation';
+
+export default function Home() {
+  redirect('/start');
+}
