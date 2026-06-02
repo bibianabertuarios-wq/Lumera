@@ -137,7 +137,7 @@ function ResultadoInner() {
 
               {/* CTA PRINCIPAL */}
               <div className={`fade d2 ${visible?'in':''}`} style={{marginBottom:'2rem'}}>
-                <button className="btn" onClick={()=>router.push('/')}>
+                <button className="btn" onClick={()=>router.push('/lumera')}>
                   {is_es ? '✨ Comenzar mi Día 1 — gratis' : '✨ Start my Day 1 — free'}
                 </button>
                 <p style={{textAlign:'center',fontSize:'0.75rem',color:'rgba(255,255,255,0.3)',fontFamily:'Montserrat,sans-serif',marginTop:'0.5rem'}}>
@@ -231,7 +231,7 @@ function ResultadoInner() {
 
               {/* CTA FINAL */}
               <div className={`fade d5 ${visible?'in':''}`} style={{marginBottom:'3rem'}}>
-                <button className="btn" onClick={()=>router.push('/')}>
+                <button className="btn" onClick={()=>router.push('/lumera')}>
                   {is_es?'✨ Comenzar mi Día 1 — gratis':'✨ Start my Day 1 — free'}
                 </button>
                 <p style={{textAlign:'center',fontSize:'0.75rem',color:'rgba(255,255,255,0.25)',fontFamily:'Montserrat,sans-serif',marginTop:'0.75rem'}}>
