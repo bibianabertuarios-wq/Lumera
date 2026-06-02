@@ -13,14 +13,10 @@ const sintomaFrase = (sintoma, is_es) => {
     'Cansancio constante': is_es ? 'acabar con ese cansancio constante' : 'end that constant fatigue',
     'Cambios de humor': is_es ? 'estabilizar esos cambios de humor' : 'stabilise those mood changes',
   };
-  return mapa[sintoma] || (is_es ? 'reconectar con tu cuerpo y tu energía' : 'reconnect with your body and energy');
+  return mapa[sintoma] || (is_es ? 'reconectar con tu cuerpo y tu energia' : 'reconnect with your body and energy');
 };
 
 function BienvenidaInner() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  );
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -31,7 +27,7 @@ function BienvenidaInner() {
 
   const lang = params.get('lang') || 'es';
   const is_es = lang === 'es';
-  const nombre = params.get('nombre') || (is_es ? 'tú' : 'you');
+  const nombre = params.get('nombre') || (is_es ? 'tu' : 'you');
   const sintoma = params.get('sintoma') || params.get('sintomas') || '';
   const frase = sintomaFrase(sintoma.split('|')[0], is_es);
 
@@ -41,14 +37,18 @@ function BienvenidaInner() {
 
   const handleActivar = async () => {
     if (!email || !password) {
-      setError(is_es ? 'Por favor introduce tu email y contraseña.' : 'Please enter your email and password.');
+      setError(is_es ? 'Por favor introduce tu email y contrasena.' : 'Please enter your email and password.');
       return;
     }
     setLoading(true);
     setError('');
 
-    // Intentar registro
-    const { data, error: signUpError } = await supabase.auth.signUp({
+    const supabase = createClient(
+      'https://pyekwpmbdnmglrjieexc.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5ZWt3cG1iZG5tZ2xyamllZXhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0ODM0OTgsImV4cCI6MjA4MTA1OTQ5OH0.zQl7GF3E6BhDqW3bEMixAbdDcOsW8BsFOBeAGa-5bzY'
+    );
+
+    const { error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -64,14 +64,17 @@ function BienvenidaInner() {
       }
     });
 
-    if (signUpError) {
-      // Si ya existe, intentar login
+    if (signUpError && signUpError.message.includes('already registered')) {
       const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
       if (loginError) {
-        setError(is_es ? 'Email o contraseña incorrectos.' : 'Incorrect email or password.');
+        setError(is_es ? 'Email o contrasena incorrectos.' : 'Incorrect email or password.');
         setLoading(false);
         return;
       }
+    } else if (signUpError) {
+      setError(signUpError.message);
+      setLoading(false);
+      return;
     }
 
     router.push('/lumera');
@@ -92,22 +95,19 @@ function BienvenidaInner() {
         .btn-activar:hover{transform:translateY(-2px);}
         .btn-activar:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
       `}}/>
-
       <div style={{minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'2.5rem 1.5rem',background:'linear-gradient(180deg,#1a0f2e 0%,#0D3D3D 100%)',fontFamily:"'Cormorant Garamond',Georgia,serif"}}>
         <div style={{maxWidth:'440px',width:'100%'}}>
 
-          {/* HEADER */}
           <div className={`fade d1 ${visible?'in':''}`} style={{textAlign:'center',marginBottom:'2rem'}}>
             <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#C9935A',letterSpacing:'3px',marginBottom:'1rem'}}>✦ LUMERA</div>
             <h1 style={{fontSize:'clamp(1.8rem,4vw,2.2rem)',fontWeight:700,color:'white',lineHeight:1.2,marginBottom:'0.75rem'}}>
-              {is_es ? `${nombre}, bienvenida a tu primer día.` : `${nombre}, welcome to your first day.`}
+              {is_es ? `${nombre}, bienvenida a tu primer dia.` : `${nombre}, welcome to your first day.`}
             </h1>
             <p style={{fontSize:'1.1rem',fontStyle:'italic',color:'#C9935A',lineHeight:1.6}}>
-              {is_es ? 'Tu reconexión empieza ahora.' : 'Your reconnection starts now.'}
+              {is_es ? 'Tu reconexion empieza ahora.' : 'Your reconnection starts now.'}
             </p>
           </div>
 
-          {/* FRASE PERSONALIZADA */}
           <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(201,147,90,0.2)',borderLeft:'4px solid #C9935A',borderRadius:'0 1rem 1rem 0',padding:'1.25rem 1.5rem',marginBottom:'2rem'}}>
             <p style={{fontSize:'1.05rem',lineHeight:1.8,fontStyle:'italic',color:'rgba(255,255,255,0.85)'}}>
               {is_es
@@ -116,62 +116,29 @@ function BienvenidaInner() {
             </p>
           </div>
 
-          {/* FORMULARIO */}
           <div className={`fade d3 ${visible?'in':''}`}>
             <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.72rem',fontWeight:700,color:'rgba(255,255,255,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'1rem',textAlign:'center'}}>
-              🔒 {is_es ? 'Crea tu acceso seguro' : 'Create your secure access'}
+              {is_es ? 'Crea tu acceso seguro' : 'Create your secure access'}
             </div>
             <p style={{fontSize:'0.9rem',fontStyle:'italic',color:'rgba(255,255,255,0.45)',textAlign:'center',marginBottom:'1.25rem',lineHeight:1.6}}>
-              {is_es
-                ? 'Para guardar tu plan hormonal y que solo tú puedas ver tu progreso.'
-                : 'To save your hormonal plan so only you can see your progress.'}
+              {is_es ? 'Para guardar tu plan hormonal y que solo tu puedas ver tu progreso.' : 'To save your hormonal plan so only you can see your progress.'}
             </p>
-
-            <input
-              type="email"
-              className="input-field"
-              placeholder={is_es ? '📧 Tu correo electrónico...' : '📧 Your email address...'}
-              value={email}
-              onChange={e=>setEmail(e.target.value)}
-              onKeyDown={e=>e.key==='Enter' && handleActivar()}
-            />
-            <input
-              type="password"
-              className="input-field"
-              placeholder={is_es ? '🔑 Crea una contraseña segura...' : '🔑 Create a secure password...'}
-              value={password}
-              onChange={e=>setPassword(e.target.value)}
-              onKeyDown={e=>e.key==='Enter' && handleActivar()}
-            />
-
-            {error && (
-              <p style={{color:'#F87171',fontSize:'0.85rem',fontFamily:'Montserrat,sans-serif',marginBottom:'0.75rem',textAlign:'center'}}>
-                {error}
-              </p>
-            )}
-
+            <input type="email" className="input-field" placeholder={is_es ? 'Tu correo electronico...' : 'Your email address...'} value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleActivar()}/>
+            <input type="password" className="input-field" placeholder={is_es ? 'Crea una contrasena segura...' : 'Create a secure password...'} value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleActivar()}/>
+            {error && <p style={{color:'#F87171',fontSize:'0.85rem',fontFamily:'Montserrat,sans-serif',marginBottom:'0.75rem',textAlign:'center'}}>{error}</p>}
             <button className="btn-activar" onClick={handleActivar} disabled={loading}>
-              {loading
-                ? (is_es ? 'Activando tu plan...' : 'Activating your plan...')
-                : (is_es ? '→ Activar mi plan y entrar' : '→ Activate my plan and enter')}
+              {loading ? (is_es?'Activando tu plan...':'Activating your plan...') : (is_es?'Activar mi plan y entrar':'Activate my plan and enter')}
             </button>
-
             <p style={{textAlign:'center',fontSize:'0.75rem',color:'rgba(255,255,255,0.25)',fontFamily:'Montserrat,sans-serif',marginTop:'0.75rem',lineHeight:1.5}}>
-              {is_es
-                ? 'Al activar tu plan, accedes directamente a tu panel sin esperas. Sin tarjeta de crédito.'
-                : 'By activating your plan, you go directly to your dashboard. No credit card required.'}
+              {is_es ? 'Sin tarjeta de credito. Cancela cuando quieras.' : 'No credit card. Cancel anytime.'}
             </p>
           </div>
 
-          {/* YA TENGO CUENTA */}
           <div className={`fade d4 ${visible?'in':''}`} style={{textAlign:'center',marginTop:'1.5rem'}}>
             <p style={{fontSize:'0.85rem',color:'rgba(255,255,255,0.3)',fontFamily:'Montserrat,sans-serif'}}>
-              {is_es ? '¿Ya tienes cuenta? ' : 'Already have an account? '}
-              <span
-                onClick={()=>router.push('/lumera')}
-                style={{color:'#C9935A',cursor:'pointer',textDecoration:'underline'}}
-              >
-                {is_es ? 'Entrar aquí' : 'Sign in here'}
+              {is_es ? 'Ya tienes cuenta? ' : 'Already have an account? '}
+              <span onClick={()=>router.push('/lumera')} style={{color:'#C9935A',cursor:'pointer',textDecoration:'underline'}}>
+                {is_es ? 'Entrar aqui' : 'Sign in here'}
               </span>
             </p>
           </div>
