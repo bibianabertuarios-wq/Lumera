@@ -327,7 +327,7 @@ import './lumera.css'
                             setCurrentUser(profile);
                             setShowAuth(false);
                             if (!profile.profile_name) {
-                                setShowQuiz(true);
+                                setShowQuiz(false);
                             }
                         } else {
                             // Usuario nueva por Google, crear perfil básico
@@ -342,7 +342,7 @@ import './lumera.css'
 
                             setCurrentUser(newProfile?.[0] || { id: session.user.id, email: session.user.email });
                             setShowAuth(false);
-                            setShowQuiz(true);
+                            setShowQuiz(false);
                         }
                     }
                 });
@@ -2074,7 +2074,7 @@ query = query.eq('region', region.toUpperCase());
 
                     // Si no tiene perfil completo, mostrar quiz
                     if (!profile?.profile_name) {
-                        setShowQuiz(true);
+                        setShowQuiz(false);
                     }
 
                 } catch (err) {
@@ -2162,7 +2162,7 @@ query = query.eq('region', region.toUpperCase());
                         setSession(data.session);
                         setCurrentUser({ id: data.user.id, email: data.user.email });
                         setShowAuth(false);
-                        setShowQuiz(true);
+                        setShowQuiz(false);
                     } else {
                         // Email confirmation requerida
                         alert(language === 'es'
