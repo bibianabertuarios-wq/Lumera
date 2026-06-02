@@ -70,7 +70,7 @@ import './lumera.css'
             const [currentUser, setCurrentUser] = useState(null);
             const [currentPage, setCurrentPage] = useState('home');
             const [showQuiz, setShowQuiz] = useState(false);
-            const [showPreQuiz, setShowPreQuiz] = useState(true);
+            const [showPreQuiz, setShowPreQuiz] = useState(false);
             const [preQuizStep, setPreQuizStep] = useState(0);
             const [preQuizAnswers, setPreQuizAnswers] = useState([]);
             const [preQuizResult, setPreQuizResult] = useState(null);
