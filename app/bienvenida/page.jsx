@@ -3,11 +3,6 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
-
 const sintomaFrase = (sintoma, is_es) => {
   const mapa = {
     'Siento un cansancio que no se va': is_es ? 'acabar con ese cansancio que no se va' : 'end that fatigue that never goes away',
@@ -22,6 +17,10 @@ const sintomaFrase = (sintoma, is_es) => {
 };
 
 function BienvenidaInner() {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
