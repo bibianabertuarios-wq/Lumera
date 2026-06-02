@@ -64,17 +64,41 @@ function BienvenidaInner() {
       }
     });
 
+    let userId = null;
+
     if (signUpError && signUpError.message.includes('already registered')) {
-      const { error: loginError } = await supabase.auth.signInWithPassword({ email, password });
+      const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({ email, password });
       if (loginError) {
         setError(is_es ? 'Email o contrasena incorrectos.' : 'Incorrect email or password.');
         setLoading(false);
         return;
       }
+      userId = loginData?.user?.id;
     } else if (signUpError) {
       setError(signUpError.message);
       setLoading(false);
       return;
+    } else {
+      // Nuevo registro - obtener sesion
+      const { data: { session } } = await supabase.auth.getSession();
+      userId = session?.user?.id;
+    }
+
+    // Guardar perfil en Supabase
+    if (userId) {
+      await supabase.from('users').upsert({
+        id: userId,
+        email,
+        profile_name: nombre,
+        sintoma_principal: sintoma.split('|')[0],
+        objetivo: params.get('objetivo') || '',
+        ciclo: params.get('ciclo') || '',
+        peso: parseFloat(params.get('peso')) || null,
+        talla: parseFloat(params.get('talla')) || null,
+        actividad: params.get('actividad') || '',
+        language: lang,
+        updated_at: new Date().toISOString()
+      });
     }
 
     router.push('/lumera');

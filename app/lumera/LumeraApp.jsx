@@ -284,9 +284,9 @@ import './lumera.css'
                         setCurrentUser(profile || { id: session.user.id, email: session.user.email });
                         setShowAuth(false);
 
-                        // Si no tiene perfil completo, mostrar quiz
+                        // Si no tiene perfil completo, ir directo al dashboard (ya hizo el quiz nuevo)
                         if (!profile?.profile_name) {
-                            setShowQuiz(true);
+                            setShowQuiz(false);
                         }
 
                     } else {
