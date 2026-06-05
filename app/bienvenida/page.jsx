@@ -20,6 +20,7 @@ function BienvenidaInner() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [error, setError] = useState('');
   const [visible, setVisible] = useState(false);
   const router = useRouter();
@@ -37,7 +38,11 @@ function BienvenidaInner() {
 
   const handleActivar = async () => {
     if (!email || !password) {
-      setError(is_es ? 'Por favor introduce tu email y contrasena.' : 'Please enter your email and password.');
+      setError(is_es ? 'Por favor introduce tu email y contraseña.' : 'Please enter your email and password.');
+      return;
+    }
+    if (!aceptaTerminos) {
+      setError(is_es ? 'Debes aceptar los términos para continuar.' : 'You must accept the terms to continue.');
       return;
     }
     setLoading(true);
@@ -150,6 +155,14 @@ function BienvenidaInner() {
             <input type="email" className="input-field" placeholder={is_es ? 'Tu correo electrónico...' : 'Your email address...'} value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleActivar()}/>
             <input type="password" className="input-field" placeholder={is_es ? 'Crea una contraseña segura...' : 'Create a secure password...'} value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleActivar()}/>
             {error && <p style={{color:'#F87171',fontSize:'0.85rem',fontFamily:'Montserrat,sans-serif',marginBottom:'0.75rem',textAlign:'center'}}>{error}</p>}
+            <div style={{display:'flex',alignItems:'flex-start',gap:'0.75rem',marginBottom:'1rem',cursor:'pointer'}} onClick={()=>setAceptaTerminos(!aceptaTerminos)}>
+              <div style={{width:'18px',height:'18px',borderRadius:'4px',border:'1.5px solid rgba(201,147,90,0.5)',background:aceptaTerminos?'#C9935A':'transparent',flexShrink:0,marginTop:'2px',display:'flex',alignItems:'center',justifyContent:'center',color:'white',fontSize:'0.7rem'}}>
+                {aceptaTerminos?'✓':''}
+              </div>
+              <p style={{fontSize:'0.82rem',color:'rgba(255,255,255,0.45)',lineHeight:1.5,fontFamily:'Montserrat,sans-serif'}}>
+                {is_es ? <span>Acepto la <a href='/privacidad' target='_blank' style={{color:'#C9935A',textDecoration:'underline'}}>Política de Privacidad</a> y los <a href='/terminos' target='_blank' style={{color:'#C9935A',textDecoration:'underline'}}>Términos de Uso</a> de Lumera.</span> : <span>I accept the <a href='/privacy' target='_blank' style={{color:'#C9935A',textDecoration:'underline'}}>Privacy Policy</a> and <a href='/terms' target='_blank' style={{color:'#C9935A',textDecoration:'underline'}}>Terms of Use</a> of Lumera.</span>}
+              </p>
+            </div>
             <button className="btn-activar" onClick={handleActivar} disabled={loading}>
               {loading ? (is_es?'Activando tu plan...':'Activating your plan...') : (is_es?'Activar mi plan y entrar':'Activate my plan and enter')}
             </button>
