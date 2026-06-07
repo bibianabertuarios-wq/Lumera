@@ -1,6 +1,12 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  'https://pyekwpmbdnmglrjieexc.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5ZWt3cG1iZG5tZ2xyamllZXhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0ODM0OTgsImV4cCI6MjA4MTA1OTQ5OH0.zQl7GF3E6BhDqW3bEMixAbdDcOsW8BsFOBeAGa-5bzY'
+);
 
 const css = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600;700&display=swap');
@@ -30,6 +36,10 @@ export default function Start() {
     const bl = navigator.language || 'es';
     setLang(bl.startsWith('es') ? 'es' : 'en');
     setTimeout(() => setV(true), 100);
+    // Si ya tiene sesión, ir directo al dashboard
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) router.push('/dashboard');
+    });
   }, []);
 
   const es = lang === 'es';
