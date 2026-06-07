@@ -106,7 +106,7 @@ function BienvenidaInner() {
       });
     }
 
-    router.push('/lumera');
+    router.push('/dashboard');
   };
 
   return (
