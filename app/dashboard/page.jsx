@@ -226,7 +226,7 @@ export default function Dashboard() {
       <div style={{minHeight:'100vh',background:'linear-gradient(180deg,#FBF7F0 0%,#f0e8d8 100%)',fontFamily:"'Cormorant Garamond',Georgia,serif",paddingBottom:'80px'}}>
 
         {/* HEADER */}
-        <div style={{background:'white',borderBottom:'1px solid rgba(201,147,90,0.15)',padding:'0.75rem 1.25rem',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
+        <div style={{background:'rgba(255,255,255,0.92)',borderBottom:'1px solid rgba(201,147,90,0.15)',backdropFilter:'blur(10px)',padding:'0.75rem 1.25rem',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
           <div style={{display:'flex',alignItems:'center',gap:'0.5rem'}}>
             <span style={{fontSize:'1.1rem',fontWeight:700,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>✦ Lumera</span>
             {pais && <span style={{fontSize:'0.65rem',color:'rgba(13,61,61,0.4)',fontFamily:'Montserrat,sans-serif'}}>{pais}</span>}
@@ -257,7 +257,7 @@ export default function Dashboard() {
           </div>
 
           {/* MISION DEL DIA */}
-          <div className={`fade d2 ${visible?'in':''}`} style={{background:'white',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem',boxShadow:'0 2px 16px rgba(201,147,90,0.08)'}}>
+          <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.88)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem',boxShadow:'0 2px 16px rgba(201,147,90,0.08)'}}>
             <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:'1rem'}}>
               <div>
                 <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.25rem'}}>
@@ -299,7 +299,7 @@ export default function Dashboard() {
           </div>
 
           {/* COMO TE SIENTES HOY */}
-          <div className={`fade d3 ${visible?'in':''}`} style={{background:'white',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem'}}>
+          <div className={`fade d3 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.88)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
             <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
               {is_es ? 'Como te sientes ahora?' : 'How do you feel right now?'}
             </div>
@@ -331,18 +331,18 @@ export default function Dashboard() {
             </div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem'}}>
               {(is_es ? [
-                {icon:'🥗',title:'Nutricion',sub:'Lo que necesitas hoy',route:'/lumera'},
-                {icon:'📸',title:'Lente Alquimica',sub:'Analiza tu plato',route:'/lumera'},
-                {icon:'💪',title:'Ejercicio',sub:'Movimiento a tu medida',route:'/lumera'},
-                {icon:'🤝',title:'LUMI',sub:'Tu espacio seguro',route:'/lumera'},
+                {img:'/images/nutri_huevo.png',title:'Nutrición',sub:'Tu menú de hoy',route:'/lumera'},
+                {img:'/images/lente_alquimica.png',title:'Lente Alquímica',sub:'Analiza tu plato',route:'/lumera'},
+                {img:'/images/ejer_fuerza.png',title:'Ejercicio',sub:'Movimiento a tu medida',route:'/lumera'},
+                {img:'/images/lumi.png',title:'LUMI',sub:'Tu espacio seguro',route:'/lumera'},
               ] : [
-                {icon:'🥗',title:'Nutrition',sub:'What you need today',route:'/lumera'},
-                {icon:'📸',title:'Alchemical Lens',sub:'Analyse your plate',route:'/lumera'},
-                {icon:'💪',title:'Exercise',sub:'Movement your way',route:'/lumera'},
-                {icon:'🤝',title:'LUMI',sub:'Your safe space',route:'/lumera'},
+                {img:'/images/nutri_huevo.png',title:'Nutrition',sub:'Your menu today',route:'/lumera'},
+                {img:'/images/lente_alquimica.png',title:'Alchemical Lens',sub:'Analyse your plate',route:'/lumera'},
+                {img:'/images/ejer_fuerza.png',title:'Exercise',sub:'Movement your way',route:'/lumera'},
+                {img:'/images/lumi.png',title:'LUMI',sub:'Your safe space',route:'/lumera'},
               ]).map((p,i) => (
                 <div key={i} className="pilar-card" onClick={()=>router.push(p.route)}>
-                  <div style={{fontSize:'1.75rem',marginBottom:'0.4rem'}}>{p.icon}</div>
+                  <img src={p.img} alt={p.title} style={{width:'56px',height:'56px',objectFit:'cover',borderRadius:'50%',marginBottom:'0.5rem'}} onError={e=>{e.target.style.display='none'}}/>
                   <div style={{fontSize:'1rem',fontWeight:600,color:'#0D3D3D',marginBottom:'0.15rem'}}>{p.title}</div>
                   <div style={{fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.45)'}}>{p.sub}</div>
                 </div>
@@ -395,7 +395,7 @@ export default function Dashboard() {
         </div>
 
         {/* NAV INFERIOR */}
-        <div style={{position:'fixed',bottom:0,left:0,right:0,background:'white',borderTop:'1px solid rgba(201,147,90,0.15)',padding:'0.5rem 0',display:'flex',justifyContent:'space-around',zIndex:100}}>
+        <div style={{position:'fixed',bottom:0,left:0,right:0,background:'rgba(255,255,255,0.92)',borderTop:'1px solid rgba(201,147,90,0.15)',backdropFilter:'blur(10px)',padding:'0.5rem 0',display:'flex',justifyContent:'space-around',zIndex:100}}>
           {(is_es ? [
             {icon:'🏠',label:'Inicio',route:'/dashboard'},
             {icon:'🥗',label:'Nutricion',route:'/lumera'},
