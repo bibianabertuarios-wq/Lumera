@@ -160,7 +160,7 @@ function BienvenidaInner() {
                 {aceptaTerminos?'✓':''}
               </div>
               <p style={{fontSize:'0.82rem',color:'rgba(255,255,255,0.45)',lineHeight:1.5,fontFamily:'Montserrat,sans-serif'}}>
-                {is_es ? <span>Acepto la <a href='/privacidad' target='_blank' style={{color:'#C9935A',textDecoration:'underline'}}>Política de Privacidad</a> y los <a href='/terminos' target='_blank' style={{color:'#C9935A',textDecoration:'underline'}}>Términos de Uso</a> de Lumera.</span> : <span>I accept the <a href='/privacy' target='_blank' style={{color:'#C9935A',textDecoration:'underline'}}>Privacy Policy</a> and <a href='/terms' target='_blank' style={{color:'#C9935A',textDecoration:'underline'}}>Terms of Use</a> of Lumera.</span>}
+                {is_es ? <span>Soy mayor de 18 años y acepto la <a href='/privacidad' target='_blank' style={{color:'#C9935A',textDecoration:'underline'}}>Política de Privacidad</a> y los <a href='/terminos' target='_blank' style={{color:'#C9935A',textDecoration:'underline'}}>Términos de Uso</a>. Entiendo que Lumera no sustituye el consejo médico profesional.</span> : <span>I am over 18 and accept the <a href='/privacy' target='_blank' style={{color:'#C9935A',textDecoration:'underline'}}>Privacy Policy</a> and <a href='/terms' target='_blank' style={{color:'#C9935A',textDecoration:'underline'}}>Terms of Use</a>. I understand Lumera does not replace professional medical advice.</span>}
               </p>
             </div>
             <button className="btn-activar" onClick={handleActivar} disabled={loading}>
