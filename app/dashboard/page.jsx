@@ -223,7 +223,7 @@ export default function Dashboard() {
         .nav-item:hover{opacity:0.8;}
       `}}/>
 
-      <div style={{minHeight:'100vh',background:'linear-gradient(180deg,#FBF7F0 0%,#f0e8d8 100%)',fontFamily:"'Cormorant Garamond',Georgia,serif",paddingBottom:'80px'}}>
+      <div style={{minHeight:'100vh',backgroundImage:"url('/images/shula_flores_bg.jpg')",backgroundSize:'cover',backgroundPosition:'center',backgroundAttachment:'fixed',fontFamily:"'Cormorant Garamond',Georgia,serif",paddingBottom:'80px'}}>
 
         {/* HEADER */}
         <div style={{background:'rgba(255,255,255,0.92)',borderBottom:'1px solid rgba(201,147,90,0.15)',backdropFilter:'blur(10px)',padding:'0.75rem 1.25rem',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
