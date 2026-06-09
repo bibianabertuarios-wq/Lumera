@@ -32,6 +32,7 @@ export default function Escaner() {
   const fileRef = useRef(null);
   const canvasRef = useRef(null);
   const avatarRef = useRef(null);
+  const resultRef = useRef(null);
   const animRef = useRef(null);
   const router = useRouter();
 
@@ -89,6 +90,7 @@ export default function Escaner() {
           drawAvatar(lm, analysis);
           setStep('result');
           setRotating(true);
+          setTimeout(() => resultRef.current?.scrollIntoView({behavior:'smooth'}), 300);
         } else {
           setStep('error');
         }
@@ -286,7 +288,7 @@ export default function Escaner() {
                   transform:`perspective(400px) rotateY(${angle}deg)`,
                   transition:'transform 0.016s linear'
                 }}>
-                  <canvas ref={avatarRef} width={220} height={380} style={{borderRadius:'1rem',background:'rgba(255,255,255,0.03)',border:'1px solid rgba(201,147,90,0.2)'}}/>
+                  <canvas ref={avatarRef} width={160} height={280} style={{borderRadius:'1rem',background:'rgba(255,255,255,0.03)',border:'1px solid rgba(201,147,90,0.2)'}}/>
                 </div>
                 <div style={{position:'absolute',bottom:'0.75rem',left:'50%',transform:'translateX(-50%)',fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(255,255,255,0.4)',whiteSpace:'nowrap'}}>
                   Silueta hormonal · Foto eliminada ✓
@@ -294,7 +296,7 @@ export default function Escaner() {
               </div>
 
               {/* TIPO DE CUERPO */}
-              <div style={{background:'rgba(255,255,255,0.05)',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'1rem',padding:'1.25rem',marginBottom:'1rem',textAlign:'center'}}>
+              <div ref={resultRef} style={{background:'rgba(255,255,255,0.05)',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'1rem',padding:'1.25rem',marginBottom:'1rem',textAlign:'center'}}>
                 <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',marginBottom:'0.4rem'}}>TU SILUETA HORMONAL</div>
                 <div style={{fontSize:'1.5rem',fontWeight:700,color:'white',marginBottom:'0.25rem'}}>{analysis.tipo}</div>
                 <div style={{fontSize:'0.8rem',fontFamily:'Montserrat,sans-serif',color:'rgba(255,255,255,0.4)'}}>Zona de atención: {analysis.zona}</div>
