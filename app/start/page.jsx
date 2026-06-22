@@ -86,7 +86,11 @@ export default function Start() {
           </div>
 
           <div className={['fi d1',v?'v':''].join(' ')} style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'0.5rem',marginBottom:'1rem'}}>
-            <img src="/images/lumera_icon_nobg.png" alt="Lumera" style={{width:'24px',height:'24px',objectFit:'contain'}}/>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="22" height="22">
+              <path d="M24 2C12 2 3 12 3 24C3 36 12 46 24 46C16 40 11 32.5 11 24C11 15.5 16 8 24 2Z" fill="#C9935A"/>
+              <path d="M24 2C36 2 45 12 45 24C45 36 36 46 24 46C32 40 37 32.5 37 24C37 15.5 32 8 24 2Z" fill="#0D3D3D" opacity="0.3"/>
+              <polygon points="26,5 30,22 26,43 22,22" fill="#C9935A" opacity="0.9"/>
+            </svg>
             <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.4em'}}>LUMERA</span>
           </div>
 
