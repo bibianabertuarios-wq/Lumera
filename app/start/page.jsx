@@ -30,6 +30,11 @@ export default function Start() {
   const [lang, setLang] = useState('es');
   const [v, setV] = useState(false);
   const [selected, setSelected] = useState([]);
+  const [showLogin, setShowLogin] = useState(false);
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [loginLoading, setLoginLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
