@@ -241,7 +241,7 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
               <span style={{fontSize:'0.85rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>{user?.nombre}</span>
             </div>
             {!user?.isPremium && (
-              <button onClick={()=>router.push('/lumera?tab=upgrade')} style={{background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'99px',padding:'0.4rem 0.85rem',color:'white',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
+              <button onClick={()=>window.location.href='/lumera?tab=upgrade'} style={{background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'99px',padding:'0.4rem 0.85rem',color:'white',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
                 ✦ Premium
               </button>
             )}
@@ -471,7 +471,7 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
               <p style={{fontSize:'0.85rem',fontStyle:'italic',color:'rgba(13,61,61,0.5)',marginBottom:'1rem',lineHeight:1.6}}>
                 {is_es ? 'LUMI seguirá aprendiendo de ti con Premium.' : 'LUMI will keep learning about you with Premium.'}
               </p>
-              <button className="btn-premium" onClick={()=>router.push('/lumera?tab=upgrade')}>✦ Continuar con Premium</button>
+              <button className="btn-premium" onClick={()=>window.location.href='/lumera?tab=upgrade'}>✦ Continuar con Premium</button>
             </div>
           )}
 
