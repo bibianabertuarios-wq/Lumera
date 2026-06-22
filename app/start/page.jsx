@@ -71,8 +71,18 @@ export default function Start() {
       <div style={{minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'3rem 1.5rem',textAlign:'center',background:'linear-gradient(180deg,#ffffff 0%,#FBF7F0 100%)',fontFamily:"'Cormorant Garamond',Georgia,serif"}}>
         <div style={{maxWidth:'480px',width:'100%'}}>
 
-          <div className={['fi d1',v?'v':''].join(' ')}>
-            <img src="/images/shula-lagrima.jpg" alt="Lumera" style={{width:'120px',height:'150px',objectFit:'cover',objectPosition:'top center',borderRadius:'50% 50% 40% 40%',border:'3px solid #C9935A',marginBottom:'1.25rem',boxShadow:'0 8px 32px rgba(201,147,90,0.2)'}}/>
+          <div className={['fi d1',v?'v':''].join(' ')} style={{marginBottom:'1.25rem'}}>
+            <div style={{position:'relative',width:'180px',height:'180px',margin:'0 auto',borderRadius:'50%',overflow:'hidden',border:'3px solid #C9935A',boxShadow:'0 8px 32px rgba(201,147,90,0.25)'}}>
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                style={{width:'100%',height:'100%',objectFit:'cover'}}
+              >
+                <source src="/videos/kling_20260307_Text_to_Video__Elegant_3_1562_0.mp4" type="video/mp4"/>
+              </video>
+            </div>
           </div>
 
           <div className={['fi d1',v?'v':''].join(' ')} style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.4em',marginBottom:'1rem'}}>
