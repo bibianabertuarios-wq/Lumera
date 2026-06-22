@@ -386,6 +386,50 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
             </div>
           </div>
 
+          {/* BANNER PWA INSTALACION */}
+          {typeof window !== 'undefined' && !window.matchMedia('(display-mode: standalone)').matches && !window.navigator?.standalone && (
+            <div className={`fade d5 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
+              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
+                {is_es ? '📲 Llévame contigo' : '📲 Take me with you'}
+              </div>
+              <p style={{fontSize:'0.9rem',color:'rgba(13,61,61,0.6)',fontStyle:'italic',marginBottom:'1rem',lineHeight:1.6}}>
+                {is_es ? 'Instala Lumera en tu móvil y tenme siempre a mano — sin buscar en el navegador.' : 'Install Lumera on your phone and have me always at hand — no searching in the browser.'}
+              </p>
+              {typeof navigator !== 'undefined' && /iphone|ipad|ipod/i.test(navigator.userAgent) ? (
+                <div>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',marginBottom:'0.5rem'}}>iPhone / iPad</div>
+                  {[
+                    is_es ? 'Abre Lumera en Safari' : 'Open Lumera in Safari',
+                    is_es ? 'Pulsa el botón compartir ↑' : 'Tap the share button ↑',
+                    is_es ? 'Selecciona "Añadir a inicio"' : 'Select "Add to Home Screen"',
+                  ].map((step, i) => (
+                    <div key={i} style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'0.5rem'}}>
+                      <div style={{width:'24px',height:'24px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',color:'white',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.7rem',fontWeight:700,flexShrink:0}}>{i+1}</div>
+                      <span style={{fontSize:'0.85rem',color:'rgba(13,61,61,0.7)',fontFamily:'Montserrat,sans-serif'}}>{step}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : typeof navigator !== 'undefined' && /android/i.test(navigator.userAgent) ? (
+                <div>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',marginBottom:'0.5rem'}}>Android</div>
+                  {[
+                    is_es ? 'Abre Lumera en Chrome' : 'Open Lumera in Chrome',
+                    is_es ? 'Toca el menú ⋮ (tres puntos)' : 'Tap the menu ⋮ (three dots)',
+                    is_es ? 'Selecciona "Añadir a pantalla de inicio"' : 'Select "Add to Home Screen"',
+                  ].map((step, i) => (
+                    <div key={i} style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'0.5rem'}}>
+                      <div style={{width:'24px',height:'24px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',color:'white',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.7rem',fontWeight:700,flexShrink:0}}>{i+1}</div>
+                      <span style={{fontSize:'0.85rem',color:'rgba(13,61,61,0.7)',fontFamily:'Montserrat,sans-serif'}}>{step}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+              <p style={{fontSize:'0.7rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.3)',marginTop:'0.75rem',textAlign:'center'}}>
+                {is_es ? '✦ Gratuito · Sin descargas de tienda · Siempre actualizada' : '✦ Free · No store download · Always up to date'}
+              </p>
+            </div>
+          )}
+
           {/* BANNER PREMIUM */}
           {!user?.isPremium && diasRestantes <= 1 && (
             <div className={`fade d5 ${visible?'in':''}`} style={{background:'linear-gradient(135deg,rgba(201,147,90,0.1),rgba(160,96,48,0.06))',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'1.25rem',padding:'1.5rem',marginBottom:'1.25rem',textAlign:'center'}}>
