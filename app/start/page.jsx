@@ -128,6 +128,44 @@ export default function Start() {
             </p>
           </div>
 
+          {/* YA TENGO CUENTA */}
+          <div className={['fi d5',v?'v':''].join(' ')} style={{marginTop:'2rem',textAlign:'center'}}>
+            {!showLogin ? (
+              <p style={{fontSize:'0.85rem',color:'rgba(13,61,61,0.35)',fontFamily:'Montserrat,sans-serif'}}>
+                {es ? '¿Ya tienes cuenta? ' : 'Already have an account? '}
+                <span onClick={()=>setShowLogin(true)} style={{color:'#C9935A',cursor:'pointer',textDecoration:'underline',fontWeight:600}}>
+                  {es ? 'Entrar aquí' : 'Sign in here'}
+                </span>
+              </p>
+            ) : (
+              <div style={{background:'rgba(13,61,61,0.04)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1rem',padding:'1.25rem',textAlign:'left'}}>
+                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',marginBottom:'1rem',textAlign:'center'}}>
+                  {es ? 'ACCEDE A TU CUENTA' : 'SIGN IN'}
+                </div>
+                <input type="email" placeholder={es?'Tu email':'Your email'} value={loginEmail} onChange={e=>setLoginEmail(e.target.value)}
+                  style={{width:'100%',background:'white',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.85rem 1rem',color:'#0D3D3D',fontFamily:'Montserrat,sans-serif',fontSize:'0.9rem',marginBottom:'0.75rem',outline:'none'}}/>
+                <input type="password" placeholder={es?'Tu contraseña':'Your password'} value={loginPassword} onChange={e=>setLoginPassword(e.target.value)}
+                  style={{width:'100%',background:'white',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.85rem 1rem',color:'#0D3D3D',fontFamily:'Montserrat,sans-serif',fontSize:'0.9rem',marginBottom:'0.75rem',outline:'none'}}/>
+                {loginError && <p style={{color:'#E53E3E',fontSize:'0.8rem',fontFamily:'Montserrat,sans-serif',marginBottom:'0.75rem',textAlign:'center'}}>{loginError}</p>}
+                <button onClick={async()=>{
+                    setLoginError('');
+                    setLoginLoading(true);
+                    const {error} = await supabase.auth.signInWithPassword({email:loginEmail,password:loginPassword});
+                    setLoginLoading(false);
+                    if(error) setLoginError(es?'Email o contraseña incorrectos':'Wrong email or password');
+                    else router.push('/dashboard');
+                  }}
+                  disabled={loginLoading||!loginEmail||!loginPassword}
+                  style={{width:'100%',background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'0.85rem',color:'white',fontFamily:'Montserrat,sans-serif',fontWeight:700,fontSize:'0.95rem',cursor:'pointer',opacity:(loginLoading||!loginEmail||!loginPassword)?0.6:1,marginBottom:'0.5rem'}}>
+                  {loginLoading?(es?'Entrando...':'Signing in...'):(es?'Entrar':'Sign in')}
+                </button>
+                <p onClick={()=>setShowLogin(false)} style={{fontSize:'0.75rem',color:'rgba(13,61,61,0.35)',fontFamily:'Montserrat,sans-serif',cursor:'pointer',textAlign:'center'}}>
+                  {es?'← Volver':'← Back'}
+                </p>
+              </div>
+            )}
+          </div>
+
         </div>
       </div>
     </>
