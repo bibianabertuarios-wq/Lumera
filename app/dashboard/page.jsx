@@ -237,9 +237,8 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
         <div style={{background:'rgba(255,255,255,0.92)',borderBottom:'1px solid rgba(201,147,90,0.15)',backdropFilter:'blur(10px)',padding:'0.75rem 1.25rem',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
           <span style={{fontSize:'1.1rem',fontWeight:700,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>✦ Lumera</span>
           <div style={{display:'flex',alignItems:'center',gap:'0.6rem'}}>
-            <div style={{display:'flex',alignItems:'center',gap:'0.5rem',background:'rgba(201,147,90,0.08)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'99px',padding:'0.3rem 0.75rem 0.3rem 0.3rem'}}>
-              <div style={{width:'26px',height:'26px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.75rem',fontWeight:700,color:'white',fontFamily:'Montserrat,sans-serif',flexShrink:0}}>L</div>
-              <span style={{fontSize:'0.8rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>{user?.nombre}</span>
+            <div style={{display:'flex',alignItems:'center',gap:'0.5rem',background:'rgba(201,147,90,0.08)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'99px',padding:'0.3rem 0.75rem'}}>
+              <span style={{fontSize:'0.85rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>{user?.nombre}</span>
             </div>
             {!user?.isPremium && (
               <button onClick={()=>router.push('/lumera?tab=upgrade')} style={{background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'99px',padding:'0.4rem 0.85rem',color:'white',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
@@ -272,6 +271,23 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
               </div>
             </div>
           </div>
+
+          {/* BARRA TRIAL */}
+          {!user?.isPremium && (
+            <div className={`fade d1 ${visible?'in':''}`} style={{marginBottom:'1rem'}}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.3rem'}}>
+                <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(13,61,61,0.5)'}}>
+                  {is_es ? `Día ${diaActual} de 3 — Prueba gratuita` : `Day ${diaActual} of 3 — Free trial`}
+                </span>
+                <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'#C9935A',fontWeight:600}}>
+                  {is_es ? `${diasRestantes}d restantes` : `${diasRestantes}d left`}
+                </span>
+              </div>
+              <div style={{height:'3px',background:'rgba(201,147,90,0.15)',borderRadius:'99px',overflow:'hidden'}}>
+                <div style={{height:'100%',background:'linear-gradient(90deg,#C9935A,#A06030)',borderRadius:'99px',width:`${(diaActual/3)*100}%`,transition:'width 0.5s ease'}}/>
+              </div>
+            </div>
+          )}
 
           {/* BLOQUE 1 — LUMI */}
           <div className={`fade d2 ${visible?'in':''}`} style={{background:'linear-gradient(135deg,rgba(13,61,61,0.97),rgba(10,45,45,0.98))',borderRadius:'1.25rem',padding:'1.5rem',marginBottom:'1.25rem',boxShadow:'0 4px 24px rgba(13,61,61,0.2)'}}>
