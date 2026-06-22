@@ -236,16 +236,17 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
         {/* HEADER */}
         <div style={{background:'rgba(255,255,255,0.92)',borderBottom:'1px solid rgba(201,147,90,0.15)',backdropFilter:'blur(10px)',padding:'0.75rem 1.25rem',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
           <span style={{fontSize:'1.1rem',fontWeight:700,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>✦ Lumera</span>
-          {!user?.isPremium && (
-            <div style={{display:'flex',alignItems:'center',gap:'0.75rem'}}>
-              <span style={{fontSize:'0.7rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.5)'}}>
-                {is_es ? `${diasRestantes}d de prueba` : `${diasRestantes}d trial`}
-              </span>
-              <button onClick={()=>router.push('/lumera')} style={{background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'99px',padding:'0.4rem 0.85rem',color:'white',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
+          <div style={{display:'flex',alignItems:'center',gap:'0.6rem'}}>
+            <div style={{display:'flex',alignItems:'center',gap:'0.5rem',background:'rgba(201,147,90,0.08)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'99px',padding:'0.3rem 0.75rem 0.3rem 0.3rem'}}>
+              <div style={{width:'26px',height:'26px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.75rem',fontWeight:700,color:'white',fontFamily:'Montserrat,sans-serif',flexShrink:0}}>L</div>
+              <span style={{fontSize:'0.8rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>{user?.nombre}</span>
+            </div>
+            {!user?.isPremium && (
+              <button onClick={()=>router.push('/lumera?tab=upgrade')} style={{background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'99px',padding:'0.4rem 0.85rem',color:'white',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
                 ✦ Premium
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         <div style={{maxWidth:'520px',margin:'0 auto',padding:'1.25rem 1.25rem 0'}}>
@@ -359,15 +360,15 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
             </div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem'}}>
               {(is_es ? [
-                {img:'/images/nutri_huevo.png', title:'Nutrición', sub:'Tu menú de hoy', route:'/lumera'},
-                {img:'/images/lente_alquimica.png', title:'Lente Alquímica', sub:'Analiza tu plato', route:'/lumera'},
+                {img:'/images/nutri_huevo.png', title:'Nutrición', sub:'Tu menú de hoy', route:'/lumera?tab=nutrition'},
+                {img:'/images/lente_alquimica.png', title:'Lente Alquímica', sub:'Analiza tu plato', route:'/lumera?tab=chat'},
                 {img:'/images/ejer_fuerza.png', title:'Silueta Hormonal', sub:'Tu análisis corporal', route:'/escaner'},
-                {img:'/images/lumi.png', title:'LUMI', sub:'Habla con tu asesora', route:'/lumera'},
+                {img:'/images/lumi.png', title:'LUMI', sub:'Habla con tu asesora', route:'/lumera?tab=chat'},
               ] : [
-                {img:'/images/nutri_huevo.png', title:'Nutrition', sub:'Your menu today', route:'/lumera'},
-                {img:'/images/lente_alquimica.png', title:'Alchemical Lens', sub:'Analyse your plate', route:'/lumera'},
+                {img:'/images/nutri_huevo.png', title:'Nutrition', sub:'Your menu today', route:'/lumera?tab=nutrition'},
+                {img:'/images/lente_alquimica.png', title:'Alchemical Lens', sub:'Analyse your plate', route:'/lumera?tab=chat'},
                 {img:'/images/ejer_fuerza.png', title:'Body Scanner', sub:'Your body analysis', route:'/escaner'},
-                {img:'/images/lumi.png', title:'LUMI', sub:'Talk to your advisor', route:'/lumera'},
+                {img:'/images/lumi.png', title:'LUMI', sub:'Talk to your advisor', route:'/lumera?tab=chat'},
               ]).map((t,i) => (
                 <div key={i} className="tool-card" onClick={()=>router.push(t.route)}>
                   <img src={t.img} alt={t.title} style={{width:'48px',height:'48px',objectFit:'cover',borderRadius:'50%',marginBottom:'0.4rem'}} onError={e=>{e.target.style.display='none'}}/>
@@ -387,7 +388,7 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
               <p style={{fontSize:'0.85rem',fontStyle:'italic',color:'rgba(13,61,61,0.5)',marginBottom:'1rem',lineHeight:1.6}}>
                 {is_es ? 'LUMI seguirá aprendiendo de ti con Premium.' : 'LUMI will keep learning about you with Premium.'}
               </p>
-              <button className="btn-premium" onClick={()=>router.push('/lumera')}>✦ Continuar con Premium</button>
+              <button className="btn-premium" onClick={()=>router.push('/lumera?tab=upgrade')}>✦ Continuar con Premium</button>
             </div>
           )}
 
@@ -397,16 +398,16 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
         <div style={{position:'fixed',bottom:0,left:0,right:0,background:'rgba(255,255,255,0.95)',borderTop:'1px solid rgba(201,147,90,0.15)',backdropFilter:'blur(10px)',padding:'0.5rem 0',display:'flex',justifyContent:'space-around',zIndex:100}}>
           {(is_es ? [
             {icon:'🏠', label:'Inicio', route:'/dashboard'},
-            {icon:'🥗', label:'Nutrición', route:'/lumera'},
+            {icon:'🥗', label:'Nutrición', route:'/lumera?tab=nutrition'},
             {icon:'✦', label:'Silueta', route:'/escaner'},
-            {icon:'🤝', label:'LUMI', route:'/lumera'},
-            {icon:'👑', label:'Premium', route:'/lumera'},
+            {icon:'🤝', label:'LUMI', route:'/lumera?tab=chat'},
+            {icon:'👑', label:'Premium', route:'/lumera?tab=upgrade'},
           ] : [
             {icon:'🏠', label:'Home', route:'/dashboard'},
-            {icon:'🥗', label:'Nutrition', route:'/lumera'},
+            {icon:'🥗', label:'Nutrition', route:'/lumera?tab=nutrition'},
             {icon:'✦', label:'Scanner', route:'/escaner'},
-            {icon:'🤝', label:'LUMI', route:'/lumera'},
-            {icon:'👑', label:'Premium', route:'/lumera'},
+            {icon:'🤝', label:'LUMI', route:'/lumera?tab=chat'},
+            {icon:'👑', label:'Premium', route:'/lumera?tab=upgrade'},
           ]).map((n,i) => (
             <div key={i} className="nav-item" onClick={()=>router.push(n.route)}>
               <span style={{fontSize:'1.2rem'}}>{n.icon}</span>
