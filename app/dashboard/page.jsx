@@ -335,11 +335,13 @@ export default function Dashboard() {
                 {img:'/images/lente_alquimica.png',title:'Lente Alquímica',sub:'Analiza tu plato',route:'/lumera'},
                 {img:'/images/ejer_fuerza.png',title:'Ejercicio',sub:'Movimiento a tu medida',route:'/lumera'},
                 {img:'/images/lumi.png',title:'LUMI',sub:'Tu espacio seguro',route:'/lumera'},
+                {img:'/images/ejer_fuerza.png',title:'Silueta Hormonal',sub:'Tu análisis corporal',route:'/escaner'},
               ] : [
                 {img:'/images/nutri_huevo.png',title:'Nutrition',sub:'Your menu today',route:'/lumera'},
                 {img:'/images/lente_alquimica.png',title:'Alchemical Lens',sub:'Analyse your plate',route:'/lumera'},
                 {img:'/images/ejer_fuerza.png',title:'Exercise',sub:'Movement your way',route:'/lumera'},
                 {img:'/images/lumi.png',title:'LUMI',sub:'Your safe space',route:'/lumera'},
+                {img:'/images/ejer_fuerza.png',title:'Body Scanner',sub:'Your body analysis',route:'/escaner'},
               ]).map((p,i) => (
                 <div key={i} className="pilar-card" onClick={()=>router.push(p.route)}>
                   <img src={p.img} alt={p.title} style={{width:'56px',height:'56px',objectFit:'cover',borderRadius:'50%',marginBottom:'0.5rem'}} onError={e=>{e.target.style.display='none'}}/>
@@ -400,6 +402,7 @@ export default function Dashboard() {
             {icon:'🏠',label:'Inicio',route:'/dashboard'},
             {icon:'🥗',label:'Nutricion',route:'/lumera'},
             {icon:'📊',label:'Sintomas',route:'/lumera'},
+            {icon:'✦',label:'Silueta',route:'/escaner'},
             {icon:'🤝',label:'LUMI',route:'/lumera'},
             {icon:'👑',label:'Premium',route:'/lumera'},
           ] : [
