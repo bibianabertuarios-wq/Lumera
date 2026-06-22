@@ -202,6 +202,7 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
   const hora = getHora();
   const diasEnApp = Math.floor((new Date() - new Date(user.createdAt)) / (1000*60*60*24));
   const diasRestantes = Math.max(0, 3 - diasEnApp);
+  const diaActual = Math.min(diasEnApp + 1, 3);
   const plan = getPlanDelDia();
   const energiaPct = getPromedioSemana('energia');
   const suenoPct = getPromedioSemana('sueno');
