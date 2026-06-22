@@ -257,6 +257,22 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
             <h1 style={{fontSize:'clamp(1.6rem,4vw,2rem)',fontWeight:700,color:'#0D3D3D',lineHeight:1.15}}>{user?.nombre}</h1>
           </div>
 
+          {/* CARD SILUETA — WOW FACTOR */}
+          <div className={`fade d2 ${visible?'in':''}`} style={{position:'relative',borderRadius:'1.25rem',overflow:'hidden',marginBottom:'1.25rem',cursor:'pointer',boxShadow:'0 4px 24px rgba(13,61,61,0.15)'}} onClick={()=>router.push('/escaner')}>
+            <video autoPlay muted loop playsInline style={{width:'100%',height:'180px',objectFit:'cover',display:'block'}}>
+              <source src="/videos/silueta.mp4" type="video/mp4"/>
+            </video>
+            <div style={{position:'absolute',inset:0,background:'linear-gradient(180deg,transparent 30%,rgba(13,61,61,0.85) 100%)',display:'flex',flexDirection:'column',justifyContent:'flex-end',padding:'1.25rem'}}>
+              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',marginBottom:'0.25rem'}}>✦ NUEVO</div>
+              <div style={{fontSize:'1.2rem',fontWeight:700,color:'white',marginBottom:'0.25rem',fontFamily:"'Cormorant Garamond',serif"}}>
+                {is_es ? 'Tu Silueta Hormonal' : 'Your Hormonal Silhouette'}
+              </div>
+              <div style={{fontSize:'0.8rem',fontFamily:'Montserrat,sans-serif',color:'rgba(255,255,255,0.7)'}}>
+                {is_es ? 'Analiza tu cuerpo y descubre tus patrones →' : 'Analyse your body and discover your patterns →'}
+              </div>
+            </div>
+          </div>
+
           {/* BLOQUE 1 — LUMI */}
           <div className={`fade d2 ${visible?'in':''}`} style={{background:'linear-gradient(135deg,rgba(13,61,61,0.97),rgba(10,45,45,0.98))',borderRadius:'1.25rem',padding:'1.5rem',marginBottom:'1.25rem',boxShadow:'0 4px 24px rgba(13,61,61,0.2)'}}>
             <div style={{display:'flex',alignItems:'center',gap:'0.5rem',marginBottom:'1rem'}}>
@@ -367,15 +383,15 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
             </div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem'}}>
               {(is_es ? [
-                {img:'/images/nutri_huevo.png', title:'Nutrición', sub:'Tu menú de hoy', route:'/lumera?tab=nutrition'},
-                {img:'/images/lente_alquimica.png', title:'Lente Alquímica', sub:'Analiza tu plato', route:'/lumera?tab=chat'},
-                {img:'/images/ejer_fuerza.png', title:'Silueta Hormonal', sub:'Tu análisis corporal', route:'/escaner'},
+                {img:"/images/kling_20260321_作品__Extremely_4730_1.png", title:'Nutrición', sub:'Tu menú de hoy', route:'/lumera?tab=nutrition'},
+                {img:"/images/kling_20260321_作品_Extremely__4896_1.png", title:'Ejercicio', sub:'Tu rutina de hoy', route:'/lumera?tab=exercise'},
                 {img:'/images/lumi.png', title:'LUMI', sub:'Habla con tu asesora', route:'/lumera?tab=chat'},
+                {img:'/images/lente_alquimica.png', title:'Lente Alquímica', sub:'Analiza tu plato', route:'/lumera?tab=chat'},
               ] : [
-                {img:'/images/nutri_huevo.png', title:'Nutrition', sub:'Your menu today', route:'/lumera?tab=nutrition'},
-                {img:'/images/lente_alquimica.png', title:'Alchemical Lens', sub:'Analyse your plate', route:'/lumera?tab=chat'},
-                {img:'/images/ejer_fuerza.png', title:'Body Scanner', sub:'Your body analysis', route:'/escaner'},
+                {img:"/images/kling_20260321_作品__Extremely_4730_1.png", title:'Nutrition', sub:'Your menu today', route:'/lumera?tab=nutrition'},
+                {img:"/images/kling_20260321_作品_Extremely__4896_1.png", title:'Exercise', sub:'Your routine today', route:'/lumera?tab=exercise'},
                 {img:'/images/lumi.png', title:'LUMI', sub:'Talk to your advisor', route:'/lumera?tab=chat'},
+                {img:'/images/lente_alquimica.png', title:'Alchemical Lens', sub:'Analyse your plate', route:'/lumera?tab=chat'},
               ]).map((t,i) => (
                 <div key={i} className="tool-card" onClick={()=>{ if(t.route.includes('/lumera')) window.location.href=t.route; else router.push(t.route); }}>
                   <img src={t.img} alt={t.title} style={{width:'48px',height:'48px',objectFit:'cover',borderRadius:'50%',marginBottom:'0.4rem'}} onError={e=>{e.target.style.display='none'}}/>
@@ -448,20 +464,20 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
         {/* NAV */}
         <div style={{position:'fixed',bottom:0,left:0,right:0,background:'rgba(255,255,255,0.95)',borderTop:'1px solid rgba(201,147,90,0.15)',backdropFilter:'blur(10px)',padding:'0.5rem 0',display:'flex',justifyContent:'space-around',zIndex:100}}>
           {(is_es ? [
-            {icon:'🏠', label:'Inicio', route:'/dashboard'},
-            {icon:'🥗', label:'Nutrición', route:'/lumera?tab=nutrition'},
-            {icon:'✦', label:'Silueta', route:'/escaner'},
-            {icon:'🤝', label:'LUMI', route:'/lumera?tab=chat'},
-            {icon:'👑', label:'Premium', route:'/lumera?tab=upgrade'},
+            {img:"/images/kling_20260321_作品_Extremely__4837_0.png", label:'Inicio', route:'/dashboard'},
+            {img:"/images/kling_20260321_作品__Extremely_4730_1.png", label:'Nutrición', route:'/lumera?tab=nutrition'},
+            {img:'/videos/PREMIUM.png', label:'Premium', route:'/lumera?tab=upgrade'},
+            {img:'/images/lumi.png', label:'LUMI', route:'/lumera?tab=chat'},
+            {img:"/images/kling_20260321_作品_Extremely__4896_1.png", label:'Ejercicio', route:'/lumera?tab=exercise'},
           ] : [
-            {icon:'🏠', label:'Home', route:'/dashboard'},
-            {icon:'🥗', label:'Nutrition', route:'/lumera?tab=nutrition'},
-            {icon:'✦', label:'Scanner', route:'/escaner'},
-            {icon:'🤝', label:'LUMI', route:'/lumera?tab=chat'},
-            {icon:'👑', label:'Premium', route:'/lumera?tab=upgrade'},
+            {img:"/images/kling_20260321_作品_Extremely__4837_0.png", label:'Home', route:'/dashboard'},
+            {img:"/images/kling_20260321_作品__Extremely_4730_1.png", label:'Nutrition', route:'/lumera?tab=nutrition'},
+            {img:'/videos/PREMIUM.png', label:'Premium', route:'/lumera?tab=upgrade'},
+            {img:'/images/lumi.png', label:'LUMI', route:'/lumera?tab=chat'},
+            {img:"/images/kling_20260321_作品_Extremely__4896_1.png", label:'Exercise', route:'/lumera?tab=exercise'},
           ]).map((n,i) => (
             <div key={i} className="nav-item" onClick={()=>{ if(n.route.includes('/lumera')) window.location.href=n.route; else router.push(n.route); }}>
-              <span style={{fontSize:'1.2rem'}}>{n.icon}</span>
+              <img src={n.img} alt={n.label} style={{width:'28px',height:'28px',borderRadius:'50%',objectFit:'cover',border:n.route==='/dashboard'?'2px solid #C9935A':'2px solid transparent'}}/>
               <span style={{fontSize:'0.6rem',fontFamily:'Montserrat,sans-serif',color:n.route==='/dashboard'?'#C9935A':'rgba(13,61,61,0.4)',fontWeight:n.route==='/dashboard'?700:400}}>{n.label}</span>
             </div>
           ))}
