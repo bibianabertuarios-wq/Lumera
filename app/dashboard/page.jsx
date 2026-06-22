@@ -377,7 +377,7 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
                 {img:'/images/ejer_fuerza.png', title:'Body Scanner', sub:'Your body analysis', route:'/escaner'},
                 {img:'/images/lumi.png', title:'LUMI', sub:'Talk to your advisor', route:'/lumera?tab=chat'},
               ]).map((t,i) => (
-                <div key={i} className="tool-card" onClick={()=>router.push(t.route)}>
+                <div key={i} className="tool-card" onClick={()=>{ if(t.route.includes('/lumera')) window.location.href=t.route; else router.push(t.route); }}>
                   <img src={t.img} alt={t.title} style={{width:'48px',height:'48px',objectFit:'cover',borderRadius:'50%',marginBottom:'0.4rem'}} onError={e=>{e.target.style.display='none'}}/>
                   <div style={{fontSize:'0.95rem',fontWeight:600,color:'#0D3D3D',marginBottom:'0.1rem'}}>{t.title}</div>
                   <div style={{fontSize:'0.7rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.4)'}}>{t.sub}</div>
@@ -460,7 +460,7 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
             {icon:'🤝', label:'LUMI', route:'/lumera?tab=chat'},
             {icon:'👑', label:'Premium', route:'/lumera?tab=upgrade'},
           ]).map((n,i) => (
-            <div key={i} className="nav-item" onClick={()=>router.push(n.route)}>
+            <div key={i} className="nav-item" onClick={()=>{ if(n.route.includes('/lumera')) window.location.href=n.route; else router.push(n.route); }}>
               <span style={{fontSize:'1.2rem'}}>{n.icon}</span>
               <span style={{fontSize:'0.6rem',fontFamily:'Montserrat,sans-serif',color:n.route==='/dashboard'?'#C9935A':'rgba(13,61,61,0.4)',fontWeight:n.route==='/dashboard'?700:400}}>{n.label}</span>
             </div>
