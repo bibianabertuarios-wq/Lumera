@@ -1,6 +1,10 @@
 'use client';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { createClient } from '@supabase/supabase-js';
+
+const SUPABASE_URL = 'https://pyekwpmbdnmglrjieexc.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5ZWt3cG1iZG5tZ2xyamllZXhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzOTMyNDIsImV4cCI6MjA1Nzk2OTI0Mn0.xHHGOEDM9WFCxNBDjSDMGkpSqMNGMHFBvAjMEKpcMko';
 
 const css = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600;700&display=swap');
@@ -29,6 +33,7 @@ export default function Escaner() {
   const [analysis, setAnalysis] = useState(null);
   const [rotating, setRotating] = useState(false);
   const [poseIndex, setPoseIndex] = useState(0);
+  const [userData, setUserData] = useState(null);
   const fileRef = useRef(null);
   const canvasRef = useRef(null);
   const avatarRef = useRef(null);
@@ -38,6 +43,22 @@ export default function Escaner() {
 
   useEffect(() => {
     setTimeout(() => setVisible(true), 100);
+    // Cargar datos usuario desde Supabase
+    const loadUser = async () => {
+      try {
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+          const { data: profile } = await supabase
+            .from('users')
+            .select('peso, talla')
+            .eq('id', session.user.id)
+            .single();
+          if (profile) setUserData(profile);
+        }
+      } catch(e) { console.log('No user data', e); }
+    };
+    loadUser();
   }, []);
 
   // Ciclo de poses avatar sprite
@@ -136,6 +157,71 @@ export default function Escaner() {
     }
 
     return { tipo, zona, consejo, ratio: ratio.toFixed(2), shoulderWidth, hipWidth };
+  };
+
+  const calcularIMC = (peso, talla) => {
+    if (!peso || !talla) return null;
+    const tallaMts = talla > 3 ? talla / 100 : talla;
+    return peso / (tallaMts * tallaMts);
+  };
+
+  const getBodyTransform = (analysis, imc) => {
+    // Escala base según IMC
+    let scaleGlobal = 1;
+    let scaleHips = 1;
+    let scaleWaist = 1;
+    let scaleShoulders = 1;
+
+    if (imc) {
+      if (imc < 18.5) { scaleGlobal = 0.88; }
+      else if (imc < 22) { scaleGlobal = 0.94; }
+      else if (imc < 25) { scaleGlobal = 1.0; }
+      else if (imc < 28) { scaleGlobal = 1.06; }
+      else if (imc < 32) { scaleGlobal = 1.12; }
+      else { scaleGlobal = 1.18; }
+    }
+
+    // Ajuste proporcional según morfología
+    const ratio = parseFloat(analysis.ratio);
+    if (analysis.tipo === 'Pera') {
+      scaleHips = 1.12;
+      scaleShoulders = 0.94;
+    } else if (analysis.tipo === 'Manzana') {
+      scaleWaist = 1.14;
+    } else if (analysis.tipo === 'Manzana invertida') {
+      scaleShoulders = 1.1;
+      scaleHips = 0.92;
+    }
+
+    return { scaleGlobal, scaleHips, scaleWaist, scaleShoulders };
+  };
+
+  const getHaloZones = (analysis, imc) => {
+    const zones = [];
+    // Posiciones relativas a la imagen (top como % de altura)
+    if (analysis.zona === 'abdomen') {
+      zones.push({ top: '48%', left: '50%', color: '#C9935A', label: 'Zona abdominal', size: 70 });
+    }
+    if (analysis.zona === 'caderas') {
+      zones.push({ top: '62%', left: '50%', color: '#C9935A', label: 'Zona caderas', size: 65 });
+    }
+    if (analysis.zona === 'hombros') {
+      zones.push({ top: '22%', left: '50%', color: '#C9935A', label: 'Zona hombros', size: 60 });
+    }
+    if (imc && imc < 18.5) {
+      // Persona delgada — refuerzo muscular
+      zones.push({ top: '30%', left: '50%', color: '#4ECDC4', label: 'Refuerzo', size: 55 });
+      zones.push({ top: '68%', left: '50%', color: '#4ECDC4', label: 'Refuerzo piernas', size: 50 });
+    }
+    return zones;
+  };
+
+  const getIMCCategory = (imc) => {
+    if (!imc) return null;
+    if (imc < 18.5) return { label: 'Bajo peso', color: '#4ECDC4' };
+    if (imc < 25) return { label: 'Peso saludable', color: '#7BC67E' };
+    if (imc < 30) return { label: 'Sobrepeso', color: '#C9935A' };
+    return { label: 'Obesidad', color: '#E07070' };
   };
 
   const drawAvatar = (lm, analysis) => {
@@ -279,39 +365,82 @@ export default function Escaner() {
           {step === 'result' && analysis && (
             <div className={`fade d1 ${visible?'in':''}`}>
               
-              {/* AVATAR SPRITE GIRATORIO */}
-              <div style={{position:'relative',marginBottom:'1.5rem',textAlign:'center'}}>
-                <div style={{
-                  display:'inline-block',
-                  position:'relative',
-                  borderRadius:'1rem',
-                  overflow:'hidden',
-                  border:'1px solid rgba(201,147,90,0.3)',
-                  boxShadow:'0 0 40px rgba(201,147,90,0.15)',
-                  background:'rgba(255,255,255,0.03)'
-                }}>
-                  <img
-                    src={`/images/opt/avatar/avatar_pose_${poseIndex + 1}.png`}
-                    alt="Avatar hormonal"
-                    style={{
-                      width:'160px',
-                      height:'280px',
-                      objectFit:'contain',
-                      display:'block',
-                      filter:'drop-shadow(0 0 12px rgba(201,147,90,0.4))'
-                    }}
-                  />
-                  <div style={{
-                    position:'absolute',
-                    top:0,left:0,right:0,bottom:0,
-                    background:'linear-gradient(180deg,transparent 0%,rgba(201,147,90,0.04) 50%,transparent 100%)',
-                    pointerEvents:'none'
-                  }}/>
-                </div>
-                <div style={{marginTop:'0.5rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(255,255,255,0.4)',whiteSpace:'nowrap'}}>
-                  Silueta hormonal · Foto eliminada ✓
-                </div>
-              </div>
+              {/* AVATAR SPRITE GIRATORIO CON HALOS */}
+              {(() => {
+                const imc = calcularIMC(userData?.peso, userData?.talla);
+                const transform = getBodyTransform(analysis, imc);
+                const halos = getHaloZones(analysis, imc);
+                const imcCat = getIMCCategory(imc);
+                return (
+                  <div style={{marginBottom:'1.5rem',textAlign:'center'}}>
+                    {/* Figura escalada */}
+                    <div style={{
+                      display:'inline-block',
+                      position:'relative',
+                      transform:`scaleX(${transform.scaleGlobal * (analysis.tipo==='Pera'?1.05:analysis.tipo==='Manzana invertida'?0.97:1)}) scaleY(${transform.scaleGlobal})`,
+                      transformOrigin:'center bottom',
+                      transition:'transform 0.5s ease'
+                    }}>
+                      <div style={{
+                        position:'relative',
+                        borderRadius:'1rem',
+                        overflow:'visible',
+                        border:'1px solid rgba(201,147,90,0.3)',
+                        boxShadow:'0 0 40px rgba(201,147,90,0.15)',
+                        background:'rgba(255,255,255,0.03)'
+                      }}>
+                        <img
+                          src={`/images/opt/avatar/avatar_pose_${poseIndex + 1}.png`}
+                          alt="Avatar hormonal"
+                          style={{
+                            width:'160px',
+                            height:'280px',
+                            objectFit:'contain',
+                            display:'block',
+                            filter:'drop-shadow(0 0 12px rgba(201,147,90,0.4))'
+                          }}
+                        />
+                        {/* Halos de zonas */}
+                        {halos.map((halo, i) => (
+                          <div key={i} style={{
+                            position:'absolute',
+                            top:halo.top,
+                            left:halo.left,
+                            transform:'translate(-50%,-50%)',
+                            width:`${halo.size}px`,
+                            height:`${halo.size}px`,
+                            borderRadius:'50%',
+                            border:`2px solid ${halo.color}`,
+                            boxShadow:`0 0 16px ${halo.color}, inset 0 0 16px ${halo.color}22`,
+                            animation:'pulse 1.8s ease-in-out infinite',
+                            mixBlendMode:'screen',
+                            pointerEvents:'none'
+                          }}/>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* IMC badge si tenemos datos */}
+                    {imc && imcCat && (
+                      <div style={{marginTop:'0.75rem',display:'inline-flex',alignItems:'center',gap:'0.4rem',background:'rgba(255,255,255,0.06)',border:`1px solid ${imcCat.color}44`,borderRadius:'2rem',padding:'0.3rem 0.8rem'}}>
+                        <div style={{width:'8px',height:'8px',borderRadius:'50%',background:imcCat.color}}/>
+                        <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:imcCat.color,fontWeight:600}}>IMC {imc.toFixed(1)} · {imcCat.label}</span>
+                      </div>
+                    )}
+
+                    <div style={{marginTop:'0.5rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(255,255,255,0.4)',whiteSpace:'nowrap'}}>
+                      Silueta hormonal · Foto eliminada ✓
+                    </div>
+
+                    {/* Disclaimer precisión */}
+                    <div style={{marginTop:'0.6rem',background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:'0.5rem',padding:'0.5rem 0.75rem',maxWidth:'280px',margin:'0.6rem auto 0'}}>
+                      <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.3)',lineHeight:1.6,textAlign:'center'}}>
+                        ⓘ Análisis orientativo basado en proporciones visuales{imc ? ' e IMC' : ''}. Precisión estimada ~75–80%. No sustituye valoración médica o nutricional profesional.
+                      </p>
+                    </div>
+                  </div>
+                );
+              })()}
 
               {/* TIPO DE CUERPO */}
               <div ref={resultRef} style={{background:'rgba(255,255,255,0.05)',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'1rem',padding:'1.25rem',marginBottom:'1rem',textAlign:'center'}}>
