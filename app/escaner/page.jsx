@@ -291,7 +291,7 @@ export default function Escaner() {
                   background:'rgba(255,255,255,0.03)'
                 }}>
                   <img
-                    src={`/images/avatar/avatar_pose_${poseIndex + 1}.png`}
+                    src={`/images/opt/avatar/avatar_pose_${poseIndex + 1}.png`}
                     alt="Avatar hormonal"
                     style={{
                       width:'160px',
