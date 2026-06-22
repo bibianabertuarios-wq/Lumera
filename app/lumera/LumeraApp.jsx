@@ -69,6 +69,10 @@ import './lumera.css'
             const [loading, setLoading] = useState(true);
             const [currentUser, setCurrentUser] = useState(null);
             const [currentPage, setCurrentPage] = useState('home');
+            const hideChrome = typeof window !== 'undefined' && 
+                ['nutrition','exercise','symptoms','chat','upgrade','period'].includes(
+                    new URLSearchParams(window.location.search).get('tab')
+                );
 
             // Leer tab de URL al montar
             useEffect(() => {
@@ -7471,7 +7475,7 @@ query = query.eq('region', region.toUpperCase());
             return (
                 <div className={darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50'}>
                     <style>{`.lumera-slider{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:9999px;outline:none;cursor:pointer;background:linear-gradient(to right,#C4A882 calc(var(--val,5)*10%),#e8d5c0 calc(var(--val,5)*10%))}.lumera-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#C4A882,#e8c89f);cursor:pointer;box-shadow:0 1px 6px rgba(201,147,90,0.4)}.lumera-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#C4A882,#e8c89f);cursor:pointer;border:none}`}</style>
-                    <header className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} shadow sticky top-0 z-40 border-b`}>
+                    <header style={{display: hideChrome ? 'none' : undefined}} className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} shadow sticky top-0 z-40 border-b`}>
                         <div className="max-w-6xl mx-auto px-3 py-3 flex justify-between items-center" style={{gap:'0.5rem'}}>
                             <div className="flex items-center gap-3">
                                 <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -7605,7 +7609,7 @@ query = query.eq('region', region.toUpperCase());
                         </div>
                     </footer>
 
-                    <nav className={`fixed bottom-0 left-0 right-0 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-t shadow-lg`}>
+                    <nav className={`fixed bottom-0 left-0 right-0 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-t shadow-lg`} style={{display: hideChrome ? 'none' : 'block'}}>
                         <div className="max-w-6xl mx-auto flex justify-around overflow-x-auto">
                             {[
                                 { page: 'home', label: t[language].home, img: '/images/sintomas.png', premium: false },

@@ -52,17 +52,17 @@ export default function Start() {
   const toggle = (s) => setSelected(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s]);
 
   const symptoms = es ? [
-    {icon:'⚡', text:'Siento un cansancio que no se va'},
-    {icon:'⚖️', text:'Mi peso sube aunque no haya cambiado nada'},
-    {icon:'😴', text:'Me despierto a mitad de la noche'},
-    {icon:'🧠', text:'Me cuesta concentrarme — neblina mental'},
-    {icon:'🎢', text:'Mi estado de ánimo es una montaña rusa'},
+    {icon:'✦', text:'Siento un cansancio que no se va'},
+    {icon:'✦', text:'Mi peso sube aunque no haya cambiado nada'},
+    {icon:'✦', text:'Me despierto a mitad de la noche'},
+    {icon:'✦', text:'Me cuesta concentrarme — neblina mental'},
+    {icon:'✦', text:'Mi estado de ánimo es una montaña rusa'},
   ] : [
-    {icon:'⚡', text:'I feel a fatigue that never goes away'},
-    {icon:'⚖️', text:'My weight keeps going up even though nothing changed'},
-    {icon:'😴', text:'I wake up in the middle of the night'},
-    {icon:'🧠', text:'I struggle to concentrate — brain fog'},
-    {icon:'🎢', text:'My mood is a rollercoaster'},
+    {icon:'✦', text:'I feel a fatigue that never goes away'},
+    {icon:'✦', text:'My weight keeps going up even though nothing changed'},
+    {icon:'✦', text:'I wake up in the middle of the night'},
+    {icon:'✦', text:'I struggle to concentrate — brain fog'},
+    {icon:'✦', text:'My mood is a rollercoaster'},
   ];
 
   return (
