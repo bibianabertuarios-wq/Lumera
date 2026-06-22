@@ -28,7 +28,7 @@ export default function Escaner() {
   const [landmarks, setLandmarks] = useState(null);
   const [analysis, setAnalysis] = useState(null);
   const [rotating, setRotating] = useState(false);
-  const [angle, setAngle] = useState(0);
+  const [poseIndex, setPoseIndex] = useState(0);
   const fileRef = useRef(null);
   const canvasRef = useRef(null);
   const avatarRef = useRef(null);
@@ -40,15 +40,13 @@ export default function Escaner() {
     setTimeout(() => setVisible(true), 100);
   }, []);
 
-  // Rotacion del avatar
+  // Ciclo de poses avatar sprite
   useEffect(() => {
     if (rotating) {
-      const animate = () => {
-        setAngle(a => (a + 1) % 360);
-        animRef.current = requestAnimationFrame(animate);
-      };
-      animRef.current = requestAnimationFrame(animate);
-      return () => cancelAnimationFrame(animRef.current);
+      const interval = setInterval(() => {
+        setPoseIndex(i => (i + 1) % 6);
+      }, 120);
+      return () => clearInterval(interval);
     }
   }, [rotating]);
 
@@ -281,16 +279,36 @@ export default function Escaner() {
           {step === 'result' && analysis && (
             <div className={`fade d1 ${visible?'in':''}`}>
               
-              {/* AVATAR GIRATORIO */}
+              {/* AVATAR SPRITE GIRATORIO */}
               <div style={{position:'relative',marginBottom:'1.5rem',textAlign:'center'}}>
                 <div style={{
                   display:'inline-block',
-                  transform:`perspective(400px) rotateY(${angle}deg)`,
-                  transition:'transform 0.016s linear'
+                  position:'relative',
+                  borderRadius:'1rem',
+                  overflow:'hidden',
+                  border:'1px solid rgba(201,147,90,0.3)',
+                  boxShadow:'0 0 40px rgba(201,147,90,0.15)',
+                  background:'rgba(255,255,255,0.03)'
                 }}>
-                  <canvas ref={avatarRef} width={160} height={280} style={{borderRadius:'1rem',background:'rgba(255,255,255,0.03)',border:'1px solid rgba(201,147,90,0.2)'}}/>
+                  <img
+                    src={`/images/avatar/avatar_pose_${poseIndex + 1}.png`}
+                    alt="Avatar hormonal"
+                    style={{
+                      width:'160px',
+                      height:'280px',
+                      objectFit:'contain',
+                      display:'block',
+                      filter:'drop-shadow(0 0 12px rgba(201,147,90,0.4))'
+                    }}
+                  />
+                  <div style={{
+                    position:'absolute',
+                    top:0,left:0,right:0,bottom:0,
+                    background:'linear-gradient(180deg,transparent 0%,rgba(201,147,90,0.04) 50%,transparent 100%)',
+                    pointerEvents:'none'
+                  }}/>
                 </div>
-                <div style={{position:'absolute',bottom:'0.75rem',left:'50%',transform:'translateX(-50%)',fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(255,255,255,0.4)',whiteSpace:'nowrap'}}>
+                <div style={{marginTop:'0.5rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(255,255,255,0.4)',whiteSpace:'nowrap'}}>
                   Silueta hormonal · Foto eliminada ✓
                 </div>
               </div>
