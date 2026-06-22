@@ -38,7 +38,7 @@ export default function Dashboard() {
 
     const userData = {
       id: session.user.id,
-      nombre: profile?.profile_name || session.user.email?.split('@')[0] || 'amiga',
+      nombre: (profile?.profile_name || session.user.email?.split('@')[0] || 'amiga').replace(/^./, c => c.toUpperCase()),
       sintoma: profile?.sintoma_principal || '',
       objetivo: profile?.objetivo || '',
       createdAt: profile?.created_at || session.user.created_at,
@@ -287,14 +287,21 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
             {planVisible && (
               <div style={{marginTop:'1rem',borderTop:'1px solid rgba(201,147,90,0.2)',paddingTop:'1rem'}}>
                 {plan.map((p, i) => (
-                  <div key={i} style={{marginBottom:'0.85rem'}}>
+                  <div key={i} style={{marginBottom:'1rem',paddingBottom:'0.85rem',borderBottom:i<plan.length-1?'1px solid rgba(255,255,255,0.06)':'none'}}>
                     <div style={{display:'flex',alignItems:'flex-start',gap:'0.6rem',marginBottom:'0.25rem'}}>
                       <span style={{fontSize:'1.1rem'}}>{p.icono}</span>
-                      <span style={{fontSize:'0.95rem',color:'rgba(255,255,255,0.9)',lineHeight:1.5,flex:1}}>{p.accion}</span>
+                      <span style={{fontSize:'0.98rem',color:'rgba(255,255,255,0.95)',lineHeight:1.5,flex:1,fontWeight:500}}>{p.accion}</span>
                     </div>
-                    <div style={{marginLeft:'1.7rem',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'rgba(201,147,90,0.7)',lineHeight:1.5,fontStyle:'italic'}}>
-                      {is_es ? '¿Por qué? ' : 'Why? '}{p.ciencia}
+                    <div style={{marginLeft:'1.7rem',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'rgba(255,255,255,0.45)',lineHeight:1.6,marginBottom:p.link?'0.4rem':'0'}}>
+                      {p.ciencia}
                     </div>
+                    {p.link && (
+                      <div style={{marginLeft:'1.7rem'}}>
+                        <span onClick={()=>router.push(p.link)} style={{fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'#C9935A',cursor:'pointer',fontWeight:600}}>
+                          {p.linkLabel}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
