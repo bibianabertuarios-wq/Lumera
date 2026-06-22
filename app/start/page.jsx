@@ -85,8 +85,9 @@ export default function Start() {
             </div>
           </div>
 
-          <div className={['fi d1',v?'v':''].join(' ')} style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.4em',marginBottom:'1rem'}}>
-            ✦ LUMERA
+          <div className={['fi d1',v?'v':''].join(' ')} style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'0.5rem',marginBottom:'1rem'}}>
+            <img src="/images/lumera_icon_nobg.png" alt="Lumera" style={{width:'24px',height:'24px',objectFit:'contain'}}/>
+            <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#C9935A',letterSpacing:'0.4em'}}>LUMERA</span>
           </div>
 
           <div className={['fi d2',v?'v':''].join(' ')}>
