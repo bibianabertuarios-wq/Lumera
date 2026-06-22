@@ -48,6 +48,7 @@ export default function Escaner() {
       try {
         const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
         const { data: { session } } = await supabase.auth.getSession();
+        if (!session) { router.push('/start'); return; }
         if (session) {
           const { data: profile } = await supabase
             .from('users')
@@ -66,7 +67,7 @@ export default function Escaner() {
     if (rotating) {
       const interval = setInterval(() => {
         setPoseIndex(i => (i + 1) % 6);
-      }, 120);
+      }, 220);
       return () => clearInterval(interval);
     }
   }, [rotating]);
@@ -206,7 +207,8 @@ export default function Escaner() {
       zones.push({ top: '62%', left: '50%', color: '#C9935A', label: 'Zona caderas', size: 65 });
     }
     if (analysis.zona === 'hombros') {
-      zones.push({ top: '22%', left: '50%', color: '#C9935A', label: 'Zona hombros', size: 60 });
+      zones.push({ top: '20%', left: '35%', color: '#C9935A', label: 'Hombro izq', size: 45 });
+      zones.push({ top: '20%', left: '65%', color: '#C9935A', label: 'Hombro der', size: 45 });
     }
     if (imc && imc < 18.5) {
       // Persona delgada — refuerzo muscular
@@ -435,7 +437,7 @@ export default function Escaner() {
                     {/* Disclaimer precisión */}
                     <div style={{marginTop:'0.6rem',background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)',borderRadius:'0.5rem',padding:'0.5rem 0.75rem',maxWidth:'280px',margin:'0.6rem auto 0'}}>
                       <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.3)',lineHeight:1.6,textAlign:'center'}}>
-                        ⓘ Análisis orientativo basado en proporciones visuales{imc ? ' e IMC' : ''}. Precisión estimada ~75–80%. No sustituye valoración médica o nutricional profesional.
+                        ⓘ Análisis orientativo basado en proporciones visuales{imc ? ' e IMC' : ''}. Precisión estimada ~75–80%. No sustituye valoración médica profesional.
                       </p>
                     </div>
                   </div>
