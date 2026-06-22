@@ -174,7 +174,7 @@ function BienvenidaInner() {
           <div className={`fade d4 ${visible?'in':''}`} style={{textAlign:'center',marginTop:'1.5rem'}}>
             <p style={{fontSize:'0.85rem',color:'rgba(255,255,255,0.3)',fontFamily:'Montserrat,sans-serif'}}>
               {is_es ? 'Ya tienes cuenta? ' : 'Already have an account? '}
-              <span onClick={()=>router.push('/lumera')} style={{color:'#C9935A',cursor:'pointer',textDecoration:'underline'}}>
+              <span onClick={()=>router.push('/dashboard')} style={{color:'#C9935A',cursor:'pointer',textDecoration:'underline'}}>
                 {is_es ? 'Entrar aqui' : 'Sign in here'}
               </span>
             </p>

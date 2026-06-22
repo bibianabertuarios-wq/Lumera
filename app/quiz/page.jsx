@@ -206,7 +206,7 @@ function QuizInner() {
                     <input className="input-num" type="number" placeholder={is_es?'ej. 65':'e.g. 65'} value={peso} onChange={e=>setPeso(e.target.value)} min="40" max="200"/>
                   </div>
                 </div>
-                <button className="btn-next" disabled={!altura||!peso} onClick={()=>siguiente({altura,peso})}>
+                <button className="btn-next" disabled={false} onClick={()=>siguiente({altura,peso})}>
                   {is_es?'Continuar →':'Continue →'}
                 </button>
               </>
