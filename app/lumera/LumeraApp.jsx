@@ -69,6 +69,15 @@ import './lumera.css'
             const [loading, setLoading] = useState(true);
             const [currentUser, setCurrentUser] = useState(null);
             const [currentPage, setCurrentPage] = useState('home');
+
+            // Leer tab de URL al montar
+            useEffect(() => {
+                if (typeof window === 'undefined') return;
+                const params = new URLSearchParams(window.location.search);
+                const tab = params.get('tab');
+                const valid = ['home','nutrition','exercise','symptoms','chat','premium','upgrade','period'];
+                if (tab && valid.includes(tab)) setCurrentPage(tab);
+            }, []);
             const [showQuiz, setShowQuiz] = useState(false);
             const [showPreQuiz, setShowPreQuiz] = useState(false);
             const [preQuizStep, setPreQuizStep] = useState(0);
