@@ -182,13 +182,13 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
 
     // Ganar músculo / default
     return is_es ? [
-      { icono: '🥩', accion: '1.6g proteína por kg de peso hoy', ciencia: 'La síntesis proteica muscular requiere un umbral mínimo de leucina por comida. Sin proteína suficiente, el músculo no crece aunque entrenes.' },
-      { icono: '🏋️', accion: 'Entrena fuerza 3 series al fallo', ciencia: 'La tensión mecánica activa mTOR, la vía anabólica principal. El fallo muscular maximiza el reclutamiento de fibras.' },
-      { icono: '😴', accion: 'Duerme 8h — el músculo crece durmiendo', ciencia: 'El 70% de la hormona de crecimiento se libera durante el sueño profundo. Sin sueño, el entrenamiento no sirve.' },
+      { icono: '🥩', accion: '1.6g proteína por kg de peso hoy', ciencia: 'Tu músculo necesita proteína de forma constante para crecer. Sin ella, el ejercicio no da resultados.' },
+      { icono: '🏋️', accion: 'Entrena fuerza 3 series al fallo', ciencia: 'El ejercicio de fuerza es lo que más impacto tiene en tu metabolismo hormonal después de los 40.' },
+      { icono: '✦', accion: 'Duerme 8h — el músculo crece durmiendo', ciencia: 'Tu cuerpo regenera y crece mientras duermes. Sin sueño suficiente, el resto del plan no funciona.' },
     ] : [
       { icono: '🥩', accion: '1.6g protein per kg of bodyweight today', ciencia: 'Muscle protein synthesis requires a minimum leucine threshold per meal. Without enough protein, muscle won\'t grow regardless of training.' },
-      { icono: '🏋️', accion: 'Strength train 3 sets to failure', ciencia: 'Mechanical tension activates mTOR, the main anabolic pathway. Training to failure maximises fibre recruitment.' },
-      { icono: '😴', accion: 'Sleep 8h — muscle grows while sleeping', ciencia: '70% of growth hormone is released during deep sleep. Without sleep, training is ineffective.' },
+      { icono: '🏋️', accion: 'Strength train 3 sets to failure', ciencia: 'Strength training has the highest impact on your hormonal metabolism after 40.' },
+      { icono: '✦', accion: 'Sleep 8h — muscle grows while sleeping', ciencia: 'Your body regenerates while you sleep. Without enough sleep, the rest of the plan will not work.' },
     ];
   };
 
@@ -351,8 +351,8 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
             {!checkinHecho ? (
               <div style={{display:'flex',gap:'0.5rem'}}>
                 {(is_es
-                  ? [{k:'bien',l:'✦ Bien'},{k:'cansada',l:'😴 Cansada'},{k:'niebla',l:'🌫️ Con niebla'},{k:'regular',l:'😤 Regular'}]
-                  : [{k:'bien',l:'✦ Good'},{k:'cansada',l:'😴 Tired'},{k:'niebla',l:'🌫️ Foggy'},{k:'regular',l:'😤 Regular'}]
+                  ? [{k:'bien',l:'✦ Bien'},{k:'cansada',l:'· Cansada'},{k:'niebla',l:'· Con niebla'},{k:'regular',l:'· Regular'}]
+                  : [{k:'bien',l:'✦ Good'},{k:'cansada',l:'· Tired'},{k:'niebla',l:'· Foggy'},{k:'regular',l:'· Regular'}]
                 ).map(({k,l}) => (
                   <button key={k} className="estado-btn" onClick={()=>hacerCheckin(k)}>{l}</button>
                 ))}
