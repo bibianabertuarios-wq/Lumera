@@ -2176,6 +2176,12 @@ query = query.eq('region', region.toUpperCase());
                         setCurrentUser({ id: data.user.id, email: data.user.email });
                         setShowAuth(false);
                         setShowQuiz(false);
+                        // Leer tab de URL después de cargar sesión
+                        const urlTab = new URLSearchParams(window.location.search).get('tab');
+                        const validTabs = ['nutrition','exercise','symptoms','chat','premium','upgrade','period'];
+                        if (urlTab && validTabs.includes(urlTab)) {
+                            setTimeout(() => setCurrentPage(urlTab), 100);
+                        }
                     } else {
                         // Email confirmation requerida
                         alert(language === 'es'
