@@ -242,7 +242,7 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
               <span style={{fontSize:'0.85rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>{user?.nombre}</span>
             </div>
             {!user?.isPremium && (
-              <button onClick={()=>router.push('/lumera?tab=upgrade')} style={{background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'99px',padding:'0.4rem 0.85rem',color:'white',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
+              <button onClick={()=>window.open('https://getlumera.lemonsqueezy.com/checkout/buy/d3ff3973-7f9e-413c-89dc-9255874779d7','_blank')} style={{background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'99px',padding:'0.4rem 0.85rem',color:'white',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
                 ✦ Premium
               </button>
             )}
@@ -472,7 +472,7 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
               <p style={{fontSize:'0.85rem',fontStyle:'italic',color:'rgba(13,61,61,0.5)',marginBottom:'1rem',lineHeight:1.6}}>
                 {is_es ? 'LUMI seguirá aprendiendo de ti con Premium.' : 'LUMI will keep learning about you with Premium.'}
               </p>
-              <button className="btn-premium" onClick={()=>router.push('/lumera?tab=upgrade')}>✦ Continuar con Premium</button>
+              <button className="btn-premium" onClick={()=>window.open('https://getlumera.lemonsqueezy.com/checkout/buy/d3ff3973-7f9e-413c-89dc-9255874779d7','_blank')}>✦ Continuar con Premium</button>
             </div>
           )}
 
@@ -483,13 +483,13 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
           {(is_es ? [
             {img:"/images/kling_20260321_作品_Extremely__4837_0.png", label:'Inicio', route:'/dashboard'},
             {img:"/images/kling_20260321_作品__Extremely_4730_1.png", label:'Nutrición', route:'/lumera?tab=nutrition'},
-            {img:'/videos/PREMIUM.png', label:'Premium', route:'/lumera?tab=upgrade'},
+            {img:'/images/sintomas.png', label:'Síntomas', route:'/lumera?tab=symptoms'},
             {img:'/images/lumi.png', label:'LUMI', route:'/lumera?tab=chat'},
             {img:"/images/kling_20260321_作品_Extremely__4896_1.png", label:'Ejercicio', route:'/lumera?tab=exercise'},
           ] : [
             {img:"/images/kling_20260321_作品_Extremely__4837_0.png", label:'Home', route:'/dashboard'},
             {img:"/images/kling_20260321_作品__Extremely_4730_1.png", label:'Nutrition', route:'/lumera?tab=nutrition'},
-            {img:'/videos/PREMIUM.png', label:'Premium', route:'/lumera?tab=upgrade'},
+            {img:'/images/sintomas.png', label:'Síntomas', route:'/lumera?tab=symptoms'},
             {img:'/images/lumi.png', label:'LUMI', route:'/lumera?tab=chat'},
             {img:"/images/kling_20260321_作品_Extremely__4896_1.png", label:'Exercise', route:'/lumera?tab=exercise'},
           ]).map((n,i) => (
