@@ -24,6 +24,10 @@ export default function Dashboard() {
   const [visible, setVisible] = useState(false);
   const [planVisible, setPlanVisible] = useState(false);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [showLumiChat, setShowLumiChat] = useState(false);
+  const [lumiChatInput, setLumiChatInput] = useState('');
+  const [lumiChatMessages, setLumiChatMessages] = useState([]);
+  const [lumiChatLoading, setLumiChatLoading] = useState(false);
   const router = useRouter();
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -81,22 +85,33 @@ export default function Dashboard() {
       const diasEnApp = Math.floor((new Date() - new Date(userData.createdAt)) / (1000*60*60*24));
       const ayer = checkins?.[0];
       
+      const patronSemana = checkins.length >= 3 ? (() => {
+        const promedioEnergia = checkins.slice(0,3).reduce((a,c) => a+(c.energia||3), 0) / 3;
+        const promedioSueno = checkins.slice(0,3).reduce((a,c) => a+(c.sueno||3), 0) / 3;
+        const tendencia = promedioEnergia < 2.5 ? 'baja energía persistente' : promedioSueno < 2.5 ? 'sueño deficiente' : 'progreso estable';
+        return tendencia;
+      })() : null;
+
       const contexto = `
-Eres LUMI, asesora de bienestar hormonal de Lumera. Hablas en ${is_es ? 'español' : 'inglés'}.
+Eres LUMI, asesora científica de bienestar hormonal de Lumera. Hablas en ${is_es ? 'español' : 'inglés'}.
 Usuaria: ${userData.nombre}
-Objetivo principal: ${userData.objetivo || 'equilibrio hormonal'}
+Objetivo: ${userData.objetivo || 'equilibrio hormonal'}
 Síntoma principal: ${userData.sintoma || 'bienestar general'}
 Días en la app: ${diasEnApp}
-Checkin de ayer: ${ayer ? `energía ${ayer.energia}/5, sueño ${ayer.sueno}/5, ánimo ${ayer.animo}/5` : 'sin datos aún'}
-Es su primer día: ${diasEnApp === 0 ? 'sí' : 'no'}
+Fecha: ${hoy}, Hora: ${hora}h
+Checkin de ayer: ${ayer ? `energía ${ayer.energia}/5, sueño ${ayer.sueno}/5, ánimo ${ayer.animo}/5, estado: ${ayer.sintoma_hoy}` : 'sin datos aún'}
+${patronSemana ? `Patrón detectado esta semana: ${patronSemana}` : ''}
+${checkins.length >= 3 ? `Lleva ${checkins.length} días registrando datos` : ''}
 
-Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app hoy.
-- Primera vez: preséntate brevemente y dile de dónde parte según su objetivo
-- Resto de días: referencia algo concreto de ayer si lo hay, y dile qué toca hoy
-- Tono: cercana, científica, directa. Sin drama. Sin diagnósticos.
-- No uses "no estás rota", no uses "te entiendo", no uses emojis
-- Termina siempre con una acción concreta para hoy
-- Máximo 3 frases
+Escribe UN mensaje personalizado (máximo 3 frases) para cuando abra la app hoy.
+REGLAS ESTRICTAS:
+- Si hay checkin de ayer: empieza referenciando cómo estaba ayer de forma específica
+- Si hay patrón detectado: mencionarlo directamente ("Noto que esta semana...")  
+- Si es primer día: preséntate y dile de dónde parte según su objetivo específico
+- Tono: asesora científica cercana. Directa. Sin drama. Sin diagnósticos médicos.
+- NUNCA uses emojis, "no estás rota", "te entiendo", "amiga"
+- Termina con UNA acción concreta y específica para hoy según su objetivo
+- Máximo 3 frases cortas
       `.trim();
 
       const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -191,6 +206,36 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
       { icono: '🏋️', accion: 'Strength train 3 sets to failure', ciencia: 'Strength training has the highest impact on your hormonal metabolism after 40.' },
       { icono: '✦', accion: 'Sleep 8h — muscle grows while sleeping', ciencia: 'Your body regenerates while you sleep. Without enough sleep, the rest of the plan will not work.' },
     ];
+  };
+
+  const enviarMensajeChat = async () => {
+    if (!lumiChatInput.trim() || lumiChatLoading) return;
+    const msg = lumiChatInput.trim();
+    setLumiChatInput('');
+    const newMessages = [...lumiChatMessages, {role:'user', content: msg}];
+    setLumiChatMessages(newMessages);
+    setLumiChatLoading(true);
+    try {
+      const is_es = user?.lang === 'es';
+      const ayer = ultimosCheckins?.[0];
+      const sistema = `Eres LUMI, asesora científica de bienestar hormonal. Usuaria: ${user?.nombre}. Objetivo: ${user?.objetivo}. Síntoma: ${user?.sintoma}. Checkin hoy: ${checkinData ? `energía ${checkinData.energia}/5, ánimo ${checkinData.animo}/5` : 'sin registrar'}. Checkin ayer: ${ayer ? `energía ${ayer.energia}/5, sueño ${ayer.sueno}/5` : 'sin datos'}. Idioma: ${is_es ? 'español' : 'inglés'}. Responde en máximo 3 frases. Directa, científica, sin diagnósticos médicos, sin emojis.`;
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          system: sistema,
+          messages: newMessages
+        })
+      });
+      const data = await res.json();
+      const reply = data.content?.[0]?.text || '';
+      setLumiChatMessages([...newMessages, {role:'assistant', content: reply}]);
+    } catch(e) {
+      setLumiChatMessages([...newMessages, {role:'assistant', content: is_es ? 'Algo fue mal, intenta de nuevo.' : 'Something went wrong, try again.'}]);
+    }
+    setLumiChatLoading(false);
   };
 
   if (loading) return (
@@ -473,6 +518,55 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
               <button className="btn-premium" onClick={()=>setShowPremiumModal(true)}>
                 ✦ {is_es ? 'Ver planes' : 'See plans'}
               </button>
+            </div>
+          )}
+
+          {/* MODAL CHAT LUMI */}
+          {showLumiChat && (
+            <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.8)',zIndex:200,display:'flex',flexDirection:'column'}} >
+              <div style={{background:'linear-gradient(135deg,#0D3D3D,#0A2A2A)',flex:1,display:'flex',flexDirection:'column',maxHeight:'100vh'}}>
+                {/* Header */}
+                <div style={{padding:'1rem 1.25rem',borderBottom:'1px solid rgba(201,147,90,0.2)',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+                  <div style={{display:'flex',alignItems:'center',gap:'0.6rem'}}>
+                    <div style={{width:'32px',height:'32px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.85rem',fontWeight:700,color:'white',fontFamily:'Montserrat,sans-serif'}}>L</div>
+                    <div>
+                      <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#C9935A'}}>LUMI</div>
+                      <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.4)'}}>{is_es?'Tu asesora de bienestar':'Your wellness advisor'}</div>
+                    </div>
+                  </div>
+                  <button onClick={()=>setShowLumiChat(false)} style={{background:'none',border:'none',color:'rgba(255,255,255,0.4)',fontSize:'1.2rem',cursor:'pointer'}}>✕</button>
+                </div>
+                {/* Mensajes */}
+                <div style={{flex:1,overflowY:'auto',padding:'1rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+                  {lumiChatMessages.map((m,i) => (
+                    <div key={i} style={{display:'flex',justifyContent:m.role==='user'?'flex-end':'flex-start'}}>
+                      <div style={{maxWidth:'80%',background:m.role==='user'?'rgba(201,147,90,0.2)':'rgba(255,255,255,0.08)',border:`1px solid ${m.role==='user'?'rgba(201,147,90,0.3)':'rgba(255,255,255,0.1)'}`,borderRadius:m.role==='user'?'1rem 1rem 0 1rem':'1rem 1rem 1rem 0',padding:'0.75rem 1rem'}}>
+                        <p style={{fontSize:'0.9rem',fontStyle:'italic',color:'rgba(255,255,255,0.9)',lineHeight:1.6,fontFamily:"'Cormorant Garamond',serif"}}>{m.content}</p>
+                      </div>
+                    </div>
+                  ))}
+                  {lumiChatLoading && (
+                    <div style={{display:'flex',justifyContent:'flex-start'}}>
+                      <div style={{background:'rgba(255,255,255,0.08)',borderRadius:'1rem',padding:'0.75rem 1rem'}}>
+                        <div className="shimmer" style={{color:'rgba(255,255,255,0.4)',fontSize:'0.85rem',fontFamily:'Montserrat,sans-serif'}}>...</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                {/* Input */}
+                <div style={{padding:'1rem',borderTop:'1px solid rgba(201,147,90,0.2)',display:'flex',gap:'0.5rem'}}>
+                  <input
+                    value={lumiChatInput}
+                    onChange={e=>setLumiChatInput(e.target.value)}
+                    onKeyDown={e=>e.key==='Enter'&&enviarMensajeChat()}
+                    placeholder={is_es?'Pregunta a LUMI...':'Ask LUMI...'}
+                    style={{flex:1,background:'rgba(255,255,255,0.08)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.75rem 1rem',color:'white',fontFamily:"'Cormorant Garamond',serif",fontSize:'0.95rem',outline:'none'}}
+                  />
+                  <button onClick={enviarMensajeChat} disabled={!lumiChatInput.trim()||lumiChatLoading} style={{background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'0.75rem',padding:'0.75rem 1rem',color:'white',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer',opacity:(!lumiChatInput.trim()||lumiChatLoading)?0.5:1}}>
+                    ✦
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 
