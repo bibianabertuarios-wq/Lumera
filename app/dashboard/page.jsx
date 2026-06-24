@@ -448,15 +448,15 @@ REGLAS ESTRICTAS:
               {(is_es ? [
                 {img:"/images/kling_20260321_作品__Extremely_4730_1.png", title:'Nutrición', sub:'Tu menú de hoy', route:'/lumera?tab=nutrition'},
                 {img:"/images/kling_20260321_作品_Extremely__4896_1.png", title:'Ejercicio', sub:'Tu rutina de hoy', route:'/lumera?tab=exercise'},
-                {img:'/images/lumi.png', title:'LUMI', sub:'Habla con tu asesora', route:'/lumera?tab=chat'},
+                {img:'/images/lumi.png', title:'LUMI', sub:'Habla con tu asesora', route:'__lumi_chat__'},
                 {img:'/images/lente_alquimica.png', title:'Lente Alquímica', sub:'Analiza tu plato', route:'/lumera?tab=chat'},
               ] : [
                 {img:"/images/kling_20260321_作品__Extremely_4730_1.png", title:'Nutrition', sub:'Your menu today', route:'/lumera?tab=nutrition'},
                 {img:"/images/kling_20260321_作品_Extremely__4896_1.png", title:'Exercise', sub:'Your routine today', route:'/lumera?tab=exercise'},
-                {img:'/images/lumi.png', title:'LUMI', sub:'Talk to your advisor', route:'/lumera?tab=chat'},
+                {img:'/images/lumi.png', title:'LUMI', sub:'Talk to your advisor', route:'__lumi_chat__'},
                 {img:'/images/lente_alquimica.png', title:'Alchemical Lens', sub:'Analyse your plate', route:'/lumera?tab=chat'},
               ]).map((t,i) => (
-                <div key={i} className="tool-card" onClick={()=>{ if(t.route.includes('/lumera')) window.location.href=t.route; else router.push(t.route); }}>
+                <div key={i} className="tool-card" onClick={()=>{ if(t.route==='__lumi_chat__'){setShowLumiChat(true);if(lumiChatMessages.length===0)setLumiChatMessages([{role:'assistant',content:lumiMsg}]);} else if(t.route.includes('/lumera')) window.location.href=t.route; else router.push(t.route); }}>
                   <img src={t.img} alt={t.title} style={{width:'48px',height:'48px',objectFit:'cover',borderRadius:'50%',marginBottom:'0.4rem'}} onError={e=>{e.target.style.display='none'}}/>
                   <div style={{fontSize:'0.95rem',fontWeight:600,color:'#0D3D3D',marginBottom:'0.1rem'}}>{t.title}</div>
                   <div style={{fontSize:'0.7rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.4)'}}>{t.sub}</div>
@@ -623,7 +623,7 @@ REGLAS ESTRICTAS:
             {img:'/images/lumi.png', label:'LUMI', route:'/lumera?tab=chat'},
             {img:"/images/kling_20260321_作品_Extremely__4896_1.png", label:'Exercise', route:'/lumera?tab=exercise'},
           ]).map((n,i) => (
-            <div key={i} className="nav-item" onClick={()=>{ if(n.route.includes('/lumera')) window.location.href=n.route; else router.push(n.route); }}>
+            <div key={i} className="nav-item" onClick={()=>{ if(n.route==='__lumi_chat__'){setShowLumiChat(true);if(lumiChatMessages.length===0)setLumiChatMessages([{role:'assistant',content:lumiMsg}]);} else if(n.route.includes('/lumera')) window.location.href=n.route; else router.push(n.route); }}>
               <img src={n.img} alt={n.label} style={{width:'28px',height:'28px',borderRadius:'50%',objectFit:'cover',border:n.route==='/dashboard'?'2px solid #C9935A':'2px solid transparent'}}/>
               <span style={{fontSize:'0.6rem',fontFamily:'Montserrat,sans-serif',color:n.route==='/dashboard'?'#C9935A':'rgba(13,61,61,0.4)',fontWeight:n.route==='/dashboard'?700:400}}>{n.label}</span>
             </div>
