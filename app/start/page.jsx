@@ -179,6 +179,15 @@ export default function Start() {
             )}
           </div>
 
+        <div style={{textAlign:'center',padding:'1.5rem 0 0.5rem',marginTop:'1rem'}}>
+          <a href="/privacidad" style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',color:'rgba(13,61,61,0.35)',textDecoration:'underline',marginRight:'1rem'}}>
+            {es ? 'Política de Privacidad' : 'Privacy Policy'}
+          </a>
+          <a href="/terminos" style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',color:'rgba(13,61,61,0.35)',textDecoration:'underline'}}>
+            {es ? 'Términos de Uso' : 'Terms of Use'}
+          </a>
+        </div>
+
         </div>
       </div>
     </>
