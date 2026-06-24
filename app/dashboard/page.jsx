@@ -23,6 +23,7 @@ export default function Dashboard() {
   const [ultimosCheckins, setUltimosCheckins] = useState([]);
   const [visible, setVisible] = useState(false);
   const [planVisible, setPlanVisible] = useState(false);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
   const router = useRouter();
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -242,7 +243,7 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
               <span style={{fontSize:'0.85rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>{user?.nombre}</span>
             </div>
             {!user?.isPremium && (
-              <button onClick={()=>window.location.href='https://getlumera.lemonsqueezy.com/checkout/buy/d3ff3973-7f9e-413c-89dc-9255874779d7'} style={{background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'99px',padding:'0.4rem 0.85rem',color:'white',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
+              <button onClick={()=>setShowPremiumModal(true)} style={{background:'linear-gradient(135deg,#C9935A,#A06030)',border:'none',borderRadius:'99px',padding:'0.4rem 0.85rem',color:'white',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer'}}>
                 ✦ Premium
               </button>
             )}
@@ -463,34 +464,51 @@ Escribe UN mensaje corto y directo (máximo 3 frases) para cuando abra la app ho
             </div>
           )}
 
-          {/* BANNER PREMIUM */}
-          {!user?.isPremium && (
-            <div className={`fade d5 ${visible?'in':''}`} style={{background:'linear-gradient(135deg,#0D3D3D,#0A2A2A)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'1.25rem',padding:'1.5rem',marginBottom:'1.25rem'}}>
-              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',marginBottom:'0.75rem'}}>
-                ✦ {is_es ? 'CONTINÚA CON PREMIUM' : 'CONTINUE WITH PREMIUM'}
-              </div>
-              <p style={{fontSize:'1rem',fontWeight:600,color:'white',marginBottom:'0.25rem',fontFamily:"'Cormorant Garamond',serif"}}>
-                {is_es ? 'LUMI aprende de ti cada día' : 'LUMI learns from you every day'}
+          {/* BANNER PREMIUM SUTIL */}
+          {!user?.isPremium && diasRestantes <= 1 && (
+            <div className={`fade d5 ${visible?'in':''}`} style={{background:'rgba(201,147,90,0.06)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem',textAlign:'center'}}>
+              <p style={{fontSize:'0.9rem',fontStyle:'italic',color:'rgba(13,61,61,0.6)',marginBottom:'0.75rem',lineHeight:1.6,fontFamily:"'Cormorant Garamond',serif"}}>
+                {is_es ? 'Tu prueba termina pronto. LUMI seguirá aprendiendo de ti con Premium.' : 'Your trial ends soon. LUMI will keep learning about you with Premium.'}
               </p>
-              <p style={{fontSize:'0.85rem',color:'rgba(255,255,255,0.5)',marginBottom:'1.25rem',lineHeight:1.6,fontFamily:'Montserrat,sans-serif'}}>
-                {is_es ? 'Menús, rutinas, seguimiento hormonal y acceso ilimitado a LUMI.' : 'Menus, routines, hormonal tracking and unlimited LUMI access.'}
-              </p>
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem',marginBottom:'0.75rem'}}>
-                <button onClick={()=>window.open('https://getlumera.lemonsqueezy.com/checkout/buy/2d480891-baaa-4968-9c7b-9b4a6e2c04db','_blank')} style={{background:'rgba(201,147,90,0.15)',border:'1px solid rgba(201,147,90,0.4)',borderRadius:'0.75rem',padding:'0.85rem 0.5rem',cursor:'pointer',textAlign:'center'}}>
-                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.4)',marginBottom:'0.2rem'}}>{is_es?'MENSUAL':'MONTHLY'}</div>
-                  <div style={{fontSize:'1.2rem',fontWeight:700,color:'#C9935A',fontFamily:"'Cormorant Garamond',serif"}}>€4.99</div>
-                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.4)'}}>{is_es?'/ mes':'/ month'}</div>
+              <button className="btn-premium" onClick={()=>setShowPremiumModal(true)}>
+                ✦ {is_es ? 'Ver planes' : 'See plans'}
+              </button>
+            </div>
+          )}
+
+          {/* MODAL PREMIUM */}
+          {showPremiumModal && (
+            <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.7)',zIndex:200,display:'flex',alignItems:'flex-end',justifyContent:'center'}} onClick={()=>setShowPremiumModal(false)}>
+              <div style={{background:'linear-gradient(135deg,#0D3D3D,#0A2A2A)',borderRadius:'1.5rem 1.5rem 0 0',padding:'2rem 1.5rem',width:'100%',maxWidth:'520px'}} onClick={e=>e.stopPropagation()}>
+                <div style={{textAlign:'center',marginBottom:'1.5rem'}}>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',marginBottom:'0.5rem'}}>✦ LUMERA PREMIUM</div>
+                  <h2 style={{fontSize:'1.5rem',fontWeight:700,color:'white',fontFamily:"'Cormorant Garamond',serif",marginBottom:'0.4rem'}}>
+                    {is_es ? 'LUMI aprende de ti cada día' : 'LUMI learns from you every day'}
+                  </h2>
+                  <p style={{fontSize:'0.85rem',color:'rgba(255,255,255,0.5)',fontFamily:'Montserrat,sans-serif',lineHeight:1.6}}>
+                    {is_es ? 'Acceso ilimitado · Menús personalizados · Seguimiento hormonal' : 'Unlimited access · Personalised menus · Hormonal tracking'}
+                  </p>
+                </div>
+                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem',marginBottom:'1rem'}}>
+                  <button onClick={()=>window.location.href='https://getlumera.lemonsqueezy.com/checkout/buy/2d480891-baaa-4968-9c7b-9b4a6e2c04db'} style={{background:'rgba(201,147,90,0.12)',border:'1px solid rgba(201,147,90,0.35)',borderRadius:'1rem',padding:'1.25rem 0.75rem',cursor:'pointer',textAlign:'center'}}>
+                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.4)',marginBottom:'0.3rem',letterSpacing:'2px'}}>{is_es?'MENSUAL':'MONTHLY'}</div>
+                    <div style={{fontSize:'1.6rem',fontWeight:700,color:'#C9935A',fontFamily:"'Cormorant Garamond',serif"}}>€4.99</div>
+                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(255,255,255,0.35)'}}>{is_es?'al mes':'per month'}</div>
+                  </button>
+                  <button onClick={()=>window.location.href='https://getlumera.lemonsqueezy.com/checkout/buy/d3ff3973-7f9e-413c-89dc-9255874779d7'} style={{background:'linear-gradient(135deg,rgba(201,147,90,0.2),rgba(160,96,48,0.15))',border:'2px solid #C9935A',borderRadius:'1rem',padding:'1.25rem 0.75rem',cursor:'pointer',textAlign:'center',position:'relative'}}>
+                    <div style={{position:'absolute',top:'-10px',left:'50%',transform:'translateX(-50%)',background:'#C9935A',borderRadius:'99px',padding:'2px 10px',fontFamily:'Montserrat,sans-serif',fontSize:'0.55rem',fontWeight:700,color:'white',whiteSpace:'nowrap'}}>{is_es?'MEJOR PRECIO':'BEST VALUE'}</div>
+                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.4)',marginBottom:'0.3rem',letterSpacing:'2px'}}>{is_es?'ANUAL':'ANNUAL'}</div>
+                    <div style={{fontSize:'1.6rem',fontWeight:700,color:'#C9935A',fontFamily:"'Cormorant Garamond',serif"}}>€39.99</div>
+                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(255,255,255,0.35)'}}>{is_es?'al año · ahorras €20':'per year · save €20'}</div>
+                  </button>
+                </div>
+                <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(255,255,255,0.2)',textAlign:'center',marginBottom:'1rem'}}>
+                  {is_es?'Sin permanencia · Cancela cuando quieras':'No commitment · Cancel anytime'}
+                </p>
+                <button onClick={()=>setShowPremiumModal(false)} style={{width:'100%',background:'none',border:'none',color:'rgba(255,255,255,0.25)',fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',cursor:'pointer',padding:'0.5rem'}}>
+                  {is_es?'Ahora no':'Not now'}
                 </button>
-                <button onClick={()=>window.open('https://getlumera.lemonsqueezy.com/checkout/buy/d3ff3973-7f9e-413c-89dc-9255874779d7','_blank')} style={{background:'linear-gradient(135deg,rgba(201,147,90,0.25),rgba(160,96,48,0.2))',border:'2px solid #C9935A',borderRadius:'0.75rem',padding:'0.85rem 0.5rem',cursor:'pointer',textAlign:'center',position:'relative'}}>
-                  <div style={{position:'absolute',top:'-10px',left:'50%',transform:'translateX(-50%)',background:'#C9935A',borderRadius:'99px',padding:'2px 8px',fontFamily:'Montserrat,sans-serif',fontSize:'0.55rem',fontWeight:700,color:'white',whiteSpace:'nowrap'}}>{is_es?'MEJOR PRECIO':'BEST VALUE'}</div>
-                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.4)',marginBottom:'0.2rem'}}>{is_es?'ANUAL':'ANNUAL'}</div>
-                  <div style={{fontSize:'1.2rem',fontWeight:700,color:'#C9935A',fontFamily:"'Cormorant Garamond',serif"}}>€39.99</div>
-                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.4)'}}>{is_es?'/ año — ahorras €20':'/ year — save €20'}</div>
-                </button>
               </div>
-              <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(255,255,255,0.25)',textAlign:'center'}}>
-                {is_es?'Sin permanencia · Cancela cuando quieras':'No commitment · Cancel anytime'}
-              </p>
             </div>
           )}
 
