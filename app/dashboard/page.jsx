@@ -28,6 +28,8 @@ export default function Dashboard() {
   const [lumiChatInput, setLumiChatInput] = useState('');
   const [lumiChatMessages, setLumiChatMessages] = useState([]);
   const [lumiChatLoading, setLumiChatLoading] = useState(false);
+  const [planGenerado, setPlanGenerado] = useState(null);
+  const [planLoading, setPlanLoading] = useState(false);
   const router = useRouter();
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -76,6 +78,7 @@ export default function Dashboard() {
 
     // Generar mensaje de LUMI
     generarMensajeLumi(userData, checkins || [], checkinHoy);
+    generarPlanDelDia(userData, checkins || []);
   };
 
   const generarMensajeLumi = async (userData, checkins, checkinHoy) => {
@@ -132,6 +135,55 @@ REGLAS ESTRICTAS:
         : 'Hi ' + userData.nombre + '. Your plan for today is ready.');
     }
     setLumiLoading(false);
+  };
+
+  const generarPlanDelDia = async (userData, checkins) => {
+    const hoy = new Date().toISOString().split('T')[0];
+    const cacheKey = `lumi_plan_${userData.id}_${hoy}`;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) { setPlanGenerado(JSON.parse(cached)); return; }
+    setPlanLoading(true);
+    try {
+      const is_es = userData.lang === 'es';
+      const ayer = checkins?.[0];
+      const prompt = `Eres LUMI, asesora científica de bienestar hormonal.
+Usuaria: ${userData.nombre}
+Objetivo: ${userData.objetivo || 'equilibrio hormonal'}
+Síntoma principal: ${userData.sintoma || 'bienestar general'}
+IMC: ${userData.peso && userData.talla ? (userData.peso / Math.pow(userData.talla > 3 ? userData.talla/100 : userData.talla, 2)).toFixed(1) : 'no disponible'}
+Estado ayer: ${ayer ? `energía ${ayer.energia}/5, sueño ${ayer.sueno}/5, ánimo ${ayer.animo}/5` : 'primer día'}
+Fecha: ${hoy}
+Idioma: ${is_es ? 'español' : 'inglés'}
+
+Genera exactamente 3 acciones concretas para hoy basadas en su objetivo y estado actual.
+Responde SOLO en JSON válido, sin texto adicional:
+[
+  {"icono": "✦", "accion": "acción concreta y específica", "ciencia": "explicación breve en lenguaje claro, no técnico"},
+  {"icono": "✦", "accion": "...", "ciencia": "..."},
+  {"icono": "✦", "accion": "...", "ciencia": "..."}
+]
+Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin emojis en iconos, solo ✦. Máximo 15 palabras por acción.`;
+
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          messages: [{role:'user', content: prompt}]
+        })
+      });
+      const data = await res.json();
+      const text = data.content?.[0]?.text || '[]';
+      const clean = text.replace(/```json|```/g, '').trim();
+      const plan = JSON.parse(clean);
+      localStorage.setItem(cacheKey, JSON.stringify(plan));
+      setPlanGenerado(plan);
+    } catch(e) {
+      console.error('Plan error:', e);
+      setPlanGenerado(null);
+    }
+    setPlanLoading(false);
   };
 
   const hacerCheckin = async (estado) => {
@@ -366,8 +418,12 @@ REGLAS ESTRICTAS:
             {/* PLAN DEL DIA */}
             {planVisible && (
               <div style={{marginTop:'1rem',borderTop:'1px solid rgba(201,147,90,0.2)',paddingTop:'1rem'}}>
-                {plan.map((p, i) => (
-                  <div key={i} style={{marginBottom:'1rem',paddingBottom:'0.85rem',borderBottom:i<plan.length-1?'1px solid rgba(255,255,255,0.06)':'none'}}>
+                {planLoading ? (
+                  <div className="shimmer" style={{color:'rgba(255,255,255,0.4)',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',padding:'0.5rem 0'}}>
+                    {is_es ? 'Preparando tu plan personalizado...' : 'Preparing your personalised plan...'}
+                  </div>
+                ) : (planGenerado || plan).map((p, i) => (
+                  <div key={i} style={{marginBottom:'1rem',paddingBottom:'0.85rem',borderBottom:i<(planGenerado||plan).length-1?'1px solid rgba(255,255,255,0.06)':'none'}}>
                     <div style={{display:'flex',alignItems:'flex-start',gap:'0.6rem',marginBottom:'0.25rem'}}>
                       <span style={{fontSize:'1.1rem'}}>{p.icono}</span>
                       <span style={{fontSize:'0.98rem',color:'rgba(255,255,255,0.95)',lineHeight:1.5,flex:1,fontWeight:500}}>{p.accion}</span>
@@ -377,7 +433,7 @@ REGLAS ESTRICTAS:
                     </div>
                     {p.link && (
                       <div style={{marginLeft:'1.7rem'}}>
-                        <span onClick={()=>router.push(p.link)} style={{fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'#C9935A',cursor:'pointer',fontWeight:600}}>
+                        <span onClick={()=>window.location.href=p.link} style={{fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'#C9935A',cursor:'pointer',fontWeight:600}}>
                           {p.linkLabel}
                         </span>
                       </div>
