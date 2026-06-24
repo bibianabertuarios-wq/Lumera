@@ -410,7 +410,7 @@ import './lumera.css'
 
                 // Generar saludo local diario garantizado
                 const buildDailyGreeting = () => {
-                    const userName = currentUser.profile_name || (language === 'es' ? 'amiga' : 'friend');
+                    const userName = currentUser.profile_name || (language === 'es' ? '' : '');
                     const hour = new Date().getHours();
                     const greetEs = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches';
                     const greetEn = hour < 12 ? 'Good morning' : hour < 19 ? 'Good afternoon' : 'Good evening';
@@ -3231,7 +3231,7 @@ query = query.eq('region', region.toUpperCase());
             const markMessagesAsRead = async () => {
                 if (proactiveMessages.length === 0) {
                     // Primer día — mostrar mensaje de bienvenida de LUMI
-                    const userName = currentUser?.profile_name || (language === 'es' ? 'amiga' : 'friend');
+                    const userName = currentUser?.profile_name || (language === 'es' ? '' : '');
                     const welcomeMsg = {
                         id: 'welcome_lumi',
                         message_type: 'greeting',
@@ -3348,7 +3348,7 @@ query = query.eq('region', region.toUpperCase());
                 try {
                     // Contexto de la usuaria
                     const todaySymptoms = symptoms.length > 0 ? symptoms[symptoms.length - 1] : null;
-                    const userName = currentUser?.profile_name || 'amiga';
+                    const userName = currentUser?.profile_name || '';
 
                     const todayStr = todaySymptoms
                         ? (language === 'es'
@@ -3777,7 +3777,7 @@ query = query.eq('region', region.toUpperCase());
 
             // ✨ DASHBOARD PREMIUM
             const renderPremiumDashboard = () => {
-                const userName = currentUser.profile_name || (language === 'es' ? 'amiga' : 'friend');
+                const userName = currentUser.profile_name || (language === 'es' ? '' : '');
                 const trialDaysLeft = getTrialDaysLeft();
                 const isInTrial = !currentUser.subscription_status || !['active','paid'].includes(currentUser.subscription_status);
                 // Día 3 de trial = último día, acceso premium completo para mostrar el valor máximo
@@ -4029,7 +4029,7 @@ query = query.eq('region', region.toUpperCase());
             const renderHome = () => {
                 if (!currentUser) return renderLanding();
 
-                const userName = currentUser.profile_name || (language === 'es' ? 'amiga' : 'friend');
+                const userName = currentUser.profile_name || (language === 'es' ? '' : '');
                 const trialDaysForRouting = getTrialDaysLeft();
 
                 // Premium activo → su propio dashboard
@@ -4060,7 +4060,7 @@ query = query.eq('region', region.toUpperCase());
                         {/* ── HERO DINÁMICO ── */}
                         {(() => {
                             const tier = getUserTier();
-                            const userName = currentUser?.profile_name || (language === 'es' ? 'amiga' : 'friend');
+                            const userName = currentUser?.profile_name || (language === 'es' ? '' : '');
                             const todayS = symptoms.length > 0 ? symptoms[symptoms.length - 1] : null;
                             const hasLowSleep = todayS && (todayS.sleep || todayS.sleepQuality || 0) <= 3;
                             const hasLowEnergy = todayS && (todayS.energy || todayS.energyLevel || 0) <= 3;
