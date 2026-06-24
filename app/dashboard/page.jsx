@@ -165,6 +165,7 @@ REGLAS ESTRICTAS:
   const getPlanDelDia = () => {
     const is_es = user?.lang === 'es';
     const obj = user?.objetivo?.toLowerCase() || '';
+    const diaSemana = new Date().getDay(); // 0=dom, 1=lun... rota el plan
     
     if (obj.includes('peso') || obj.includes('weight')) return is_es ? [
       { icono: '🕗', accion: 'Desayuna antes de las 9am con proteína', ciencia: 'El cortisol matutino está en su pico — la proteína lo estabiliza y frena el catabolismo muscular.' },
