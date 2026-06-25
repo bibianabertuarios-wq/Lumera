@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 
@@ -463,6 +464,57 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
               </div>
             )}
           </div>
+
+          {/* CARD PROGRESO */}
+          {ultimosCheckins.length >= 2 && (
+            <div className={`fade d4 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'1rem'}}>
+                <div>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.2rem'}}>
+                    {is_es ? 'Tu progreso' : 'Your progress'}
+                  </div>
+                  <div style={{fontSize:'1rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>
+                    {is_es ? 'Últimos 7 días' : 'Last 7 days'}
+                  </div>
+                </div>
+                <div style={{display:'flex',gap:'0.75rem'}}>
+                  {[
+                    {label:is_es?'Energía':'Energy', color:'#C9935A', val: energiaPct},
+                    {label:is_es?'Sueño':'Sleep', color:'#7B9EA6', val: suenoPct},
+                    {label:is_es?'Ánimo':'Mood', color:'#9B7BB0', val: animoPct},
+                  ].map(({label,color,val}) => (
+                    <div key={label} style={{textAlign:'center'}}>
+                      <div style={{fontSize:'1rem',fontWeight:700,color,fontFamily:"'Cormorant Garamond',serif"}}>{val}%</div>
+                      <div style={{fontSize:'0.6rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.4)'}}>{label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <ResponsiveContainer width="100%" height={120}>
+                <LineChart data={[...ultimosCheckins].reverse().map(c => ({
+                  fecha: new Date(c.fecha).toLocaleDateString(is_es?'es-ES':'en-US', {day:'numeric',month:'short'}),
+                  energia: (c.energia||0) * 20,
+                  sueno: (c.sueno||0) * 20,
+                  animo: (c.animo||0) * 20,
+                }))}>
+                  <XAxis dataKey="fecha" tick={{fontSize:9, fill:'rgba(13,61,61,0.4)'}} axisLine={false} tickLine={false}/>
+                  <YAxis hide domain={[0,100]}/>
+                  <Tooltip
+                    contentStyle={{background:'white',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'0.5rem',fontSize:'0.75rem'}}
+                    formatter={(val,name) => [`${val}%`, name==='energia'?(is_es?'Energía':'Energy'):name==='sueno'?(is_es?'Sueño':'Sleep'):(is_es?'Ánimo':'Mood')]}
+                  />
+                  <Line type="monotone" dataKey="energia" stroke="#C9935A" strokeWidth={2} dot={{fill:'#C9935A',r:3}} activeDot={{r:5}}/>
+                  <Line type="monotone" dataKey="sueno" stroke="#7B9EA6" strokeWidth={2} dot={{fill:'#7B9EA6',r:3}} activeDot={{r:5}}/>
+                  <Line type="monotone" dataKey="animo" stroke="#9B7BB0" strokeWidth={2} dot={{fill:'#9B7BB0',r:3}} activeDot={{r:5}}/>
+                </LineChart>
+              </ResponsiveContainer>
+              {ultimosCheckins.length < 3 && (
+                <p style={{fontSize:'0.7rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.35)',textAlign:'center',marginTop:'0.5rem',fontStyle:'italic'}}>
+                  {is_es ? `Registra ${3-ultimosCheckins.length} días más para ver tendencias` : `Log ${3-ultimosCheckins.length} more days to see trends`}
+                </p>
+              )}
+            </div>
+          )}
 
           {/* BLOQUE 3 — TU SEMANA + TOOLS */}
           <div className={`fade d4 ${visible?'in':''}`} style={{marginBottom:'1.25rem'}}>
