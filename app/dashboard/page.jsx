@@ -117,12 +117,10 @@ REGLAS ESTRICTAS:
 - Máximo 3 frases cortas
       `.trim();
 
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('/api/lumi', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
           messages: [{ role: 'user', content: contexto }]
         })
       });
@@ -164,12 +162,10 @@ Responde SOLO en JSON válido, sin texto adicional:
 ]
 Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin emojis en iconos, solo ✦. Máximo 15 palabras por acción.`;
 
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('/api/lumi', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
           messages: [{role:'user', content: prompt}]
         })
       });
@@ -272,12 +268,10 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
       const is_es = user?.lang === 'es';
       const ayer = ultimosCheckins?.[0];
       const sistema = `Eres LUMI, asesora científica de bienestar hormonal. Usuaria: ${user?.nombre}. Objetivo: ${user?.objetivo}. Síntoma: ${user?.sintoma}. Checkin hoy: ${checkinData ? `energía ${checkinData.energia}/5, ánimo ${checkinData.animo}/5` : 'sin registrar'}. Checkin ayer: ${ayer ? `energía ${ayer.energia}/5, sueño ${ayer.sueno}/5` : 'sin datos'}. Idioma: ${is_es ? 'español' : 'inglés'}. Responde en máximo 3 frases. Directa, científica, sin diagnósticos médicos, sin emojis.`;
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
+      const res = await fetch('/api/lumi', {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
           system: sistema,
           messages: newMessages
         })
