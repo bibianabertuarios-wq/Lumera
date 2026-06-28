@@ -3933,37 +3933,6 @@ query = query.eq('region', region.toUpperCase());
                                     );
                                 })()}
 
-                                {/* CARD RESUMEN DATOS */}
-                                {currentUser && currentUser.peso && currentUser.talla && (()=>{
-                                    const peso = currentUser.peso;
-                                    const talla = currentUser.talla;
-                                    const imc = peso && talla ? (peso / Math.pow(talla > 3 ? talla/100 : talla, 2)).toFixed(1) : null;
-                                    const imcCat = imc ? (imc < 18.5 ? (language==='es'?'Bajo peso':'Underweight') : imc < 25 ? (language==='es'?'Peso saludable':'Healthy weight') : imc < 30 ? (language==='es'?'Sobrepeso':'Overweight') : (language==='es'?'Obesidad':'Obesity')) : null;
-                                    const bmr = peso && talla ? Math.round(10 * peso + 6.25 * (talla > 3 ? talla : talla * 100) - 5 * 40 - 161) : null;
-                                    const tdee = bmr ? Math.round(bmr * 1.375) : null;
-                                    return (
-                                        <div className="gc" style={{marginBottom:'1rem',padding:'1.25rem'}}>
-                                            <p style={{fontSize:'0.62rem',color:'#B8997A',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.875rem'}}>
-                                                {language==='es'?'✦ TUS DATOS':'✦ YOUR DATA'}
-                                            </p>
-                                            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem',marginBottom:'0.75rem'}}>
-                                                {imc && <div style={{background:'rgba(184,115,51,0.08)',borderRadius:'0.75rem',padding:'0.75rem',textAlign:'center'}}>
-                                                    <div style={{fontSize:'1.4rem',fontWeight:700,color:'#B8997A',fontFamily:"'Cormorant',serif"}}>{imc}</div>
-                                                    <div style={{fontSize:'0.6rem',color:'rgba(184,115,51,0.6)',fontFamily:'Montserrat,sans-serif'}}>IMC · {imcCat}</div>
-                                                </div>}
-                                                {tdee && <div style={{background:'rgba(184,115,51,0.08)',borderRadius:'0.75rem',padding:'0.75rem',textAlign:'center'}}>
-                                                    <div style={{fontSize:'1.4rem',fontWeight:700,color:'#B8997A',fontFamily:"'Cormorant',serif"}}>{tdee}</div>
-                                                    <div style={{fontSize:'0.6rem',color:'rgba(184,115,51,0.6)',fontFamily:'Montserrat,sans-serif'}}>{language==='es'?'kcal/día recomendadas':'kcal/day recommended'}</div>
-                                                </div>}
-                                            </div>
-                                            {currentUser.objetivo && <div style={{background:'rgba(184,115,51,0.06)',border:'1px solid rgba(184,115,51,0.15)',borderRadius:'0.75rem',padding:'0.6rem 0.875rem',display:'flex',alignItems:'center',gap:'0.5rem'}}>
-                                                <div style={{width:'6px',height:'6px',borderRadius:'50%',background:'#B8997A',flexShrink:0}}/>
-                                                <span style={{fontSize:'0.82rem',color:'rgba(245,230,211,0.8)',fontFamily:"'Cormorant',serif"}}>{language==='es'?'Objetivo: ':'Goal: '}{currentUser.objetivo}</span>
-                                            </div>}
-                                        </div>
-                                    );
-                                })()}
-
                                 <div style={{marginBottom:'1rem'}}>
                                     <p style={{fontSize:'0.62rem',color:'#B8997A',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.75rem'}}>{language==='es'?'TU ESPACIO':'YOUR SPACE'}</p>
                                     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.6rem'}}>
