@@ -3905,53 +3905,9 @@ query = query.eq('region', region.toUpperCase());
                                     );
                                 })()}
 
-                                <div className="gc" style={{marginBottom:'1rem',overflow:'hidden',padding:0}}>
-                                    <div style={{position:'relative'}}>
-                                        <img src="/images/acuarela.jpg" alt="Shula Ríos" style={{width:'100%',maxHeight:'200px',objectFit:'cover',display:'block',filter:'brightness(0.85) sepia(0.15)'}} onError={e=>{e.target.style.display='none'}}/>
-                                        <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,transparent 30%,rgba(13,13,13,0.85) 100%)'}}/>
-                                        <div style={{position:'absolute',bottom:0,left:0,right:0,padding:'1rem 1.25rem'}}>
-                                            <p style={{fontFamily:"'Cormorant',serif",fontStyle:'italic',color:'rgba(245,230,211,0.9)',fontSize:'0.95rem'}}>{language==='es'?'"No estás sola en este camino."':'"You are not alone on this path."'}</p>
-                                            <p style={{fontSize:'0.62rem',color:'rgba(184,115,51,0.7)',marginTop:'4px'}}>Arte original · Shula Ríos</p>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                {/* ESTADOS EMOCIONALES — HOY QUIERO */}
-                                <div style={{marginBottom:'1.25rem'}}>
-                                    <p style={{fontSize:'0.62rem',color:'#B8997A',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.75rem'}}>{language==='es'?'HOY QUIERO...':'TODAY I WANT TO...'}</p>
-                                    <div style={{display:'flex',flexDirection:'row',gap:'0.6rem',overflowX:'auto',paddingBottom:'0.5rem',scrollbarWidth:'none',WebkitOverflowScrolling:'touch'}}>
-                                        {[
-                                            {img:'/images/descanso.png',es:'Descansar',en:'Rest',sub_es:'Tu ritual de calma',sub_en:'Your calm ritual',
-                                             rec_es:'Infusión de valeriana · Yoga Nidra · "El arte de la siesta"',
-                                             rec_en:'Valerian tea · Yoga Nidra · "The Art of Rest"'},
-                                            {img:'/images/dopamina.png',es:'Activarme',en:'Get energised',sub_es:'Genera tu dopamina',sub_en:'Generate your dopamine',
-                                             rec_es:'Chocolate negro 85% · Caminata 20 min · Playlist: Shakira, Beyóncé',
-                                             rec_en:'Dark chocolate 85% · Brisk walk 20 min · Playlist: Shakira, Beyoncé'},
-                                            {img:'/images/lagrima.png',es:'Soltar',en:'Let it out',sub_es:'A veces llorar es sanar',sub_en:'Sometimes tears heal',
-                                             rec_es:'Sopa con cúrcuma · Respiración 4-7-8 · "Eat Pray Love" — peli',
-                                             rec_en:'Turmeric soup · 4-7-8 breathing · "Eat Pray Love" — film'},
-                                            {img:'/images/reirme.png',es:'Reírme',en:'Laugh',sub_es:'La risa es medicina',sub_en:'Laughter is medicine',
-                                             rec_es:'Frutos rojos · Baile libre 10 min · "Fleabag" en Prime',
-                                             rec_en:'Mixed berries · Free dance 10 min · "Fleabag" on Prime'},
-                                            {img:'/images/florecer.png',es:'Florecer',en:'Blossom',sub_es:'Activa tu serotonina',sub_en:'Activate your serotonin',
-                                             rec_es:'Plátano + avena · Meditación 10 min · Frecuencias 528hz',
-                                             rec_en:'Banana + oats · Meditation 10 min · 528hz frequencies'},
-                                        ].map((item,i)=>(
-                                            <div key={i} style={{flexShrink:0,width:'160px'}}>
-                                                <div className="gc gch" onClick={()=>setOpenEstado(openEstado===i?null:i)} style={{padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem'}}>
-                                                    <img src={item.img} style={{width:'42px',height:'42px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'1px solid rgba(184,115,51,0.3)',boxShadow:'0 0 12px rgba(184,115,51,0.15)'}}/>
-                                                    <div>
-                                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'0.88rem',fontWeight:600,color:'#F0EDE8',margin:0}}>{language==='es'?item.es:item.en}</p>
-                                                        <p style={{fontSize:'0.7rem',color:'rgba(184,115,51,0.7)',margin:0}}>{language==='es'?item.sub_es:item.sub_en}</p>
-                                                    </div>
-                                                </div>
-                                                {openEstado===i&&<div style={{background:'rgba(184,115,51,0.08)',border:'1px solid rgba(184,115,51,0.2)',borderRadius:'0.75rem',padding:'0.75rem',marginTop:'0.35rem',fontSize:'0.78rem',color:'rgba(245,230,211,0.85)',lineHeight:1.7,fontStyle:'italic'}}>
-                                                    {language==='es'?item.rec_es:item.rec_en}
-                                                </div>}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
+
+
 
                                 {/* SABIAS QUE */}
                                 {(()=>{
@@ -3977,6 +3933,37 @@ query = query.eq('region', region.toUpperCase());
                                     );
                                 })()}
 
+                                {/* CARD RESUMEN DATOS */}
+                                {currentUser && (()=>{
+                                    const peso = currentUser.peso;
+                                    const talla = currentUser.talla;
+                                    const imc = peso && talla ? (peso / Math.pow(talla > 3 ? talla/100 : talla, 2)).toFixed(1) : null;
+                                    const imcCat = imc ? (imc < 18.5 ? (language==='es'?'Bajo peso':'Underweight') : imc < 25 ? (language==='es'?'Peso saludable':'Healthy weight') : imc < 30 ? (language==='es'?'Sobrepeso':'Overweight') : (language==='es'?'Obesidad':'Obesity')) : null;
+                                    const bmr = peso && talla ? Math.round(10 * peso + 6.25 * (talla > 3 ? talla : talla * 100) - 5 * 40 - 161) : null;
+                                    const tdee = bmr ? Math.round(bmr * 1.375) : null;
+                                    return (
+                                        <div className="gc" style={{marginBottom:'1rem',padding:'1.25rem'}}>
+                                            <p style={{fontSize:'0.62rem',color:'#B8997A',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.875rem'}}>
+                                                {language==='es'?'✦ TUS DATOS':'✦ YOUR DATA'}
+                                            </p>
+                                            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem',marginBottom:'0.75rem'}}>
+                                                {imc && <div style={{background:'rgba(184,115,51,0.08)',borderRadius:'0.75rem',padding:'0.75rem',textAlign:'center'}}>
+                                                    <div style={{fontSize:'1.4rem',fontWeight:700,color:'#B8997A',fontFamily:"'Cormorant',serif"}}>{imc}</div>
+                                                    <div style={{fontSize:'0.6rem',color:'rgba(184,115,51,0.6)',fontFamily:'Montserrat,sans-serif'}}>IMC · {imcCat}</div>
+                                                </div>}
+                                                {tdee && <div style={{background:'rgba(184,115,51,0.08)',borderRadius:'0.75rem',padding:'0.75rem',textAlign:'center'}}>
+                                                    <div style={{fontSize:'1.4rem',fontWeight:700,color:'#B8997A',fontFamily:"'Cormorant',serif"}}>{tdee}</div>
+                                                    <div style={{fontSize:'0.6rem',color:'rgba(184,115,51,0.6)',fontFamily:'Montserrat,sans-serif'}}>{language==='es'?'kcal/día recomendadas':'kcal/day recommended'}</div>
+                                                </div>}
+                                            </div>
+                                            {currentUser.objetivo && <div style={{background:'rgba(184,115,51,0.06)',border:'1px solid rgba(184,115,51,0.15)',borderRadius:'0.75rem',padding:'0.6rem 0.875rem',display:'flex',alignItems:'center',gap:'0.5rem'}}>
+                                                <div style={{width:'6px',height:'6px',borderRadius:'50%',background:'#B8997A',flexShrink:0}}/>
+                                                <span style={{fontSize:'0.82rem',color:'rgba(245,230,211,0.8)',fontFamily:"'Cormorant',serif"}}>{language==='es'?'Objetivo: ':'Goal: '}{currentUser.objetivo}</span>
+                                            </div>}
+                                        </div>
+                                    );
+                                })()}
+
                                 <div style={{marginBottom:'1rem'}}>
                                     <p style={{fontSize:'0.62rem',color:'#B8997A',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.75rem'}}>{language==='es'?'TU ESPACIO':'YOUR SPACE'}</p>
                                     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.6rem'}}>
@@ -3984,11 +3971,12 @@ query = query.eq('region', region.toUpperCase());
                                             {img:'/images/modo_ritual.png',es:'Síntomas',en:'Symptoms',page:'symptoms',des:'Registra tu día',den:'Log your day'},
                                             {img:'/images/nutri_huevo.png',es:'Nutrición',en:'Nutrition',page:'nutrition',des:'Tu menú hoy',den:'Your menu today'},
                                             {img:'/images/ejer_fuerza.png',es:'Ejercicio',en:'Exercise',page:'exercise',des:'Movimiento',den:'Movement'},
-                                            {img:'/images/lumi.png',es:'LUMI',en:'LUMI',page:'chat',des:'Tu guía amiga',den:'Your guide'},
+                                            {img:'/images/lumi.png',es:'LUMI',en:'LUMI',page:'chat',des:'Habla con tu asesora',den:'Talk to your advisor'},
+                                            {img:'/images/ejer_fuerza.png',es:'Silueta',en:'Silhouette',page:'escaner',des:'Tu análisis hormonal',den:'Your hormonal analysis'},
                                             {img:'/images/nutri_progreso.png',es:'Progreso',en:'Progress',page:'progreso',des:'Tus patrones',den:'Your patterns'},
                                             {img:'/images/modo_cueva.png',es:'Período',en:'Period',page:'period',des:'Tu ciclo',den:'Your cycle'},
                                         ].map((item,i)=>(
-                                            <div key={i} className="gc gch" onClick={()=>setCurrentPage(item.page)} style={{padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem'}}>
+                                            <div key={i} className="gc gch" onClick={()=>item.page==='escaner'?window.location.href='/escaner':setCurrentPage(item.page)} style={{padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem'}}>
                                                 <img src={item.img} style={{width:'42px',height:'42px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'1px solid rgba(184,115,51,0.3)',boxShadow:'0 0 12px rgba(184,115,51,0.15)'}}/>
                                                 <div>
                                                     <p style={{fontSize:'0.88rem',fontWeight:600,color:'#F0EDE8',fontFamily:"'Cormorant',serif"}}>{language==='es'?item.es:item.en}</p>
@@ -7615,7 +7603,7 @@ query = query.eq('region', region.toUpperCase());
                         </div>
                     </footer>
 
-                    <nav className={`fixed bottom-0 left-0 right-0 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-t shadow-lg`} style={{display: hideChrome ? 'none' : 'block'}}>
+                    <nav className={`fixed bottom-0 left-0 right-0 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-t shadow-lg`} style={{display: (hideChrome || ['active','paid'].includes(currentUser?.subscription_status)) ? 'none' : 'block'}}>
                         <div className="max-w-6xl mx-auto flex justify-around overflow-x-auto">
                             {[
                                 { page: 'home', label: t[language].home, img: '/images/sintomas.png', premium: false },
