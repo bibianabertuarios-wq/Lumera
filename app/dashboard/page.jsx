@@ -44,6 +44,11 @@ export default function Dashboard() {
       .from('users').select('*').eq('id', session.user.id).limit(1);
     const profile = profiles?.[0];
 
+    if (['active','paid'].includes(profile?.subscription_status)) {
+      window.location.href = '/lumera';
+      return;
+    }
+
     const userData = {
       id: session.user.id,
       nombre: (profile?.profile_name || session.user.email?.split('@')[0] || 'amiga').replace(/^./, c => c.toUpperCase()),
