@@ -3934,7 +3934,7 @@ query = query.eq('region', region.toUpperCase());
                                 })()}
 
                                 {/* CARD RESUMEN DATOS */}
-                                {currentUser && (()=>{
+                                {currentUser && currentUser.peso && currentUser.talla && (()=>{
                                     const peso = currentUser.peso;
                                     const talla = currentUser.talla;
                                     const imc = peso && talla ? (peso / Math.pow(talla > 3 ? talla/100 : talla, 2)).toFixed(1) : null;
@@ -3972,7 +3972,7 @@ query = query.eq('region', region.toUpperCase());
                                             {img:'/images/nutri_huevo.png',es:'Nutrición',en:'Nutrition',page:'nutrition',des:'Tu menú hoy',den:'Your menu today'},
                                             {img:'/images/ejer_fuerza.png',es:'Ejercicio',en:'Exercise',page:'exercise',des:'Movimiento',den:'Movement'},
                                             {img:'/images/lumi.png',es:'LUMI',en:'LUMI',page:'chat',des:'Habla con tu asesora',den:'Talk to your advisor'},
-                                            {img:'/images/ejer_fuerza.png',es:'Silueta',en:'Silhouette',page:'escaner',des:'Tu análisis hormonal',den:'Your hormonal analysis'},
+                                            {img:'/images/opt/avatar/avatar_pose_1.png',es:'Silueta',en:'Silhouette',page:'escaner',des:'Tu análisis hormonal',den:'Your hormonal analysis'},
                                             {img:'/images/nutri_progreso.png',es:'Progreso',en:'Progress',page:'progreso',des:'Tus patrones',den:'Your patterns'},
                                             {img:'/images/modo_cueva.png',es:'Período',en:'Period',page:'period',des:'Tu ciclo',den:'Your cycle'},
                                         ].map((item,i)=>(
