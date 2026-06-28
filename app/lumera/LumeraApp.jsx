@@ -6840,9 +6840,10 @@ query = query.eq('region', region.toUpperCase());
                     <nav className="navbar-elegant fixed top-0 w-full z-50">
                         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
                             <div className="flex items-center gap-3">
-                                <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M50 5 C25 5 5 25 5 50 C5 75 25 95 50 95 C35 85 25 68 25 50 C25 32 35 15 50 5Z" fill="#9b8ec4" opacity="0.85"/>
-                                    <path d="M50 22 L56 45 L50 78 L44 45 Z" fill="#C4A882"/>
+                                <svg width="32" height="32" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M24 2C12 2 3 12 3 24C3 36 12 46 24 46C16 40 11 32.5 11 24C11 15.5 16 8 24 2Z" fill="#C9935A"/>
+                                    <path d="M24 2C36 2 45 12 45 24C45 36 36 46 24 46C32 40 37 32.5 37 24C37 15.5 32 8 24 2Z" fill="#0D3D3D" opacity="0.3"/>
+                                    <polygon points="26,5 30,22 26,43 22,22" fill="#C9935A" opacity="0.9"/>
                                 </svg>
                                 <h1 className="text-2xl font-medium tracking-tight" style={{color: '#78716c', fontFamily: 'Cormorant, serif'}}>
                                     LUMERA
@@ -7472,9 +7473,10 @@ query = query.eq('region', region.toUpperCase());
                     <header style={{display: hideChrome ? 'none' : undefined}} className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} shadow sticky top-0 z-40 border-b`}>
                         <div className="max-w-6xl mx-auto px-3 py-3 flex justify-between items-center" style={{gap:'0.5rem'}}>
                             <div className="flex items-center gap-3">
-                                <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M50 5 C25 5 5 25 5 50 C5 75 25 95 50 95 C35 85 25 68 25 50 C25 32 35 15 50 5Z" fill="#9b8ec4" opacity="0.85"/>
-                                    <path d="M50 22 L56 45 L50 78 L44 45 Z" fill="#C4A882"/>
+                                <svg width="32" height="32" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M24 2C12 2 3 12 3 24C3 36 12 46 24 46C16 40 11 32.5 11 24C11 15.5 16 8 24 2Z" fill="#C9935A"/>
+                                    <path d="M24 2C36 2 45 12 45 24C45 36 36 46 24 46C32 40 37 32.5 37 24C37 15.5 32 8 24 2Z" fill="#0D3D3D" opacity="0.3"/>
+                                    <polygon points="26,5 30,22 26,43 22,22" fill="#C9935A" opacity="0.9"/>
                                 </svg>
                                 <h1 style={{fontFamily:"'Cormorant',serif",fontSize:"1.25rem",fontWeight:500,background:"linear-gradient(135deg,#C4A882,#c4a882)",WebkitBackgroundClip:"text",WebkitTextFillColor:"transparent",whiteSpace:"nowrap"}}>Lumera</h1>
                             </div>
