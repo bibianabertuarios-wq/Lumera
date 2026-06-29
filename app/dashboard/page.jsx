@@ -117,6 +117,12 @@ export default function Dashboard() {
         if (obj.includes('músculo') || obj.includes('fuerza') || obj.includes('muscle')) {
           return `Peso: ${userData.peso}kg, IMC: ${imc}. Ganar músculo: superávit 200-300kcal/día, fuerza 3x/semana. Resultados en 8-12 semanas.`;
         }
+        if (obj.includes('hormonal') || obj.includes('equilibrio') || obj.includes('balance')) {
+          return `IMC: ${imc}. El equilibrio hormonal mejora en 4-6 semanas con hábitos consistentes. Síntomas reducen 40-60% en 3 meses con nutrición, movimiento y sueño optimizados.`;
+        }
+        if (obj.includes('energía') || obj.includes('energy') || obj.includes('sueño') || obj.includes('sleep') || obj.includes('niebla')) {
+          return `IMC: ${imc}. La energía y el sueño mejoran en 2-3 semanas al regular el cortisol. El 70% de la hormona de crecimiento se libera durmiendo — el sueño es tu primera prioridad.`;
+        }
         return imc ? `IMC: ${imc}.` : '';
       })();
 
