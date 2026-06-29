@@ -25,6 +25,7 @@ export default function Dashboard() {
   const [visible, setVisible] = useState(false);
   const [planVisible, setPlanVisible] = useState(false);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [showMasMenu, setShowMasMenu] = useState(false);
   const [showLumiChat, setShowLumiChat] = useState(false);
   const [lumiChatInput, setLumiChatInput] = useState('');
   const [lumiChatMessages, setLumiChatMessages] = useState([]);
@@ -707,6 +708,41 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
             </div>
           )}
 
+          {/* MODAL MÁS */}
+          {showMasMenu && (
+            <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.7)',zIndex:200,display:'flex',alignItems:'flex-end',justifyContent:'center'}} onClick={()=>setShowMasMenu(false)}>
+              <div style={{background:'#FBF7F0',borderRadius:'1.5rem 1.5rem 0 0',padding:'2rem 1.5rem',width:'100%',maxWidth:'520px'}} onClick={e=>e.stopPropagation()}>
+                <div style={{textAlign:'center',marginBottom:'1.5rem'}}>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',marginBottom:'0.5rem'}}>✦ EXPLORAR</div>
+                  <h2 style={{fontSize:'1.4rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>
+                    {is_es ? 'Tu espacio completo' : 'Your full space'}
+                  </h2>
+                </div>
+                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem',marginBottom:'1rem'}}>
+                  {[
+                    {img:'/images/carta_intimidad.png', es:'Bienestar íntimo', en:'Intimate wellness', route:'/lumera?tab=symptoms', sub_es:'Reconexión y suelo pélvico', sub_en:'Reconnection & pelvic floor'},
+                    {img:'/images/mitos.png', es:'Mitos', en:'Myths', route:'/lumera?tab=symptoms', sub_es:'Lo que no te han contado', sub_en:'What nobody told you'},
+                    {img:'/images/consejos.png', es:'Consejos', en:'Tips', route:'/lumera?tab=symptoms', sub_es:'Tips de LUMI para hoy', sub_en:'LUMI tips for today'},
+                    {img:'/images/modo_cueva.png', es:'Período', en:'Period', route:'/lumera?tab=period', sub_es:'Seguimiento de tu ciclo', sub_en:'Track your cycle'},
+                    {img:'/images/sintomas.png', es:'Síntomas', en:'Symptoms', route:'/lumera?tab=symptoms', sub_es:'Registra cómo te sientes', sub_en:'Log how you feel'},
+                    {img:'/images/escaner_preview.png', es:'Comunidad', en:'Community', route:'/lumera?tab=symptoms', sub_es:'Próximamente', sub_en:'Coming soon'},
+                  ].map((item,i)=>(
+                    <div key={i} onClick={()=>{setShowMasMenu(false); window.location.href=item.route;}} style={{background:'white',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'1rem',padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem',cursor:'pointer'}}>
+                      <img src={item.img} style={{width:'40px',height:'40px',borderRadius:'50%',objectFit:'cover',flexShrink:0}} onError={e=>{e.target.style.display='none'}}/>
+                      <div>
+                        <div style={{fontSize:'0.88rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>{is_es?item.es:item.en}</div>
+                        <div style={{fontSize:'0.65rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.45)'}}>{is_es?item.sub_es:item.sub_en}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button onClick={()=>setShowMasMenu(false)} style={{width:'100%',background:'none',border:'none',color:'rgba(13,61,61,0.35)',fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',cursor:'pointer',padding:'0.5rem'}}>
+                  {is_es?'Cerrar':'Close'}
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* MODAL PREMIUM */}
           {showPremiumModal && (
             <div style={{position:'fixed',inset:0,background:'rgba(0,0,0,0.7)',zIndex:200,display:'flex',alignItems:'flex-end',justifyContent:'center'}} onClick={()=>setShowPremiumModal(false)}>
@@ -751,16 +787,18 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
             {img:"/images/kling_20260321_作品_Extremely__4837_0.png", label:'Inicio', route:'/dashboard'},
             {img:"/images/kling_20260321_作品__Extremely_4730_1.png", label:'Nutrición', route:'/lumera?tab=nutrition'},
             {img:'/images/sintomas.png', label:'Síntomas', route:'/lumera?tab=symptoms'},
+            {img:'/images/mitos.png', label:'Más', route:'__mas_menu__'},
             {img:'/images/lumi.png', label:'LUMI', route:'/lumera?tab=chat'},
             {img:"/images/kling_20260321_作品_Extremely__4896_1.png", label:'Ejercicio', route:'/lumera?tab=exercise'},
           ] : [
             {img:"/images/kling_20260321_作品_Extremely__4837_0.png", label:'Home', route:'/dashboard'},
             {img:"/images/kling_20260321_作品__Extremely_4730_1.png", label:'Nutrition', route:'/lumera?tab=nutrition'},
             {img:'/images/sintomas.png', label:'Síntomas', route:'/lumera?tab=symptoms'},
+            {img:'/images/mitos.png', label:'Más', route:'__mas_menu__'},
             {img:'/images/lumi.png', label:'LUMI', route:'/lumera?tab=chat'},
             {img:"/images/kling_20260321_作品_Extremely__4896_1.png", label:'Exercise', route:'/lumera?tab=exercise'},
           ]).map((n,i) => (
-            <div key={i} className="nav-item" onClick={()=>{ if(n.route==='__lumi_chat__'){setShowLumiChat(true);if(lumiChatMessages.length===0)setLumiChatMessages([{role:'assistant',content:lumiMsg}]);} else if(n.route.includes('/lumera')) window.location.href=n.route; else router.push(n.route); }}>
+            <div key={i} className="nav-item" onClick={()=>{ if(n.route==='__lumi_chat__'){setShowLumiChat(true);if(lumiChatMessages.length===0)setLumiChatMessages([{role:'assistant',content:lumiMsg}]);} else if(n.route==='__mas_menu__'){setShowMasMenu(true);} else if(n.route.includes('/lumera')) window.location.href=n.route; else router.push(n.route); }}>
               <img src={n.img} alt={n.label} style={{width:'28px',height:'28px',borderRadius:'50%',objectFit:'cover',border:n.route==='/dashboard'?'2px solid #C9935A':'2px solid transparent'}}/>
               <span style={{fontSize:'0.6rem',fontFamily:'Montserrat,sans-serif',color:n.route==='/dashboard'?'#C9935A':'rgba(13,61,61,0.4)',fontWeight:n.route==='/dashboard'?700:400}}>{n.label}</span>
             </div>
