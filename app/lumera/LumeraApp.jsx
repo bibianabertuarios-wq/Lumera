@@ -3945,7 +3945,7 @@ query = query.eq('region', region.toUpperCase());
                                             {img:'/images/nutri_progreso.png',es:'Progreso',en:'Progress',page:'progreso',des:'Tus patrones',den:'Your patterns'},
                                             {img:'/images/modo_cueva.png',es:'Período',en:'Period',page:'period',des:'Tu ciclo',den:'Your cycle'},
                                         ].map((item,i)=>(
-                                            <div key={i} className="gc gch" onClick={()=>item.page==='escaner'?window.location.href='/escaner':setCurrentPage(item.page)} style={{padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem'}}>
+                                            <div key={i} className="gc gch" onClick={()=>item.page==='escaner'?window.location.href='/escaner':item.page==='progreso'?window.location.href='/dashboard':setCurrentPage(item.page)} style={{padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem'}}>
                                                 <img src={item.img} style={{width:'42px',height:'42px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'1px solid rgba(184,115,51,0.3)',boxShadow:'0 0 12px rgba(184,115,51,0.15)'}}/>
                                                 <div>
                                                     <p style={{fontSize:'0.88rem',fontWeight:600,color:'#F0EDE8',fontFamily:"'Cormorant',serif"}}>{language==='es'?item.es:item.en}</p>
