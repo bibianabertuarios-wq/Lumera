@@ -197,8 +197,19 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
       const text = data.content?.[0]?.text || '[]';
       const clean = text.replace(/```json|```/g, '').trim();
       const plan = JSON.parse(clean);
-      localStorage.setItem(cacheKey, JSON.stringify(plan));
-      setPlanGenerado(plan);
+      // Añadir links automáticos según contenido
+      const planConLinks = plan.map(p => {
+        const texto = (p.accion || '').toLowerCase();
+        if (texto.includes('proteína') || texto.includes('protein') || texto.includes('come') || texto.includes('eat') || texto.includes('desayuno') || texto.includes('breakfast') || texto.includes('menú') || texto.includes('menu') || texto.includes('cena') || texto.includes('dinner') || texto.includes('almuerzo') || texto.includes('lunch')) {
+          return {...p, link: '/lumera?tab=nutrition', linkLabel: is_es ? 'Ver tu menú →' : 'See your menu →'};
+        }
+        if (texto.includes('entrena') || texto.includes('train') || texto.includes('ejercicio') || texto.includes('exercise') || texto.includes('fuerza') || texto.includes('strength') || texto.includes('camina') || texto.includes('walk') || texto.includes('series') || texto.includes('sets')) {
+          return {...p, link: '/lumera?tab=exercise', linkLabel: is_es ? 'Ver tu rutina →' : 'See your routine →'};
+        }
+        return p;
+      });
+      localStorage.setItem(cacheKey, JSON.stringify(planConLinks));
+      setPlanGenerado(planConLinks);
     } catch(e) {
       console.error('Plan error:', e);
       setPlanGenerado(null);
