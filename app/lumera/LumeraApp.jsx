@@ -3942,7 +3942,7 @@ query = query.eq('region', region.toUpperCase());
                                             {img:'/images/ejer_fuerza.png',es:'Ejercicio',en:'Exercise',page:'exercise',des:'Movimiento',den:'Movement'},
                                             {img:'/images/lumi.png',es:'LUMI',en:'LUMI',page:'chat',des:'Habla con tu asesora',den:'Talk to your advisor'},
                                             {img:'/images/opt/avatar/avatar_pose_1.png',es:'Silueta',en:'Silhouette',page:'escaner',des:'Tu análisis hormonal',den:'Your hormonal analysis'},
-                                            {img:'/images/nutri_progreso.png',es:'Progreso',en:'Progress',page:'progreso',des:'Tus patrones',den:'Your patterns'},
+
                                             {img:'/images/modo_cueva.png',es:'Período',en:'Period',page:'period',des:'Tu ciclo',den:'Your cycle'},
                                         ].map((item,i)=>(
                                             <div key={i} className="gc gch" onClick={()=>item.page==='escaner'?window.location.href='/escaner':item.page==='progreso'?window.location.href='/dashboard':setCurrentPage(item.page)} style={{padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem'}}>
