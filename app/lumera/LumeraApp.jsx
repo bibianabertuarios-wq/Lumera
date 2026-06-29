@@ -3938,7 +3938,7 @@ query = query.eq('region', region.toUpperCase());
                                     <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.6rem'}}>
                                         {[
                                             {img:'/images/modo_ritual.png',es:'Síntomas',en:'Symptoms',page:'symptoms',des:'Registra tu día',den:'Log your day'},
-                                            {img:'/images/nutri_huevo.png',es:'Nutrición',en:'Nutrition',page:'nutrition',des:'Tu menú hoy',den:'Your menu today'},
+                                            {img:'/images/nutri_huevo.png',es:'Nutrición y Progreso',en:'Nutrition & Progress',page:'nutrition',des:'Tu menú y evolución',den:'Your menu & progress'},
                                             {img:'/images/ejer_fuerza.png',es:'Ejercicio',en:'Exercise',page:'exercise',des:'Movimiento',den:'Movement'},
                                             {img:'/images/lumi.png',es:'LUMI',en:'LUMI',page:'chat',des:'Habla con tu asesora',den:'Talk to your advisor'},
                                             {img:'/images/opt/avatar/avatar_pose_1.png',es:'Silueta',en:'Silhouette',page:'escaner',des:'Tu análisis hormonal',den:'Your hormonal analysis'},
