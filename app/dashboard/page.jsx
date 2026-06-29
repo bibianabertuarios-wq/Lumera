@@ -101,27 +101,39 @@ export default function Dashboard() {
         return tendencia;
       })() : null;
 
-      const contexto = `
-Eres LUMI, asesora científica de bienestar hormonal de Lumera. Hablas en ${is_es ? 'español' : 'inglés'}.
-Usuaria: ${userData.nombre}
-Objetivo: ${userData.objetivo || 'equilibrio hormonal'}
-Síntoma principal: ${userData.sintoma || 'bienestar general'}
-Días en la app: ${diasEnApp}
-Fecha: ${hoy}, Hora: ${hora}h
-Checkin de ayer: ${ayer ? `energía ${ayer.energia}/5, sueño ${ayer.sueno}/5, ánimo ${ayer.animo}/5, estado: ${ayer.sintoma_hoy}` : 'sin datos aún'}
-${patronSemana ? `Patrón detectado esta semana: ${patronSemana}` : ''}
-${checkins.length >= 3 ? `Lleva ${checkins.length} días registrando datos` : ''}
+      const imc = userData.peso && userData.talla ?
+        (userData.peso / Math.pow(userData.talla > 3 ? userData.talla/100 : userData.talla, 2)).toFixed(1) : null;
 
-Escribe UN mensaje personalizado (máximo 3 frases) para cuando abra la app hoy.
-REGLAS ESTRICTAS:
-- Si hay checkin de ayer: empieza referenciando cómo estaba ayer de forma específica
-- Si hay patrón detectado: mencionarlo directamente ("Noto que esta semana...")  
-- Si es primer día: preséntate y dile de dónde parte según su objetivo específico
-- Tono: asesora científica cercana. Directa. Sin drama. Sin diagnósticos médicos.
-- NUNCA uses emojis, "no estás rota", "te entiendo", "amiga"
-- Termina con UNA acción concreta y específica para hoy según su objetivo
-- Máximo 3 frases cortas
-      `.trim();
+      const objetivoDetalle = (() => {
+        const obj = (userData.objetivo || '').toLowerCase();
+        if (!userData.peso) return '';
+        const tallaM = userData.talla > 3 ? userData.talla/100 : userData.talla;
+        const pesoIdeal = tallaM ? Math.round(21.5 * tallaM * tallaM) : null;
+        if (obj.includes('peso') || obj.includes('weight')) {
+          const diff = pesoIdeal ? (userData.peso - pesoIdeal).toFixed(1) : null;
+          const meses = diff > 0 ? Math.round(diff / 0.75) : null;
+          return diff > 0 ? `Peso: ${userData.peso}kg, IMC: ${imc}. Objetivo: ~${pesoIdeal}kg (-${diff}kg). Tiempo estimado: ${meses} meses a 0.5-1kg/mes.` : `Peso: ${userData.peso}kg, IMC: ${imc}. Ya en rango saludable.`;
+        }
+        if (obj.includes('músculo') || obj.includes('fuerza') || obj.includes('muscle')) {
+          return `Peso: ${userData.peso}kg, IMC: ${imc}. Ganar músculo: superávit 200-300kcal/día, fuerza 3x/semana. Resultados en 8-12 semanas.`;
+        }
+        return imc ? `IMC: ${imc}.` : '';
+      })();
+
+      const contexto = [
+        `Eres LUMI, asesora científica de bienestar hormonal. Idioma: ${is_es ? 'español' : 'inglés'}.`,
+        `Usuaria: ${userData.nombre}. Objetivo: ${userData.objetivo || 'equilibrio hormonal'}. Síntoma: ${userData.sintoma || 'bienestar general'}.`,
+        `Días en app: ${diasEnApp}. Fecha: ${hoy}, ${hora}h.`,
+        objetivoDetalle ? `Datos: ${objetivoDetalle}` : '',
+        ayer ? `Ayer: energía ${ayer.energia}/5, sueño ${ayer.sueno}/5, ánimo ${ayer.animo}/5.` : 'Sin checkin previo.',
+        patronSemana ? `Patrón semana: ${patronSemana}.` : '',
+        'Escribe UN mensaje de máximo 4 frases para cuando abra la app hoy.',
+        'Día 1 sin checkins: preséntate, menciona punto de partida con datos reales, primer paso concreto, invita a explorar.',
+        'Día 2+: referencia ayer específicamente, patrón si existe, acción concreta.',
+        'Tono: asesora científica cercana, directa, con números reales. Sin diagnósticos médicos.',
+        'NUNCA: emojis, "no estás rota", "te entiendo", "amiga".',
+        'Termina con invitación a preguntar o explorar la app.',
+      ].filter(Boolean).join(' ');
 
       const res = await fetch('/api/lumi', {
         method: 'POST',
