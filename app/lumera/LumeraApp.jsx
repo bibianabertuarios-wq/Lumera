@@ -3964,14 +3964,14 @@ query = query.eq('region', region.toUpperCase());
                                     </div>
                                 </div>
 
-                                <div style={{marginBottom:'1rem'}}>
-                                    <p style={{fontSize:'0.62rem',color:'#B8997A',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.75rem'}}>{language==='es'?'MÁS':'MORE'}</p>
-                                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.6rem'}}>
+                                <details style={{marginBottom:'1rem'}}>
+                                    <summary style={{listStyle:'none',cursor:'pointer',fontSize:'0.62rem',color:'#B8997A',fontWeight:700,letterSpacing:'0.14em',textTransform:'uppercase',marginBottom:'0.75rem'}}>{language==='es'?'✦ MÁS':'✦ MORE'}</summary>
+                                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.6rem',marginTop:'0.75rem'}}>
                                         {[
-                                            {img:'/images/carta_intimidad.png',es:'Bienestar íntimo',en:'Intimate wellness',page:'symptoms',des:'Reconexión y suelo pélvico',den:'Reconnection & pelvic floor'},
-                                            {img:'/images/mitos.png',es:'Mitos',en:'Myths',page:'symptoms',des:'Lo que no te han contado',den:'What nobody told you'},
-                                            {img:'/images/consejos.png',es:'Consejos',en:'Tips',page:'symptoms',des:'Tips de LUMI para hoy',den:'LUMI tips for today'},
-                                            {img:'/images/escaner_preview.png',es:'Comunidad',en:'Community',page:'symptoms',des:'Próximamente',den:'Coming soon'},
+                                            {img:'/images/carta_intimidad.png',es:'Bienestar íntimo',en:'Intimate wellness',page:'intimidad',des:'Reconexión y suelo pélvico',den:'Reconnection & pelvic floor'},
+                                            {img:'/images/mitos.png',es:'Mitos',en:'Myths',page:'myths',des:'Lo que no te han contado',den:'What nobody told you'},
+                                            {img:'/images/consejos.png',es:'Consejos',en:'Tips',page:'tips',des:'Tips de LUMI para hoy',den:'LUMI tips for today'},
+                                            {img:'/images/escaner_preview.png',es:'Comunidad',en:'Community',page:'community',des:'Próximamente',den:'Coming soon'},
                                         ].map((item,i)=>(
                                             <div key={i} className="gc gch" onClick={()=>setCurrentPage(item.page)} style={{padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem'}}>
                                                 <img src={item.img} style={{width:'42px',height:'42px',borderRadius:'50%',objectFit:'cover',flexShrink:0,border:'1px solid rgba(184,115,51,0.3)',boxShadow:'0 0 12px rgba(184,115,51,0.15)'}} onError={e=>{e.target.style.display='none'}}/>
@@ -3982,7 +3982,7 @@ query = query.eq('region', region.toUpperCase());
                                             </div>
                                         ))}
                                     </div>
-                                </div>
+                                </details>
 
                                 <div className="gc" style={{marginBottom:'1rem',padding:'1.25rem'}}>
                                     <div style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:!isInTrial?'1rem':'0'}}>
@@ -6372,6 +6372,81 @@ query = query.eq('region', region.toUpperCase());
 
 
             // CONSEJOS
+            const renderIntimidad = () => {
+                return (
+                    <div className="pb-32 space-y-5" key={`intimidad-${language}`} style={{background:darkMode?'transparent':'linear-gradient(180deg,#fdf8f3,#fdf4ee)',minHeight:'100vh',padding:'1rem'}}>
+                        <div style={{position:'relative',borderRadius:'1.25rem',overflow:'hidden',marginBottom:'0.5rem',height:'120px'}}>
+                            <img src="/images/carta_intimidad.png" style={{width:'100%',height:'100%',objectFit:'cover',filter:'brightness(0.65)'}} alt="" />
+                            <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',padding:'1.25rem'}}>
+                                <div>
+                                    <p style={{color:'rgba(255,255,255,0.8)',fontSize:'0.7rem',letterSpacing:'0.15em'}}>✦ LUMERA</p>
+                                    <h2 style={{fontFamily:"'Cormorant',serif",fontSize:'1.8rem',fontWeight:500,color:'white',lineHeight:1.2}}>{language==='es'?'Bienestar íntimo':'Intimate wellness'}</h2>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p style={{fontSize:'0.85rem',color:darkMode?'#a8a29e':'#78716c',lineHeight:1.6,padding:'0 0.25rem'}}>
+                            {language==='es'
+                                ? 'Tu vida sexual también cambia en esta etapa, y casi nadie te lo explica. Aquí hablamos de ello con la misma naturalidad y base científica que del resto de tu cuerpo.'
+                                : 'Your sexual life also changes at this stage, and almost nobody explains it. Here we talk about it with the same openness and scientific basis as the rest of your body.'}
+                        </p>
+
+                        <div style={{background:darkMode?'rgba(255,255,255,0.05)':'rgba(255,255,255,0.95)',borderRadius:'1.1rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 2px 12px rgba(0,0,0,0.06)'}}>
+                            <div style={{padding:'1rem 1.25rem',borderBottom:'1px solid rgba(201,147,90,0.1)',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(232,200,159,0.08))'}}>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.2rem',fontWeight:600,color:darkMode?'#e8d5c0':'#292524'}}>
+                                    <span style={{color:'#C4A882',marginRight:'0.4rem'}}>✦</span>{language==='es'?'Respiración y reconexión con tu cuerpo':'Breathing and reconnecting with your body'}
+                                </h3>
+                            </div>
+                            <div style={{padding:'1rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+                                <div style={{borderLeft:'3px solid #C4A882',paddingLeft:'0.75rem'}}>
+                                    <p style={{fontSize:'0.8rem',fontWeight:600,color:'#C4A882',marginBottom:'0.2rem'}}>{language==='es'?'Respiración 4-7-8 antes de la intimidad':'4-7-8 breathing before intimacy'}</p>
+                                    <p style={{fontSize:'0.85rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.5}}>{language==='es'?'Inhala 4 segundos, mantén 7, exhala 8. Repite 4 veces. Activa el sistema nervioso parasimpático, reduciendo el cortisol que bloquea el deseo y la lubricación natural.':'Inhale for 4 seconds, hold for 7, exhale for 8. Repeat 4 times. Activates the parasympathetic nervous system, lowering the cortisol that blocks desire and natural lubrication.'}</p>
+                                </div>
+                                <div style={{borderLeft:'3px solid rgba(201,147,90,0.4)',paddingLeft:'0.75rem'}}>
+                                    <p style={{fontSize:'0.8rem',fontWeight:600,color:'#8A7055',marginBottom:'0.2rem'}}>{language==='es'?'Reconexión sensorial propia':'Self sensory reconnection'}</p>
+                                    <p style={{fontSize:'0.85rem',color:darkMode?'#a8a29e':'#78716c',lineHeight:1.5}}>{language==='es'?'Dedicar tiempo a sentir tu propio cuerpo sin objetivo (un baño consciente, una crema con masaje lento) reentrena la sensibilidad y reduce la ansiedad de desempeño.':'Spending time feeling your own body without a goal (a mindful bath, a slow lotion massage) retrains sensitivity and reduces performance anxiety.'}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{background:darkMode?'rgba(255,255,255,0.05)':'rgba(255,255,255,0.95)',borderRadius:'1.1rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 2px 12px rgba(0,0,0,0.06)'}}>
+                            <div style={{padding:'1rem 1.25rem',borderBottom:'1px solid rgba(201,147,90,0.1)',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(232,200,159,0.08))'}}>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.2rem',fontWeight:600,color:darkMode?'#e8d5c0':'#292524'}}>
+                                    <span style={{color:'#C4A882',marginRight:'0.4rem'}}>✦</span>{language==='es'?'Sequedad vaginal: por qué pasa y qué ayuda':'Vaginal dryness: why it happens and what helps'}
+                                </h3>
+                            </div>
+                            <div style={{padding:'1rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+                                <div style={{borderLeft:'3px solid #C4A882',paddingLeft:'0.75rem'}}>
+                                    <p style={{fontSize:'0.8rem',fontWeight:600,color:'#C4A882',marginBottom:'0.2rem'}}>{language==='es'?'Por qué ocurre':'Why it happens'}</p>
+                                    <p style={{fontSize:'0.85rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.5}}>{language==='es'?'La caída de estrógeno reduce el flujo sanguíneo y la elasticidad de los tejidos vaginales. Es un cambio fisiológico, no una señal de que algo va mal en ti o en tu deseo.':'The drop in oestrogen reduces blood flow and elasticity in vaginal tissue. It is a physiological change, not a sign that something is wrong with you or your desire.'}</p>
+                                </div>
+                                <div style={{borderLeft:'3px solid rgba(201,147,90,0.4)',paddingLeft:'0.75rem'}}>
+                                    <p style={{fontSize:'0.8rem',fontWeight:600,color:'#8A7055',marginBottom:'0.2rem'}}>{language==='es'?'Qué ayuda':'What helps'}</p>
+                                    <p style={{fontSize:'0.85rem',color:darkMode?'#a8a29e':'#78716c',lineHeight:1.5}}>{language==='es'?'Lubricante a base de agua, hidratantes vaginales de uso regular (no solo durante el sexo) y mantener relaciones regulares ayudan a conservar la elasticidad de los tejidos.':'Water-based lubricant, regular-use vaginal moisturisers (not just during sex) and staying sexually active help preserve tissue elasticity.'}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{background:darkMode?'rgba(255,255,255,0.05)':'rgba(255,255,255,0.95)',borderRadius:'1.1rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',boxShadow:'0 2px 12px rgba(0,0,0,0.06)'}}>
+                            <div style={{padding:'1rem 1.25rem',borderBottom:'1px solid rgba(201,147,90,0.1)',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(232,200,159,0.08))'}}>
+                                <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.2rem',fontWeight:600,color:darkMode?'#e8d5c0':'#292524'}}>
+                                    <span style={{color:'#C4A882',marginRight:'0.4rem'}}>✦</span>{language==='es'?'Comunicación y conexión en pareja':'Communication and connection as a couple'}
+                                </h3>
+                            </div>
+                            <div style={{padding:'1rem 1.25rem',display:'flex',flexDirection:'column',gap:'0.75rem'}}>
+                                <div style={{borderLeft:'3px solid #C4A882',paddingLeft:'0.75rem'}}>
+                                    <p style={{fontSize:'0.85rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.5}}>{language==='es'?'Nombrar en voz alta lo que tu cuerpo necesita ahora mismo —más tiempo, otro ritmo, más comunicación— no es un fallo, es información valiosa para ambos.':'Naming out loud what your body needs right now —more time, a different pace, more communication— is not a failure, it is valuable information for both of you.'}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style={{borderLeft:'3px solid rgba(155,142,196,0.5)',paddingLeft:'0.75rem',margin:'0 0.25rem'}}>
+                            <p style={{fontSize:'0.72rem',color:darkMode?'#a8a29e':'#78716c',fontStyle:'italic'}}>🔬 {language==='es'?'Esta sección se irá ampliando con más herramientas guiadas por LUMI. Si tienes una duda concreta, puedes preguntarle directamente.':'This section will keep growing with more LUMI-guided tools. If you have a specific question, you can ask LUMI directly.'}</p>
+                        </div>
+                    </div>
+                );
+            };
+
             const renderTips = () => {
                 const { tips } = getMythsAndTips();
                 return (
@@ -6633,6 +6708,7 @@ query = query.eq('region', region.toUpperCase());
                     case 'exercise': return renderExercise();
                     case 'symptoms': return renderSymptoms();
                     case 'period': return renderPeriod();
+                    case 'intimidad': return renderIntimidad();
                     case 'myths': return renderMyths();
                     case 'tips': return renderTips();
                     case 'workshops': return renderWorkshops();
@@ -7574,6 +7650,13 @@ query = query.eq('region', region.toUpperCase());
                     <main className="max-w-6xl mx-auto px-4 py-8" key={`content-${currentPage}-${language}`}>
                         {renderContent()}
                     </main>
+
+                    {currentPage !== 'home' && (
+                        <button onClick={()=>setCurrentPage('home')} style={{position:'fixed',bottom:'5.5rem',right:'1.25rem',zIndex:90,background:'rgba(13,13,13,0.85)',border:'1px solid rgba(184,115,51,0.45)',borderRadius:'9999px',padding:'0.6rem 1.1rem',display:'flex',alignItems:'center',gap:'0.4rem',boxShadow:'0 4px 16px rgba(0,0,0,0.4)',backdropFilter:'blur(6px)',cursor:'pointer'}}>
+                            <span style={{color:'#C4A882',fontSize:'1rem',lineHeight:1}}>←</span>
+                            <span style={{color:'#F0EDE8',fontSize:'0.8rem',fontFamily:"'Cormorant',serif",fontWeight:600}}>{language==='es'?'Inicio':'Home'}</span>
+                        </button>
+                    )}
 
                     {/* Footer con disclaimer y enlaces legales */}
                     <footer className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'} border-t py-6 mb-20`}>
