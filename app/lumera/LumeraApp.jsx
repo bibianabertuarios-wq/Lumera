@@ -7652,7 +7652,7 @@ query = query.eq('region', region.toUpperCase());
                     </main>
 
                     {currentPage !== 'home' && (
-                        <button onClick={()=>setCurrentPage('home')} style={{position:'fixed',bottom:'5.5rem',right:'1.25rem',zIndex:90,background:'rgba(13,13,13,0.85)',border:'1px solid rgba(184,115,51,0.45)',borderRadius:'9999px',padding:'0.6rem 1.1rem',display:'flex',alignItems:'center',gap:'0.4rem',boxShadow:'0 4px 16px rgba(0,0,0,0.4)',backdropFilter:'blur(6px)',cursor:'pointer'}}>
+                        <button onClick={()=>hideChrome ? window.location.href='/dashboard' : setCurrentPage('home')} style={{position:'fixed',bottom:'5.5rem',right:'1.25rem',zIndex:90,background:'rgba(13,13,13,0.85)',border:'1px solid rgba(184,115,51,0.45)',borderRadius:'9999px',padding:'0.6rem 1.1rem',display:'flex',alignItems:'center',gap:'0.4rem',boxShadow:'0 4px 16px rgba(0,0,0,0.4)',backdropFilter:'blur(6px)',cursor:'pointer'}}>
                             <span style={{color:'#C4A882',fontSize:'1rem',lineHeight:1}}>←</span>
                             <span style={{color:'#F0EDE8',fontSize:'0.8rem',fontFamily:"'Cormorant',serif",fontWeight:600}}>{language==='es'?'Inicio':'Home'}</span>
                         </button>
