@@ -3411,12 +3411,10 @@ query = query.eq('region', region.toUpperCase());
                           todayStr + '\n' + recentStr + '\n' + patternStr + '\n' + periodStr + '\n' + periodLogStr + '\n\n' +
                           'Respond in English, max 3-4 lines, conversational tone.';
 
-                    const response = await fetch('https://lumera1.bibianabertuarios.workers.dev', {
+                    const response = await fetch('/api/lumi', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            model: 'claude-sonnet-4-20250514',
-                            max_tokens: 1000,
                             system: systemPrompt,
                             messages: [
                                 ...lumiMessages.filter(m => m.role !== 'assistant' || !m.content.includes('Has usado tus')),
