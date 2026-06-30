@@ -470,6 +470,58 @@ import './lumera.css'
                             return () => clearTimeout(timer);
                         }
 
+                        // ── BIENVENIDA PREMIUM PERSONALIZADA (primera vez tras activar premium) ──
+                        const isPremiumNow = ['active','paid'].includes(currentUser?.subscription_status);
+                        const premiumWelcomeKey = `lumiPremiumWelcomed_${currentUser.id}`;
+                        const alreadyWelcomedPremium = localStorage.getItem(premiumWelcomeKey);
+
+                        if (isPremiumNow && !alreadyWelcomedPremium) {
+                            try {
+                                const userName = currentUser.profile_name || '';
+                                const weight = currentUser.weight;
+                                const height = currentUser.height;
+                                const goal = currentUser.goal || '';
+                                const imc = weight && height ? (weight / Math.pow(height > 3 ? height/100 : height, 2)).toFixed(1) : null;
+
+                                const datosLine = imc
+                                    ? (language==='es'
+                                        ? `Peso: ${weight}kg, IMC: ${imc}. Objetivo: ${goal || 'no especificado'}.`
+                                        : `Weight: ${weight}kg, BMI: ${imc}. Goal: ${goal || 'not specified'}.`)
+                                    : (language==='es'
+                                        ? `Aún no tengo su peso ni altura registrados.`
+                                        : `I don't have her weight or height registered yet.`);
+
+                                const prompt = language==='es'
+                                    ? `Eres LUMI, asesora científica de bienestar hormonal de Lumera. Escribe el mensaje de bienvenida para ${userName || 'la usuaria'}, que acaba de hacerse Premium. Objetivo: ${goal || 'sin especificar'}. ${datosLine}\n\nEstructura: 1) Dale la bienvenida a Premium. 2) Dile que aquí encontrará una guía para entenderse, enfocarse y darle las herramientas para alcanzar su objetivo. 3) Si su objetivo pudo haber cambiado desde el registro, pídele que se lo indique para actualizar su plan. 4) Si faltan datos de peso o altura, pídeselos directamente para calcular su punto de partida exacto. 5) Termina invitándola a empezar, mencionando que tiene menús y rutinas de ejercicio personalizados esperándola.\nTono: cercana, directa, científica. Sin emojis excesivos (máximo uno). Sin diagnósticos médicos. Máximo 5 frases.`
+                                    : `You are LUMI, Lumera's scientific hormonal wellness advisor. Write the welcome message for ${userName || 'the user'}, who just became Premium. Goal: ${goal || 'unspecified'}. ${datosLine}\n\nStructure: 1) Welcome her to Premium. 2) Tell her she'll find a guide to understand herself, focus, and get the tools to reach her goal. 3) If her goal may have changed since registration, ask her to tell you so you can update her plan. 4) If weight or height are missing, ask for them directly to calculate her exact starting point. 5) End by inviting her to begin, mentioning personalised menus and exercise routines await her.\nTone: warm, direct, scientific. Minimal emojis (max one). No medical diagnoses. Max 5 sentences.`;
+
+                                const res = await fetch('/api/lumi', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ messages: [{ role: 'user', content: prompt }] })
+                                });
+                                const data = await res.json();
+                                const welcomeText = data?.content?.[0]?.text;
+
+                                if (welcomeText) {
+                                    localStorage.setItem(premiumWelcomeKey, '1');
+                                    const greeting = {
+                                        id: 'local-premium-welcome-' + Date.now(),
+                                        message_type: 'pattern_insight',
+                                        message_text: welcomeText,
+                                        created_at: new Date().toISOString(),
+                                        read_at: null
+                                    };
+                                    setProactiveMessages([greeting]);
+                                    setUnreadLumiMessages(1);
+                                    const timer = setTimeout(() => setShowProactiveModal(true), 2000);
+                                    return () => clearTimeout(timer);
+                                }
+                            } catch (welcomeErr) {
+                                // Si falla, seguimos al saludo fijo de siempre sin romper nada
+                            }
+                        }
+
                         // Sin mensajes en BD → saludo diario local
                         // Solo mostrar popup si no saludó hoy todavía
                         const greeting = buildDailyGreeting();
@@ -3433,6 +3485,38 @@ query = query.eq('region', region.toUpperCase());
 
                     // Incrementar contador
                     setDailyQuestions(dailyQuestions + 1);
+
+                    // ── EXTRACCIÓN SEGURA DE PESO/ALTURA SI FALTABAN ──
+                    if (!currentUser?.weight || !currentUser?.height) {
+                        try {
+                            const extractPrompt = `Analiza este mensaje de una usuaria y extrae SOLO su peso (en kg) y altura (en metros o cm) si los menciona explícitamente. Mensaje: "${userMessage}"\n\nResponde ÚNICAMENTE con JSON válido, sin texto adicional, sin markdown. Formato exacto:\n{"weight": numero o null, "height": numero o null}\nSi no menciona alguno de los dos, pon null en ese campo. Si la altura está en cm conviértela a metros (ej 165cm -> 1.65).`;
+
+                            const extractRes = await fetch('/api/lumi', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ messages: [{ role: 'user', content: extractPrompt }] })
+                            });
+                            const extractData = await extractRes.json();
+                            const extractText = (extractData?.content?.[0]?.text || '').replace(/```json|```/g, '').trim();
+                            const parsed = JSON.parse(extractText);
+
+                            const newWeight = (typeof parsed.weight === 'number' && parsed.weight >= 30 && parsed.weight <= 200) ? parsed.weight : null;
+                            const newHeight = (typeof parsed.height === 'number' && parsed.height >= 1.20 && parsed.height <= 2.20) ? parsed.height : null;
+
+                            if (newWeight || newHeight) {
+                                const updatePayload = {};
+                                if (newWeight && !currentUser?.weight) updatePayload.weight = newWeight;
+                                if (newHeight && !currentUser?.height) updatePayload.height = newHeight;
+
+                                if (Object.keys(updatePayload).length > 0) {
+                                    await supabase.from('users').update(updatePayload).eq('id', currentUser.id);
+                                    setCurrentUser({ ...currentUser, ...updatePayload });
+                                }
+                            }
+                        } catch (extractErr) {
+                            // Si falla la extracción, no pasa nada — el chat sigue normal, no se guarda nada
+                        }
+                    }
 
                 } catch (error) {
                     const errorMsg = language === 'es'
