@@ -14,6 +14,16 @@ const getHora = () => {
   return 'noche';
 };
 
+const getEstadoHormonal = (ciclo, is_es) => {
+  const c = (ciclo || '').toLowerCase();
+  if (!c) return is_es ? 'estado de ciclo no informado — no asumir fase ni menopausia' : 'cycle status unknown — do not assume phase or menopause';
+  if (c.startsWith('regular')) return is_es ? 'ciclo menstrual regular — puede referirse a fases del ciclo en sus recomendaciones' : 'regular menstrual cycle — cycle phases can inform advice';
+  if (c.includes('quir') || c.includes('surgic')) return is_es ? 'menopausia quirurgica — sin ciclo, transicion hormonal abrupta, NUNCA mencionar fases del ciclo' : 'surgical menopause — no cycle, abrupt hormonal transition, NEVER mention cycle phases';
+  if (c.includes('m\u00e1s de 12') || c.includes('over 12')) return is_es ? 'posmenopausia (sin periodo mas de 12 meses) — NUNCA mencionar fases del ciclo ni el periodo' : 'postmenopause (no period over 12 months) — NEVER mention cycle phases or periods';
+  if (c.includes('menos de 12') || c.includes('less than 12')) return is_es ? 'transicion avanzada (sin periodo menos de 12 meses) — no asumir ciclo activo' : 'late transition (no period under 12 months) — do not assume an active cycle';
+  return is_es ? 'ciclo irregular — transicion hormonal activa, no asumir una fase concreta' : 'irregular cycle — active hormonal transition, do not assume a specific phase';
+};
+
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -32,6 +42,8 @@ export default function Dashboard() {
   const [lumiChatLoading, setLumiChatLoading] = useState(false);
   const [planGenerado, setPlanGenerado] = useState(null);
   const [planLoading, setPlanLoading] = useState(false);
+  const [planHecho, setPlanHecho] = useState([]);
+  const [toolsVisible, setToolsVisible] = useState(false);
   const router = useRouter();
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -60,6 +72,7 @@ export default function Dashboard() {
       lang: profile?.language || 'es',
       peso: profile?.peso || null,
       talla: profile?.talla || null,
+      ciclo: profile?.ciclo || '',
     };
     setUser(userData);
 
@@ -71,6 +84,11 @@ export default function Dashboard() {
       .order('fecha', { ascending: false })
       .limit(7);
     setUltimosCheckins(checkins || []);
+
+    try {
+      const hk = new Date().toISOString().split('T')[0];
+      setPlanHecho(JSON.parse(localStorage.getItem(`lumi_plan_done_${session.user.id}_${hk}`) || '[]'));
+    } catch(e) {}
 
     // Ver si ya hizo checkin hoy
     const hoy = new Date().toISOString().split('T')[0];
@@ -127,12 +145,21 @@ export default function Dashboard() {
         return imc ? `IMC: ${imc}.` : '';
       })();
 
+      const ayerKey = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+      let planAyerHechas = null;
+      try {
+        const a = JSON.parse(localStorage.getItem(`lumi_plan_done_${userData.id}_${ayerKey}`) || 'null');
+        if (Array.isArray(a)) planAyerHechas = Math.min(a.length, 3);
+      } catch(e) {}
+
       const contexto = [
         `Eres LUMI, asesora científica de bienestar hormonal. Idioma: ${is_es ? 'español' : 'inglés'}.`,
         `Usuaria: ${userData.nombre}. Objetivo: ${userData.objetivo || 'equilibrio hormonal'}. Síntoma: ${userData.sintoma || 'bienestar general'}.`,
+        `Estado hormonal (del quiz): ${getEstadoHormonal(userData.ciclo, is_es)}.`,
         `Días en app: ${diasEnApp}. Fecha: ${hoy}, ${hora}h.`,
         objetivoDetalle ? `Datos: ${objetivoDetalle}` : '',
         ayer ? `Ayer: energía ${ayer.energia}/5, sueño ${ayer.sueno}/5, ánimo ${ayer.animo}/5.` : 'Sin checkin previo.',
+        planAyerHechas !== null ? `Ayer completó ${planAyerHechas} de 3 acciones de su plan. Si fueron 3, reconóceselo; si fueron menos, anímala sin culpabilizar.` : '',
         patronSemana ? `Patrón semana: ${patronSemana}.` : '',
         'Escribe UN mensaje de máximo 4 frases para cuando abra la app hoy.',
         'Día 1 sin checkins: preséntate, menciona punto de partida con datos reales, primer paso concreto, invita a explorar.',
@@ -173,6 +200,7 @@ export default function Dashboard() {
 Usuaria: ${userData.nombre}
 Objetivo: ${userData.objetivo || 'equilibrio hormonal'}
 Síntoma principal: ${userData.sintoma || 'bienestar general'}
+Estado hormonal (del quiz): ${getEstadoHormonal(userData.ciclo, is_es)}
 IMC: ${userData.peso && userData.talla ? (userData.peso / Math.pow(userData.talla > 3 ? userData.talla/100 : userData.talla, 2)).toFixed(1) : 'no disponible'}
 Estado ayer: ${ayer ? `energía ${ayer.energia}/5, sueño ${ayer.sueno}/5, ánimo ${ayer.animo}/5` : 'primer día'}
 Fecha: ${hoy}
@@ -244,6 +272,15 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
     const vals = ultimosCheckins.filter(c => c[campo]).map(c => c[campo]);
     if (!vals.length) return 0;
     return Math.round((vals.reduce((a,b) => a+b, 0) / vals.length) * 20);
+  };
+
+  const togglePlanItem = (idx) => {
+    const hk = new Date().toISOString().split('T')[0];
+    setPlanHecho(prev => {
+      const next = prev.includes(idx) ? prev.filter(x => x !== idx) : [...prev, idx];
+      try { localStorage.setItem(`lumi_plan_done_${user?.id}_${hk}`, JSON.stringify(next)); } catch(e) {}
+      return next;
+    });
   };
 
   const getPlanDelDia = () => {
@@ -440,9 +477,14 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
             )}
 
             <button onClick={()=>setPlanVisible(!planVisible)} style={{width:'100%',background:'rgba(201,147,90,0.15)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.75rem',color:'#C9935A',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',fontWeight:600,cursor:'pointer',transition:'all 0.2s ease'}}>
-              {planVisible 
-                ? (is_es ? '▲ Ocultar plan de hoy' : '▲ Hide today\'s plan')
-                : (is_es ? '✦ Ver mi plan de hoy' : '✦ See my plan for today')}
+              {(() => {
+                const tp = (planGenerado || plan).length;
+                const h = planHecho.filter(x => x < tp).length;
+                const c = tp && !planLoading ? ` · ${h}/${tp}` : '';
+                return planVisible
+                  ? (is_es ? `▲ Ocultar plan de hoy${c}` : `▲ Hide today's plan${c}`)
+                  : (is_es ? `✦ Ver mi plan de hoy${c}` : `✦ See my plan for today${c}`);
+              })()}
             </button>
 
             {/* PLAN DEL DIA */}
@@ -454,9 +496,9 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
                   </div>
                 ) : (planGenerado || plan).map((p, i) => (
                   <div key={i} style={{marginBottom:'1rem',paddingBottom:'0.85rem',borderBottom:i<(planGenerado||plan).length-1?'1px solid rgba(255,255,255,0.06)':'none'}}>
-                    <div style={{display:'flex',alignItems:'flex-start',gap:'0.6rem',marginBottom:'0.25rem'}}>
-                      <span style={{fontSize:'1.1rem'}}>{p.icono}</span>
-                      <span style={{fontSize:'0.98rem',color:'rgba(255,255,255,0.95)',lineHeight:1.5,flex:1,fontWeight:500}}>{p.accion}</span>
+                    <div onClick={()=>togglePlanItem(i)} style={{display:'flex',alignItems:'flex-start',gap:'0.6rem',marginBottom:'0.25rem',cursor:'pointer'}}>
+                      <span style={{width:'22px',height:'22px',borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.8rem',border:'1.5px solid '+(planHecho.includes(i)?'#C9935A':'rgba(255,255,255,0.3)'),background:planHecho.includes(i)?'#C9935A':'transparent',color:'white',transition:'all 0.2s ease'}}>{planHecho.includes(i)?'✓':''}</span>
+                      <span style={{fontSize:'0.98rem',color:planHecho.includes(i)?'rgba(255,255,255,0.5)':'rgba(255,255,255,0.95)',lineHeight:1.5,flex:1,fontWeight:500,textDecoration:planHecho.includes(i)?'line-through':'none',transition:'all 0.2s ease'}}>{p.accion}</span>
                     </div>
                     <div style={{marginLeft:'1.7rem',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'rgba(255,255,255,0.45)',lineHeight:1.6,marginBottom:p.link?'0.4rem':'0'}}>
                       {p.ciencia}
@@ -470,6 +512,11 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
                     )}
                   </div>
                 ))}
+                {!planLoading && (planGenerado || plan).length > 0 && planHecho.filter(x => x < (planGenerado || plan).length).length === (planGenerado || plan).length && (
+                  <div style={{marginTop:'0.25rem',padding:'0.6rem 0.75rem',background:'rgba(201,147,90,0.12)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',color:'#C9935A',fontWeight:600}}>
+                    {is_es ? '✦ Plan de hoy completado. Tu constancia es la que cambia tu biología.' : '✦ Today\'s plan complete. Consistency is what changes your biology.'}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -579,10 +626,13 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
             )}
 
             {/* Tools grid */}
-            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
-              {is_es ? 'Tus herramientas' : 'Your tools'}
+            <div onClick={()=>setToolsVisible(!toolsVisible)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',marginBottom:'0.75rem'}}>
+              <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase'}}>
+                {is_es ? 'Tus herramientas' : 'Your tools'}
+              </span>
+              <span style={{fontSize:'0.75rem',color:'#C9935A',fontWeight:600}}>{toolsVisible ? '▲' : '▼'}</span>
             </div>
-            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem'}}>
+            <div style={{display:toolsVisible?'grid':'none',gridTemplateColumns:'1fr 1fr',gap:'0.75rem'}}>
               {(is_es ? [
                 {img:"/images/kling_20260321_作品__Extremely_4730_1.png", title:'Nutrición', sub:'Tu menú de hoy', route:'/lumera?tab=nutrition'},
                 {img:"/images/kling_20260321_作品_Extremely__4896_1.png", title:'Ejercicio', sub:'Tu rutina de hoy', route:'/lumera?tab=exercise'},
