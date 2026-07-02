@@ -194,3 +194,16 @@
         .animate-ping {
             animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
         }
+/* ── PASO 1: AnilloVivo + BarraSemana ── */
+.lum-anillo { width: 180px; margin: 0 auto; animation: lumBreathe 4.5s ease-in-out infinite; transform-origin: center; }
+.lum-anillo-vacio { opacity: 0.85; }
+.lum-anillo-punto { animation: lumPulse 2.2s ease-in-out infinite; }
+@keyframes lumBreathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.035); } }
+@keyframes lumPulse { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+@media (prefers-reduced-motion: reduce) { .lum-anillo, .lum-anillo-punto { animation: none; } }
+.lum-barra { margin: 14px 2px 18px; }
+.lum-barra-labels { display: flex; justify-content: space-between; font-size: 12px; color: #8A8178; margin-bottom: 5px; }
+.lum-barra-num { color: #9A6B3B; }
+.lum-barra-track { height: 5px; background: #EDE3D4; border-radius: 3px; }
+.lum-barra-fill { height: 5px; background: #C9935A; border-radius: 3px; transition: width .6s ease; }
+.lum-anillo-wrap { background: #FFFFFF; border: 0.5px solid #E7DCCB; border-radius: 14px; padding: 16px; margin-bottom: 12px; }

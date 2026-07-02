@@ -51,6 +51,114 @@ import './lumera.css'
             }
         };
 
+        // ── PASO 1: ciclo — mapeo de respuesta del quiz a código normalizado (ES+EN) ──
+        const CICLO_TEXTOS = {
+            'Regular como siempre': 'regular',
+            'Irregular — cambia de duración o cantidad': 'irregular',
+            'Muy irregular o casi desaparecido': 'casi_ausente',
+            'Sin periodo hace menos de 12 meses': 'sin_menos12',
+            'Sin periodo hace más de 12 meses': 'sin_mas12',
+            'Sin periodo por intervención quirúrgica': 'quirurgica',
+            'Regular as always': 'regular',
+            'Irregular — changes in duration or flow': 'irregular',
+            'Almost gone': 'casi_ausente',
+            'No period for less than 12 months': 'sin_menos12',
+            'No period for over 12 months': 'sin_mas12',
+            'Surgically induced menopause': 'quirurgica',
+        };
+
+        function getCicloCode(cicloRaw) {
+            if (!cicloRaw) return null;
+            return CICLO_TEXTOS[cicloRaw.trim()] || null;
+        }
+
+        // Solo calculamos día/fase cuando el código de ciclo y el historial lo permiten.
+        // Nunca se asume fase lútea por defecto: la lútea requiere ovulación confirmada.
+        function getFaseCicloInfo(cicloCode, periodLog) {
+            const sinFaseFiable = ['sin_menos12', 'sin_mas12', 'quirurgica', 'casi_ausente'];
+            if (!cicloCode || sinFaseFiable.includes(cicloCode)) {
+                return { tieneCiclo: false };
+            }
+            if (!periodLog || periodLog.length === 0) {
+                return { tieneCiclo: false };
+            }
+            const lastPeriod = periodLog[periodLog.length - 1];
+            const periodDate = new Date(lastPeriod.date);
+            const hoy = new Date();
+            const diaCicloReal = Math.max(1, Math.round((hoy - periodDate) / (1000 * 60 * 60 * 24)) + 1);
+            const duracionCiclo = 28; // asunción estándar hasta tener histórico suficiente para media real
+            const duracionRegla = lastPeriod.duration || 5;
+            let fase = 'folicular';
+            if (diaCicloReal <= duracionRegla) fase = 'menstrual';
+            else if (diaCicloReal <= 13) fase = 'folicular';
+            else if (diaCicloReal <= 16) fase = 'ovulatoria';
+            else if (diaCicloReal <= duracionCiclo) fase = 'lutea';
+            else fase = 'folicular'; // el ciclo se pasó de la duración estimada: evitamos marcar lútea indefinida
+            return {
+                tieneCiclo: true,
+                diaCiclo: Math.min(diaCicloReal, duracionCiclo),
+                duracionCiclo,
+                fase,
+                incierto: cicloCode === 'irregular',
+            };
+        }
+
+        const FASE_LABEL_ES = { menstrual: 'Fase menstrual', folicular: 'Fase folicular', ovulatoria: 'Fase ovulatoria', lutea: 'Fase lútea' };
+        const FASE_LABEL_EN = { menstrual: 'Menstrual phase', folicular: 'Follicular phase', ovulatoria: 'Ovulatory phase', lutea: 'Luteal phase' };
+
+        function AnilloVivo({ info, language = 'es' }) {
+            const faseLabels = language === 'es' ? FASE_LABEL_ES : FASE_LABEL_EN;
+            if (!info || !info.tieneCiclo) {
+                const txt = language === 'es' ? 'Tu ritmo, a tu manera' : 'Your rhythm, your way';
+                return (
+                    <div className="lum-anillo lum-anillo-vacio" role="img" aria-label={txt}>
+                        <svg viewBox="0 0 180 180" width="180" height="180">
+                            <circle cx="90" cy="90" r="78" fill="none" stroke="#EDE3D4" strokeWidth="7" />
+                            <text x="90" y="86" textAnchor="middle" fontSize="13" fill="#8A8178" fontFamily="'Cormorant Garamond', Georgia, serif">
+                                {txt}
+                            </text>
+                        </svg>
+                    </div>
+                );
+            }
+            const { diaCiclo, duracionCiclo, fase, incierto } = info;
+            const r = 78;
+            const C = 2 * Math.PI * r;
+            const p = Math.min(Math.max(diaCiclo / duracionCiclo, 0), 1);
+            const ang = p * 360;
+            return (
+                <div className="lum-anillo" role="img" aria-label={`${language === 'es' ? 'Día' : 'Day'} ${diaCiclo} ${language === 'es' ? 'de' : 'of'} ${duracionCiclo}, ${faseLabels[fase]}`}>
+                    <svg viewBox="0 0 180 180" width="180" height="180">
+                        <circle cx="90" cy="90" r={r} fill="none" stroke="#EDE3D4" strokeWidth="7" />
+                        <circle cx="90" cy="90" r={r} fill="none" stroke="#C9935A" strokeWidth="7"
+                            strokeLinecap="round" strokeDasharray={`${C * p} ${C * (1 - p)}`}
+                            transform="rotate(-90 90 90)" />
+                        <circle className="lum-anillo-punto" cx="90" cy={90 - r} r="6.5" fill="#C9935A"
+                            transform={`rotate(${ang} 90 90)`} />
+                        <text x="90" y="82" textAnchor="middle" fontSize="26" fill="#2E2A25"
+                            fontFamily="'Cormorant Garamond', Georgia, serif">{`${language === 'es' ? 'Día' : 'Day'} ${diaCiclo}`}</text>
+                        <text x="90" y="103" textAnchor="middle" fontSize="12" fill="#9A6B3B">{faseLabels[fase]}</text>
+                        {incierto && <text x="90" y="120" textAnchor="middle" fontSize="9" fill="#8A8178">{language === 'es' ? 'estimado · ciclo irregular' : 'estimated · irregular cycle'}</text>}
+                    </svg>
+                </div>
+            );
+        }
+
+        function BarraSemana({ diasCompletados = 0, diasTotales = 7, language = 'es' }) {
+            const pct = Math.round((diasCompletados / diasTotales) * 100);
+            return (
+                <div className="lum-barra">
+                    <div className="lum-barra-labels">
+                        <span>{language === 'es' ? 'Tu semana' : 'Your week'}</span>
+                        <span className="lum-barra-num">{diasCompletados} {language === 'es' ? 'de' : 'of'} {diasTotales}</span>
+                    </div>
+                    <div className="lum-barra-track">
+                        <div className="lum-barra-fill" style={{ width: `${pct}%` }} />
+                    </div>
+                </div>
+            );
+        }
+
         const LumeraApp = () => {
             const [language, setLanguage] = useState(() => { if (typeof window === 'undefined') return 'es'; const saved = localStorage.getItem('lumeraLang'); if (saved) return saved; const browserLang = navigator.language || navigator.userLanguage || 'es'; return browserLang.startsWith('es') ? 'es' : 'en'; });
 
@@ -3933,6 +4041,22 @@ query = query.eq('region', region.toUpperCase());
 
                             <div style={{padding:'1.25rem'}}>
 
+                                {(() => {
+                                    const cicloCode = getCicloCode(currentUser?.ciclo);
+                                    const infoCiclo = getFaseCicloInfo(cicloCode, periodLog);
+                                    const hace7dias = new Date(); hace7dias.setDate(hace7dias.getDate() - 7);
+                                    const diasCompletados = Math.min(7, (symptoms || []).filter(s => {
+                                        const d = new Date(s.symptom_date || s.date);
+                                        return d >= hace7dias;
+                                    }).length);
+                                    return (
+                                        <div className="lum-anillo-wrap">
+                                            <AnilloVivo info={infoCiclo} language={language} />
+                                            <BarraSemana diasCompletados={diasCompletados} diasTotales={7} language={language} />
+                                        </div>
+                                    );
+                                })()}
+
                                 {/* RECORDATORIO */}
                                 {(!symptoms || symptoms.length === 0) && (
                                     <div style={{background:'rgba(184,115,51,0.08)',border:'1px solid rgba(184,115,51,0.25)',borderRadius:'1rem',padding:'0.875rem 1.1rem',marginBottom:'0.75rem',display:'flex',alignItems:'center',gap:'0.75rem',cursor:'pointer'}} onClick={()=>setCurrentPage('symptoms')}>
@@ -4216,6 +4340,22 @@ query = query.eq('region', region.toUpperCase());
                                             ))}
                                         </div>
                                     </div>
+
+                                    {(() => {
+                                        const cicloCode = getCicloCode(currentUser?.ciclo);
+                                        const infoCiclo = getFaseCicloInfo(cicloCode, periodLog);
+                                        const hace7dias = new Date(); hace7dias.setDate(hace7dias.getDate() - 7);
+                                        const diasCompletados = Math.min(7, (symptoms || []).filter(s => {
+                                            const d = new Date(s.symptom_date || s.date);
+                                            return d >= hace7dias;
+                                        }).length);
+                                        return (
+                                            <div className="lum-anillo-wrap">
+                                                <AnilloVivo info={infoCiclo} language={language} />
+                                                <BarraSemana diasCompletados={diasCompletados} diasTotales={7} language={language} />
+                                            </div>
+                                        );
+                                    })()}
 
                                     {/* Hero card — evoluciona por día */}
                                     <div style={{
