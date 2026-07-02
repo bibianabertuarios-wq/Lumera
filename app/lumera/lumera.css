@@ -207,3 +207,11 @@
 .lum-barra-track { height: 5px; background: #EDE3D4; border-radius: 3px; }
 .lum-barra-fill { height: 5px; background: #C9935A; border-radius: 3px; transition: width .6s ease; }
 .lum-anillo-wrap { background: #FFFFFF; border: 0.5px solid #E7DCCB; border-radius: 14px; padding: 16px; margin-bottom: 12px; }
+
+
+/* ── PASO 2: LumiMensaje ── */
+.lum-msg { background: rgba(184,115,51,0.08); border: 1px solid rgba(184,115,51,0.25); border-radius: 1rem; padding: 1.1rem 1.25rem; margin-bottom: 1rem; }
+.lum-msg-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: #B8997A; font-weight: 700; }
+.lum-msg-avatar { width: 26px; height: 26px; border-radius: 50%; background: #C9935A; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+.lum-msg-texto { margin: 0; font-size: 0.95rem; color: rgba(245,230,211,0.9); line-height: 1.6; font-family: 'Cormorant', serif; font-style: italic; }
+.lum-msg-cta { margin: 12px 0 0; font-size: 0.85rem; color: #C9935A; font-weight: 600; }
