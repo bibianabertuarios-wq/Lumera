@@ -469,7 +469,7 @@ export default function Escaner() {
                 <div style={{fontSize:'0.9rem',color:'rgba(255,255,255,0.5)',fontStyle:'italic',marginBottom:'0.75rem',lineHeight:1.6}}>
                   🔒 Vuelve en 7 días para ver cómo evoluciona tu silueta — disponible en Premium
                 </div>
-                <button className="btn" style={{marginBottom:'0.5rem'}} onClick={()=>router.push('/lumera')}>
+                <button className="btn" style={{marginBottom:'0.5rem'}} onClick={()=>router.push('/dashboard')}>
                   ✦ Activar Premium — ver mi evolución
                 </button>
               </div>
