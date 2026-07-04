@@ -24,6 +24,94 @@ const getEstadoHormonal = (ciclo, is_es) => {
   return is_es ? 'ciclo irregular — transicion hormonal activa, no asumir una fase concreta' : 'irregular cycle — active hormonal transition, do not assume a specific phase';
 };
 
+function getCicloCode(cicloRaw) {
+  const CICLO_TEXTOS = {
+    'Regular como siempre': 'regular',
+    'Irregular — cambia de duración o cantidad': 'irregular',
+    'Muy irregular o casi desaparecido': 'casi_ausente',
+    'Sin periodo hace menos de 12 meses': 'sin_menos12',
+    'Sin periodo hace más de 12 meses': 'sin_mas12',
+    'Sin periodo por intervención quirúrgica': 'quirurgica',
+    'Regular as always': 'regular',
+    'Irregular — changes in duration or flow': 'irregular',
+    'Almost gone': 'casi_ausente',
+    'No period for less than 12 months': 'sin_menos12',
+    'No period for over 12 months': 'sin_mas12',
+    'Surgically induced menopause': 'quirurgica',
+  };
+  if (!cicloRaw) return null;
+  return CICLO_TEXTOS[cicloRaw.trim()] || null;
+}
+
+function getFaseCicloInfo(cicloCode, periodLog) {
+  const sinFaseFiable = ['sin_menos12', 'sin_mas12', 'quirurgica', 'casi_ausente'];
+  if (!cicloCode || sinFaseFiable.includes(cicloCode)) return { tieneCiclo: false };
+  if (!periodLog || periodLog.length === 0) return { tieneCiclo: false };
+  const lastPeriod = periodLog[periodLog.length - 1];
+  const periodDate = new Date(lastPeriod.date);
+  const hoy = new Date();
+  const diaCicloReal = Math.max(1, Math.round((hoy - periodDate) / (1000 * 60 * 60 * 24)) + 1);
+  const duracionCiclo = 28;
+  const duracionRegla = lastPeriod.duration || 5;
+  let fase = 'folicular';
+  if (diaCicloReal <= duracionRegla) fase = 'menstrual';
+  else if (diaCicloReal <= 13) fase = 'folicular';
+  else if (diaCicloReal <= 16) fase = 'ovulatoria';
+  else if (diaCicloReal <= duracionCiclo) fase = 'lutea';
+  else fase = 'folicular';
+  return { tieneCiclo: true, diaCiclo: Math.min(diaCicloReal, duracionCiclo), duracionCiclo, fase, incierto: cicloCode === 'irregular' };
+}
+
+const FASE_LABEL_ES = { menstrual: 'Fase menstrual', folicular: 'Fase folicular', ovulatoria: 'Fase ovulatoria', lutea: 'Fase lútea' };
+const FASE_LABEL_EN = { menstrual: 'Menstrual phase', folicular: 'Follicular phase', ovulatoria: 'Ovulatory phase', lutea: 'Luteal phase' };
+
+function AnilloVivo({ info, is_es }) {
+  const faseLabels = is_es ? FASE_LABEL_ES : FASE_LABEL_EN;
+  if (!info || !info.tieneCiclo) {
+    const txt = is_es ? 'Tu ritmo, a tu manera' : 'Your rhythm, your way';
+    return (
+      <div style={{ width: 150, margin: '0 auto' }} role="img" aria-label={txt}>
+        <svg viewBox="0 0 150 150" width="150" height="150">
+          <circle cx="75" cy="75" r="62" fill="none" stroke="rgba(201,147,90,0.2)" strokeWidth="6" />
+          <text x="75" y="79" textAnchor="middle" fontSize="12" fill="rgba(13,61,61,0.5)" fontFamily="'Cormorant Garamond',Georgia,serif">{txt}</text>
+        </svg>
+      </div>
+    );
+  }
+  const { diaCiclo, duracionCiclo, fase, incierto } = info;
+  const r = 62, C = 2 * Math.PI * r;
+  const p = Math.min(Math.max(diaCiclo / duracionCiclo, 0), 1);
+  return (
+    <div style={{ width: 150, margin: '0 auto', animation: 'lumBreathe 4.5s ease-in-out infinite', transformOrigin: 'center' }}
+      role="img" aria-label={`${is_es ? 'Día' : 'Day'} ${diaCiclo} ${is_es ? 'de' : 'of'} ${duracionCiclo}, ${faseLabels[fase]}`}>
+      <svg viewBox="0 0 150 150" width="150" height="150">
+        <circle cx="75" cy="75" r={r} fill="none" stroke="rgba(201,147,90,0.2)" strokeWidth="6" />
+        <circle cx="75" cy="75" r={r} fill="none" stroke="#C9935A" strokeWidth="6" strokeLinecap="round"
+          strokeDasharray={`${C * p} ${C * (1 - p)}`} transform="rotate(-90 75 75)" />
+        <circle cx="75" cy={75 - r} r="5.5" fill="#C9935A" transform={`rotate(${p * 360} 75 75)`} />
+        <text x="75" y="71" textAnchor="middle" fontSize="21" fill="#0D3D3D" fontFamily="'Cormorant Garamond',Georgia,serif">{`${is_es ? 'Día' : 'Day'} ${diaCiclo}`}</text>
+        <text x="75" y="89" textAnchor="middle" fontSize="10.5" fill="#A06030">{faseLabels[fase]}</text>
+        {incierto && <text x="75" y="103" textAnchor="middle" fontSize="8" fill="rgba(13,61,61,0.45)">{is_es ? 'estimado · ciclo irregular' : 'estimated · irregular cycle'}</text>}
+      </svg>
+    </div>
+  );
+}
+
+function BarraSemana({ diasCompletados = 0, diasTotales = 7, is_es }) {
+  const pct = Math.round((diasCompletados / diasTotales) * 100);
+  return (
+    <div style={{ margin: '10px 2px 4px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'rgba(13,61,61,0.5)', marginBottom: 5 }}>
+        <span>{is_es ? 'Tu semana' : 'Your week'}</span>
+        <span style={{ color: '#A06030' }}>{diasCompletados} {is_es ? 'de' : 'of'} {diasTotales}</span>
+      </div>
+      <div style={{ height: 5, background: 'rgba(201,147,90,0.15)', borderRadius: 3 }}>
+        <div style={{ height: 5, background: '#C9935A', borderRadius: 3, width: `${pct}%`, transition: 'width .6s ease' }} />
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -44,6 +132,7 @@ export default function Dashboard() {
   const [planLoading, setPlanLoading] = useState(false);
   const [planHecho, setPlanHecho] = useState([]);
   const [toolsVisible, setToolsVisible] = useState(false);
+  const [periodLog, setPeriodLog] = useState([]);
   const router = useRouter();
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -56,11 +145,6 @@ export default function Dashboard() {
     const { data: profiles } = await supabase
       .from('users').select('*').eq('id', session.user.id).limit(1);
     const profile = profiles?.[0];
-
-    if (['active','paid'].includes(profile?.subscription_status)) {
-      window.location.href = '/lumera';
-      return;
-    }
 
     const userData = {
       id: session.user.id,
@@ -88,6 +172,10 @@ export default function Dashboard() {
     try {
       const hk = new Date().toISOString().split('T')[0];
       setPlanHecho(JSON.parse(localStorage.getItem(`lumi_plan_done_${session.user.id}_${hk}`) || '[]'));
+    } catch(e) {}
+
+    try {
+      setPeriodLog(JSON.parse(localStorage.getItem('lumeraPeriod') || '[]'));
     } catch(e) {}
 
     // Ver si ya hizo checkin hoy
@@ -367,8 +455,23 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
   const is_es = user?.lang === 'es';
   const hora = getHora();
   const diasEnApp = Math.floor((new Date() - new Date(user.createdAt)) / (1000*60*60*24));
+  const handleCancelSubscription = async () => {
+    const confirmed = window.confirm(
+      user?.lang === 'es'
+        ? '¿Segura que quieres cancelar? Mantendrás acceso premium hasta el final de tu período de facturación.'
+        : 'Are you sure you want to cancel? You will keep premium access until the end of your billing period.'
+    );
+    if (!confirmed) return;
+    const email = user?.email || '';
+    window.open(`mailto:support@lumera.app?subject=${encodeURIComponent('Cancelar suscripción')}&body=${encodeURIComponent(`Hola, quiero cancelar mi suscripción.\n\nEmail: ${email}`)}`, '_blank');
+  };
+
   const diasRestantes = Math.max(0, 3 - diasEnApp);
   const diaActual = Math.min(diasEnApp + 1, 3);
+  const bloqueado = !user?.isPremium && diasRestantes === 0;
+  const cicloCode = getCicloCode(user?.ciclo);
+  const infoCiclo = getFaseCicloInfo(cicloCode, periodLog);
+  const diasCompletadosSemana = Math.min(7, (ultimosCheckins || []).length);
   const plan = getPlanDelDia();
   const energiaPct = getPromedioSemana('energia');
   const suenoPct = getPromedioSemana('sueno');
@@ -396,6 +499,8 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
         .btn-premium{width:100%;background:linear-gradient(135deg,#C9935A,#A06030);border:none;border-radius:0.75rem;padding:1rem;color:white;font-size:1rem;font-family:Montserrat,sans-serif;font-weight:700;cursor:pointer;}
         @keyframes shimmer{0%{opacity:0.5;}50%{opacity:1;}100%{opacity:0.5;}}
         .shimmer{animation:shimmer 1.5s infinite;}
+        @keyframes lumBreathe{0%,100%{transform:scale(1);}50%{transform:scale(1.035);}}
+        @media (prefers-reduced-motion: reduce){ [style*="lumBreathe"]{animation:none!important;} }
       `}}/>
 
       <div style={{minHeight:'100vh',backgroundImage:"url('/images/shula_flores_bg.jpg')",backgroundSize:'cover',backgroundPosition:'center',backgroundAttachment:'fixed',fontFamily:"'Cormorant Garamond',Georgia,serif",paddingBottom:'80px'}}>
@@ -421,6 +526,11 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
           <div className={`fade d1 ${visible?'in':''}`} style={{marginBottom:'1rem'}}>
             <p style={{fontSize:'0.8rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.4)',marginBottom:'0.1rem'}}>{saludoHora}</p>
             <h1 style={{fontSize:'clamp(1.6rem,4vw,2rem)',fontWeight:700,color:'#0D3D3D',lineHeight:1.15}}>{user?.nombre}</h1>
+          </div>
+
+          <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
+            <AnilloVivo info={infoCiclo} is_es={is_es} />
+            <BarraSemana diasCompletados={diasCompletadosSemana} diasTotales={7} is_es={is_es} />
           </div>
 
           {/* CARD SILUETA — WOW FACTOR */}
@@ -644,7 +754,8 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
                 {img:'/images/lumi.png', title:'LUMI', sub:'Talk to your advisor', route:'__lumi_chat__'},
                 {img:'/images/lente_alquimica.png', title:'Alchemical Lens', sub:'Analyse your plate', route:'/lumera?tab=chat'},
               ]).map((t,i) => (
-                <div key={i} className="tool-card" onClick={()=>{ if(t.route==='__lumi_chat__'){setShowLumiChat(true);if(lumiChatMessages.length===0)setLumiChatMessages([{role:'assistant',content:lumiMsg}]);} else if(t.route.includes('/lumera')) window.location.href=t.route; else router.push(t.route); }}>
+                <div key={i} className="tool-card" style={bloqueado?{opacity:0.55,position:'relative'}:{}} onClick={()=>{ if(bloqueado){setShowPremiumModal(true);return;} if(t.route==='__lumi_chat__'){setShowLumiChat(true);if(lumiChatMessages.length===0)setLumiChatMessages([{role:'assistant',content:lumiMsg}]);} else if(t.route.includes('/lumera')) window.location.href=t.route; else router.push(t.route); }}>
+                  {bloqueado && <span style={{position:'absolute',top:'0.5rem',right:'0.5rem',fontSize:'0.75rem'}}>🔒</span>}
                   <img src={t.img} alt={t.title} style={{width:'48px',height:'48px',objectFit:'cover',borderRadius:'50%',marginBottom:'0.4rem'}} onError={e=>{e.target.style.display='none'}}/>
                   <div style={{fontSize:'0.95rem',fontWeight:600,color:'#0D3D3D',marginBottom:'0.1rem'}}>{t.title}</div>
                   <div style={{fontSize:'0.7rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.4)'}}>{t.sub}</div>
@@ -652,6 +763,23 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
               ))}
             </div>
           </div>
+
+          {user?.isPremium && (
+            <div className={`fade d4 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
+              <div style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'1rem'}}>
+                <div style={{width:'32px',height:'32px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
+                  <span style={{fontSize:'0.8rem',color:'white',fontWeight:700}}>P</span>
+                </div>
+                <div style={{flex:1}}>
+                  <p style={{fontSize:'0.78rem',fontWeight:600,color:'#A06030'}}>{is_es?'Premium activa':'Premium active'}</p>
+                  <p style={{fontSize:'0.72rem',color:'rgba(13,61,61,0.5)'}}>{is_es?'Acceso completo a Lumera':'Full access to Lumera'}</p>
+                </div>
+              </div>
+              <button onClick={handleCancelSubscription} style={{background:'none',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'0.5rem',padding:'0.45rem 1rem',fontSize:'0.75rem',color:'rgba(13,61,61,0.45)',cursor:'pointer',width:'100%'}} onMouseEnter={e=>{e.target.style.borderColor='rgba(239,68,68,0.5)';e.target.style.color='rgba(239,68,68,0.7)'}} onMouseLeave={e=>{e.target.style.borderColor='rgba(201,147,90,0.25)';e.target.style.color='rgba(13,61,61,0.45)'}}>
+                {is_es?'Cancelar suscripción':'Cancel subscription'}
+              </button>
+            </div>
+          )}
 
           {/* BANNER PWA INSTALACION */}
           {typeof window !== 'undefined' && !window.matchMedia('(display-mode: standalone)').matches && !window.navigator?.standalone && (
@@ -777,7 +905,8 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
                     {img:'/images/sintomas.png', es:'Síntomas', en:'Symptoms', route:'/lumera?tab=symptoms', sub_es:'Registra cómo te sientes', sub_en:'Log how you feel'},
                     {img:'/images/escaner_preview.png', es:'Comunidad', en:'Community', route:'/lumera?tab=symptoms', sub_es:'Próximamente', sub_en:'Coming soon'},
                   ].map((item,i)=>(
-                    <div key={i} onClick={()=>{setShowMasMenu(false); window.location.href=item.route;}} style={{background:'white',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'1rem',padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem',cursor:'pointer'}}>
+                    <div key={i} onClick={()=>{ if(bloqueado){setShowMasMenu(false);setShowPremiumModal(true);return;} setShowMasMenu(false); window.location.href=item.route;}} style={{background:'white',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'1rem',padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem',cursor:'pointer',opacity:bloqueado?0.55:1,position:'relative'}}>
+                      {bloqueado && <span style={{position:'absolute',top:'0.5rem',right:'0.5rem',fontSize:'0.75rem'}}>🔒</span>}
                       <img src={item.img} style={{width:'40px',height:'40px',borderRadius:'50%',objectFit:'cover',flexShrink:0}} onError={e=>{e.target.style.display='none'}}/>
                       <div>
                         <div style={{fontSize:'0.88rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>{is_es?item.es:item.en}</div>
