@@ -1,10 +1,9 @@
 // Lumera Service Worker
-const CACHE_NAME = 'lumera-v1';
+const CACHE_NAME = 'lumera-v2';
 
 // Archivos a cachear para uso offline
 const STATIC_ASSETS = [
   '/',
-  '/index.html',
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png'
@@ -84,7 +83,7 @@ self.addEventListener('fetch', (event) => {
             return cachedResponse;
           }
           // Si no hay cache, devolver la página principal (SPA fallback)
-          return caches.match('/') || caches.match('/index.html');
+          return caches.match('/');
         });
       })
   );
