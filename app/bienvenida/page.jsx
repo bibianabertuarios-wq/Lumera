@@ -121,10 +121,14 @@ function BienvenidaInner() {
       });
     }
 
+    console.log('[DEBUG] signUpError:', signUpError);
+    console.log('[DEBUG] userId final:', userId);
+
     if (userId) {
       setUserId(userId);
       setStep('notificaciones');
     } else {
+      console.log('[DEBUG] userId vacio, saltando a dashboard');
       router.push('/dashboard');
     }
     setLoading(false);
