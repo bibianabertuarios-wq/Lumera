@@ -3,6 +3,17 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
 const sintomaFrase = (sintoma, is_es) => {
   const mapa = {
     'Siento un cansancio que no se va': is_es ? 'acabar con ese cansancio que no se va' : 'end that fatigue that never goes away',
@@ -23,6 +34,10 @@ function BienvenidaInner() {
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [error, setError] = useState('');
   const [visible, setVisible] = useState(false);
+  const [step, setStep] = useState('form');
+  const [userId, setUserId] = useState(null);
+  const [horaElegida, setHoraElegida] = useState('09:00');
+  const [pushLoading, setPushLoading] = useState(false);
   const router = useRouter();
   const params = useSearchParams();
 
@@ -106,7 +121,42 @@ function BienvenidaInner() {
       });
     }
 
-    router.push('/dashboard');
+    if (userId) {
+      setUserId(userId);
+      setStep('notificaciones');
+    } else {
+      router.push('/dashboard');
+    }
+    setLoading(false);
+  };
+
+  const solicitarPush = async () => {
+    setPushLoading(true);
+    try {
+      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+        router.push('/dashboard');
+        return;
+      }
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        router.push('/dashboard');
+        return;
+      }
+      const registration = await navigator.serviceWorker.ready;
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY),
+      });
+      await fetch('/api/push/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, subscription, hora: horaElegida }),
+      });
+    } catch (err) {
+      console.error('[push] Error al suscribir:', err);
+    } finally {
+      router.push('/dashboard');
+    }
   };
 
   return (
@@ -145,7 +195,7 @@ function BienvenidaInner() {
             </p>
           </div>
 
-          <div className={`fade d3 ${visible?'in':''}`}>
+          {step === 'form' && <div className={`fade d3 ${visible?'in':''}`}>
             <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.72rem',fontWeight:700,color:'rgba(255,255,255,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'1rem',textAlign:'center'}}>
               {is_es ? 'Crea tu acceso seguro' : 'Create your secure access'}
             </div>
@@ -169,16 +219,40 @@ function BienvenidaInner() {
             <p style={{textAlign:'center',fontSize:'0.75rem',color:'rgba(255,255,255,0.25)',fontFamily:'Montserrat,sans-serif',marginTop:'0.75rem',lineHeight:1.5}}>
               {is_es ? 'Sin tarjeta de crédito. Cancela cuando quieras.' : 'No credit card. Cancel anytime.'}
             </p>
-          </div>
+          </div>}
 
-          <div className={`fade d4 ${visible?'in':''}`} style={{textAlign:'center',marginTop:'1.5rem'}}>
+          {step === 'form' && <div className={`fade d4 ${visible?'in':''}`} style={{textAlign:'center',marginTop:'1.5rem'}}>
             <p style={{fontSize:'0.85rem',color:'rgba(255,255,255,0.3)',fontFamily:'Montserrat,sans-serif'}}>
               {is_es ? 'Ya tienes cuenta? ' : 'Already have an account? '}
               <span onClick={()=>router.push('/dashboard')} style={{color:'#C9935A',cursor:'pointer',textDecoration:'underline'}}>
                 {is_es ? 'Entrar aqui' : 'Sign in here'}
               </span>
             </p>
-          </div>
+          </div>}
+
+          {step === 'notificaciones' && <div className="fade in">
+            <div style={{textAlign:'center',marginBottom:'1.5rem'}}>
+              <div style={{fontSize:'2.5rem',marginBottom:'1rem'}}>🔔</div>
+              <h2 style={{fontSize:'1.4rem',fontWeight:700,color:'white',marginBottom:'0.75rem'}}>
+                {is_es ? 'LUMI puede acompañarte cada día' : 'LUMI can be with you every day'}
+              </h2>
+              <p style={{fontSize:'0.95rem',fontStyle:'italic',color:'rgba(255,255,255,0.55)',lineHeight:1.6}}>
+                {is_es ? 'Un mensaje breve cada día, a la hora que tú elijas. Nada más.' : 'One short message every day, at the time you choose. Nothing more.'}
+              </p>
+            </div>
+            <div style={{marginBottom:'1.5rem'}}>
+              <label style={{display:'block',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'rgba(255,255,255,0.4)',letterSpacing:'1px',textTransform:'uppercase',marginBottom:'0.5rem',textAlign:'center'}}>
+                {is_es ? '¿A qué hora te viene bien?' : 'What time works for you?'}
+              </label>
+              <input type="time" className="input-field" value={horaElegida} onChange={e=>setHoraElegida(e.target.value)} style={{textAlign:'center'}}/>
+            </div>
+            <button className="btn-activar" onClick={solicitarPush} disabled={pushLoading}>
+              {pushLoading ? (is_es?'Activando...':'Activating...') : (is_es?'Activar mis recordatorios':'Activate my reminders')}
+            </button>
+            <p onClick={()=>router.push('/dashboard')} style={{textAlign:'center',fontSize:'0.85rem',color:'rgba(255,255,255,0.35)',fontFamily:'Montserrat,sans-serif',marginTop:'1rem',cursor:'pointer',textDecoration:'underline'}}>
+              {is_es ? 'Más tarde' : 'Maybe later'}
+            </p>
+          </div>}
 
         </div>
       </div>
