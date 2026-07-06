@@ -111,11 +111,11 @@ function BienvenidaInner() {
         email,
         profile_name: nombre,
         sintoma_principal: sintoma.split('|')[0],
-        objetivo: params.get('objetivo') || '',
+        goal: params.get('objetivo') || '',
         ciclo: params.get('ciclo') || '',
-        peso: parseFloat(params.get('peso')) || null,
-        talla: parseFloat(params.get('talla')) || null,
-        actividad: params.get('actividad') || '',
+        weight: parseFloat(params.get('peso')) || null,
+        height: parseFloat(params.get('talla')) || null,
+        activity_level: params.get('actividad') || '',
         language: lang,
         updated_at: new Date().toISOString()
       });
