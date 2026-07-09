@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, useMemo, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 
@@ -63,17 +63,51 @@ function calcularTDEE(bmr, activityLevel) {
   return Math.round(bmr * m);
 }
 
-const sintomaFrase = (sintoma, is_es) => {
+function getImcInfo(imc, is_es) {
+  if (!imc) return { label: '', color: '#C9935A' };
+  if (imc < 18.5) return { label: is_es ? 'activar metabolismo' : 'activate metabolism', color: '#3B82F6' };
+  if (imc < 25) return { label: is_es ? 'equilibrio óptimo' : 'optimal balance', color: '#2A7A4A' };
+  if (imc < 30) return { label: is_es ? 'equilibrar hormonas' : 'balance hormones', color: '#F59E0B' };
+  return { label: is_es ? 'plan intensivo' : 'intensive plan', color: '#EF4444' };
+}
+
+const insightPorSintoma = (sintoma, is_es) => {
   const mapa = {
-    'Siento un cansancio que no se va': is_es ? 'acabar con ese cansancio que no se va' : 'end that fatigue that never goes away',
-    'Mi peso sube aunque no haya cambiado nada': is_es ? 'entender por qué tu peso no responde como antes' : 'understand why your weight stopped responding',
-    'Me despierto a mitad de la noche': is_es ? 'recuperar ese sueño profundo que tanto necesitas' : 'recover the deep sleep you need so much',
-    'Me cuesta concentrarme — neblina mental': is_es ? 'despejar esa niebla mental y recuperar tu claridad' : 'clear that brain fog and recover your clarity',
-    'Mi estado de ánimo es una montaña rusa': is_es ? 'estabilizar tu estado de ánimo y recuperar tu equilibrio' : 'stabilise your mood and recover your balance',
-    'Cansancio constante': is_es ? 'acabar con ese cansancio constante' : 'end that constant fatigue',
-    'Cambios de humor': is_es ? 'estabilizar esos cambios de humor' : 'stabilise those mood changes',
+    'Siento un cansancio que no se va': {
+      es: 'Tu cuerpo está gestionando un cambio hormonal real — el cansancio no es pereza, es química. Empezamos por recuperar tu energía.',
+      en: 'Your body is managing a real hormonal shift — the fatigue isn\'t laziness, it\'s chemistry. We start by getting your energy back.'
+    },
+    'Cansancio constante': {
+      es: 'Tu cuerpo está gestionando un cambio hormonal real — el cansancio no es pereza, es química. Empezamos por recuperar tu energía.',
+      en: 'Your body is managing a real hormonal shift — the fatigue isn\'t laziness, it\'s chemistry. We start by getting your energy back.'
+    },
+    'Mi peso sube aunque no haya cambiado nada': {
+      es: 'Tu metabolismo está respondiendo a un desajuste hormonal, no a que hagas algo mal. Empezamos por entender qué necesita tu cuerpo ahora.',
+      en: 'Your metabolism is responding to a hormonal shift, not to something you\'re doing wrong. We start by understanding what your body needs now.'
+    },
+    'Me despierto a mitad de la noche': {
+      es: 'Ese despertar a media noche tiene nombre y explicación — le pasa a la mayoría de mujeres en esta etapa. Empezamos por tu descanso.',
+      en: 'Waking up in the middle of the night has a name and an explanation — it happens to most women at this stage. We start with your rest.'
+    },
+    'Me cuesta concentrarme — neblina mental': {
+      es: 'Esa niebla mental es real y es hormonal, no falta de esfuerzo. Empezamos por devolverte claridad.',
+      en: 'That brain fog is real and hormonal, not a lack of effort. We start by giving you back your clarity.'
+    },
+    'Mi estado de ánimo es una montaña rusa': {
+      es: 'Esos cambios de humor tienen una base hormonal concreta, no eres "demasiado sensible". Empezamos por estabilizarlo.',
+      en: 'Those mood swings have a real hormonal basis — you\'re not "too sensitive". We start by stabilising it.'
+    },
+    'Cambios de humor': {
+      es: 'Esos cambios de humor tienen una base hormonal concreta, no eres "demasiado sensible". Empezamos por estabilizarlo.',
+      en: 'Those mood swings have a real hormonal basis — you\'re not "too sensitive". We start by stabilising it.'
+    },
   };
-  return mapa[sintoma] || (is_es ? 'reconectar con tu cuerpo y tu energia' : 'reconnect with your body and energy');
+  const fallback = {
+    es: 'Tu cuerpo está atravesando cambios reales, y mereces entenderlos. Empezamos por tu primer paso.',
+    en: 'Your body is going through real changes, and you deserve to understand them. We start with your first step.'
+  };
+  const entry = mapa[sintoma] || fallback;
+  return is_es ? entry.es : entry.en;
 };
 
 function BienvenidaInner() {
@@ -83,22 +117,50 @@ function BienvenidaInner() {
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [error, setError] = useState('');
   const [visible, setVisible] = useState(false);
-  const [step, setStep] = useState('form');
-  const [userId, setUserId] = useState(null);
+  const [recordatoriosOn, setRecordatoriosOn] = useState(true);
   const [horaElegida, setHoraElegida] = useState('09:00');
-  const [pushLoading, setPushLoading] = useState(false);
   const router = useRouter();
   const params = useSearchParams();
 
   const lang = params.get('lang') || 'es';
   const is_es = lang === 'es';
   const nombre = params.get('nombre') || (is_es ? 'tu' : 'you');
-  const sintoma = params.get('sintoma') || params.get('sintomas') || '';
-  const frase = sintomaFrase(sintoma.split('|')[0], is_es);
+  const sintoma = (params.get('sintoma') || params.get('sintomas') || '').split('|')[0];
+  const insight = insightPorSintoma(sintoma, is_es);
+
+  const pesoParam = parseFloat(params.get('peso')) || null;
+  const tallaParam = parseFloat(params.get('talla')) || null;
+  const edadParam = calcularEdad(params.get('nacimiento') || '');
+  const activityKeyParam = mapActividad(params.get('actividad') || '');
+
+  const imcPreview = useMemo(() => calcularBMI(pesoParam, tallaParam), [pesoParam, tallaParam]);
+  const bmrPreview = useMemo(() => calcularBMR(pesoParam, tallaParam, edadParam), [pesoParam, tallaParam, edadParam]);
+  const tdeePreview = useMemo(() => calcularTDEE(bmrPreview, activityKeyParam), [bmrPreview, activityKeyParam]);
+  const imcInfo = getImcInfo(imcPreview, is_es);
 
   useEffect(() => {
     setTimeout(() => setVisible(true), 100);
   }, []);
+
+  const solicitarPush = async (userId) => {
+    try {
+      if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') return;
+      const registration = await navigator.serviceWorker.ready;
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY),
+      });
+      await fetch('/api/push/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, subscription, hora: horaElegida }),
+      });
+    } catch (err) {
+      console.error('[push] Error al suscribir:', err);
+    }
+  };
 
   const handleActivar = async () => {
     if (!email || !password) {
@@ -123,7 +185,7 @@ function BienvenidaInner() {
       options: {
         data: {
           nombre,
-          sintoma_principal: sintoma.split('|')[0],
+          sintoma_principal: sintoma,
           objetivo: params.get('objetivo') || '',
           ciclo: params.get('ciclo') || '',
           peso: params.get('peso') || '',
@@ -148,20 +210,11 @@ function BienvenidaInner() {
       setLoading(false);
       return;
     } else {
-      // Nuevo registro - obtener sesion
       const { data: { session } } = await supabase.auth.getSession();
       userId = session?.user?.id;
     }
 
-    // Guardar perfil en Supabase
     if (userId) {
-      const pesoNum = parseFloat(params.get('peso')) || null;
-      const tallaNum = parseFloat(params.get('talla')) || null;
-      const edadCalc = calcularEdad(params.get('nacimiento') || '');
-      const activityLevelKey = mapActividad(params.get('actividad') || '');
-      const bmiCalc = calcularBMI(pesoNum, tallaNum);
-      const bmrCalc = calcularBMR(pesoNum, tallaNum, edadCalc);
-      const tdeeCalc = calcularTDEE(bmrCalc, activityLevelKey);
       const objetivoParam = params.get('objetivo') || '';
       const condicionesArray = (params.get('condiciones') || '').split('|').filter(Boolean);
 
@@ -169,76 +222,31 @@ function BienvenidaInner() {
         id: userId,
         email,
         profile_name: nombre,
-        sintoma_principal: sintoma.split('|')[0],
+        sintoma_principal: sintoma,
         goal: objetivoParam,
         weight_goal: objetivoParam,
         ciclo: params.get('ciclo') || '',
-        weight: pesoNum,
-        height: tallaNum,
-        activity_level: activityLevelKey,
-        age: edadCalc,
-        bmi: bmiCalc,
-        bmr: bmrCalc,
-        tdee: tdeeCalc,
+        weight: pesoParam,
+        height: tallaParam,
+        activity_level: activityKeyParam,
+        age: edadParam,
+        bmi: imcPreview,
+        bmr: bmrPreview,
+        tdee: tdeePreview,
         restricciones: params.get('restricciones') || '',
         medicacion: params.get('medicacion') || '',
         health_conditions: condicionesArray.length ? condicionesArray : null,
         language: lang,
         updated_at: new Date().toISOString()
       });
+
+      if (recordatoriosOn) {
+        await solicitarPush(userId);
+      }
     }
 
-    console.log('[DEBUG] signUpError:', signUpError);
-    console.log('[DEBUG] userId final:', userId);
-
-    if (userId) {
-      setUserId(userId);
-      setStep('notificaciones');
-    } else {
-      console.log('[DEBUG] userId vacio, saltando a dashboard');
-      router.push('/dashboard');
-    }
     setLoading(false);
-  };
-
-  const solicitarPush = async () => {
-    console.log('[DEBUG-PUSH] boton pulsado, userId:', userId);
-    setPushLoading(true);
-    try {
-      console.log('[DEBUG-PUSH] serviceWorker soportado:', 'serviceWorker' in navigator);
-      console.log('[DEBUG-PUSH] PushManager soportado:', 'PushManager' in window);
-      console.log('[DEBUG-PUSH] VAPID key presente:', !!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY);
-      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        console.log('[DEBUG-PUSH] navegador no soporta push, saliendo');
-        router.push('/dashboard');
-        return;
-      }
-      const permission = await Notification.requestPermission();
-      console.log('[DEBUG-PUSH] resultado del permiso:', permission);
-      if (permission !== 'granted') {
-        console.log('[DEBUG-PUSH] permiso no concedido, saliendo');
-        router.push('/dashboard');
-        return;
-      }
-      const registration = await navigator.serviceWorker.ready;
-      console.log('[DEBUG-PUSH] SW listo, suscribiendo...');
-      const subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY),
-      });
-      console.log('[DEBUG-PUSH] suscripcion creada:', subscription);
-      const res = await fetch('/api/push/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, subscription, hora: horaElegida }),
-      });
-      const data = await res.json();
-      console.log('[DEBUG-PUSH] respuesta del endpoint:', res.status, data);
-    } catch (err) {
-      console.error('[DEBUG-PUSH] ERROR CAPTURADO:', err);
-    } finally {
-      router.push('/dashboard');
-    }
+    router.push('/dashboard');
   };
 
   return (
@@ -255,34 +263,71 @@ function BienvenidaInner() {
         .btn-activar{width:100%;background:linear-gradient(135deg,#C9935A,#A06030);border:none;border-radius:0.75rem;padding:1.15rem;color:white;font-size:1.05rem;font-family:Montserrat,sans-serif;font-weight:700;cursor:pointer;box-shadow:0 4px 24px rgba(201,147,90,0.35);transition:transform 0.2s ease;margin-top:0.5rem;}
         .btn-activar:hover{transform:translateY(-2px);}
         .btn-activar:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+        .toggle{width:44px;height:26px;border-radius:13px;position:relative;cursor:pointer;transition:background 0.2s ease;flex-shrink:0;}
+        .toggle-knob{width:20px;height:20px;border-radius:50%;background:white;position:absolute;top:3px;transition:left 0.2s ease;}
       `}}/>
       <div style={{minHeight:'100vh',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'2.5rem 1.5rem 2.5rem 1.5rem',background:'linear-gradient(180deg,#1a0f2e 0%,#0D3D3D 100%)',fontFamily:"'Cormorant Garamond',Georgia,serif"}}>
         <div style={{maxWidth:'440px',width:'100%'}}>
 
-          <div className={`fade d1 ${visible?'in':''}`} style={{textAlign:'center',marginBottom:'2rem'}}>
+          <div className={`fade d1 ${visible?'in':''}`} style={{textAlign:'center',marginBottom:'1.5rem'}}>
             <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#C9935A',letterSpacing:'3px',marginBottom:'1rem'}}>✦ LUMERA</div>
-            <h1 style={{fontSize:'clamp(1.5rem,4vw,2rem)',fontWeight:700,color:'white',lineHeight:1.2,marginBottom:'0.75rem'}}>
-              {is_es ? `${nombre}, bienvenida a tu primer día.` : `${nombre}, welcome to your first day.`}
+            <h1 style={{fontSize:'clamp(1.5rem,4vw,2rem)',fontWeight:700,color:'white',lineHeight:1.2}}>
+              {is_es ? `${nombre}, te entiendo.` : `${nombre}, I understand.`}
             </h1>
-            <p style={{fontSize:'1.1rem',fontStyle:'italic',color:'#C9935A',lineHeight:1.6}}>
-              {is_es ? 'Tu reconexión empieza ahora.' : 'Your reconnection starts now.'}
+          </div>
+
+          <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(201,147,90,0.2)',borderLeft:'4px solid #C9935A',borderRadius:'0 1rem 1rem 0',padding:'1.25rem 1.5rem',marginBottom:'1.5rem'}}>
+            <p style={{fontSize:'1.02rem',lineHeight:1.75,fontStyle:'italic',color:'rgba(255,255,255,0.85)'}}>
+              {insight}
             </p>
           </div>
 
-          <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(201,147,90,0.2)',borderLeft:'4px solid #C9935A',borderRadius:'0 1rem 1rem 0',padding:'1.25rem 1.5rem',marginBottom:'2rem'}}>
-            <p style={{fontSize:'1.05rem',lineHeight:1.8,fontStyle:'italic',color:'rgba(255,255,255,0.85)'}}>
-              {is_es
-                ? `He preparado todo para ayudarte a ${frase} y recuperar el bienestar que mereces.`
-                : `I have prepared everything to help you ${frase} and recover the wellbeing you deserve.`}
-            </p>
-          </div>
-
-          {step === 'form' && <div className={`fade d3 ${visible?'in':''}`}>
-            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.72rem',fontWeight:700,color:'rgba(255,255,255,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'1rem',textAlign:'center'}}>
-              {is_es ? 'Crea tu acceso seguro' : 'Create your secure access'}
+          {imcPreview && (
+            <div className={`fade d2 ${visible?'in':''}`} style={{marginBottom:'1.5rem'}}>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'0.6rem'}}>
+                <div style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'0.75rem',padding:'0.85rem',textAlign:'center'}}>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.52rem',fontWeight:700,color:'rgba(255,255,255,0.4)',letterSpacing:'1px',marginBottom:'0.3rem'}}>{is_es?'RITMO':'RHYTHM'}</div>
+                  <div style={{fontSize:'1.25rem',fontWeight:700,color:imcInfo.color}}>{imcPreview}</div>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.55rem',color:'rgba(255,255,255,0.25)',fontStyle:'italic',marginTop:'0.15rem'}}>{imcInfo.label}</div>
+                </div>
+                <div style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'0.75rem',padding:'0.85rem',textAlign:'center'}}>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.52rem',fontWeight:700,color:'rgba(255,255,255,0.4)',letterSpacing:'1px',marginBottom:'0.3rem'}}>{is_es?'ENERGÍA':'ENERGY'}</div>
+                  <div style={{fontSize:'1.25rem',fontWeight:700,color:'#C9935A'}}>{bmrPreview||'—'}</div>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.55rem',color:'rgba(255,255,255,0.25)',fontStyle:'italic',marginTop:'0.15rem'}}>kcal</div>
+                </div>
+                <div style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'0.75rem',padding:'0.85rem',textAlign:'center'}}>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.52rem',fontWeight:700,color:'rgba(255,255,255,0.4)',letterSpacing:'1px',marginBottom:'0.3rem'}}>{is_es?'GASTO':'BURN'}</div>
+                  <div style={{fontSize:'1.25rem',fontWeight:700,color:'#2A7A4A'}}>{tdeePreview||'—'}</div>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.55rem',color:'rgba(255,255,255,0.25)',fontStyle:'italic',marginTop:'0.15rem'}}>kcal</div>
+                </div>
+              </div>
             </div>
-            <p style={{fontSize:'0.9rem',fontStyle:'italic',color:'rgba(255,255,255,0.45)',textAlign:'center',marginBottom:'1.25rem',lineHeight:1.6}}>
-              {is_es ? 'Para guardar tu plan hormonal y que solo tú puedas ver tu progreso.' : 'To save your hormonal plan so only you can see your progress.'}
+          )}
+
+          <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(201,147,90,0.06)',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'0.85rem',padding:'1.1rem 1.25rem',marginBottom:'1.5rem'}}>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:'1rem'}}>
+              <div style={{flex:1}}>
+                <div style={{fontSize:'0.98rem',color:'white',fontWeight:600,marginBottom:'0.2rem'}}>
+                  {is_es ? '¿Quieres que LUMI te recuerde tu paso de hoy?' : 'Want LUMI to remind you of today\'s step?'}
+                </div>
+                <div style={{fontSize:'0.82rem',fontStyle:'italic',color:'rgba(255,255,255,0.5)',lineHeight:1.5}}>
+                  {is_es ? 'Actívalo y no se te olvidará — puedes cambiarlo cuando quieras.' : 'Turn it on and you won\'t forget — you can change it anytime.'}
+                </div>
+              </div>
+              <div className="toggle" onClick={()=>setRecordatoriosOn(!recordatoriosOn)} style={{background:recordatoriosOn?'#C9935A':'rgba(255,255,255,0.15)'}}>
+                <div className="toggle-knob" style={{left:recordatoriosOn?'21px':'3px'}}/>
+              </div>
+            </div>
+            {recordatoriosOn && (
+              <div style={{marginTop:'0.9rem'}}>
+                <input type="time" className="input-field" value={horaElegida} onChange={e=>setHoraElegida(e.target.value)} style={{textAlign:'center',marginBottom:0}}/>
+              </div>
+            )}
+          </div>
+
+          <div className={`fade d3 ${visible?'in':''}`}>
+            <p style={{fontSize:'0.85rem',fontStyle:'italic',color:'rgba(255,255,255,0.45)',textAlign:'center',marginBottom:'1rem',lineHeight:1.6}}>
+              {is_es ? 'Para que pueda acompañarte y guardar tu plan, crea tu acceso:' : 'To let me guide you and save your plan, create your access:'}
             </p>
             <input type="email" className="input-field" placeholder={is_es ? 'Tu correo electrónico...' : 'Your email address...'} value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleActivar()}/>
             <input type="password" className="input-field" placeholder={is_es ? 'Crea una contraseña segura...' : 'Create a secure password...'} value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleActivar()}/>
@@ -296,45 +341,24 @@ function BienvenidaInner() {
               </p>
             </div>
             <button className="btn-activar" onClick={handleActivar} disabled={loading}>
-              {loading ? (is_es?'Activando tu plan...':'Activating your plan...') : (is_es?'Activar mi plan y entrar':'Activate my plan and enter')}
+              {loading ? (is_es?'Guardando tu plan...':'Saving your plan...') : (is_es?'Guardar mi plan y empezar':'Save my plan and start')}
             </button>
             <p style={{textAlign:'center',fontSize:'0.75rem',color:'rgba(255,255,255,0.25)',fontFamily:'Montserrat,sans-serif',marginTop:'0.75rem',lineHeight:1.5}}>
               {is_es ? 'Sin tarjeta de crédito. Cancela cuando quieras.' : 'No credit card. Cancel anytime.'}
             </p>
-          </div>}
+          </div>
 
-          {step === 'form' && <div className={`fade d4 ${visible?'in':''}`} style={{textAlign:'center',marginTop:'1.5rem'}}>
+          <div className={`fade d4 ${visible?'in':''}`} style={{textAlign:'center',marginTop:'1.5rem'}}>
             <p style={{fontSize:'0.85rem',color:'rgba(255,255,255,0.3)',fontFamily:'Montserrat,sans-serif'}}>
               {is_es ? 'Ya tienes cuenta? ' : 'Already have an account? '}
               <span onClick={()=>router.push('/dashboard')} style={{color:'#C9935A',cursor:'pointer',textDecoration:'underline'}}>
                 {is_es ? 'Entrar aqui' : 'Sign in here'}
               </span>
             </p>
-          </div>}
-
-          {step === 'notificaciones' && <div className="fade in">
-            <div style={{textAlign:'center',marginBottom:'1.5rem'}}>
-              <div style={{fontSize:'2.5rem',marginBottom:'1rem'}}>🔔</div>
-              <h2 style={{fontSize:'1.4rem',fontWeight:700,color:'white',marginBottom:'0.75rem'}}>
-                {is_es ? 'LUMI puede acompañarte cada día' : 'LUMI can be with you every day'}
-              </h2>
-              <p style={{fontSize:'0.95rem',fontStyle:'italic',color:'rgba(255,255,255,0.55)',lineHeight:1.6}}>
-                {is_es ? 'Un mensaje breve cada día, a la hora que tú elijas. Nada más.' : 'One short message every day, at the time you choose. Nothing more.'}
-              </p>
-            </div>
-            <div style={{marginBottom:'1.5rem'}}>
-              <label style={{display:'block',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'rgba(255,255,255,0.4)',letterSpacing:'1px',textTransform:'uppercase',marginBottom:'0.5rem',textAlign:'center'}}>
-                {is_es ? '¿A qué hora te viene bien?' : 'What time works for you?'}
-              </label>
-              <input type="time" className="input-field" value={horaElegida} onChange={e=>setHoraElegida(e.target.value)} style={{textAlign:'center'}}/>
-            </div>
-            <button className="btn-activar" onClick={solicitarPush} disabled={pushLoading}>
-              {pushLoading ? (is_es?'Activando...':'Activating...') : (is_es?'Activar mis recordatorios':'Activate my reminders')}
-            </button>
-            <p onClick={()=>router.push('/dashboard')} style={{textAlign:'center',fontSize:'0.85rem',color:'rgba(255,255,255,0.35)',fontFamily:'Montserrat,sans-serif',marginTop:'1rem',cursor:'pointer',textDecoration:'underline'}}>
-              {is_es ? 'Más tarde' : 'Maybe later'}
+            <p style={{textAlign:'center',fontSize:'0.72rem',color:'rgba(255,255,255,0.15)',fontStyle:'italic',marginTop:'1rem',lineHeight:1.5}}>
+              {is_es?'Resultados individuales pueden variar. Lumera no diagnostica ni sustituye el consejo médico profesional.':'Individual results may vary. Lumera does not diagnose or replace professional medical advice.'}
             </p>
-          </div>}
+          </div>
 
         </div>
       </div>
