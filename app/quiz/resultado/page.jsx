@@ -146,6 +146,10 @@ function ResultadoInner() {
       p.set('peso', params.get('peso')||'');
       p.set('talla', params.get('talla')||'');
       p.set('actividad', params.get('actividad')||'');
+      p.set('nacimiento', params.get('nacimiento')||'');
+      p.set('restricciones', params.get('restricciones')||'');
+      p.set('medicacion', params.get('medicacion')||'');
+      p.set('condiciones', params.get('condiciones')||'');
       p.set('lang', params.get('lang')||'es');
       router.push('/bienvenida?' + p.toString());
     }}>

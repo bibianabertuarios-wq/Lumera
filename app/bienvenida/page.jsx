@@ -14,6 +14,55 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 
+function calcularEdad(fechaNacimientoStr) {
+  if (!fechaNacimientoStr) return null;
+  const fecha = new Date(fechaNacimientoStr + '-01');
+  if (isNaN(fecha.getTime())) return null;
+  const hoy = new Date();
+  let edad = hoy.getFullYear() - fecha.getFullYear();
+  const m = hoy.getMonth() - fecha.getMonth();
+  if (m < 0 || (m === 0 && hoy.getDate() < fecha.getDate())) edad--;
+  return edad > 0 && edad < 120 ? edad : null;
+}
+
+function mapActividad(texto) {
+  const mapa = {
+    'Sedentaria — poco o nada de movimiento': 'sedentary',
+    'Algo activa — camino, subo escaleras': 'light',
+    'Moderadamente activa — ejercicio 2-3 veces/semana': 'moderate',
+    'Muy activa — entreno regularmente': 'active',
+    'Sedentary — little or no movement': 'sedentary',
+    'Lightly active — walking, stairs': 'light',
+    'Moderately active — exercise 2-3x/week': 'moderate',
+    'Very active — regular training': 'active',
+  };
+  return mapa[texto] || 'moderate';
+}
+
+function calcularBMI(weight, height) {
+  if (!weight || !height || weight <= 0 || height <= 0) return null;
+  const heightInMeters = height / 100;
+  return parseFloat((weight / (heightInMeters * heightInMeters)).toFixed(2));
+}
+
+function calcularBMR(weight, height, age) {
+  if (!weight || !height || !age) return null;
+  return Math.round((10 * weight) + (6.25 * height) - (5 * age) - 161);
+}
+
+function calcularTDEE(bmr, activityLevel) {
+  if (!bmr) return null;
+  const multiplicadores = {
+    sedentary: 1.2,
+    light: 1.375,
+    moderate: 1.55,
+    active: 1.725,
+    very_active: 1.9,
+  };
+  const m = multiplicadores[activityLevel] || 1.55;
+  return Math.round(bmr * m);
+}
+
 const sintomaFrase = (sintoma, is_es) => {
   const mapa = {
     'Siento un cansancio que no se va': is_es ? 'acabar con ese cansancio que no se va' : 'end that fatigue that never goes away',
@@ -106,16 +155,34 @@ function BienvenidaInner() {
 
     // Guardar perfil en Supabase
     if (userId) {
+      const pesoNum = parseFloat(params.get('peso')) || null;
+      const tallaNum = parseFloat(params.get('talla')) || null;
+      const edadCalc = calcularEdad(params.get('nacimiento') || '');
+      const activityLevelKey = mapActividad(params.get('actividad') || '');
+      const bmiCalc = calcularBMI(pesoNum, tallaNum);
+      const bmrCalc = calcularBMR(pesoNum, tallaNum, edadCalc);
+      const tdeeCalc = calcularTDEE(bmrCalc, activityLevelKey);
+      const objetivoParam = params.get('objetivo') || '';
+      const condicionesArray = (params.get('condiciones') || '').split('|').filter(Boolean);
+
       await supabase.from('users').upsert({
         id: userId,
         email,
         profile_name: nombre,
         sintoma_principal: sintoma.split('|')[0],
-        goal: params.get('objetivo') || '',
+        goal: objetivoParam,
+        weight_goal: objetivoParam,
         ciclo: params.get('ciclo') || '',
-        weight: parseFloat(params.get('peso')) || null,
-        height: parseFloat(params.get('talla')) || null,
-        activity_level: params.get('actividad') || '',
+        weight: pesoNum,
+        height: tallaNum,
+        activity_level: activityLevelKey,
+        age: edadCalc,
+        bmi: bmiCalc,
+        bmr: bmrCalc,
+        tdee: tdeeCalc,
+        restricciones: params.get('restricciones') || '',
+        medicacion: params.get('medicacion') || '',
+        health_conditions: condicionesArray.length ? condicionesArray : null,
         language: lang,
         updated_at: new Date().toISOString()
       });
