@@ -60,6 +60,30 @@ function getImcInfo(imc, is_es) {
   return { label: is_es ? 'plan intensivo' : 'intensive plan', color: '#EF4444' };
 }
 
+const primerPasoPorSintoma = (sintoma, is_es) => {
+  const mapa = {
+    'Cansancio constante': { es: 'Hoy: desayuna con proteína dentro de la primera hora del día.', en: 'Today: have a protein breakfast within the first hour of waking.' },
+    'Constant fatigue': { es: 'Hoy: desayuna con proteína dentro de la primera hora del día.', en: 'Today: have a protein breakfast within the first hour of waking.' },
+    'Antojos de dulce': { es: 'Hoy: bebe un vaso de agua antes de cada antojo — muchas veces es sed, no hambre.', en: 'Today: drink a glass of water before each craving — it\'s often thirst, not hunger.' },
+    'Sugar cravings': { es: 'Hoy: bebe un vaso de agua antes de cada antojo — muchas veces es sed, no hambre.', en: 'Today: drink a glass of water before each craving — it\'s often thirst, not hunger.' },
+    'Insomnio o despertar nocturno': { es: 'Hoy: apaga las pantallas 30 minutos antes de dormir.', en: 'Today: turn off screens 30 minutes before bed.' },
+    'Insomnia or night waking': { es: 'Hoy: apaga las pantallas 30 minutos antes de dormir.', en: 'Today: turn off screens 30 minutes before bed.' },
+    'Hinchazón': { es: 'Hoy: reduce la sal en la cena y camina 10 minutos después de comer.', en: 'Today: cut back on salt at dinner and walk for 10 minutes after eating.' },
+    'Bloating': { es: 'Hoy: reduce la sal en la cena y camina 10 minutos después de comer.', en: 'Today: cut back on salt at dinner and walk for 10 minutes after eating.' },
+    'Cambios de humor': { es: 'Hoy: sal a la luz natural 10 minutos nada más despertar.', en: 'Today: get 10 minutes of natural light right after waking up.' },
+    'Mood changes': { es: 'Hoy: sal a la luz natural 10 minutos nada más despertar.', en: 'Today: get 10 minutes of natural light right after waking up.' },
+    'Sofocos': { es: 'Hoy: evita la cafeína después de las 14:00.', en: 'Today: avoid caffeine after 2pm.' },
+    'Hot flashes': { es: 'Hoy: evita la cafeína después de las 14:00.', en: 'Today: avoid caffeine after 2pm.' },
+    'Bajo deseo sexual': { es: 'Hoy: prioriza dormir 7-8 horas — es la base hormonal de todo lo demás.', en: 'Today: prioritise 7-8 hours of sleep — it\'s the hormonal base for everything else.' },
+    'Low libido': { es: 'Hoy: prioriza dormir 7-8 horas — es la base hormonal de todo lo demás.', en: 'Today: prioritise 7-8 hours of sleep — it\'s the hormonal base for everything else.' },
+    'Niebla mental': { es: 'Hoy: empieza el día con proteína y grasas buenas, sin azúcar añadido.', en: 'Today: start the day with protein and good fats, no added sugar.' },
+    'Brain fog': { es: 'Hoy: empieza el día con proteína y grasas buenas, sin azúcar añadido.', en: 'Today: start the day with protein and good fats, no added sugar.' },
+  };
+  const fallback = { es: 'Hoy: bebe un vaso de agua nada más despertar, antes que nada.', en: 'Today: drink a glass of water first thing when you wake up, before anything else.' };
+  const entry = mapa[sintoma] || fallback;
+  return is_es ? entry.es : entry.en;
+};
+
 const insightPorSintoma = (sintoma, is_es) => {
   const mapa = {
     'Cansancio constante': {
@@ -150,6 +174,7 @@ function BienvenidaInner() {
   const nombre = params.get('nombre') || (is_es ? 'tu' : 'you');
   const sintoma = (params.get('sintoma') || params.get('sintomas') || '').split('|')[0];
   const insight = insightPorSintoma(sintoma, is_es);
+  const primerPaso = primerPasoPorSintoma(sintoma, is_es);
 
   const pesoParam = parseFloat(params.get('peso')) || null;
   const tallaParam = parseFloat(params.get('talla')) || null;
@@ -279,27 +304,17 @@ function BienvenidaInner() {
             </p>
           </div>
 
-          {imcPreview && (
-            <div className={`fade d2 ${visible?'in':''}`} style={{marginBottom:'1.5rem'}}>
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:'0.6rem'}}>
-                <div style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'0.75rem',padding:'0.85rem',textAlign:'center'}}>
-                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.52rem',fontWeight:700,color:'rgba(255,255,255,0.4)',letterSpacing:'1px',marginBottom:'0.3rem'}}>{is_es?'RITMO':'RHYTHM'}</div>
-                  <div style={{fontSize:'1.25rem',fontWeight:700,color:imcInfo.color}}>{imcPreview}</div>
-                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.55rem',color:'rgba(255,255,255,0.25)',fontStyle:'italic',marginTop:'0.15rem'}}>{imcInfo.label}</div>
-                </div>
-                <div style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'0.75rem',padding:'0.85rem',textAlign:'center'}}>
-                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.52rem',fontWeight:700,color:'rgba(255,255,255,0.4)',letterSpacing:'1px',marginBottom:'0.3rem'}}>{is_es?'ENERGÍA':'ENERGY'}</div>
-                  <div style={{fontSize:'1.25rem',fontWeight:700,color:'#C9935A'}}>{bmrPreview||'—'}</div>
-                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.55rem',color:'rgba(255,255,255,0.25)',fontStyle:'italic',marginTop:'0.15rem'}}>kcal</div>
-                </div>
-                <div style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.1)',borderRadius:'0.75rem',padding:'0.85rem',textAlign:'center'}}>
-                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.52rem',fontWeight:700,color:'rgba(255,255,255,0.4)',letterSpacing:'1px',marginBottom:'0.3rem'}}>{is_es?'GASTO':'BURN'}</div>
-                  <div style={{fontSize:'1.25rem',fontWeight:700,color:'#2A7A4A'}}>{tdeePreview||'—'}</div>
-                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.55rem',color:'rgba(255,255,255,0.25)',fontStyle:'italic',marginTop:'0.15rem'}}>kcal</div>
-                </div>
-              </div>
+          <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(201,147,90,0.08)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.85rem',padding:'1.25rem',marginBottom:'1.5rem'}}>
+            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.68rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.6rem'}}>
+              ✨ {is_es?'Empieza por aquí':'Start here'}
             </div>
-          )}
+            <p style={{fontSize:'1.05rem',lineHeight:1.6,color:'white',marginBottom:'0.75rem',fontWeight:600}}>
+              {primerPaso}
+            </p>
+            <p style={{fontSize:'0.85rem',fontStyle:'italic',color:'rgba(255,255,255,0.5)',lineHeight:1.5}}>
+              {is_es ? 'Esto es solo el día 1. Con tu plan, cada día tendrás una acción como esta — hecha para tu ciclo, tus síntomas y tu objetivo.' : 'This is just day 1. With your plan, every day you\'ll get an action like this one — made for your cycle, your symptoms, and your goal.'}
+            </p>
+          </div>
 
           <div className={`fade d3 ${visible?'in':''}`}>
             <p style={{fontSize:'0.85rem',fontStyle:'italic',color:'rgba(255,255,255,0.45)',textAlign:'center',marginBottom:'1rem',lineHeight:1.6}}>
