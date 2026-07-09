@@ -202,29 +202,40 @@ function BienvenidaInner() {
   };
 
   const solicitarPush = async () => {
+    console.log('[DEBUG-PUSH] boton pulsado, userId:', userId);
     setPushLoading(true);
     try {
+      console.log('[DEBUG-PUSH] serviceWorker soportado:', 'serviceWorker' in navigator);
+      console.log('[DEBUG-PUSH] PushManager soportado:', 'PushManager' in window);
+      console.log('[DEBUG-PUSH] VAPID key presente:', !!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY);
       if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+        console.log('[DEBUG-PUSH] navegador no soporta push, saliendo');
         router.push('/dashboard');
         return;
       }
       const permission = await Notification.requestPermission();
+      console.log('[DEBUG-PUSH] resultado del permiso:', permission);
       if (permission !== 'granted') {
+        console.log('[DEBUG-PUSH] permiso no concedido, saliendo');
         router.push('/dashboard');
         return;
       }
       const registration = await navigator.serviceWorker.ready;
+      console.log('[DEBUG-PUSH] SW listo, suscribiendo...');
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY),
       });
-      await fetch('/api/push/subscribe', {
+      console.log('[DEBUG-PUSH] suscripcion creada:', subscription);
+      const res = await fetch('/api/push/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, subscription, hora: horaElegida }),
       });
+      const data = await res.json();
+      console.log('[DEBUG-PUSH] respuesta del endpoint:', res.status, data);
     } catch (err) {
-      console.error('[push] Error al suscribir:', err);
+      console.error('[DEBUG-PUSH] ERROR CAPTURADO:', err);
     } finally {
       router.push('/dashboard');
     }
