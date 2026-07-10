@@ -62,24 +62,24 @@ function getImcInfo(imc, is_es) {
 
 const primerPasoPorSintoma = (sintoma, is_es) => {
   const mapa = {
-    'Cansancio constante': { es: 'Hoy: desayuna con proteína dentro de la primera hora del día.', en: 'Today: have a protein breakfast within the first hour of waking.' },
-    'Constant fatigue': { es: 'Hoy: desayuna con proteína dentro de la primera hora del día.', en: 'Today: have a protein breakfast within the first hour of waking.' },
-    'Antojos de dulce': { es: 'Hoy: bebe un vaso de agua antes de cada antojo — muchas veces es sed, no hambre.', en: 'Today: drink a glass of water before each craving — it\'s often thirst, not hunger.' },
-    'Sugar cravings': { es: 'Hoy: bebe un vaso de agua antes de cada antojo — muchas veces es sed, no hambre.', en: 'Today: drink a glass of water before each craving — it\'s often thirst, not hunger.' },
-    'Insomnio o despertar nocturno': { es: 'Hoy: apaga las pantallas 30 minutos antes de dormir.', en: 'Today: turn off screens 30 minutes before bed.' },
-    'Insomnia or night waking': { es: 'Hoy: apaga las pantallas 30 minutos antes de dormir.', en: 'Today: turn off screens 30 minutes before bed.' },
-    'Hinchazón': { es: 'Hoy: reduce la sal en la cena y camina 10 minutos después de comer.', en: 'Today: cut back on salt at dinner and walk for 10 minutes after eating.' },
-    'Bloating': { es: 'Hoy: reduce la sal en la cena y camina 10 minutos después de comer.', en: 'Today: cut back on salt at dinner and walk for 10 minutes after eating.' },
-    'Cambios de humor': { es: 'Hoy: sal a la luz natural 10 minutos nada más despertar.', en: 'Today: get 10 minutes of natural light right after waking up.' },
-    'Mood changes': { es: 'Hoy: sal a la luz natural 10 minutos nada más despertar.', en: 'Today: get 10 minutes of natural light right after waking up.' },
-    'Sofocos': { es: 'Hoy: evita la cafeína después de las 14:00.', en: 'Today: avoid caffeine after 2pm.' },
-    'Hot flashes': { es: 'Hoy: evita la cafeína después de las 14:00.', en: 'Today: avoid caffeine after 2pm.' },
-    'Bajo deseo sexual': { es: 'Hoy: prioriza dormir 7-8 horas — es la base hormonal de todo lo demás.', en: 'Today: prioritise 7-8 hours of sleep — it\'s the hormonal base for everything else.' },
-    'Low libido': { es: 'Hoy: prioriza dormir 7-8 horas — es la base hormonal de todo lo demás.', en: 'Today: prioritise 7-8 hours of sleep — it\'s the hormonal base for everything else.' },
-    'Niebla mental': { es: 'Hoy: empieza el día con proteína y grasas buenas, sin azúcar añadido.', en: 'Today: start the day with protein and good fats, no added sugar.' },
-    'Brain fog': { es: 'Hoy: empieza el día con proteína y grasas buenas, sin azúcar añadido.', en: 'Today: start the day with protein and good fats, no added sugar.' },
+    'Cansancio constante': { es: 'Hoy: toma tu café antes de las 10h — después compite con tu cortisol natural y te deja más cansada, no menos.', en: 'Today: have your coffee before 10am — after that it competes with your natural cortisol and leaves you more tired, not less.' },
+    'Constant fatigue': { es: 'Hoy: toma tu café antes de las 10h — después compite con tu cortisol natural y te deja más cansada, no menos.', en: 'Today: have your coffee before 10am — after that it competes with your natural cortisol and leaves you more tired, not less.' },
+    'Antojos de dulce': { es: 'Hoy: una cucharada de vinagre de manzana diluido antes de comer corta el pico de glucosa que dispara el antojo de después.', en: 'Today: a spoon of diluted apple cider vinegar before eating blunts the glucose spike that triggers the craving afterwards.' },
+    'Sugar cravings': { es: 'Hoy: una cucharada de vinagre de manzana diluido antes de comer corta el pico de glucosa que dispara el antojo de después.', en: 'Today: a spoon of diluted apple cider vinegar before eating blunts the glucose spike that triggers the craving afterwards.' },
+    'Insomnio o despertar nocturno': { es: 'Hoy: cena al menos 3 horas antes de dormir — la digestión sube tu temperatura justo cuando tu cuerpo necesita bajarla para dormir profundo.', en: 'Today: have dinner at least 3 hours before bed — digestion raises your temperature right when your body needs to lower it for deep sleep.' },
+    'Insomnia or night waking': { es: 'Hoy: cena al menos 3 horas antes de dormir — la digestión sube tu temperatura justo cuando tu cuerpo necesita bajarla para dormir profundo.', en: 'Today: have dinner at least 3 hours before bed — digestion raises your temperature right when your body needs to lower it for deep sleep.' },
+    'Hinchazón': { es: 'Hoy: añade un plátano o aguacate a alguna comida — no es la sal lo que retiene agua, es la sal sin potasio.', en: 'Today: add a banana or avocado to a meal — it\'s not salt itself that retains water, it\'s salt without potassium.' },
+    'Bloating': { es: 'Hoy: añade un plátano o aguacate a alguna comida — no es la sal lo que retiene agua, es la sal sin potasio.', en: 'Today: add a banana or avocado to a meal — it\'s not salt itself that retains water, it\'s salt without potassium.' },
+    'Cambios de humor': { es: 'Hoy: busca luz natural antes de las 10h, no a mediodía — en esa ventana regula mejor tu cortisol y tu serotonina.', en: 'Today: get natural light before 10am, not at midday — that window regulates your cortisol and serotonin better.' },
+    'Mood changes': { es: 'Hoy: busca luz natural antes de las 10h, no a mediodía — en esa ventana regula mejor tu cortisol y tu serotonina.', en: 'Today: get natural light before 10am, not at midday — that window regulates your cortisol and serotonin better.' },
+    'Sofocos': { es: 'Hoy: en el próximo sofoco, respira 4 segundos al inhalar y 8 al exhalar — corta la respuesta de golpe de calor en segundos.', en: 'Today: at your next hot flash, breathe in for 4 seconds and out for 8 — it cuts the heat surge response in seconds.' },
+    'Hot flashes': { es: 'Hoy: en el próximo sofoco, respira 4 segundos al inhalar y 8 al exhalar — corta la respuesta de golpe de calor en segundos.', en: 'Today: at your next hot flash, breathe in for 4 seconds and out for 8 — it cuts the heat surge response in seconds.' },
+    'Bajo deseo sexual': { es: 'Hoy: prioriza el magnesio por la noche (almendras, cacao puro) — es el primer mineral que cae con el estrés, y afecta directo a tu deseo.', en: 'Today: prioritise magnesium at night (almonds, raw cacao) — it\'s the first mineral depleted by stress, and it directly affects desire.' },
+    'Low libido': { es: 'Hoy: prioriza el magnesio por la noche (almendras, cacao puro) — es el primer mineral que cae con el estrés, y afecta directo a tu deseo.', en: 'Today: prioritise magnesium at night (almonds, raw cacao) — it\'s the first mineral depleted by stress, and it directly affects desire.' },
+    'Niebla mental': { es: 'Hoy: empieza a comer por la grasa o proteína del plato, no por el carbohidrato — el orden cambia cuánta glucosa llega después a tu cerebro.', en: 'Today: eat the fat or protein on your plate first, not the carbs — the order changes how much glucose reaches your brain afterwards.' },
+    'Brain fog': { es: 'Hoy: empieza a comer por la grasa o proteína del plato, no por el carbohidrato — el orden cambia cuánta glucosa llega después a tu cerebro.', en: 'Today: eat the fat or protein on your plate first, not the carbs — the order changes how much glucose reaches your brain afterwards.' },
   };
-  const fallback = { es: 'Hoy: bebe un vaso de agua nada más despertar, antes que nada.', en: 'Today: drink a glass of water first thing when you wake up, before anything else.' };
+  const fallback = { es: 'Hoy: bebe un vaso de agua nada más despertar — antes de que tu cuerpo entre en modo estrés por la mañana.', en: 'Today: drink a glass of water first thing — before your body shifts into morning stress mode.' };
   const entry = mapa[sintoma] || fallback;
   return is_es ? entry.es : entry.en;
 };
