@@ -898,14 +898,14 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
                 </div>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem',marginBottom:'1rem'}}>
                   {[
-                    {img:'/images/carta_intimidad.png', es:'Bienestar íntimo', en:'Intimate wellness', route:'/lumera?tab=symptoms', sub_es:'Reconexión y suelo pélvico', sub_en:'Reconnection & pelvic floor'},
-                    {img:'/images/mitos.png', es:'Mitos', en:'Myths', route:'/lumera?tab=symptoms', sub_es:'Lo que no te han contado', sub_en:'What nobody told you'},
-                    {img:'/images/consejos.png', es:'Consejos', en:'Tips', route:'/lumera?tab=symptoms', sub_es:'Tips de LUMI para hoy', sub_en:'LUMI tips for today'},
+                    {img:'/images/carta_intimidad.png', es:'Bienestar íntimo', en:'Intimate wellness', route:null, sub_es:'Próximamente', sub_en:'Coming soon'},
+                    {img:'/images/mitos.png', es:'Mitos', en:'Myths', route:'/lumera?tab=myths', sub_es:'Lo que no te han contado', sub_en:'What nobody told you'},
+                    {img:'/images/consejos.png', es:'Consejos', en:'Tips', route:'/lumera?tab=tips', sub_es:'Tips de LUMI para hoy', sub_en:'LUMI tips for today'},
                     {img:'/images/modo_cueva.png', es:'Período', en:'Period', route:'/lumera?tab=period', sub_es:'Seguimiento de tu ciclo', sub_en:'Track your cycle'},
                     {img:'/images/sintomas.png', es:'Síntomas', en:'Symptoms', route:'/lumera?tab=symptoms', sub_es:'Registra cómo te sientes', sub_en:'Log how you feel'},
-                    {img:'/images/escaner_preview.png', es:'Comunidad', en:'Community', route:'/lumera?tab=symptoms', sub_es:'Próximamente', sub_en:'Coming soon'},
+                    {img:'/images/escaner_preview.png', es:'Comunidad', en:'Community', route:'/lumera?tab=community', sub_es:'Historias y apoyo real', sub_en:'Real stories & support'},
                   ].map((item,i)=>(
-                    <div key={i} onClick={()=>{ if(bloqueado){setShowMasMenu(false);setShowPremiumModal(true);return;} setShowMasMenu(false); window.location.href=item.route;}} style={{background:'white',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'1rem',padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem',cursor:'pointer',opacity:bloqueado?0.55:1,position:'relative'}}>
+                    <div key={i} onClick={()=>{ if(!item.route){return;} if(bloqueado){setShowMasMenu(false);setShowPremiumModal(true);return;} setShowMasMenu(false); window.location.href=item.route;}} style={{background:'white',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'1rem',padding:'1rem',display:'flex',alignItems:'center',gap:'0.75rem',cursor:'pointer',opacity:bloqueado?0.55:1,position:'relative'}}>
                       {bloqueado && <span style={{position:'absolute',top:'0.5rem',right:'0.5rem',fontSize:'0.75rem'}}>🔒</span>}
                       <img src={item.img} style={{width:'40px',height:'40px',borderRadius:'50%',objectFit:'cover',flexShrink:0}} onError={e=>{e.target.style.display='none'}}/>
                       <div>

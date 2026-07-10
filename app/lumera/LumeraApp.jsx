@@ -383,7 +383,7 @@ import './lumera.css'
                 if (typeof window === 'undefined') return;
                 const params = new URLSearchParams(window.location.search);
                 const tab = params.get('tab');
-                const valid = ['home','nutrition','exercise','symptoms','chat','premium','upgrade','period'];
+                const valid = ['home','nutrition','exercise','symptoms','chat','premium','upgrade','period','myths','tips','community'];
                 if (tab && valid.includes(tab)) setCurrentPage(tab);
             }, []);
             const [showQuiz, setShowQuiz] = useState(false);
