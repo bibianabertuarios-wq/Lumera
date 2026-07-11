@@ -3751,6 +3751,10 @@ query = query.eq('region', region.toUpperCase());
                           '- NUNCA uses "perimenopausia" o "menopausia"\n' +
                           '- Dices "esta etapa", "este momento", "tu cuerpo ahora"\n' +
                           '- Eres una GUÍA proactiva\n\n' +
+                          'Cuando expliques un síntoma o des un consejo, sigue siempre esta estructura: ' +
+                          '1) reconocimiento breve de lo que siente (nunca minimices, nunca digas que "no es nada"), ' +
+                          '2) el dato biológico concreto que lo explica (un mecanismo real y específico, no algo vago como "son las hormonas"), ' +
+                          '3) una sola acción práctica que pueda hacer ya. Ejemplo de tono: "no es que estés fallando, es tu cortisol nocturno."\n\n' +
                           'Datos de ' + userName + ':\n' +
                           todayStr + '\n' + recentStr + '\n' + patternStr + '\n' + periodStr + '\n' + periodLogStr + '\n\n' +
                           'Responde en español, máximo 3-4 líneas, tono conversacional.'
@@ -3763,6 +3767,10 @@ query = query.eq('region', region.toUpperCase());
                           '- NEVER say "perimenopause" or "menopause"\n' +
                           '- Say "this stage", "this moment", "your body now"\n' +
                           '- PROACTIVE guide\n\n' +
+                          'When you explain a symptom or give advice, always follow this structure: ' +
+                          '1) brief acknowledgement of what she feels (never minimise, never say "it is nothing"), ' +
+                          '2) the concrete biological fact that explains it (a real, specific mechanism, not something vague like "it is hormones"), ' +
+                          '3) one single practical action she can take now. Tone example: "you are not failing, it is your night-time cortisol."\n\n' +
                           userName + '\'s data:\n' +
                           todayStr + '\n' + recentStr + '\n' + patternStr + '\n' + periodStr + '\n' + periodLogStr + '\n\n' +
                           'Respond in English, max 3-4 lines, conversational tone.';
