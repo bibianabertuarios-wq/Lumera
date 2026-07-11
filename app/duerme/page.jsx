@@ -54,7 +54,7 @@ export default function Duerme() {
         y la ansiedad nocturna después de los 40.
       </p>
 
-      
+      <a
         href="/downloads/plan-7-noches-sueno-ansiedad.pdf"
         download
         style={{
@@ -83,7 +83,7 @@ export default function Duerme() {
           Esta guía es una muestra. Lumera es tu acompañante diario para
           sostener el sueño y calmar la ansiedad cada noche.
         </p>
-        
+        <a
           href="https://getlumera.app"
           style={{
             color: "#C9935A",
