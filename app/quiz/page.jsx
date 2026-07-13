@@ -14,6 +14,7 @@ const PREGUNTAS_ES = [
   { id:'restricciones', tipo:'opciones', pregunta:'¿Tienes alguna restricción alimentaria?', opciones:['Ninguna','Vegetariana','Vegana','Sin gluten','Sin lácteos'] },
   { id:'medicacion', tipo:'opciones', pregunta:'¿Tomas alguna medicación de forma habitual?', opciones:['No','Sí, tratamiento hormonal (THS o anticonceptivos)','Sí, para tiroides','Sí, para tensión o colesterol','Sí, otra'] },
   { id:'condiciones', tipo:'multiple', pregunta:'¿Tienes alguna condición de salud diagnosticada?', sub:'Puedes elegir varias', opciones:['Ninguna','Hipotiroidismo / Hipertiroidismo','Diabetes o resistencia a la insulina','Hipertensión','Fibromialgia','SOP — Síndrome de ovario poliquístico','Endometriosis','Miomas','Menopausia quirúrgica','Otra'] },
+  { id:'region', tipo:'opciones', pregunta:'¿Desde dónde nos escribes?', sub:'Para adaptar los ingredientes de tus recetas a lo que encuentras en tu zona', opciones:['España','Latinoamérica','Estados Unidos / Canadá'] },
 ];
 
 const PREGUNTAS_EN = [
@@ -27,6 +28,7 @@ const PREGUNTAS_EN = [
   { id:'restricciones', tipo:'opciones', pregunta:'Do you have any dietary restrictions?', opciones:['None','Vegetarian','Vegan','Gluten-free','Dairy-free'] },
   { id:'medicacion', tipo:'opciones', pregunta:'Do you take any regular medication?', opciones:['No','Yes, hormonal treatment (HRT or contraceptives)','Yes, for thyroid','Yes, for blood pressure or cholesterol','Yes, other'] },
   { id:'condiciones', tipo:'multiple', pregunta:'Have you been diagnosed with any health condition?', sub:'You can choose several', opciones:['None','Hypo / Hyperthyroidism','Diabetes or insulin resistance','High blood pressure','Fibromyalgia','PCOS','Endometriosis','Fibroids','Surgical menopause','Other'] },
+  { id:'region', tipo:'opciones', pregunta:'Where are you writing to us from?', sub:'So we can adapt your recipe ingredients to what you can find nearby', opciones:['Spain','Latin America','United States / Canada'] },
 ];
 
 function QuizInner() {

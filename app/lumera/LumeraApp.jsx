@@ -355,6 +355,16 @@ import './lumera.css'
             );
         }
 
+        function getRegionCode(regionRaw) {
+            if (!regionRaw) return null;
+            const r = regionRaw.trim().toLowerCase();
+            if (['latam', 'emea', 'usa'].includes(r)) return r;
+            if (r.includes('latinoam\u00e9rica') || r.includes('latin america')) return 'latam';
+            if (r.includes('espa\u00f1a') || r.includes('spain') || r.includes('europa') || r.includes('europe') || r.includes('\u00e1frica') || r.includes('africa')) return 'emea';
+            if (r.includes('estados unidos') || r.includes('united states') || r.includes('usa') || r.includes('canad\u00e1') || r.includes('canada')) return 'usa';
+            return null;
+        }
+
         const LumeraApp = () => {
             const [language, setLanguage] = useState(() => { if (typeof window === 'undefined') return 'es'; const saved = localStorage.getItem('lumeraLang'); if (saved) return saved; const browserLang = navigator.language || navigator.userLanguage || 'es'; return browserLang.startsWith('es') ? 'es' : 'en'; });
 
@@ -4510,7 +4520,7 @@ query = query.eq('region', region.toUpperCase());
                                             <div style={{padding:'0.75rem 1rem 1rem',display:'flex',flexDirection:'column',gap:'0.6rem'}}>
                                                 {recipe.ingredients.map((ing, i) => {
                                                     const isString = typeof ing === 'string';
-                                                    const userRegionKey = (currentUser?.region || userRegion || 'latam').toLowerCase();
+                                                    const userRegionKey = getRegionCode(currentUser?.region) || userRegion || 'latam';
                                                     const ingredientName = isString ? ing : (ing.region?.[userRegionKey] || ing.ingredient || ing.name);
                                                     const hasDetails = !isString && (ing.qty || ing.why);
                                                     return (
