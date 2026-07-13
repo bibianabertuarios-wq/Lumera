@@ -4510,7 +4510,8 @@ query = query.eq('region', region.toUpperCase());
                                             <div style={{padding:'0.75rem 1rem 1rem',display:'flex',flexDirection:'column',gap:'0.6rem'}}>
                                                 {recipe.ingredients.map((ing, i) => {
                                                     const isString = typeof ing === 'string';
-                                                    const ingredientName = isString ? ing : (ing.ingredient || ing.name);
+                                                    const userRegionKey = (currentUser?.region || userRegion || 'latam').toLowerCase();
+                                                    const ingredientName = isString ? ing : (ing.region?.[userRegionKey] || ing.ingredient || ing.name);
                                                     const hasDetails = !isString && (ing.qty || ing.why);
                                                     return (
                                                         <div key={i} style={{background:darkMode?'rgba(255,255,255,0.04)':'rgba(255,255,255,0.9)',borderRadius:'0.65rem',padding:'0.65rem 0.85rem',borderLeft:'3px solid #C4A882'}}>
