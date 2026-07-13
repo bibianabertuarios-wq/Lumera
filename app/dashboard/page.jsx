@@ -533,22 +533,6 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
             <BarraSemana diasCompletados={diasCompletadosSemana} diasTotales={7} is_es={is_es} />
           </div>
 
-          {/* CARD SILUETA — WOW FACTOR */}
-          <div className={`fade d2 ${visible?'in':''}`} style={{position:'relative',borderRadius:'1.25rem',overflow:'hidden',marginBottom:'1.25rem',cursor:'pointer',boxShadow:'0 4px 24px rgba(13,61,61,0.15)'}} onClick={()=>router.push('/escaner')}>
-            <video autoPlay muted loop playsInline style={{width:'100%',height:'180px',objectFit:'cover',display:'block'}}>
-              <source src="/videos/silueta.mp4" type="video/mp4"/>
-            </video>
-            <div style={{position:'absolute',inset:0,background:'linear-gradient(180deg,transparent 30%,rgba(13,61,61,0.85) 100%)',display:'flex',flexDirection:'column',justifyContent:'flex-end',padding:'1.25rem'}}>
-              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',marginBottom:'0.25rem'}}>✦ NUEVO</div>
-              <div style={{fontSize:'1.2rem',fontWeight:700,color:'white',marginBottom:'0.25rem',fontFamily:"'Cormorant Garamond',serif"}}>
-                {is_es ? 'Tu Silueta Hormonal' : 'Your Hormonal Silhouette'}
-              </div>
-              <div style={{fontSize:'0.8rem',fontFamily:'Montserrat,sans-serif',color:'rgba(255,255,255,0.7)'}}>
-                {is_es ? 'Analiza tu cuerpo y descubre tus patrones →' : 'Analyse your body and discover your patterns →'}
-              </div>
-            </div>
-          </div>
-
           {/* BARRA TRIAL */}
           {!user?.isPremium && (
             <div className={`fade d1 ${visible?'in':''}`} style={{marginBottom:'1rem'}}>
@@ -761,6 +745,22 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
                   <div style={{fontSize:'0.7rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.4)'}}>{t.sub}</div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* CARD SILUETA — secundaria, tras el progreso del dia */}
+          <div className={`fade d2 ${visible?'in':''}`} style={{position:'relative',borderRadius:'1.25rem',overflow:'hidden',marginBottom:'1.25rem',cursor:'pointer',boxShadow:'0 4px 24px rgba(13,61,61,0.15)'}} onClick={()=>router.push('/escaner')}>
+            <video autoPlay muted loop playsInline style={{width:'100%',height:'180px',objectFit:'cover',display:'block'}}>
+              <source src="/videos/silueta.mp4" type="video/mp4"/>
+            </video>
+            <div style={{position:'absolute',inset:0,background:'linear-gradient(180deg,transparent 30%,rgba(13,61,61,0.85) 100%)',display:'flex',flexDirection:'column',justifyContent:'flex-end',padding:'1.25rem'}}>
+              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',marginBottom:'0.25rem'}}>✦ NUEVO</div>
+              <div style={{fontSize:'1.2rem',fontWeight:700,color:'white',marginBottom:'0.25rem',fontFamily:"'Cormorant Garamond',serif"}}>
+                {is_es ? 'Tu Silueta Hormonal' : 'Your Hormonal Silhouette'}
+              </div>
+              <div style={{fontSize:'0.8rem',fontFamily:'Montserrat,sans-serif',color:'rgba(255,255,255,0.7)'}}>
+                {is_es ? 'Analiza tu cuerpo y descubre tus patrones →' : 'Analyse your body and discover your patterns →'}
+              </div>
             </div>
           </div>
 
