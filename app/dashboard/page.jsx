@@ -65,15 +65,55 @@ function getFaseCicloInfo(cicloCode, periodLog) {
 const FASE_LABEL_ES = { menstrual: 'Fase menstrual', folicular: 'Fase folicular', ovulatoria: 'Fase ovulatoria', lutea: 'Fase lútea' };
 const FASE_LABEL_EN = { menstrual: 'Menstrual phase', folicular: 'Follicular phase', ovulatoria: 'Ovulatory phase', lutea: 'Luteal phase' };
 
-function AnilloVivo({ info, is_es }) {
+const DESCUBRIMIENTOS_ES = [
+  'Tu hígado metaboliza el estrógeno durante la noche — cenar tarde y pesado le roba ese turno.',
+  'El músculo es tu órgano metabólico más activo: cada kilo quema energía incluso mientras duermes.',
+  'La luz del sol en la primera hora del día adelanta tu melatonina nocturna hasta 90 minutos.',
+  'La progesterona se transforma en alopregnanolona, que actúa sobre los mismos receptores que los ansiolíticos — por eso su bajada afecta tanto al ánimo y al sueño.',
+  'Dos minutos de caminar después de comer reducen el pico de glucosa de forma medible.',
+  'Tu cerebro es 75% agua: una deshidratación del 2% ya nubla la memoria y el foco.',
+  'La fibra alimenta bacterias que fabrican serotonina — tu ánimo también se cocina en el intestino.',
+  'El magnesio participa en más de 300 reacciones de tu cuerpo, incluidas las del sueño profundo.',
+  'Dormir menos de 6 horas sube la grelina, la hormona del hambre, al día siguiente.',
+  'Tu fuerza muscular hoy predice tu independencia física a los 75 mejor que tu peso.',
+  'El té con las comidas reduce la absorción de hierro: mejor sepáralos una hora.',
+  'Tus mitocondrias se renuevan con el ejercicio: cada sesión fabrica centrales de energía nuevas.',
+  'Respirar lento, 4-6 veces por minuto, activa el nervio vago y baja el cortisol en minutos.',
+  'La proteína del desayuno reduce los antojos de dulce por la tarde — es química, no fuerza de voluntad.',
+];
+const DESCUBRIMIENTOS_EN = [
+  'Your liver metabolises oestrogen overnight — a late, heavy dinner steals that shift.',
+  'Muscle is your most metabolically active organ: every kilo burns energy even while you sleep.',
+  'Sunlight in the first hour of your day can advance your night melatonin by up to 90 minutes.',
+  'Progesterone converts into allopregnanolone, which acts on the same receptors as anti-anxiety medication — that is why its drop affects mood and sleep so directly.',
+  'Two minutes of walking after a meal measurably lowers your glucose spike.',
+  'Your brain is 75% water: 2% dehydration already clouds memory and focus.',
+  'Fibre feeds bacteria that make serotonin — your mood is also cooked in your gut.',
+  'Magnesium takes part in over 300 reactions in your body, including deep sleep.',
+  'Sleeping under 6 hours raises ghrelin, your hunger hormone, the next day.',
+  'Your muscle strength today predicts your independence at 75 better than your weight.',
+  'Tea with meals reduces iron absorption: keep them an hour apart.',
+  'Your mitochondria renew with exercise: every session builds new energy factories.',
+  'Slow breathing, 4-6 breaths per minute, activates the vagus nerve and lowers cortisol within minutes.',
+  'Protein at breakfast reduces afternoon sugar cravings — it is chemistry, not willpower.',
+];
+
+function AnilloVivo({ info, is_es, racha = 0 }) {
   const faseLabels = is_es ? FASE_LABEL_ES : FASE_LABEL_EN;
   if (!info || !info.tieneCiclo) {
-    const txt = is_es ? 'Tu ritmo, a tu manera' : 'Your rhythm, your way';
+    const r = 62, C = 2 * Math.PI * r;
+    const p = Math.min(racha / 7, 1);
+    const titulo = racha > 0 ? String(racha) : (is_es ? 'Hoy' : 'Today');
+    const sub = racha > 0
+      ? (is_es ? (racha === 1 ? 'día de constancia' : 'días de constancia') : (racha === 1 ? 'day of consistency' : 'days of consistency'))
+      : (is_es ? 'empieza tu racha' : 'your streak starts');
     return (
-      <div style={{ width: 150, margin: '0 auto' }} role="img" aria-label={txt}>
+      <div style={{ width: 150, margin: '0 auto', animation: 'lumBreathe 4.5s ease-in-out infinite', transformOrigin: 'center' }} role="img" aria-label={`${titulo} ${sub}`}>
         <svg viewBox="0 0 150 150" width="150" height="150">
-          <circle cx="75" cy="75" r="62" fill="none" stroke="rgba(201,147,90,0.2)" strokeWidth="6" />
-          <text x="75" y="79" textAnchor="middle" fontSize="12" fill="rgba(13,61,61,0.5)" fontFamily="'Cormorant Garamond',Georgia,serif">{txt}</text>
+          <circle cx="75" cy="75" r={r} fill="none" stroke="rgba(201,147,90,0.2)" strokeWidth="6" />
+          {p > 0 && <circle cx="75" cy="75" r={r} fill="none" stroke="#C9935A" strokeWidth="6" strokeLinecap="round" strokeDasharray={`${C * p} ${C * (1 - p)}`} transform="rotate(-90 75 75)" />}
+          <text x="75" y="74" textAnchor="middle" fontSize={racha > 0 ? 30 : 19} fill="#0D3D3D" fontFamily="'Cormorant Garamond',Georgia,serif">{titulo}</text>
+          <text x="75" y="92" textAnchor="middle" fontSize="10" fill="#A06030">{sub}</text>
         </svg>
       </div>
     );
@@ -121,8 +161,10 @@ export default function Dashboard() {
   const [checkinData, setCheckinData] = useState(null);
   const [ultimosCheckins, setUltimosCheckins] = useState([]);
   const [visible, setVisible] = useState(false);
-  const [planVisible, setPlanVisible] = useState(false);
+  const [planVisible, setPlanVisible] = useState(true);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const [showGestion, setShowGestion] = useState(false);
+  const [pwaOculto, setPwaOculto] = useState(() => { try { return localStorage.getItem('lumera_pwa_hide') === '1'; } catch(e) { return false; } });
   const [showMasMenu, setShowMasMenu] = useState(false);
   const [showLumiChat, setShowLumiChat] = useState(false);
   const [lumiChatInput, setLumiChatInput] = useState('');
@@ -269,8 +311,8 @@ export default function Dashboard() {
       setLumiMsg(msg);
     } catch(e) {
       setLumiMsg(userData.lang === 'es' 
-        ? 'Hola ' + userData.nombre + '. Tu plan de hoy está listo según tu objetivo.'
-        : 'Hi ' + userData.nombre + '. Your plan for today is ready.');
+        ? (() => { const h = new Date().getHours(); const sal = h < 12 ? 'Buenos días' : h < 19 ? 'Buenas tardes' : 'Buenas noches'; const o = (userData.objetivo || '').toLowerCase(); const foco = o.includes('peso') ? 'Hoy protege tu insulina: proteína en el desayuno y un paseo corto después de comer.' : (o.includes('energ') || o.includes('niebla')) ? 'Hoy cuida tu energía: agua al despertar y una pausa sin pantallas cada hora.' : (o.includes('sue') || o.includes('dorm')) ? 'Tu noche se prepara desde ahora: última cafeína antes de las 14h y cena ligera.' : 'Hoy elige una sola cosa y hazla bien: la constancia gana a la intensidad.'; return `${sal}, ${userData.nombre}. ${foco} Tu plan te espera abajo — ve marcándolo.`; })()
+        : (() => { const h = new Date().getHours(); const sal = h < 12 ? 'Good morning' : h < 19 ? 'Good afternoon' : 'Good evening'; const o = (userData.objetivo || '').toLowerCase(); const foco = o.includes('weight') ? 'Today, protect your insulin: protein at breakfast and a short walk after meals.' : (o.includes('energ') || o.includes('fog')) ? 'Guard your energy today: water on waking and a screen-free pause every hour.' : o.includes('sleep') ? 'Tonight starts now: last caffeine before 2pm and a light dinner.' : 'Pick one thing today and do it well — consistency beats intensity.'; return `${sal}, ${userData.nombre}. ${foco} Your plan is below — tick it as you go.`; })());
     }
     setLumiLoading(false);
   };
@@ -471,6 +513,15 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
   const bloqueado = !user?.isPremium && diasRestantes === 0;
   const cicloCode = getCicloCode(user?.ciclo);
   const infoCiclo = getFaseCicloInfo(cicloCode, periodLog);
+  const rachaDias = (() => {
+    if (!ultimosCheckins || !ultimosCheckins.length) return 0;
+    const dias = new Set(ultimosCheckins.map(c => c.fecha));
+    let r = 0;
+    const d = new Date();
+    if (!dias.has(d.toISOString().split('T')[0])) d.setDate(d.getDate() - 1);
+    while (dias.has(d.toISOString().split('T')[0])) { r++; d.setDate(d.getDate() - 1); }
+    return r;
+  })();
   const diasCompletadosSemana = Math.min(7, (ultimosCheckins || []).length);
   const plan = getPlanDelDia();
   const energiaPct = getPromedioSemana('energia');
@@ -529,7 +580,7 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
           </div>
 
           <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
-            <AnilloVivo info={infoCiclo} is_es={is_es} />
+            <AnilloVivo info={infoCiclo} is_es={is_es} racha={rachaDias} />
             <BarraSemana diasCompletados={diasCompletadosSemana} diasTotales={7} is_es={is_es} />
           </div>
 
@@ -609,6 +660,16 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
                 {!planLoading && (planGenerado || plan).length > 0 && planHecho.filter(x => x < (planGenerado || plan).length).length === (planGenerado || plan).length && (
                   <div style={{marginTop:'0.25rem',padding:'0.6rem 0.75rem',background:'rgba(201,147,90,0.12)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',color:'#C9935A',fontWeight:600}}>
                     {is_es ? '✦ Plan de hoy completado. Tu constancia es la que cambia tu biología.' : '✦ Today\'s plan complete. Consistency is what changes your biology.'}
+                  </div>
+                )}
+                {!planLoading && (planGenerado || plan).length > 0 && planHecho.filter(x => x < (planGenerado || plan).length).length === (planGenerado || plan).length && (
+                  <div style={{marginTop:'0.6rem',padding:'0.9rem 1rem',background:'linear-gradient(135deg,rgba(13,61,61,0.95),rgba(13,61,61,0.85))',borderRadius:'0.75rem'}}>
+                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,letterSpacing:'2px',color:'#C9935A',textTransform:'uppercase',marginBottom:'0.4rem'}}>
+                      {is_es ? '✦ Descubrimiento desbloqueado' : '✦ Discovery unlocked'}
+                    </div>
+                    <p style={{fontSize:'0.9rem',color:'rgba(255,255,255,0.92)',lineHeight:1.65,fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',margin:0}}>
+                      {(is_es ? DESCUBRIMIENTOS_ES : DESCUBRIMIENTOS_EN)[new Date().getDate() % DESCUBRIMIENTOS_ES.length]}
+                    </p>
                   </div>
                 )}
               </div>
@@ -765,27 +826,28 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
           </div>
 
           {user?.isPremium && (
-            <div className={`fade d4 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
-              <div style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'1rem'}}>
-                <div style={{width:'32px',height:'32px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}>
-                  <span style={{fontSize:'0.8rem',color:'white',fontWeight:700}}>P</span>
+            <div className={`fade d4 ${visible?'in':''}`} style={{textAlign:'center',marginBottom:'1.25rem'}}>
+              <span onClick={()=>setShowGestion(!showGestion)} style={{fontSize:'0.7rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.35)',cursor:'pointer'}}>
+                {is_es?'✦ Premium activa · Gestionar suscripción':'✦ Premium active · Manage subscription'}
+              </span>
+              {showGestion && (
+                <div style={{marginTop:'0.6rem'}}>
+                  <button onClick={handleCancelSubscription} style={{background:'none',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'0.5rem',padding:'0.45rem 1rem',fontSize:'0.72rem',color:'rgba(13,61,61,0.45)',cursor:'pointer'}}>
+                    {is_es?'Cancelar suscripción':'Cancel subscription'}
+                  </button>
                 </div>
-                <div style={{flex:1}}>
-                  <p style={{fontSize:'0.78rem',fontWeight:600,color:'#A06030'}}>{is_es?'Premium activa':'Premium active'}</p>
-                  <p style={{fontSize:'0.72rem',color:'rgba(13,61,61,0.5)'}}>{is_es?'Acceso completo a Lumera':'Full access to Lumera'}</p>
-                </div>
-              </div>
-              <button onClick={handleCancelSubscription} style={{background:'none',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'0.5rem',padding:'0.45rem 1rem',fontSize:'0.75rem',color:'rgba(13,61,61,0.45)',cursor:'pointer',width:'100%'}} onMouseEnter={e=>{e.target.style.borderColor='rgba(239,68,68,0.5)';e.target.style.color='rgba(239,68,68,0.7)'}} onMouseLeave={e=>{e.target.style.borderColor='rgba(201,147,90,0.25)';e.target.style.color='rgba(13,61,61,0.45)'}}>
-                {is_es?'Cancelar suscripción':'Cancel subscription'}
-              </button>
+              )}
             </div>
           )}
 
           {/* BANNER PWA INSTALACION */}
-          {typeof window !== 'undefined' && !window.matchMedia('(display-mode: standalone)').matches && !window.navigator?.standalone && (
+          {!pwaOculto && typeof window !== 'undefined' && !window.matchMedia('(display-mode: standalone)').matches && !window.navigator?.standalone && (
             <div className={`fade d5 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
-              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
-                {is_es ? '📲 Llévame contigo' : '📲 Take me with you'}
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.75rem'}}>
+                <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',textTransform:'uppercase'}}>
+                  {is_es ? '📲 Llévame contigo' : '📲 Take me with you'}
+                </span>
+                <span onClick={()=>{ setPwaOculto(true); try { localStorage.setItem('lumera_pwa_hide','1'); } catch(e) {} }} style={{cursor:'pointer',color:'rgba(13,61,61,0.35)',fontSize:'0.95rem',padding:'0 0.25rem'}}>✕</span>
               </div>
               <p style={{fontSize:'0.9rem',color:'rgba(13,61,61,0.6)',fontStyle:'italic',marginBottom:'1rem',lineHeight:1.6}}>
                 {is_es ? 'Instala Lumera en tu móvil y tenme siempre a mano — sin buscar en el navegador.' : 'Install Lumera on your phone and have me always at hand — no searching in the browser.'}
