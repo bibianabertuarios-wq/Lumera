@@ -214,6 +214,10 @@ export default function Dashboard() {
   const [calmaActiva, setCalmaActiva] = useState(false);
   const [showMasMenu, setShowMasMenu] = useState(false);
   const [showLumiChat, setShowLumiChat] = useState(false);
+  const [showPesoModal, setShowPesoModal] = useState(false);
+  const [pesoInput, setPesoInput] = useState('');
+  const [metaInput, setMetaInput] = useState('');
+  const [guardandoPeso, setGuardandoPeso] = useState(false);
   const [lumiChatInput, setLumiChatInput] = useState('');
   const [lumiChatMessages, setLumiChatMessages] = useState([]);
   const [lumiChatLoading, setLumiChatLoading] = useState(false);
@@ -224,6 +228,36 @@ export default function Dashboard() {
   const [periodLog, setPeriodLog] = useState([]);
   const router = useRouter();
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const guardarPeso = async () => {
+    const nuevoPeso = parseFloat(pesoInput);
+    if (!nuevoPeso || nuevoPeso <= 0) return;
+    setGuardandoPeso(true);
+    const esInicial = !user?.pesoInicial;
+    const nuevaMeta = metaInput ? parseFloat(metaInput) : (user?.pesoMeta || null);
+    const updates = {
+      peso: nuevoPeso,
+      peso_meta: nuevaMeta,
+    };
+    if (esInicial) {
+      updates.peso_inicial = nuevoPeso;
+      updates.peso_fecha = new Date().toISOString().split('T')[0];
+    }
+    try {
+      await supabase.from('users').update(updates).eq('id', user.id);
+    } catch(e) {}
+    setUser(prev => ({
+      ...prev,
+      peso: nuevoPeso,
+      pesoMeta: nuevaMeta,
+      pesoInicial: esInicial ? nuevoPeso : prev.pesoInicial,
+      pesoFecha: esInicial ? updates.peso_fecha : prev.pesoFecha,
+    }));
+    setGuardandoPeso(false);
+    setShowPesoModal(false);
+    setPesoInput('');
+    setMetaInput('');
+  };
 
   useEffect(() => { init(); }, []);
 
@@ -246,6 +280,9 @@ export default function Dashboard() {
       peso: profile?.peso || null,
       talla: profile?.talla || null,
       ciclo: profile?.ciclo || '',
+      pesoInicial: profile?.peso_inicial || null,
+      pesoMeta: profile?.peso_meta || null,
+      pesoFecha: profile?.peso_fecha || null,
     };
     setUser(userData);
 
@@ -637,6 +674,66 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
             <BarraSemana diasCompletados={diasCompletadosSemana} diasTotales={7} is_es={is_es} />
           </div>
 
+          {/* EL CAMINO — a donde voy */}
+          <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
+            {!user?.pesoMeta ? (
+              <div onClick={()=>setShowPesoModal(true)} style={{textAlign:'center',cursor:'pointer',padding:'0.5rem 0'}}>
+                <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',color:'#0D3D3D',marginBottom:'0.35rem'}}>
+                  {is_es ? '✦ Definir mi meta' : '✦ Set my goal'}
+                </p>
+                <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(13,61,61,0.45)'}}>
+                  {is_es ? 'Marca tu punto de partida y a dónde quieres llegar' : 'Mark your starting point and where you want to get to'}
+                </p>
+              </div>
+            ) : (() => {
+              const total = Math.abs(user.pesoInicial - user.pesoMeta);
+              const avance = Math.abs(user.pesoInicial - (user.peso || user.pesoInicial));
+              const pct = total > 0 ? Math.min(100, Math.max(0, Math.round((avance/total)*100))) : 0;
+              const fechaInicio = user.pesoFecha ? new Date(user.pesoFecha).toLocaleDateString(is_es?'es-ES':'en-GB', {month:'short', year:'2-digit'}) : '';
+              return (
+                <div>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:'0.9rem'}}>
+                    <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase'}}>
+                      {is_es ? 'Tu camino' : 'Your path'}
+                    </p>
+                    <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',fontWeight:700,color:'#A06030'}}>{pct}% {is_es?'recorrido':'done'}</p>
+                  </div>
+                  <div style={{position:'relative',height:'6px',background:'rgba(201,147,90,0.15)',borderRadius:'99px',margin:'1.5rem 0.5rem'}}>
+                    <div style={{position:'absolute',left:0,top:0,height:'6px',width:`${pct}%`,background:'#C9935A',borderRadius:'99px',transition:'width 0.6s ease'}}/>
+                    <div style={{position:'absolute',left:`calc(${pct}% - 8px)`,top:'-7px',width:'20px',height:'20px',borderRadius:'50%',background:'#C9935A',border:'3px solid white',boxShadow:'0 2px 8px rgba(201,147,90,0.5)',transition:'left 0.6s ease'}}/>
+                  </div>
+                  <div style={{display:'flex',justifyContent:'space-between',fontSize:'0.7rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.45)',marginBottom:'0.9rem'}}>
+                    <span>{user.pesoInicial}kg {fechaInicio && `· ${fechaInicio}`}</span>
+                    <span>{user.pesoMeta}kg</span>
+                  </div>
+                  <button onClick={()=>{setPesoInput(String(user.peso||''));setMetaInput(String(user.pesoMeta||''));setShowPesoModal(true);}} style={{width:'100%',background:'none',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'0.6rem',padding:'0.5rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'#A06030',cursor:'pointer'}}>
+                    {is_es ? '✎ Actualizar peso' : '✎ Update weight'}
+                  </button>
+                </div>
+              );
+            })()}
+          </div>
+
+          {showPesoModal && (
+            <div style={{position:'fixed',inset:0,background:'rgba(13,61,61,0.6)',zIndex:250,display:'flex',alignItems:'flex-end',justifyContent:'center'}} onClick={()=>setShowPesoModal(false)}>
+              <div style={{background:'#FBF7F0',borderRadius:'1.5rem 1.5rem 0 0',padding:'1.75rem 1.5rem',width:'100%',maxWidth:'520px'}} onClick={e=>e.stopPropagation()}>
+                <h2 style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.3rem',color:'#0D3D3D',marginBottom:'1rem',textAlign:'center'}}>
+                  {is_es ? 'Tu peso y tu meta' : 'Your weight and goal'}
+                </h2>
+                <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(13,61,61,0.5)'}}>{is_es?'Peso actual (kg)':'Current weight (kg)'}</label>
+                <input type="number" value={pesoInput} onChange={e=>setPesoInput(e.target.value)} placeholder={is_es?'ej. 72.5':'e.g. 72.5'} style={{width:'100%',padding:'0.7rem',borderRadius:'0.6rem',border:'1px solid rgba(201,147,90,0.3)',marginTop:'0.3rem',marginBottom:'0.9rem',fontSize:'1rem'}}/>
+                <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(13,61,61,0.5)'}}>{is_es?'Peso meta (kg)':'Goal weight (kg)'}</label>
+                <input type="number" value={metaInput} onChange={e=>setMetaInput(e.target.value)} placeholder={is_es?'ej. 65':'e.g. 65'} style={{width:'100%',padding:'0.7rem',borderRadius:'0.6rem',border:'1px solid rgba(201,147,90,0.3)',marginTop:'0.3rem',marginBottom:'1.25rem',fontSize:'1rem'}}/>
+                <button onClick={guardarPeso} disabled={guardandoPeso} style={{width:'100%',background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.85rem',fontFamily:'Montserrat,sans-serif',fontWeight:700,cursor:'pointer',marginBottom:'0.6rem'}}>
+                  {guardandoPeso ? (is_es?'Guardando...':'Saving...') : (is_es?'Guardar':'Save')}
+                </button>
+                <button onClick={()=>setShowPesoModal(false)} style={{width:'100%',background:'none',border:'none',color:'rgba(13,61,61,0.35)',fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',cursor:'pointer',padding:'0.4rem'}}>
+                  {is_es?'Cancelar':'Cancel'}
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* BARRA TRIAL */}
           {!user?.isPremium && (
             <div className={`fade d1 ${visible?'in':''}`} style={{marginBottom:'1rem'}}>
@@ -832,6 +929,23 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
                 ))}
               </div>
             )}
+
+            {/* GUIAS GRATIS */}
+            <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
+              {is_es ? 'Tus guías gratis' : 'Your free guides'}
+            </p>
+            <div style={{display:'flex',flexDirection:'column',gap:'0.6rem',marginBottom:'1.5rem'}}>
+              {[
+                {es:'7 días para sentirte menos hinchada y con menos antojos', en:'7 days to feel less bloated and fewer cravings', href:'/desinflamate'},
+                {es:'7 noches para calmar tu ansiedad y volver a dormir', en:'7 nights to calm your anxiety and sleep again', href:'/duerme'},
+                {es:'3 Hábitos GLP-1 Naturales que Cambian tu Energía', en:'3 Natural GLP-1 Habits for Stable Energy', href:'/guia-glp1'},
+              ].map((g,i)=>(
+                <div key={i} onClick={()=>router.push(g.href)} style={{background:'white',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'0.85rem',padding:'0.8rem 1rem',cursor:'pointer',fontFamily:'Montserrat,sans-serif',fontSize:'0.82rem',color:'#0D3D3D',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                  <span>{is_es?g.es:g.en}</span>
+                  <span style={{color:'#C9935A'}}>→</span>
+                </div>
+              ))}
+            </div>
 
             {/* Tools grid */}
             <div onClick={()=>setToolsVisible(!toolsVisible)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',marginBottom:'0.75rem'}}>
