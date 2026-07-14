@@ -198,6 +198,52 @@ function CalmaOverlay({ is_es, onClose }) {
   );
 }
 
+function CalmaOverlay({ is_es, onClose }) {
+  const [fase, setFase] = useState('exhala');
+  const [resp, setResp] = useState(0);
+  const [fin, setFin] = useState(false);
+  useEffect(() => {
+    const t0 = Date.now();
+    const tick = () => {
+      const el = (Date.now() - t0) / 1000;
+      if (el >= 60) { setFin(true); clearInterval(iv); return; }
+      setResp(Math.floor(el / 10));
+      setFase(el % 10 < 4 ? 'inhala' : 'exhala');
+    };
+    const iv = setInterval(tick, 200);
+    tick();
+    return () => clearInterval(iv);
+  }, []);
+  const escala = fase === 'inhala' ? 1.35 : 1;
+  const dur = fase === 'inhala' ? '4s' : '6s';
+  return (
+    <div style={{position:'fixed',inset:0,zIndex:200,background:'rgba(13,61,61,0.97)',display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'2rem'}}>
+      <button onClick={onClose} aria-label={is_es ? 'Cerrar' : 'Close'} style={{position:'absolute',top:'1.25rem',right:'1.5rem',background:'none',border:'none',color:'rgba(255,255,255,0.5)',fontSize:'1.3rem',cursor:'pointer'}}>✕</button>
+      {!fin ? (
+        <>
+          <div style={{width:180,height:180,borderRadius:'50%',border:'2px solid rgba(201,147,90,0.4)',background:'radial-gradient(circle, rgba(201,147,90,0.28), rgba(201,147,90,0.05))',transform:`scale(${escala})`,transition:`transform ${dur} ease-in-out`,display:'flex',alignItems:'center',justifyContent:'center'}}>
+            <span style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.4rem',color:'#F5EFE6'}}>
+              {fase === 'inhala' ? (is_es ? 'Inhala' : 'Inhale') : (is_es ? 'Exhala' : 'Exhale')}
+            </span>
+          </div>
+          <p style={{marginTop:'2.75rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.72rem',letterSpacing:'2px',color:'rgba(255,255,255,0.45)',textTransform:'uppercase'}}>
+            {is_es ? `Respiración ${Math.min(resp + 1, 6)} de 6` : `Breath ${Math.min(resp + 1, 6)} of 6`}
+          </p>
+        </>
+      ) : (
+        <div style={{textAlign:'center',maxWidth:'22rem'}}>
+          <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.5rem',color:'#F5EFE6',lineHeight:1.5,fontStyle:'italic'}}>
+            {is_es ? 'Un minuto para ti. Tu sistema nervioso te lo agradece.' : 'One minute for you. Your nervous system thanks you.'}
+          </p>
+          <button onClick={onClose} style={{marginTop:'1.75rem',background:'#C9935A',color:'white',border:'none',borderRadius:'2rem',padding:'0.7rem 2rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',fontWeight:600,cursor:'pointer'}}>
+            {is_es ? 'Volver' : 'Back'}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -211,6 +257,7 @@ export default function Dashboard() {
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showGestion, setShowGestion] = useState(false);
   const [pwaOculto, setPwaOculto] = useState(() => { try { return localStorage.getItem('lumera_pwa_hide') === '1'; } catch(e) { return false; } });
+  const [calmaActiva, setCalmaActiva] = useState(false);
   const [calmaActiva, setCalmaActiva] = useState(false);
   const [showMasMenu, setShowMasMenu] = useState(false);
   const [showLumiChat, setShowLumiChat] = useState(false);
@@ -628,7 +675,13 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
 
           <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
             <div onClick={() => setCalmaActiva(true)} style={{cursor:'pointer'}} role="button" aria-label={is_es ? 'Abrir tu minuto de calma' : 'Open your calm minute'}>
+              <div onClick={() => setCalmaActiva(true)} style={{cursor:'pointer'}} role="button" aria-label={is_es ? 'Abrir tu minuto de calma' : 'Open your calm minute'}>
               <AnilloVivo info={infoCiclo} is_es={is_es} racha={rachaDias} />
+              <p style={{textAlign:'center',fontFamily:'Montserrat,sans-serif',fontSize:'0.62rem',letterSpacing:'1.5px',color:'#A06030',textTransform:'uppercase',margin:'0.45rem 0 0'}}>
+                {is_es ? '✦ Toca para tu minuto de calma' : '✦ Tap for your calm minute'}
+              </p>
+            </div>
+            {calmaActiva && <CalmaOverlay is_es={is_es} onClose={() => setCalmaActiva(false)} />}
               <p style={{textAlign:'center',fontFamily:'Montserrat,sans-serif',fontSize:'0.62rem',letterSpacing:'1.5px',color:'#A06030',textTransform:'uppercase',margin:'0.45rem 0 0'}}>
                 {is_es ? '✦ Toca para tu minuto de calma' : '✦ Tap for your calm minute'}
               </p>
