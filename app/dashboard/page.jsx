@@ -98,6 +98,81 @@ const DESCUBRIMIENTOS_EN = [
   'Protein at breakfast reduces afternoon sugar cravings — it is chemistry, not willpower.',
 ];
 
+function TendenciaCard({ tipo, checkins, is_es }) {
+  const esSueno = tipo === 'sueno';
+  const val = (c) => esSueno ? Number(c.sueno) : (Number(c.energia) + Number(c.animo)) / 2;
+  const datos = (checkins || []).filter(c => val(c) > 0).slice().sort((a, b) => a.fecha < b.fecha ? -1 : 1);
+  const nombre = esSueno ? (is_es ? 'sueño' : 'sleep') : (is_es ? 'energía' : 'energy');
+  const hace7 = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
+  const rec = datos.filter(c => c.fecha >= hace7);
+  const prev = datos.filter(c => c.fecha < hace7);
+  const media = (arr) => arr.length ? arr.reduce((s, c) => s + val(c), 0) / arr.length : null;
+  const mRec = media(rec), mPrev = media(prev);
+
+  if (datos.length < 4) {
+    return (
+      <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem'}}>
+        <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase'}}>
+          {is_es ? 'Tu camino' : 'Your path'}
+        </span>
+        <div style={{display:'flex',gap:'0.45rem',margin:'0.8rem 0 0.6rem'}}>
+          {[0,1,2,3].map(i => (
+            <span key={i} style={{width:'12px',height:'12px',borderRadius:'50%',background:i < datos.length ? '#C9935A' : 'rgba(201,147,90,0.18)'}} />
+          ))}
+        </div>
+        <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'rgba(13,61,61,0.55)',margin:0,lineHeight:1.5}}>
+          {is_es
+            ? `${datos.length} de 4 check-ins — con 4 días registrados, tu tendencia de ${nombre} cobra vida aquí.`
+            : `${datos.length} of 4 check-ins — after 4 logged days, your ${nombre} trend comes alive here.`}
+        </p>
+      </div>
+    );
+  }
+
+  const ultimos = datos.slice(-14);
+  const W = 270, H = 64;
+  const xs = (i) => ultimos.length > 1 ? 12 + (i * (W - 24)) / (ultimos.length - 1) : W / 2;
+  const ys = (v) => H - 8 - ((v - 1) / 4) * (H - 20);
+  const puntos = ultimos.map((c, i) => `${xs(i).toFixed(1)},${ys(val(c)).toFixed(1)}`).join(' ');
+  const ux = xs(ultimos.length - 1), uy = ys(val(ultimos[ultimos.length - 1]));
+  const deltaPct = (mPrev && mPrev > 0 && mRec !== null) ? Math.round((mRec - mPrev) / mPrev * 100) : null;
+  const sube = deltaPct !== null && deltaPct > 2;
+  const baja = deltaPct !== null && deltaPct < -2;
+  const deltaTxt = deltaPct === null
+    ? (is_es ? 'primera semana' : 'first week')
+    : `${deltaPct > 0 ? '+' : ''}${deltaPct}% ${sube ? '↑' : baja ? '↓' : '→'}`;
+  const frase = deltaPct === null
+    ? (is_es ? 'Tu punto de partida ya está dibujado.' : 'Your starting point is drawn.')
+    : sube
+      ? (is_es ? `Tu ${nombre} mejora — tu constancia está funcionando ✦` : `Your ${nombre} is improving — your consistency is working ✦`)
+      : baja
+        ? (is_es ? `Semana más baja de ${nombre} — es información, no fracaso. Tu cuerpo también tiene fases.` : `A lower ${nombre} week — that is information, not failure. Your body has phases too.`)
+        : (is_es ? `Tu ${nombre} se mantiene estable esta semana.` : `Your ${nombre} is holding steady this week.`);
+
+  return (
+    <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem'}}>
+      <style>{`@keyframes tendPulso { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }`}</style>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:'0.5rem'}}>
+        <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase'}}>
+          {is_es ? `Tu camino · ${nombre}` : `Your path · ${nombre}`}
+        </span>
+        <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.82rem',fontWeight:700,color:sube ? '#A06030' : 'rgba(13,61,61,0.55)'}}>{deltaTxt}</span>
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label={is_es ? `Tendencia de ${nombre}: ${deltaTxt}` : `${nombre} trend: ${deltaTxt}`}>
+        <polyline points={puntos} fill="none" stroke="rgba(201,147,90,0.35)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        {ultimos.map((c, i) => (
+          <circle key={i} cx={xs(i)} cy={ys(val(c))} r="2.6" fill={c.fecha >= hace7 ? '#C9935A' : 'rgba(13,61,61,0.2)'} />
+        ))}
+        <circle cx={ux} cy={uy} r="5.5" fill="#C9935A" style={{animation:'tendPulso 2.4s ease-in-out infinite'}} />
+      </svg>
+      <div style={{display:'flex',justifyContent:'space-between',fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(13,61,61,0.35)',marginTop:'0.1rem'}}>
+        <span>{is_es ? 'hace 2 semanas' : '2 weeks ago'}</span><span>{is_es ? 'hoy' : 'today'}</span>
+      </div>
+      <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'#A06030',margin:'0.45rem 0 0'}}>{frase}</p>
+    </div>
+  );
+}
+
 function AnilloVivo({ info, is_es, racha = 0 }) {
   const faseLabels = is_es ? FASE_LABEL_ES : FASE_LABEL_EN;
   if (!info || !info.tieneCiclo) {
@@ -292,7 +367,7 @@ export default function Dashboard() {
       .select('*')
       .eq('user_id', session.user.id)
       .order('fecha', { ascending: false })
-      .limit(7);
+      .limit(14);
     setUltimosCheckins(checkins || []);
 
     try {
@@ -606,7 +681,11 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
     while (dias.has(d.toISOString().split('T')[0])) { r++; d.setDate(d.getDate() - 1); }
     return r;
   })();
-  const diasCompletadosSemana = Math.min(7, (ultimosCheckins || []).length);
+  const hace7dias = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
+  const diasCompletadosSemana = Math.min(7, (ultimosCheckins || []).filter(c => c.fecha >= hace7dias).length);
+  const objLower = (user?.objetivo || '').toLowerCase();
+  const esObjetivoPeso = objLower.includes('peso') || objLower.includes('weight') || objLower.includes('fuerza') || objLower.includes('muscul') || objLower.includes('strength') || objLower.includes('muscle');
+  const esObjetivoSueno = objLower.includes('sue') || objLower.includes('dorm') || objLower.includes('sleep');
   const plan = getPlanDelDia();
   const energiaPct = getPromedioSemana('energia');
   const suenoPct = getPromedioSemana('sueno');
@@ -674,7 +753,12 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
             <BarraSemana diasCompletados={diasCompletadosSemana} diasTotales={7} is_es={is_es} />
           </div>
 
-          {/* EL CAMINO — a donde voy */}
+          {/* EL CAMINO — a donde voy (peso/musculo: sendero · resto: tendencia de checkins) */}
+          {!esObjetivoPeso ? (
+            <div className={`fade d1 ${visible?'in':''}`} style={{marginBottom:'1.25rem'}}>
+              <TendenciaCard tipo={esObjetivoSueno ? 'sueno' : 'energia'} checkins={ultimosCheckins} is_es={is_es} />
+            </div>
+          ) : (
           <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
             {!user?.pesoMeta ? (
               <div onClick={()=>setShowPesoModal(true)} style={{textAlign:'center',cursor:'pointer',padding:'0.5rem 0'}}>
@@ -713,6 +797,7 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
               );
             })()}
           </div>
+          )}
 
           {showPesoModal && (
             <div style={{position:'fixed',inset:0,background:'rgba(13,61,61,0.6)',zIndex:250,display:'flex',alignItems:'flex-end',justifyContent:'center'}} onClick={()=>setShowPesoModal(false)}>
