@@ -288,6 +288,12 @@ export default function Dashboard() {
   const [showGestion, setShowGestion] = useState(false);
   const [pwaOculto, setPwaOculto] = useState(() => { try { return localStorage.getItem('lumera_pwa_hide') === '1'; } catch(e) { return false; } });
   const [calmaActiva, setCalmaActiva] = useState(false);
+  const [mostrarPuertaRecordatorios, setMostrarPuertaRecordatorios] = useState(false);
+  const [mostrarCuestionarioHorarios, setMostrarCuestionarioHorarios] = useState(false);
+  const [horaDesayuno, setHoraDesayuno] = useState('08:00');
+  const [horaComida, setHoraComida] = useState('14:00');
+  const [horaCena, setHoraCena] = useState('20:30');
+  const [guardandoRecordatorios, setGuardandoRecordatorios] = useState(false);
   const [showMasMenu, setShowMasMenu] = useState(false);
   const [showLumiChat, setShowLumiChat] = useState(false);
   const [showPesoModal, setShowPesoModal] = useState(false);
@@ -304,6 +310,46 @@ export default function Dashboard() {
   const [periodLog, setPeriodLog] = useState([]);
   const router = useRouter();
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  const urlBase64ToUint8Array = (base64String) => {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = atob(base64);
+    return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)));
+  };
+
+  const activarRecordatorios = async () => {
+    setGuardandoRecordatorios(true);
+    try {
+      const permiso = await Notification.requestPermission();
+      if (permiso === 'granted') {
+        const reg = await navigator.serviceWorker.ready;
+        const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+        const sub = await reg.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(vapidKey),
+        });
+        await fetch('/api/push/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: user.id,
+            subscription: sub,
+            horaDesayuno, horaComida, horaCena,
+          }),
+        });
+      }
+    } catch(e) {}
+    try { localStorage.setItem(`lumi_puerta_recordatorios_${user.id}`, '1'); } catch(e) {}
+    setGuardandoRecordatorios(false);
+    setMostrarCuestionarioHorarios(false);
+    setMostrarPuertaRecordatorios(false);
+  };
+
+  const rechazarRecordatorios = () => {
+    try { localStorage.setItem(`lumi_puerta_recordatorios_${user?.id}`, '1'); } catch(e) {}
+    setMostrarPuertaRecordatorios(false);
+  };
 
   const guardarPeso = async () => {
     const nuevoPeso = parseFloat(pesoInput);
@@ -357,10 +403,15 @@ export default function Dashboard() {
       talla: profile?.talla || null,
       ciclo: profile?.ciclo || '',
       pesoInicial: profile?.peso_inicial || null,
+      pushEnabled: profile?.push_enabled || false,
       pesoMeta: profile?.peso_meta || null,
       pesoFecha: profile?.peso_fecha || null,
     };
     setUser(userData);
+    try {
+      const yaRespondio = userData.pushEnabled || localStorage.getItem(`lumi_puerta_recordatorios_${session.user.id}`);
+      setMostrarPuertaRecordatorios(!yaRespondio);
+    } catch(e) {}
 
     // Cargar últimos 7 checkins
     const { data: checkins } = await supabase
@@ -835,6 +886,47 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
               <div style={{height:'3px',background:'rgba(201,147,90,0.15)',borderRadius:'99px',overflow:'hidden'}}>
                 <div style={{height:'100%',background:'linear-gradient(90deg,#C9935A,#A06030)',borderRadius:'99px',width:`${(diaActual/3)*100}%`,transition:'width 0.5s ease'}}/>
               </div>
+            </div>
+          )}
+
+          {mostrarPuertaRecordatorios && (
+            <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem'}}>
+              {!mostrarCuestionarioHorarios ? (
+                <div>
+                  <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',color:'#0D3D3D',lineHeight:1.5,marginBottom:'0.9rem'}}>
+                    {is_es
+                      ? `¿Me dejas ayudarte a alcanzar tu objetivo antes, ajustando tus horas de comida, qué comer y en qué orden?`
+                      : `Will you let me help you reach your goal sooner, by adjusting your meal times, what to eat and in what order?`}
+                  </p>
+                  <div style={{display:'flex',gap:'0.6rem'}}>
+                    <button onClick={()=>setMostrarCuestionarioHorarios(true)} style={{flex:1,background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer'}}>
+                      {is_es ? 'Sí, ayúdame' : 'Yes, help me'}
+                    </button>
+                    <button onClick={rechazarRecordatorios} style={{flex:1,background:'none',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(13,61,61,0.5)',cursor:'pointer'}}>
+                      {is_es ? 'Ahora no' : 'Not now'}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#A06030',letterSpacing:'1px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
+                    {is_es ? '¿A qué hora sueles...' : 'What time do you usually...'}
+                  </p>
+                  {[
+                    { label: is_es ? 'Desayunar' : 'Have breakfast', val: horaDesayuno, set: setHoraDesayuno },
+                    { label: is_es ? 'Comer' : 'Have lunch', val: horaComida, set: setHoraComida },
+                    { label: is_es ? 'Cenar' : 'Have dinner', val: horaCena, set: setHoraCena },
+                  ].map(({label,val,set}) => (
+                    <div key={label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.7rem'}}>
+                      <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#0D3D3D'}}>{label}</label>
+                      <input type="time" value={val} onChange={e=>set(e.target.value)} style={{padding:'0.4rem 0.6rem',borderRadius:'0.5rem',border:'1px solid rgba(201,147,90,0.3)',fontSize:'0.85rem'}}/>
+                    </div>
+                  ))}
+                  <button onClick={activarRecordatorios} disabled={guardandoRecordatorios} style={{width:'100%',background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer',marginTop:'0.4rem'}}>
+                    {guardandoRecordatorios ? (is_es?'Activando...':'Activating...') : (is_es ? 'Activar mis recordatorios' : 'Activate my reminders')}
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
