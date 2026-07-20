@@ -281,6 +281,7 @@ export default function Dashboard() {
   const [checkinHecho, setCheckinHecho] = useState(false);
   const [checkinData, setCheckinData] = useState(null);
   const [ultimosCheckins, setUltimosCheckins] = useState([]);
+  const [ultimosSintomas, setUltimosSintomas] = useState([]);
   const [visible, setVisible] = useState(false);
   const [planVisible, setPlanVisible] = useState(true);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
@@ -370,6 +371,15 @@ export default function Dashboard() {
       .limit(14);
     setUltimosCheckins(checkins || []);
 
+    // Ultimos sintomas registrados (para que LUMI sea predictiva)
+    const { data: sintomasData } = await supabase
+      .from('symptoms')
+      .select('*')
+      .eq('user_id', session.user.id)
+      .order('symptom_date', { ascending: false })
+      .limit(5);
+    setUltimosSintomas(sintomasData || []);
+
     try {
       const hk = new Date().toISOString().split('T')[0];
       setPlanHecho(JSON.parse(localStorage.getItem(`lumi_plan_done_${session.user.id}_${hk}`) || '[]'));
@@ -450,6 +460,9 @@ export default function Dashboard() {
         ayer ? `Ayer: energía ${ayer.energia}/5, sueño ${ayer.sueno}/5, ánimo ${ayer.animo}/5.` : 'Sin checkin previo.',
         planAyerHechas !== null ? `Ayer completó ${planAyerHechas} de 3 acciones de su plan. Si fueron 3, reconóceselo; si fueron menos, anímala sin culpabilizar.` : '',
         patronSemana ? `Patrón semana: ${patronSemana}.` : '',
+        ultimosSintomas.length > 0
+          ? `Sintomas recientes registrados: ${ultimosSintomas.slice(0,3).map(s => s.symptoms || s.symptom_name || 'sintoma').join(', ')}. Usalos para anticiparte a lo que puede necesitar hoy.`
+          : '',
         'Escribe UN mensaje de máximo 4 frases para cuando abra la app hoy.',
         'Día 1 sin checkins: preséntate, menciona punto de partida con datos reales, primer paso concreto, invita a explorar.',
         'Día 2+: referencia ayer específicamente, patrón si existe, acción concreta.',
@@ -924,6 +937,9 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
                 </span>
               </div>
             )}
+            <a href="/lumera?tab=symptoms" style={{display:'block',marginTop:'0.9rem',paddingTop:'0.75rem',borderTop:'1px solid rgba(201,147,90,0.15)',fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'#A06030',textDecoration:'none'}}>
+              {is_es ? 'Registro detallado de síntomas →' : 'Detailed symptom log →'}
+            </a>
           </div>
 
           <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
