@@ -788,18 +788,7 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
           </div>
           )}
 
-          <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
-            <div onClick={() => setCalmaActiva(true)} style={{cursor:'pointer'}} role="button" aria-label={is_es ? 'Abrir tu minuto de calma' : 'Open your calm minute'}>
-              <AnilloVivo info={infoCiclo} is_es={is_es} racha={rachaDias} />
-              <p style={{textAlign:'center',fontFamily:'Montserrat,sans-serif',fontSize:'0.62rem',letterSpacing:'1.5px',color:'#A06030',textTransform:'uppercase',margin:'0.45rem 0 0'}}>
-                {is_es ? '✦ Toca para tu minuto de calma' : '✦ Tap for your calm minute'}
-              </p>
-            </div>
-            {calmaActiva && <CalmaOverlay is_es={is_es} onClose={() => setCalmaActiva(false)} />}
-            <BarraSemana diasCompletados={diasCompletadosSemana} diasTotales={7} is_es={is_es} />
-          </div>
-
-          {showPesoModal && (
+                    {showPesoModal && (
             <div style={{position:'fixed',inset:0,background:'rgba(13,61,61,0.6)',zIndex:250,display:'flex',alignItems:'flex-end',justifyContent:'center'}} onClick={()=>setShowPesoModal(false)}>
               <div style={{background:'#FBF7F0',borderRadius:'1.5rem 1.5rem 0 0',padding:'1.75rem 1.5rem',width:'100%',maxWidth:'520px'}} onClick={e=>e.stopPropagation()}>
                 <h2 style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.3rem',color:'#0D3D3D',marginBottom:'1rem',textAlign:'center'}}>
@@ -935,6 +924,17 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
                 </span>
               </div>
             )}
+          </div>
+
+          <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
+            <div onClick={() => setCalmaActiva(true)} style={{cursor:'pointer'}} role="button" aria-label={is_es ? 'Abrir tu minuto de calma' : 'Open your calm minute'}>
+              <AnilloVivo info={infoCiclo} is_es={is_es} racha={rachaDias} />
+              <p style={{textAlign:'center',fontFamily:'Montserrat,sans-serif',fontSize:'0.62rem',letterSpacing:'1.5px',color:'#A06030',textTransform:'uppercase',margin:'0.45rem 0 0'}}>
+                {is_es ? '✦ Toca para tu minuto de calma' : '✦ Tap for your calm minute'}
+              </p>
+            </div>
+            {calmaActiva && <CalmaOverlay is_es={is_es} onClose={() => setCalmaActiva(false)} />}
+            <BarraSemana diasCompletados={diasCompletadosSemana} diasTotales={7} is_es={is_es} />
           </div>
 
           {/* BLOQUE 3 — TU SEMANA + TOOLS */}
