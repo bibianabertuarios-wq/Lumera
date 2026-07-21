@@ -185,7 +185,7 @@ function TendenciaCard({ tipo, checkins, is_es, bare }) {
   );
 }
 
-function AnilloVivo({ info, is_es, racha = 0 }) {
+function AnilloVivo({ info, is_es, racha = 0, size = 150 }) {
   const faseLabels = is_es ? FASE_LABEL_ES : FASE_LABEL_EN;
   if (!info || !info.tieneCiclo) {
     const r = 62, C = 2 * Math.PI * r;
@@ -196,8 +196,8 @@ function AnilloVivo({ info, is_es, racha = 0 }) {
       ? (is_es ? (racha === 1 ? 'día de constancia' : 'días de constancia') : (racha === 1 ? 'day of consistency' : 'days of consistency'))
       : (is_es ? 'tu semana ya está en marcha' : 'your week is already underway');
     return (
-      <div style={{ width: 150, margin: '0 auto', animation: 'lumBreathe 4.5s ease-in-out infinite', transformOrigin: 'center' }} role="img" aria-label={`${titulo} ${sub}`}>
-        <svg viewBox="0 0 150 150" width="150" height="150">
+      <div style={{ width: size, margin: '0 auto', animation: 'lumBreathe 4.5s ease-in-out infinite', transformOrigin: 'center' }} role="img" aria-label={`${titulo} ${sub}`}>
+        <svg viewBox="0 0 150 150" width={size} height={size}>
           <circle cx="75" cy="75" r={r} fill="none" stroke="rgba(201,147,90,0.2)" strokeWidth="6" />
           {p > 0 && <circle cx="75" cy="75" r={r} fill="none" stroke="#C9935A" strokeWidth="6" strokeLinecap="round" strokeDasharray={`${C * p} ${C * (1 - p)}`} transform="rotate(-90 75 75)" />}
           <text x="75" y="74" textAnchor="middle" fontSize={racha > 0 ? 30 : 19} fill="#0D3D3D" fontFamily="'Cormorant Garamond',Georgia,serif">{titulo}</text>
@@ -210,9 +210,9 @@ function AnilloVivo({ info, is_es, racha = 0 }) {
   const r = 62, C = 2 * Math.PI * r;
   const p = Math.min(Math.max(diaCiclo / duracionCiclo, 0), 1);
   return (
-    <div style={{ width: 150, margin: '0 auto', animation: 'lumBreathe 4.5s ease-in-out infinite', transformOrigin: 'center' }}
+    <div style={{ width: size, margin: '0 auto', animation: 'lumBreathe 4.5s ease-in-out infinite', transformOrigin: 'center' }}
       role="img" aria-label={`${is_es ? 'Día' : 'Day'} ${diaCiclo} ${is_es ? 'de' : 'of'} ${duracionCiclo}, ${faseLabels[fase]}`}>
-      <svg viewBox="0 0 150 150" width="150" height="150">
+      <svg viewBox="0 0 150 150" width={size} height={size}>
         <circle cx="75" cy="75" r={r} fill="none" stroke="rgba(201,147,90,0.2)" strokeWidth="6" />
         <circle cx="75" cy="75" r={r} fill="none" stroke="#C9935A" strokeWidth="6" strokeLinecap="round"
           strokeDasharray={`${C * p} ${C * (1 - p)}`} transform="rotate(-90 75 75)" />
@@ -1087,14 +1087,23 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
             )}
           </div>
 
-          <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
-            <div onClick={() => setCalmaActiva(true)} style={{cursor:'pointer'}} role="button" aria-label={is_es ? 'Abrir tu minuto de calma' : 'Open your calm minute'}>
-              <AnilloVivo info={infoCiclo} is_es={is_es} racha={rachaDias} />
-              <p style={{textAlign:'center',fontFamily:'Montserrat,sans-serif',fontSize:'0.62rem',letterSpacing:'1.5px',color:'#A06030',textTransform:'uppercase',margin:'0.45rem 0 0'}}>
-                {is_es ? '✦ Toca para tu minuto de calma' : '✦ Tap for your calm minute'}
+          {/* HABLA CON TU ASESORA + MOMENTO DE CALMA — tiles chicos en fila */}
+          <div className={`fade d1 ${visible?'in':''}`} style={{display:'flex',gap:'0.75rem',marginBottom:'0.75rem'}}>
+            <div onClick={()=>{ setShowLumiChat(true); if (lumiChatMessages.length === 0) setLumiChatMessages([{role:'assistant', content: lumiMsg}]); }} style={{flex:1,background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1rem',cursor:'pointer',textAlign:'center'}}>
+              <img src="/images/lumi.png" alt="LUMI" style={{width:'40px',height:'40px',objectFit:'cover',borderRadius:'50%',marginBottom:'0.4rem'}} onError={e=>{e.target.style.display='none'}}/>
+              <div style={{fontSize:'0.85rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>
+                {is_es ? 'Habla con tu asesora' : 'Talk to your advisor'}
+              </div>
+            </div>
+            <div onClick={() => setCalmaActiva(true)} style={{flex:1,background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1rem',cursor:'pointer',textAlign:'center'}} role="button" aria-label={is_es ? 'Abrir tu minuto de calma' : 'Open your calm minute'}>
+              <AnilloVivo info={infoCiclo} is_es={is_es} racha={rachaDias} size={64} />
+              <p style={{textAlign:'center',fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',letterSpacing:'1px',color:'#A06030',textTransform:'uppercase',margin:'0.35rem 0 0'}}>
+                {is_es ? 'Momento de calma' : 'Calm minute'}
               </p>
             </div>
-            {calmaActiva && <CalmaOverlay is_es={is_es} onClose={() => setCalmaActiva(false)} />}
+          </div>
+          {calmaActiva && <CalmaOverlay is_es={is_es} onClose={() => setCalmaActiva(false)} />}
+          <div className={`fade d1 ${visible?'in':''}`} style={{marginBottom:'1.25rem'}}>
             <BarraSemana diasCompletados={diasCompletadosSemana} diasTotales={7} is_es={is_es} />
           </div>
 
@@ -1129,12 +1138,10 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
               {(is_es ? [
                 {img:"/images/kling_20260321_作品__Extremely_4730_1.png", title:'Nutrición', sub:'Tu menú de hoy', route:'/lumera?tab=nutrition'},
                 {img:"/images/kling_20260321_作品_Extremely__4896_1.png", title:'Ejercicio', sub:'Tu rutina de hoy', route:'/lumera?tab=exercise'},
-                {img:'/images/lumi.png', title:'LUMI', sub:'Habla con tu asesora', route:'__lumi_chat__'},
                 {img:'/images/lente_alquimica.png', title:'Lente Alquímica', sub:'Analiza tu plato', route:'/lumera?tab=chat'},
               ] : [
                 {img:"/images/kling_20260321_作品__Extremely_4730_1.png", title:'Nutrition', sub:'Your menu today', route:'/lumera?tab=nutrition'},
                 {img:"/images/kling_20260321_作品_Extremely__4896_1.png", title:'Exercise', sub:'Your routine today', route:'/lumera?tab=exercise'},
-                {img:'/images/lumi.png', title:'LUMI', sub:'Talk to your advisor', route:'__lumi_chat__'},
                 {img:'/images/lente_alquimica.png', title:'Alchemical Lens', sub:'Analyse your plate', route:'/lumera?tab=chat'},
               ]).map((t,i) => (
                 <div key={i} className="tool-card" style={bloqueado?{opacity:0.55,position:'relative'}:{}} onClick={()=>{ if(bloqueado){setShowPremiumModal(true);return;} if(t.route==='__lumi_chat__'){setShowLumiChat(true);if(lumiChatMessages.length===0)setLumiChatMessages([{role:'assistant',content:lumiMsg}]);} else if(t.route.includes('/lumera')) window.location.href=t.route; else router.push(t.route); }}>
