@@ -98,7 +98,7 @@ const DESCUBRIMIENTOS_EN = [
   'Protein at breakfast reduces afternoon sugar cravings — it is chemistry, not willpower.',
 ];
 
-function TendenciaCard({ tipo, checkins, is_es }) {
+function TendenciaCard({ tipo, checkins, is_es, bare }) {
   const esSueno = tipo === 'sueno';
   const val = (c) => esSueno ? Number(c.sueno) : (Number(c.energia) + Number(c.animo)) / 2;
   const datos = (checkins || []).filter(c => val(c) > 0).slice().sort((a, b) => a.fecha < b.fecha ? -1 : 1);
@@ -110,11 +110,13 @@ function TendenciaCard({ tipo, checkins, is_es }) {
   const mRec = media(rec), mPrev = media(prev);
 
   if (datos.length < 4) {
-    return (
-      <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem'}}>
-        <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase'}}>
-          {is_es ? 'Tu camino' : 'Your path'}
-        </span>
+    const contenido = (
+      <>
+        {!bare && (
+          <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase'}}>
+            {is_es ? 'Tu camino' : 'Your path'}
+          </span>
+        )}
         <div style={{display:'flex',gap:'0.45rem',margin:'0.8rem 0 0.6rem'}}>
           {[0,1,2,3].map(i => (
             <span key={i} style={{width:'12px',height:'12px',borderRadius:'50%',background:i < datos.length ? '#C9935A' : 'rgba(201,147,90,0.18)'}} />
@@ -125,6 +127,11 @@ function TendenciaCard({ tipo, checkins, is_es }) {
             ? `${datos.length} de 4 check-ins — con 4 días registrados, tu tendencia de ${nombre} cobra vida aquí.`
             : `${datos.length} of 4 check-ins — after 4 logged days, your ${nombre} trend comes alive here.`}
         </p>
+      </>
+    );
+    return bare ? contenido : (
+      <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem'}}>
+        {contenido}
       </div>
     );
   }
@@ -149,12 +156,14 @@ function TendenciaCard({ tipo, checkins, is_es }) {
         ? (is_es ? `Semana más baja de ${nombre} — es información, no fracaso. Tu cuerpo también tiene fases.` : `A lower ${nombre} week — that is information, not failure. Your body has phases too.`)
         : (is_es ? `Tu ${nombre} se mantiene estable esta semana.` : `Your ${nombre} is holding steady this week.`);
 
-  return (
-    <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem'}}>
+  const contenido = (
+    <>
       <style>{`@keyframes tendPulso { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }`}</style>
-      <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase'}}>
-        {is_es ? `Tu camino · ${nombre}` : `Your path · ${nombre}`}
-      </span>
+      {!bare && (
+        <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase'}}>
+          {is_es ? `Tu camino · ${nombre}` : `Your path · ${nombre}`}
+        </span>
+      )}
       <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',fontStyle:'italic',color:'#0D3D3D',margin:'0.4rem 0 0.75rem',lineHeight:1.4}}>{frase}</p>
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label={is_es ? `Tendencia de ${nombre}: ${deltaTxt}` : `${nombre} trend: ${deltaTxt}`}>
         <polyline points={puntos} fill="none" stroke="rgba(201,147,90,0.35)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -167,6 +176,11 @@ function TendenciaCard({ tipo, checkins, is_es }) {
         <span>{is_es ? 'hace 2 semanas' : '2 weeks ago'}</span><span>{is_es ? 'hoy' : 'today'}</span>
       </div>
       <div style={{textAlign:'right',fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:600,color:'rgba(13,61,61,0.4)',marginTop:'0.35rem'}}>{deltaTxt}</div>
+    </>
+  );
+  return bare ? contenido : (
+    <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem'}}>
+      {contenido}
     </div>
   );
 }
@@ -865,51 +879,60 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
             </a>
           </div>
 
-                    {/* EL CAMINO — a donde voy (peso/musculo: sendero · resto: tendencia de checkins) */}
-          {!esObjetivoPeso ? (
-            <div className={`fade d1 ${visible?'in':''}`} style={{marginBottom:'1.25rem'}}>
-              <TendenciaCard tipo={esObjetivoSueno ? 'sueno' : 'energia'} checkins={ultimosCheckins} is_es={is_es} />
-            </div>
-          ) : (
-          <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
-            {!user?.pesoMeta ? (
-              <div onClick={()=>setShowPesoModal(true)} style={{textAlign:'center',cursor:'pointer',padding:'0.5rem 0'}}>
-                <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',color:'#0D3D3D',marginBottom:'0.35rem'}}>
-                  {is_es ? '✦ Definir mi meta' : '✦ Set my goal'}
+          {/* TU PROGRESO — gráfica/meta + silueta en una sola card */}
+          <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',overflow:'hidden',marginBottom:'1.25rem'}}>
+            <div style={{padding:'1.25rem'}}>
+              {user?.objetivo && (
+                <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
+                  {is_es ? `Tu progreso · ${user.objetivo}` : `Your progress · ${user.objetivo}`}
                 </p>
-                <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(13,61,61,0.45)'}}>
-                  {is_es ? 'Marca tu punto de partida y a dónde quieres llegar' : 'Mark your starting point and where you want to get to'}
-                </p>
-              </div>
-            ) : (() => {
-              const total = Math.abs(user.pesoInicial - user.pesoMeta);
-              const avance = Math.abs(user.pesoInicial - (user.peso || user.pesoInicial));
-              const pct = total > 0 ? Math.min(100, Math.max(0, Math.round((avance/total)*100))) : 0;
-              const fechaInicio = user.pesoFecha ? new Date(user.pesoFecha).toLocaleDateString(is_es?'es-ES':'en-GB', {month:'short', year:'2-digit'}) : '';
-              return (
-                <div>
-                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:'0.9rem'}}>
-                    <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase'}}>
-                      {is_es ? 'Tu camino' : 'Your path'}
-                    </p>
-                    <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',fontWeight:700,color:'#A06030'}}>{pct}% {is_es?'recorrido':'done'}</p>
-                  </div>
-                  <div style={{position:'relative',height:'6px',background:'rgba(201,147,90,0.15)',borderRadius:'99px',margin:'1.5rem 0.5rem'}}>
-                    <div style={{position:'absolute',left:0,top:0,height:'6px',width:`${pct}%`,background:'#C9935A',borderRadius:'99px',transition:'width 0.6s ease'}}/>
-                    <div style={{position:'absolute',left:`calc(${pct}% - 8px)`,top:'-7px',width:'20px',height:'20px',borderRadius:'50%',background:'#C9935A',border:'3px solid white',boxShadow:'0 2px 8px rgba(201,147,90,0.5)',transition:'left 0.6s ease'}}/>
-                  </div>
-                  <div style={{display:'flex',justifyContent:'space-between',fontSize:'0.7rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.45)',marginBottom:'0.9rem'}}>
-                    <span>{user.pesoInicial}kg {fechaInicio && `· ${fechaInicio}`}</span>
-                    <span>{user.pesoMeta}kg</span>
-                  </div>
-                  <button onClick={()=>{setPesoInput(String(user.peso||''));setMetaInput(String(user.pesoMeta||''));setShowPesoModal(true);}} style={{width:'100%',background:'none',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'0.6rem',padding:'0.5rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'#A06030',cursor:'pointer'}}>
-                    {is_es ? '✎ Actualizar peso' : '✎ Update weight'}
-                  </button>
+              )}
+              {!esObjetivoPeso ? (
+                <TendenciaCard tipo={esObjetivoSueno ? 'sueno' : 'energia'} checkins={ultimosCheckins} is_es={is_es} bare />
+              ) : !user?.pesoMeta ? (
+                <div onClick={()=>setShowPesoModal(true)} style={{textAlign:'center',cursor:'pointer',padding:'0.5rem 0'}}>
+                  <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',color:'#0D3D3D',marginBottom:'0.35rem'}}>
+                    {is_es ? '✦ Definir mi meta' : '✦ Set my goal'}
+                  </p>
+                  <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(13,61,61,0.45)'}}>
+                    {is_es ? 'Marca tu punto de partida y a dónde quieres llegar' : 'Mark your starting point and where you want to get to'}
+                  </p>
                 </div>
-              );
-            })()}
+              ) : (() => {
+                const total = Math.abs(user.pesoInicial - user.pesoMeta);
+                const avance = Math.abs(user.pesoInicial - (user.peso || user.pesoInicial));
+                const pct = total > 0 ? Math.min(100, Math.max(0, Math.round((avance/total)*100))) : 0;
+                const fechaInicio = user.pesoFecha ? new Date(user.pesoFecha).toLocaleDateString(is_es?'es-ES':'en-GB', {month:'short', year:'2-digit'}) : '';
+                return (
+                  <div>
+                    <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',fontWeight:700,color:'#A06030',textAlign:'right',marginBottom:'0.9rem'}}>{pct}% {is_es?'recorrido':'done'}</p>
+                    <div style={{position:'relative',height:'6px',background:'rgba(201,147,90,0.15)',borderRadius:'99px',margin:'1.5rem 0.5rem'}}>
+                      <div style={{position:'absolute',left:0,top:0,height:'6px',width:`${pct}%`,background:'#C9935A',borderRadius:'99px',transition:'width 0.6s ease'}}/>
+                      <div style={{position:'absolute',left:`calc(${pct}% - 8px)`,top:'-7px',width:'20px',height:'20px',borderRadius:'50%',background:'#C9935A',border:'3px solid white',boxShadow:'0 2px 8px rgba(201,147,90,0.5)',transition:'left 0.6s ease'}}/>
+                    </div>
+                    <div style={{display:'flex',justifyContent:'space-between',fontSize:'0.7rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.45)',marginBottom:'0.9rem'}}>
+                      <span>{user.pesoInicial}kg {fechaInicio && `· ${fechaInicio}`}</span>
+                      <span>{user.pesoMeta}kg</span>
+                    </div>
+                    <button onClick={()=>{setPesoInput(String(user.peso||''));setMetaInput(String(user.pesoMeta||''));setShowPesoModal(true);}} style={{width:'100%',background:'none',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'0.6rem',padding:'0.5rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'#A06030',cursor:'pointer'}}>
+                      {is_es ? '✎ Actualizar peso' : '✎ Update weight'}
+                    </button>
+                  </div>
+                );
+              })()}
+            </div>
+            <div onClick={()=>router.push('/escaner')} style={{position:'relative',cursor:'pointer'}}>
+              <video autoPlay muted loop playsInline style={{width:'100%',height:'140px',objectFit:'cover',display:'block'}}>
+                <source src="/videos/silueta.mp4" type="video/mp4"/>
+              </video>
+              <div style={{position:'absolute',inset:0,background:'linear-gradient(180deg,transparent 40%,rgba(13,61,61,0.85) 100%)',display:'flex',flexDirection:'column',justifyContent:'flex-end',padding:'0.9rem 1.25rem'}}>
+                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',marginBottom:'0.2rem'}}>✦ NUEVO</div>
+                <div style={{fontSize:'1rem',fontWeight:700,color:'white',fontFamily:"'Cormorant Garamond',serif"}}>
+                  {is_es ? 'Tu Silueta Hormonal →' : 'Your Hormonal Silhouette →'}
+                </div>
+              </div>
+            </div>
           </div>
-          )}
 
                     {showPesoModal && (
             <div style={{position:'fixed',inset:0,background:'rgba(13,61,61,0.6)',zIndex:250,display:'flex',alignItems:'flex-end',justifyContent:'center'}} onClick={()=>setShowPesoModal(false)}>
@@ -1121,22 +1144,6 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
                   <div style={{fontSize:'0.7rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.4)'}}>{t.sub}</div>
                 </div>
               ))}
-            </div>
-          </div>
-
-          {/* CARD SILUETA — secundaria, tras el progreso del dia */}
-          <div className={`fade d2 ${visible?'in':''}`} style={{position:'relative',borderRadius:'1.25rem',overflow:'hidden',marginBottom:'1.25rem',cursor:'pointer',boxShadow:'0 4px 24px rgba(13,61,61,0.15)'}} onClick={()=>router.push('/escaner')}>
-            <video autoPlay muted loop playsInline style={{width:'100%',height:'180px',objectFit:'cover',display:'block'}}>
-              <source src="/videos/silueta.mp4" type="video/mp4"/>
-            </video>
-            <div style={{position:'absolute',inset:0,background:'linear-gradient(180deg,transparent 30%,rgba(13,61,61,0.85) 100%)',display:'flex',flexDirection:'column',justifyContent:'flex-end',padding:'1.25rem'}}>
-              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',marginBottom:'0.25rem'}}>✦ NUEVO</div>
-              <div style={{fontSize:'1.2rem',fontWeight:700,color:'white',marginBottom:'0.25rem',fontFamily:"'Cormorant Garamond',serif"}}>
-                {is_es ? 'Tu Silueta Hormonal' : 'Your Hormonal Silhouette'}
-              </div>
-              <div style={{fontSize:'0.8rem',fontFamily:'Montserrat,sans-serif',color:'rgba(255,255,255,0.7)'}}>
-                {is_es ? 'Analiza tu cuerpo y descubre tus patrones →' : 'Analyse your body and discover your patterns →'}
-              </div>
             </div>
           </div>
 
