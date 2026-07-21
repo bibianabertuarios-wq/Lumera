@@ -227,6 +227,29 @@ function BarraSemana({ diasCompletados = 0, diasTotales = 7, is_es }) {
   );
 }
 
+// TODO copy pendiente revisión Bibiana — formulación blanda, no diagnóstica
+const INSIGHTS_CHECKIN = {
+  bien:    { es: 'Buena señal. Aprovecha para dejar hecha la cosa que más te cuesta hoy.', en: 'Good sign. Use it to get the hardest thing on your list done today.' },
+  cansada: { es: 'Algunas mujeres notan más cansancio en ciertas fases — hoy vale bajar el listón sin culpa.', en: 'Some women notice more tiredness at certain phases — today it is fine to lower the bar without guilt.' },
+  niebla:  { es: 'La claridad mental va y viene. Una cosa sola, bien hecha, gana a hacer diez a medias.', en: 'Mental clarity comes and goes. One thing done well beats ten done halfway.' },
+  regular: { es: 'Un día regular sigue contando. Marcar una acción pequeña ya cambia la semana.', en: 'An average day still counts. Ticking one small action already shifts the week.' },
+};
+
+function InsightCheckin({ estado, is_es, onAmpliar }) {
+  const texto = INSIGHTS_CHECKIN[estado]?.[is_es ? 'es' : 'en'];
+  if (!texto) return null;
+  return (
+    <div style={{marginTop:'0.75rem',padding:'0.9rem 1rem',background:'#FAF7F1',borderRadius:'1rem'}}>
+      <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#5b5147',lineHeight:1.55,margin:0}}>
+        {texto}
+      </p>
+      <button onClick={onAmpliar} style={{marginTop:'0.5rem',background:'none',border:'none',padding:0,color:'#C9935A',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.8rem',cursor:'pointer'}}>
+        {is_es ? 'Cuéntame más →' : 'Tell me more →'}
+      </button>
+    </div>
+  );
+}
+
 function CalmaOverlay({ is_es, onClose }) {
   const [fase, setFase] = useState('exhala');
   const [resp, setResp] = useState(0);
@@ -280,6 +303,7 @@ export default function Dashboard() {
   const [lumiLoading, setLumiLoading] = useState(false);
   const [checkinHecho, setCheckinHecho] = useState(false);
   const [checkinData, setCheckinData] = useState(null);
+  const [estadoCheckin, setEstadoCheckin] = useState(null);
   const [ultimosCheckins, setUltimosCheckins] = useState([]);
   const [ultimosSintomas, setUltimosSintomas] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -609,13 +633,14 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
       'regular':  { energia: 3, animo: 2, sueno: 3, sintoma_hoy: 'regular' },
     };
     const datos = valores[estado];
+    setCheckinHecho(true);
+    setCheckinData(datos);
+    setEstadoCheckin(estado);
     await supabase.from('lumi_checkins').upsert({
       user_id: user.id,
       fecha: hoy,
       ...datos
     });
-    setCheckinHecho(true);
-    setCheckinData(datos);
     // Regenerar mensaje con el nuevo checkin
     generarMensajeLumi(user, ultimosCheckins, datos);
   };
@@ -1021,6 +1046,12 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
                   <button key={k} className="estado-btn" onClick={()=>hacerCheckin(k)}>{l}</button>
                 ))}
               </div>
+            ) : estadoCheckin ? (
+              <InsightCheckin
+                estado={estadoCheckin}
+                is_es={is_es}
+                onAmpliar={() => { setShowLumiChat(true); if (lumiChatMessages.length === 0) setLumiChatMessages([{role:'assistant', content: lumiMsg}]); }}
+              />
             ) : (
               <div style={{display:'flex',alignItems:'center',gap:'0.5rem'}}>
                 <div style={{width:'8px',height:'8px',borderRadius:'50%',background:'#C9935A'}}/>
