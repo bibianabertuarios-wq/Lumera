@@ -805,7 +805,7 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
         .fade{opacity:0;transform:translateY(16px);transition:opacity 0.6s ease,transform 0.6s ease;}
         .fade.in{opacity:1;transform:translateY(0);}
         .d1{transition-delay:0.05s;} .d2{transition-delay:0.15s;} .d3{transition-delay:0.25s;} .d4{transition-delay:0.35s;} .d5{transition-delay:0.45s;}
-        .estado-btn{flex:1;padding:0.6rem 0.4rem;border:1.5px solid rgba(201,147,90,0.25);border-radius:0.75rem;background:white;cursor:pointer;font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:#0D3D3D;transition:all 0.2s ease;text-align:center;}
+        .estado-btn{flex:1;padding:0.6rem 0.4rem;border:1.5px solid rgba(201,147,90,0.25);border-radius:0.75rem;background:white;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:0.3rem;font-family:'Montserrat',sans-serif;color:#0D3D3D;transition:all 0.2s ease;text-align:center;}
         .estado-btn:hover{border-color:#C9935A;background:rgba(201,147,90,0.06);}
         .estado-btn.sel{border-color:#C9935A;background:rgba(201,147,90,0.12);font-weight:600;}
         .tool-card{background:white;border:1px solid rgba(201,147,90,0.15);border-radius:1rem;padding:1rem;text-align:center;cursor:pointer;transition:all 0.2s ease;}
@@ -854,10 +854,13 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
             {!checkinHecho ? (
               <div style={{display:'flex',gap:'0.5rem'}}>
                 {(is_es
-                  ? [{k:'bien',l:'✦ Bien'},{k:'cansada',l:'· Cansada'},{k:'niebla',l:'· Con niebla'},{k:'regular',l:'· Regular'}]
-                  : [{k:'bien',l:'✦ Good'},{k:'cansada',l:'· Tired'},{k:'niebla',l:'· Foggy'},{k:'regular',l:'· Regular'}]
-                ).map(({k,l}) => (
-                  <button key={k} className="estado-btn" onClick={()=>hacerCheckin(k)}>{l}</button>
+                  ? [{k:'bien',emoji:'😊',l:'Bien'},{k:'cansada',emoji:'😴',l:'Cansada'},{k:'niebla',emoji:'🌫️',l:'Con niebla'},{k:'regular',emoji:'😐',l:'Regular'}]
+                  : [{k:'bien',emoji:'😊',l:'Good'},{k:'cansada',emoji:'😴',l:'Tired'},{k:'niebla',emoji:'🌫️',l:'Foggy'},{k:'regular',emoji:'😐',l:'Regular'}]
+                ).map(({k,emoji,l}) => (
+                  <button key={k} className="estado-btn" onClick={()=>hacerCheckin(k)}>
+                    <span style={{fontSize:'1.5rem',lineHeight:1}}>{emoji}</span>
+                    <span style={{fontSize:'0.68rem'}}>{l}</span>
+                  </button>
                 ))}
               </div>
             ) : estadoCheckin ? (
