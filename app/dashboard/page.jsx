@@ -1048,30 +1048,6 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
           {/* BLOQUE 3 — TU SEMANA + TOOLS */}
           <div className={`fade d4 ${visible?'in':''}`} style={{marginBottom:'1.25rem'}}>
 
-            {/* Progreso semanal — solo si hay datos */}
-            {ultimosCheckins.length > 0 && (
-              <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1rem'}}>
-                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
-                  {is_es ? 'Tu semana' : 'Your week'}
-                </div>
-                {[
-                  {label: is_es?'Energía':'Energy', val: energiaPct, color:'#C9935A'},
-                  {label: is_es?'Sueño':'Sleep', val: suenoPct, color:'#7B9EA6'},
-                  {label: is_es?'Ánimo':'Mood', val: animoPct, color:'#9B7BB0'},
-                ].map(({label,val,color}) => (
-                  <div key={label} style={{marginBottom:'0.6rem'}}>
-                    <div style={{display:'flex',justifyContent:'space-between',marginBottom:'0.2rem'}}>
-                      <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',color:'rgba(13,61,61,0.5)'}}>{label}</span>
-                      <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',color,fontWeight:600}}>{val}%</span>
-                    </div>
-                    <div style={{height:'4px',background:'rgba(13,61,61,0.08)',borderRadius:'99px',overflow:'hidden'}}>
-                      <div style={{height:'100%',background:color,borderRadius:'99px',width:val+'%',transition:'width 1s ease'}}/>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
             {/* GUIAS GRATIS */}
             <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
               {is_es ? 'Tus guías gratis' : 'Your free guides'}
