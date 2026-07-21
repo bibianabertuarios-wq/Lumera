@@ -152,12 +152,10 @@ function TendenciaCard({ tipo, checkins, is_es }) {
   return (
     <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem'}}>
       <style>{`@keyframes tendPulso { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }`}</style>
-      <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:'0.5rem'}}>
-        <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase'}}>
-          {is_es ? `Tu camino · ${nombre}` : `Your path · ${nombre}`}
-        </span>
-        <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.82rem',fontWeight:700,color:sube ? '#A06030' : 'rgba(13,61,61,0.55)'}}>{deltaTxt}</span>
-      </div>
+      <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase'}}>
+        {is_es ? `Tu camino · ${nombre}` : `Your path · ${nombre}`}
+      </span>
+      <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',fontStyle:'italic',color:'#0D3D3D',margin:'0.4rem 0 0.75rem',lineHeight:1.4}}>{frase}</p>
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label={is_es ? `Tendencia de ${nombre}: ${deltaTxt}` : `${nombre} trend: ${deltaTxt}`}>
         <polyline points={puntos} fill="none" stroke="rgba(201,147,90,0.35)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
         {ultimos.map((c, i) => (
@@ -168,7 +166,7 @@ function TendenciaCard({ tipo, checkins, is_es }) {
       <div style={{display:'flex',justifyContent:'space-between',fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(13,61,61,0.35)',marginTop:'0.1rem'}}>
         <span>{is_es ? 'hace 2 semanas' : '2 weeks ago'}</span><span>{is_es ? 'hoy' : 'today'}</span>
       </div>
-      <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'#A06030',margin:'0.45rem 0 0'}}>{frase}</p>
+      <div style={{textAlign:'right',fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:600,color:'rgba(13,61,61,0.4)',marginTop:'0.35rem'}}>{deltaTxt}</div>
     </div>
   );
 }
@@ -179,9 +177,10 @@ function AnilloVivo({ info, is_es, racha = 0 }) {
     const r = 62, C = 2 * Math.PI * r;
     const p = Math.min(racha / 7, 1);
     const titulo = racha > 0 ? String(racha) : (is_es ? 'Hoy' : 'Today');
+    // TODO copy pendiente revisión Bibiana — sin marcar "cero", encuadre de semana ya en marcha
     const sub = racha > 0
       ? (is_es ? (racha === 1 ? 'día de constancia' : 'días de constancia') : (racha === 1 ? 'day of consistency' : 'days of consistency'))
-      : (is_es ? 'empieza tu racha' : 'your streak starts');
+      : (is_es ? 'tu semana ya está en marcha' : 'your week is already underway');
     return (
       <div style={{ width: 150, margin: '0 auto', animation: 'lumBreathe 4.5s ease-in-out infinite', transformOrigin: 'center' }} role="img" aria-label={`${titulo} ${sub}`}>
         <svg viewBox="0 0 150 150" width="150" height="150">
@@ -979,7 +978,7 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
               {(() => {
                 const tp = (planGenerado || plan).length;
                 const h = planHecho.filter(x => x < tp).length;
-                const c = tp && !planLoading ? ` · ${h}/${tp}` : '';
+                const c = tp && !planLoading && h > 0 ? ` · ${h}/${tp}` : '';
                 return planVisible
                   ? (is_es ? `▲ Ocultar plan de hoy${c}` : `▲ Hide today's plan${c}`)
                   : (is_es ? `✦ Ver mi plan de hoy${c}` : `✦ See my plan for today${c}`);
