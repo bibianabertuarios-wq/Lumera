@@ -320,7 +320,7 @@ export default function Dashboard() {
   const [ultimosCheckins, setUltimosCheckins] = useState([]);
   const [ultimosSintomas, setUltimosSintomas] = useState([]);
   const [visible, setVisible] = useState(false);
-  const [planVisible, setPlanVisible] = useState(true);
+  const [planVisible, setPlanVisible] = useState(false);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showGestion, setShowGestion] = useState(false);
   const [pwaOculto, setPwaOculto] = useState(() => { try { return localStorage.getItem('lumera_pwa_hide') === '1'; } catch(e) { return false; } });
@@ -971,48 +971,7 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
             </div>
           )}
 
-          {mostrarPuertaRecordatorios && (
-            <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem'}}>
-              {!mostrarCuestionarioHorarios ? (
-                <div>
-                  <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',color:'#0D3D3D',lineHeight:1.5,marginBottom:'0.9rem'}}>
-                    {is_es
-                      ? `¿Me dejas ayudarte a alcanzar tu objetivo antes, ajustando tus horas de comida, qué comer y en qué orden?`
-                      : `Will you let me help you reach your goal sooner, by adjusting your meal times, what to eat and in what order?`}
-                  </p>
-                  <div style={{display:'flex',gap:'0.6rem'}}>
-                    <button onClick={()=>setMostrarCuestionarioHorarios(true)} style={{flex:1,background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer'}}>
-                      {is_es ? 'Sí, ayúdame' : 'Yes, help me'}
-                    </button>
-                    <button onClick={rechazarRecordatorios} style={{flex:1,background:'none',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(13,61,61,0.5)',cursor:'pointer'}}>
-                      {is_es ? 'Ahora no' : 'Not now'}
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#A06030',letterSpacing:'1px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
-                    {is_es ? '¿A qué hora sueles...' : 'What time do you usually...'}
-                  </p>
-                  {[
-                    { label: is_es ? 'Desayunar' : 'Have breakfast', val: horaDesayuno, set: setHoraDesayuno },
-                    { label: is_es ? 'Comer' : 'Have lunch', val: horaComida, set: setHoraComida },
-                    { label: is_es ? 'Cenar' : 'Have dinner', val: horaCena, set: setHoraCena },
-                  ].map(({label,val,set}) => (
-                    <div key={label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.7rem'}}>
-                      <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#0D3D3D'}}>{label}</label>
-                      <input type="time" value={val} onChange={e=>set(e.target.value)} style={{padding:'0.4rem 0.6rem',borderRadius:'0.5rem',border:'1px solid rgba(201,147,90,0.3)',fontSize:'0.85rem'}}/>
-                    </div>
-                  ))}
-                  <button onClick={activarRecordatorios} disabled={guardandoRecordatorios} style={{width:'100%',background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer',marginTop:'0.4rem'}}>
-                    {guardandoRecordatorios ? (is_es?'Activando...':'Activating...') : (is_es ? 'Activar mis recordatorios' : 'Activate my reminders')}
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* BLOQUE 1 — LUMI */}
+          {/* MI PLAN — mensaje de LUMI + puerta de recordatorios + plan de hoy (resumen que expande) */}
           <div className={`fade d2 ${visible?'in':''}`} style={{background:'linear-gradient(135deg,rgba(13,61,61,0.97),rgba(10,45,45,0.98))',borderRadius:'1.25rem',padding:'1.5rem',marginBottom:'1.25rem',boxShadow:'0 4px 24px rgba(13,61,61,0.2)'}}>
             <div style={{display:'flex',alignItems:'center',gap:'0.5rem',marginBottom:'1rem'}}>
               <div style={{width:'32px',height:'32px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.85rem',fontWeight:700,color:'white',fontFamily:'Montserrat,sans-serif'}}>L</div>
@@ -1030,6 +989,47 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
               </div>
             ) : (
               <p style={{fontSize:'1.05rem',fontStyle:'italic',color:'rgba(255,255,255,0.9)',lineHeight:1.75,marginBottom:'1.25rem'}}>{lumiMsg}</p>
+            )}
+
+            {mostrarPuertaRecordatorios && (
+              <div style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'1rem',padding:'1.1rem',marginBottom:'1.1rem'}}>
+                {!mostrarCuestionarioHorarios ? (
+                  <div>
+                    <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',color:'rgba(255,255,255,0.9)',lineHeight:1.5,marginBottom:'0.9rem'}}>
+                      {is_es
+                        ? `¿Me dejas ayudarte a alcanzar tu objetivo antes, ajustando tus horas de comida, qué comer y en qué orden?`
+                        : `Will you let me help you reach your goal sooner, by adjusting your meal times, what to eat and in what order?`}
+                    </p>
+                    <div style={{display:'flex',gap:'0.6rem'}}>
+                      <button onClick={()=>setMostrarCuestionarioHorarios(true)} style={{flex:1,background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer'}}>
+                        {is_es ? 'Sí, ayúdame' : 'Yes, help me'}
+                      </button>
+                      <button onClick={rechazarRecordatorios} style={{flex:1,background:'none',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(255,255,255,0.55)',cursor:'pointer'}}>
+                        {is_es ? 'Ahora no' : 'Not now'}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#A06030',letterSpacing:'1px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
+                      {is_es ? '¿A qué hora sueles...' : 'What time do you usually...'}
+                    </p>
+                    {[
+                      { label: is_es ? 'Desayunar' : 'Have breakfast', val: horaDesayuno, set: setHoraDesayuno },
+                      { label: is_es ? 'Comer' : 'Have lunch', val: horaComida, set: setHoraComida },
+                      { label: is_es ? 'Cenar' : 'Have dinner', val: horaCena, set: setHoraCena },
+                    ].map(({label,val,set}) => (
+                      <div key={label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.7rem'}}>
+                        <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(255,255,255,0.85)'}}>{label}</label>
+                        <input type="time" value={val} onChange={e=>set(e.target.value)} style={{padding:'0.4rem 0.6rem',borderRadius:'0.5rem',border:'1px solid rgba(201,147,90,0.3)',fontSize:'0.85rem',background:'white'}}/>
+                      </div>
+                    ))}
+                    <button onClick={activarRecordatorios} disabled={guardandoRecordatorios} style={{width:'100%',background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer',marginTop:'0.4rem'}}>
+                      {guardandoRecordatorios ? (is_es?'Activando...':'Activating...') : (is_es ? 'Activar mis recordatorios' : 'Activate my reminders')}
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
 
             <button onClick={()=>setPlanVisible(!planVisible)} style={{width:'100%',background:'rgba(201,147,90,0.15)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.75rem',color:'#C9935A',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',fontWeight:600,cursor:'pointer',transition:'all 0.2s ease'}}>
