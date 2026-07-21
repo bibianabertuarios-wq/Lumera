@@ -345,6 +345,8 @@ export default function Dashboard() {
   const [planLoading, setPlanLoading] = useState(false);
   const [planHecho, setPlanHecho] = useState([]);
   const [toolsVisible, setToolsVisible] = useState(false);
+  const [usoVisible, setUsoVisible] = useState(false);
+  const [recursosVisible, setRecursosVisible] = useState(false);
   const [periodLog, setPeriodLog] = useState([]);
   const router = useRouter();
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -1109,27 +1111,62 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
           {calmaActiva && <CalmaOverlay is_es={is_es} onClose={() => setCalmaActiva(false)} />}
           <div className={`fade d1 ${visible?'in':''}`} style={{marginBottom:'1.25rem'}}>
             <BarraSemana diasCompletados={diasCompletadosSemana} diasTotales={7} is_es={is_es} />
+            {(diasCompletadosSemana === 3 || diasCompletadosSemana === 7) && (
+              <p style={{textAlign:'center',fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'0.85rem',fontStyle:'italic',color:'#A06030',marginTop:'0.6rem'}}>
+                {diasCompletadosSemana === 7
+                  ? (is_es ? '✦ Semana completa. Esto es lo que cambia tu biología.' : '✦ Full week. This is what changes your biology.')
+                  : (is_es ? '✦ Día 3 — tu constancia ya se nota.' : '✦ Day 3 — your consistency is already showing.')}
+              </p>
+            )}
           </div>
 
           {/* BLOQUE 3 — TU SEMANA + TOOLS */}
           <div className={`fade d4 ${visible?'in':''}`} style={{marginBottom:'1.25rem'}}>
 
-            {/* GUIAS GRATIS */}
-            <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
-              {is_es ? 'Tus guías gratis' : 'Your free guides'}
-            </p>
-            <div style={{display:'flex',flexDirection:'column',gap:'0.6rem',marginBottom:'1.5rem'}}>
-              {[
-                {es:'7 días para sentirte menos hinchada y con menos antojos', en:'7 days to feel less bloated and fewer cravings', href:'/desinflamate'},
-                {es:'7 noches para calmar tu ansiedad y volver a dormir', en:'7 nights to calm your anxiety and sleep again', href:'/duerme'},
-                {es:'3 Hábitos GLP-1 Naturales que Cambian tu Energía', en:'3 Natural GLP-1 Habits for Stable Energy', href:'/guia-glp1'},
-              ].map((g,i)=>(
-                <div key={i} onClick={()=>router.push(g.href)} style={{background:'white',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'0.85rem',padding:'0.8rem 1rem',cursor:'pointer',fontFamily:'Montserrat,sans-serif',fontSize:'0.82rem',color:'#0D3D3D',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                  <span>{is_es?g.es:g.en}</span>
-                  <span style={{color:'#C9935A'}}>→</span>
-                </div>
-              ))}
+            {/* ¿CÓMO USAR LUMERA? — acordeón cerrado por defecto */}
+            <div onClick={()=>setUsoVisible(!usoVisible)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',marginBottom:'0.75rem'}}>
+              <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase'}}>
+                {is_es ? '¿Cómo usar Lumera?' : 'How to use Lumera?'}
+              </span>
+              <span style={{fontSize:'0.75rem',color:'#C9935A',fontWeight:600}}>{usoVisible ? '▲' : '▼'}</span>
             </div>
+            {usoVisible && (
+              <div style={{marginBottom:'1.5rem'}}>
+                {[
+                  is_es ? 'Registra cómo te sientes' : 'Log how you feel',
+                  is_es ? 'Marca tu plan de hoy' : "Check off today's plan",
+                  is_es ? 'Pregunta a tu asesora' : 'Ask your advisor',
+                ].map((step, i) => (
+                  <div key={i} style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'0.6rem'}}>
+                    <div style={{width:'24px',height:'24px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',color:'white',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.7rem',fontWeight:700,flexShrink:0}}>{i+1}</div>
+                    <span style={{fontSize:'0.85rem',color:'rgba(13,61,61,0.7)',fontFamily:'Montserrat,sans-serif'}}>{step}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* RECURSOS — acordeón cerrado por defecto (antes "Guías") */}
+            <div onClick={()=>setRecursosVisible(!recursosVisible)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',marginBottom:'0.75rem'}}>
+              <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase'}}>
+                {is_es ? 'Recursos' : 'Resources'}
+              </span>
+              <span style={{fontSize:'0.75rem',color:'#C9935A',fontWeight:600}}>{recursosVisible ? '▲' : '▼'}</span>
+            </div>
+            {recursosVisible && (
+              <div style={{display:'flex',flexDirection:'column',gap:'0.6rem',marginBottom:'1.5rem'}}>
+                {[
+                  {es:'7 días para sentirte menos hinchada y con menos antojos', en:'7 days to feel less bloated and fewer cravings', href:'/desinflamate'},
+                  {es:'7 noches para calmar tu ansiedad y volver a dormir', en:'7 nights to calm your anxiety and sleep again', href:'/duerme'},
+                  {es:'3 Hábitos GLP-1 Naturales que Cambian tu Energía', en:'3 Natural GLP-1 Habits for Stable Energy', href:'/guia-glp1'},
+                  {es:'Lente Alquímica — analiza tu plato', en:'Alchemical Lens — analyse your plate', href:'/lumera?tab=chat'},
+                ].map((g,i)=>(
+                  <div key={i} onClick={()=>{ if (g.href.includes('/lumera')) window.location.href = g.href; else router.push(g.href); }} style={{background:'white',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'0.85rem',padding:'0.8rem 1rem',cursor:'pointer',fontFamily:'Montserrat,sans-serif',fontSize:'0.82rem',color:'#0D3D3D',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                    <span>{is_es?g.es:g.en}</span>
+                    <span style={{color:'#C9935A'}}>→</span>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Tools grid */}
             <div onClick={()=>setToolsVisible(!toolsVisible)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',marginBottom:'0.75rem'}}>
@@ -1142,11 +1179,9 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
               {(is_es ? [
                 {img:"/images/kling_20260321_作品__Extremely_4730_1.png", title:'Nutrición', sub:'Tu menú de hoy', route:'/lumera?tab=nutrition'},
                 {img:"/images/kling_20260321_作品_Extremely__4896_1.png", title:'Ejercicio', sub:'Tu rutina de hoy', route:'/lumera?tab=exercise'},
-                {img:'/images/lente_alquimica.png', title:'Lente Alquímica', sub:'Analiza tu plato', route:'/lumera?tab=chat'},
               ] : [
                 {img:"/images/kling_20260321_作品__Extremely_4730_1.png", title:'Nutrition', sub:'Your menu today', route:'/lumera?tab=nutrition'},
                 {img:"/images/kling_20260321_作品_Extremely__4896_1.png", title:'Exercise', sub:'Your routine today', route:'/lumera?tab=exercise'},
-                {img:'/images/lente_alquimica.png', title:'Alchemical Lens', sub:'Analyse your plate', route:'/lumera?tab=chat'},
               ]).map((t,i) => (
                 <div key={i} className="tool-card" style={bloqueado?{opacity:0.55,position:'relative'}:{}} onClick={()=>{ if(bloqueado){setShowPremiumModal(true);return;} if(t.route==='__lumi_chat__'){setShowLumiChat(true);if(lumiChatMessages.length===0)setLumiChatMessages([{role:'assistant',content:lumiMsg}]);} else if(t.route.includes('/lumera')) window.location.href=t.route; else router.push(t.route); }}>
                   {bloqueado && <span style={{position:'absolute',top:'0.5rem',right:'0.5rem',fontSize:'0.75rem'}}>🔒</span>}
