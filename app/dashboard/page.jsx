@@ -830,6 +830,41 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
             <h1 style={{fontSize:'clamp(1.6rem,4vw,2rem)',fontWeight:700,color:'#0D3D3D',lineHeight:1.15}}>{user?.nombre}</h1>
           </div>
 
+          {/* REGISTRO DE HOY — check-in, primero: el registro decide el plan */}
+          <div className={`fade d3 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
+            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
+              {checkinHecho
+                ? (is_es ? '✓ Registrado hoy' : '✓ Logged today')
+                : (is_es ? '¿Cómo estás ahora?' : 'How are you right now?')}
+            </div>
+            {!checkinHecho ? (
+              <div style={{display:'flex',gap:'0.5rem'}}>
+                {(is_es
+                  ? [{k:'bien',l:'✦ Bien'},{k:'cansada',l:'· Cansada'},{k:'niebla',l:'· Con niebla'},{k:'regular',l:'· Regular'}]
+                  : [{k:'bien',l:'✦ Good'},{k:'cansada',l:'· Tired'},{k:'niebla',l:'· Foggy'},{k:'regular',l:'· Regular'}]
+                ).map(({k,l}) => (
+                  <button key={k} className="estado-btn" onClick={()=>hacerCheckin(k)}>{l}</button>
+                ))}
+              </div>
+            ) : estadoCheckin ? (
+              <InsightCheckin
+                estado={estadoCheckin}
+                is_es={is_es}
+                onAmpliar={() => { setShowLumiChat(true); if (lumiChatMessages.length === 0) setLumiChatMessages([{role:'assistant', content: lumiMsg}]); }}
+              />
+            ) : (
+              <div style={{display:'flex',alignItems:'center',gap:'0.5rem'}}>
+                <div style={{width:'8px',height:'8px',borderRadius:'50%',background:'#C9935A'}}/>
+                <span style={{fontSize:'0.9rem',color:'rgba(13,61,61,0.6)',fontStyle:'italic'}}>
+                  {is_es ? `LUMI tiene en cuenta cómo te sientes hoy` : `LUMI is taking into account how you feel today`}
+                </span>
+              </div>
+            )}
+            <a href="/lumera?tab=symptoms" style={{display:'block',marginTop:'0.9rem',paddingTop:'0.75rem',borderTop:'1px solid rgba(201,147,90,0.15)',fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'#A06030',textDecoration:'none'}}>
+              {is_es ? 'Registro detallado de síntomas →' : 'Detailed symptom log →'}
+            </a>
+          </div>
+
                     {/* EL CAMINO — a donde voy (peso/musculo: sendero · resto: tendencia de checkins) */}
           {!esObjetivoPeso ? (
             <div className={`fade d1 ${visible?'in':''}`} style={{marginBottom:'1.25rem'}}>
@@ -1027,41 +1062,6 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
                 )}
               </div>
             )}
-          </div>
-
-          {/* BLOQUE 2 — CHECK-IN */}
-          <div className={`fade d3 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
-            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
-              {checkinHecho 
-                ? (is_es ? '✓ Registrado hoy' : '✓ Logged today')
-                : (is_es ? '¿Cómo estás ahora?' : 'How are you right now?')}
-            </div>
-            {!checkinHecho ? (
-              <div style={{display:'flex',gap:'0.5rem'}}>
-                {(is_es
-                  ? [{k:'bien',l:'✦ Bien'},{k:'cansada',l:'· Cansada'},{k:'niebla',l:'· Con niebla'},{k:'regular',l:'· Regular'}]
-                  : [{k:'bien',l:'✦ Good'},{k:'cansada',l:'· Tired'},{k:'niebla',l:'· Foggy'},{k:'regular',l:'· Regular'}]
-                ).map(({k,l}) => (
-                  <button key={k} className="estado-btn" onClick={()=>hacerCheckin(k)}>{l}</button>
-                ))}
-              </div>
-            ) : estadoCheckin ? (
-              <InsightCheckin
-                estado={estadoCheckin}
-                is_es={is_es}
-                onAmpliar={() => { setShowLumiChat(true); if (lumiChatMessages.length === 0) setLumiChatMessages([{role:'assistant', content: lumiMsg}]); }}
-              />
-            ) : (
-              <div style={{display:'flex',alignItems:'center',gap:'0.5rem'}}>
-                <div style={{width:'8px',height:'8px',borderRadius:'50%',background:'#C9935A'}}/>
-                <span style={{fontSize:'0.9rem',color:'rgba(13,61,61,0.6)',fontStyle:'italic'}}>
-                  {is_es ? `LUMI tiene en cuenta cómo te sientes hoy` : `LUMI is taking into account how you feel today`}
-                </span>
-              </div>
-            )}
-            <a href="/lumera?tab=symptoms" style={{display:'block',marginTop:'0.9rem',paddingTop:'0.75rem',borderTop:'1px solid rgba(201,147,90,0.15)',fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'#A06030',textDecoration:'none'}}>
-              {is_es ? 'Registro detallado de síntomas →' : 'Detailed symptom log →'}
-            </a>
           </div>
 
           <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
