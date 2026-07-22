@@ -240,6 +240,8 @@ function BarraSemana({ diasCompletados = 0, diasTotales = 7, is_es }) {
   );
 }
 
+const SINTOMA_A_ESTADO = { 'bien':'bien', 'cansancio':'cansada', 'niebla mental':'niebla', 'regular':'regular' };
+
 // TODO copy pendiente revisión Bibiana — formulación blanda, no diagnóstica
 const INSIGHTS_CHECKIN = {
   bien:    { es: 'Buena señal. Aprovecha para dejar hecha la cosa que más te cuesta hoy.', en: 'Good sign. Use it to get the hardest thing on your list done today.' },
@@ -788,6 +790,7 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
   })();
   const hace7dias = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
   const diasCompletadosSemana = Math.min(7, (ultimosCheckins || []).filter(c => c.fecha >= hace7dias).length);
+  const estadoLectura = estadoCheckin || SINTOMA_A_ESTADO[checkinData?.sintoma_hoy] || null;
   const objLower = (user?.objetivo || '').toLowerCase();
   const esObjetivoPeso = objLower.includes('peso') || objLower.includes('weight') || objLower.includes('fuerza') || objLower.includes('muscul') || objLower.includes('strength') || objLower.includes('muscle');
   const esObjetivoSueno = objLower.includes('sue') || objLower.includes('dorm') || objLower.includes('sleep');
@@ -847,28 +850,35 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
             <h1 style={{fontSize:'clamp(1.6rem,4vw,2rem)',fontWeight:700,color:'#0D3D3D',lineHeight:1.15}}>{user?.nombre}</h1>
           </div>
 
-          {/* REGISTRO DE HOY — check-in, primero: el registro decide el plan */}
+          {/* TU LECTURA DE HOY — el regalo, héroe: el check-in alimenta la lectura */}
           <div className={`fade d3 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
             <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
-              {checkinHecho
-                ? (is_es ? '✓ Registrado hoy' : '✓ Logged today')
-                : (is_es ? '¿Cómo estás ahora?' : 'How are you right now?')}
+              {is_es ? '⭐ Tu lectura de hoy' : '⭐ Your reading for today'}
             </div>
             {!checkinHecho ? (
-              <div style={{display:'flex',gap:'0.5rem'}}>
-                {(is_es
-                  ? [{k:'bien',emoji:'😊',l:'Bien'},{k:'cansada',emoji:'😴',l:'Cansada'},{k:'niebla',emoji:'🌫️',l:'Con niebla'},{k:'regular',emoji:'😐',l:'Regular'}]
-                  : [{k:'bien',emoji:'😊',l:'Good'},{k:'cansada',emoji:'😴',l:'Tired'},{k:'niebla',emoji:'🌫️',l:'Foggy'},{k:'regular',emoji:'😐',l:'Regular'}]
-                ).map(({k,emoji,l}) => (
-                  <button key={k} className="estado-btn" onClick={()=>hacerCheckin(k)}>
-                    <span style={{fontSize:'1.5rem',lineHeight:1}}>{emoji}</span>
-                    <span style={{fontSize:'0.68rem'}}>{l}</span>
-                  </button>
-                ))}
-              </div>
-            ) : estadoCheckin ? (
+              <>
+                {/* TODO copy pendiente revisión Bibiana */}
+                <p style={{fontSize:'0.95rem',fontStyle:'italic',color:'rgba(13,61,61,0.6)',lineHeight:1.5,marginBottom:'0.4rem'}}>
+                  {is_es ? 'Un toque y te digo qué está pasando en tu cuerpo hoy.' : "One tap and I'll tell you what's happening in your body today."}
+                </p>
+                <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'#A06030',fontWeight:600,marginBottom:'0.75rem'}}>
+                  {is_es ? 'Tócame para tu lectura de hoy ↓' : 'Tap for your reading today ↓'}
+                </p>
+                <div style={{display:'flex',gap:'0.5rem'}}>
+                  {(is_es
+                    ? [{k:'bien',emoji:'😊',l:'Bien'},{k:'cansada',emoji:'😴',l:'Cansada'},{k:'niebla',emoji:'🌫️',l:'Con niebla'},{k:'regular',emoji:'😐',l:'Regular'}]
+                    : [{k:'bien',emoji:'😊',l:'Good'},{k:'cansada',emoji:'😴',l:'Tired'},{k:'niebla',emoji:'🌫️',l:'Foggy'},{k:'regular',emoji:'😐',l:'Regular'}]
+                  ).map(({k,emoji,l}) => (
+                    <button key={k} className="estado-btn" onClick={()=>hacerCheckin(k)}>
+                      <span style={{fontSize:'1.5rem',lineHeight:1}}>{emoji}</span>
+                      <span style={{fontSize:'0.68rem'}}>{l}</span>
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : estadoLectura ? (
               <InsightCheckin
-                estado={estadoCheckin}
+                estado={estadoLectura}
                 is_es={is_es}
                 onAmpliar={() => { setShowLumiChat(true); if (lumiChatMessages.length === 0) setLumiChatMessages([{role:'assistant', content: lumiMsg}]); }}
               />
