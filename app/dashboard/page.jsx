@@ -895,6 +895,24 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
             </a>
           </div>
 
+          {/* TU FOCO DE HOY — 1 problema · 1 acción · 1 porqué · 1 CTA */}
+          {!planLoading && (planGenerado || plan)[0] && (
+            <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
+              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
+                {is_es ? 'Tu foco de hoy' : 'Your focus today'}
+              </div>
+              <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.15rem',color:'#0D3D3D',lineHeight:1.4,marginBottom:'0.4rem'}}>
+                {(planGenerado || plan)[0].accion}
+              </p>
+              <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'rgba(13,61,61,0.5)',lineHeight:1.5,marginBottom:'1rem'}}>
+                {(planGenerado || plan)[0].ciencia}
+              </p>
+              <button onClick={()=>togglePlanItem(0)} style={{width:'100%',background:planHecho.includes(0)?'rgba(201,147,90,0.15)':'#C9935A',color:planHecho.includes(0)?'#A06030':'white',border:'none',borderRadius:'0.75rem',padding:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer'}}>
+                {planHecho.includes(0) ? (is_es ? '✓ Hecho' : '✓ Done') : (is_es ? 'Empezar →' : 'Start →')}
+              </button>
+            </div>
+          )}
+
           {/* TU PROGRESO — gráfica/meta + silueta en una sola card */}
           <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',overflow:'hidden',marginBottom:'1.25rem'}}>
             <div style={{padding:'1.25rem'}}>
