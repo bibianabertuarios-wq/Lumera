@@ -7145,6 +7145,13 @@ query = query.eq('region', region.toUpperCase());
                         </button>
                     )}
 
+                    {hideChrome && (
+                        <button onClick={()=>{ window.location.href = '/dashboard'; }} style={{position:'fixed',top:'0.75rem',left:'0.75rem',zIndex:90,background:'rgba(13,13,13,0.85)',border:'1px solid rgba(184,115,51,0.45)',borderRadius:'9999px',padding:'0.5rem 0.9rem',display:'flex',alignItems:'center',gap:'0.35rem',boxShadow:'0 4px 16px rgba(0,0,0,0.4)',backdropFilter:'blur(6px)',cursor:'pointer'}}>
+                            <span style={{color:'#C4A882',fontSize:'0.95rem',lineHeight:1}}>←</span>
+                            <span style={{color:'#F0EDE8',fontSize:'0.78rem',fontFamily:"'Cormorant',serif",fontWeight:600}}>{language==='es'?'Volver':'Back'}</span>
+                        </button>
+                    )}
+
                     {/* Footer con disclaimer y enlaces legales */}
                     <footer className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'} border-t py-6 mb-20`}>
                         <div className="max-w-6xl mx-auto px-4">
