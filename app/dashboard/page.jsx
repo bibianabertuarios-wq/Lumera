@@ -822,7 +822,7 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
         @media (prefers-reduced-motion: reduce){ [style*="lumBreathe"]{animation:none!important;} }
       `}}/>
 
-      <div style={{minHeight:'100vh',backgroundImage:"url('/images/shula_flores_bg.jpg')",backgroundSize:'cover',backgroundPosition:'center',backgroundAttachment:'fixed',fontFamily:"'Cormorant Garamond',Georgia,serif",paddingBottom:'80px'}}>
+      <div style={{minHeight:'100vh',backgroundImage:"linear-gradient(rgba(250,247,241,0.92),rgba(250,247,241,0.92)),url('/images/shula_flores_bg.jpg')",backgroundSize:'cover',backgroundPosition:'center',backgroundAttachment:'fixed',fontFamily:"'Cormorant Garamond',Georgia,serif",paddingBottom:'80px'}}>
 
         {/* HEADER */}
         <div style={{background:'rgba(255,255,255,0.92)',borderBottom:'1px solid rgba(201,147,90,0.15)',backdropFilter:'blur(10px)',padding:'0.75rem 1.25rem',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
@@ -842,7 +842,7 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
         <div style={{maxWidth:'520px',margin:'0 auto',padding:'1.25rem 1.25rem 0'}}>
 
           {/* SALUDO */}
-          <div className={`fade d1 ${visible?'in':''}`} style={{marginBottom:'1rem'}}>
+          <div className={`fade d1 ${visible?'in':''}`} style={{background:'#FAF7F1',borderRadius:'1.25rem',boxShadow:'0 2px 12px rgba(13,61,61,0.06)',padding:'0.9rem 1.1rem',marginBottom:'1rem'}}>
             <p style={{fontSize:'0.8rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.4)',marginBottom:'0.1rem'}}>{saludoHora}</p>
             <h1 style={{fontSize:'clamp(1.6rem,4vw,2rem)',fontWeight:700,color:'#0D3D3D',lineHeight:1.15}}>{user?.nombre}</h1>
           </div>
@@ -978,7 +978,7 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
           )}
 
           {/* MI PLAN — mensaje de LUMI + puerta de recordatorios + plan de hoy (resumen que expande) */}
-          <div className={`fade d2 ${visible?'in':''}`} style={{background:'linear-gradient(135deg,rgba(13,61,61,0.97),rgba(10,45,45,0.98))',borderRadius:'1.25rem',padding:'1.5rem',marginBottom:'1.25rem',boxShadow:'0 4px 24px rgba(13,61,61,0.2)'}}>
+          <div className={`fade d2 ${visible?'in':''}`} style={{background:'linear-gradient(135deg,rgba(13,61,61,0.97),rgba(10,45,45,0.98))',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'1.25rem',padding:'1.25rem',margin:'0 0.3rem 1.25rem',boxShadow:'0 4px 20px rgba(13,61,61,0.15)'}}>
             <div style={{display:'flex',alignItems:'center',gap:'0.5rem',marginBottom:'1rem'}}>
               <div style={{width:'32px',height:'32px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.85rem',fontWeight:700,color:'white',fontFamily:'Montserrat,sans-serif'}}>L</div>
               <div>
