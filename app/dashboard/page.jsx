@@ -98,6 +98,24 @@ const DESCUBRIMIENTOS_EN = [
   'Protein at breakfast reduces afternoon sugar cravings — it is chemistry, not willpower.',
 ];
 
+// TODO copy pendiente revisión Bibiana — rigor científico, formato mito/verdad
+const MITOS_VERDAD_ES = [
+  'Mito: sudar más quema más grasa. Verdad: el sudor regula tu temperatura, no tu grasa corporal.',
+  'Mito: los carbohidratos de noche engordan más. Verdad: lo que más pesa es el total del día, no la hora.',
+  'Mito: hay que aguantar hambre para adelgazar. Verdad: el músculo que pierdes con hambre es el que más te protege a los 60.',
+  'Mito: el cansancio se arregla con más cafeína. Verdad: el magnesio y el sueño profundo lo resuelven de raíz.',
+  'Mito: la niebla mental es solo cosa de la edad. Verdad: la hidratación y el omega-3 la mejoran de forma medible.',
+  'Mito: hay que hacer cardio largo para perder peso. Verdad: el músculo que ganas con fuerza sigue quemando en reposo.',
+];
+const MITOS_VERDAD_EN = [
+  'Myth: sweating more burns more fat. Truth: sweat regulates your temperature, not your body fat.',
+  'Myth: carbs at night are more fattening. Truth: your daily total matters more than the time.',
+  'Myth: you have to push through hunger to lose weight. Truth: the muscle you lose to hunger is what protects you most at 60.',
+  'Myth: tiredness is fixed with more caffeine. Truth: magnesium and deep sleep solve it at the root.',
+  'Myth: brain fog is just an age thing. Truth: hydration and omega-3 measurably improve it.',
+  'Myth: you need long cardio to lose weight. Truth: the muscle you build with strength keeps burning at rest.',
+];
+
 function TendenciaCard({ tipo, checkins, is_es, bare }) {
   const esSueno = tipo === 'sueno';
   const val = (c) => esSueno ? Number(c.sueno) : (Number(c.energia) + Number(c.animo)) / 2;
@@ -1006,18 +1024,39 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
                 );
               })())}
             </div>
-            <div onClick={()=>router.push('/escaner')} style={{position:'relative',cursor:'pointer'}}>
-              <video autoPlay muted loop playsInline style={{width:'100%',height:'140px',objectFit:'cover',display:'block'}}>
-                <source src="/videos/silueta.mp4" type="video/mp4"/>
-              </video>
-              <div style={{position:'absolute',inset:0,background:'linear-gradient(180deg,transparent 40%,rgba(13,61,61,0.85) 100%)',display:'flex',flexDirection:'column',justifyContent:'flex-end',padding:'0.9rem 1.25rem'}}>
-                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',marginBottom:'0.2rem'}}>✦ NUEVO</div>
-                <div style={{fontSize:'1rem',fontWeight:700,color:'white',fontFamily:"'Cormorant Garamond',serif"}}>
-                  {is_es ? 'Tu Silueta Hormonal →' : 'Your Hormonal Silhouette →'}
-                </div>
-              </div>
+            <div onClick={()=>router.push('/escaner')} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'0.75rem 1.25rem',borderTop:'1px solid rgba(201,147,90,0.15)',cursor:'pointer'}}>
+              <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'#A06030'}}>
+                {is_es ? 'Tu Silueta Hormonal' : 'Your Hormonal Silhouette'}
+              </span>
+              <span style={{color:'#C9935A',fontSize:'0.85rem'}}>→</span>
             </div>
           </div>
+
+          {/* VERDAD DE HOY — mito/verdad, 1 línea */}
+          <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1rem 1.25rem',marginBottom:'1.25rem'}}>
+            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.4rem'}}>
+              {is_es ? '✦ Verdad de hoy' : '✦ Truth of the day'}
+            </div>
+            {/* TODO copy pendiente revisión Bibiana */}
+            <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'0.95rem',color:'#0D3D3D',lineHeight:1.5,margin:0}}>
+              {(is_es ? MITOS_VERDAD_ES : MITOS_VERDAD_EN)[new Date().getDate() % MITOS_VERDAD_ES.length]}
+            </p>
+          </div>
+
+          {/* PREMIUM COMO SIGUIENTE PASO — valor primero, no "suscripción" */}
+          {!user?.isPremium && diasRestantes > 1 && (
+            <div onClick={()=>setShowPremiumModal(true)} className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'1.25rem',padding:'1rem 1.25rem',marginBottom:'1.25rem',cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+              <div>
+                <div style={{fontSize:'0.95rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>
+                  {is_es ? 'Tu plan personalizado completo' : 'Your full personalised plan'}
+                </div>
+                <div style={{fontSize:'0.75rem',color:'rgba(13,61,61,0.5)',fontFamily:'Montserrat,sans-serif'}}>
+                  {is_es ? 'Más claridad, un plan guiado paso a paso para ti' : 'More clarity, a step-by-step plan guided just for you'}
+                </div>
+              </div>
+              <span style={{color:'#C9935A',fontSize:'1.1rem'}}>→</span>
+            </div>
+          )}
 
                     {showPesoModal && (
             <div style={{position:'fixed',inset:0,background:'rgba(13,61,61,0.6)',zIndex:250,display:'flex',alignItems:'flex-end',justifyContent:'center'}} onClick={()=>setShowPesoModal(false)}>
