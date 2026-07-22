@@ -153,7 +153,7 @@ function TendenciaCard({ tipo, checkins, is_es, bare }) {
     : sube
       ? (is_es ? `Tu ${nombre} mejora — tu constancia está funcionando ✦` : `Your ${nombre} is improving — your consistency is working ✦`)
       : baja
-        ? (is_es ? `Semana más baja de ${nombre} — es información, no fracaso. Tu cuerpo también tiene fases.` : `A lower ${nombre} week — that is information, not failure. Your body has phases too.`)
+        ? (is_es ? `Tu ${nombre} va en fase baja esta semana. Hoy tienes una palanca concreta para subirla.` : `Your ${nombre} is in a low phase this week. Today you have a concrete lever to lift it.`)
         : (is_es ? `Tu ${nombre} se mantiene estable esta semana.` : `Your ${nombre} is holding steady this week.`);
 
   const contenido = (
@@ -243,7 +243,7 @@ function BarraSemana({ diasCompletados = 0, diasTotales = 7, is_es }) {
 // TODO copy pendiente revisión Bibiana — formulación blanda, no diagnóstica
 const INSIGHTS_CHECKIN = {
   bien:    { es: 'Buena señal. Aprovecha para dejar hecha la cosa que más te cuesta hoy.', en: 'Good sign. Use it to get the hardest thing on your list done today.' },
-  cansada: { es: 'Algunas mujeres notan más cansancio en ciertas fases — hoy vale bajar el listón sin culpa.', en: 'Some women notice more tiredness at certain phases — today it is fine to lower the bar without guilt.' },
+  cansada: { es: 'Algunas mujeres notan más cansancio en ciertas fases — hoy tu palanca es elegir una sola tarea y dejar que el resto espere.', en: 'Some women notice more tiredness at certain phases — today your lever is picking one task and letting the rest wait.' },
   niebla:  { es: 'La claridad mental va y viene. Una cosa sola, bien hecha, gana a hacer diez a medias.', en: 'Mental clarity comes and goes. One thing done well beats ten done halfway.' },
   regular: { es: 'Un día regular sigue contando. Marcar una acción pequeña ya cambia la semana.', en: 'An average day still counts. Ticking one small action already shifts the week.' },
 };
