@@ -348,6 +348,7 @@ export default function Dashboard() {
   const [planHecho, setPlanHecho] = useState([]);
   const [ritualHecho, setRitualHecho] = useState([]);
   const [toolsVisible, setToolsVisible] = useState(false);
+  const [progresoDetalleVisible, setProgresoDetalleVisible] = useState(false);
   const [usoVisible, setUsoVisible] = useState(false);
   const [recursosVisible, setRecursosVisible] = useState(false);
   const [periodLog, setPeriodLog] = useState([]);
@@ -961,7 +962,17 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
                   {is_es ? `Tu progreso · ${user.objetivo}` : `Your progress · ${user.objetivo}`}
                 </p>
               )}
-              {!esObjetivoPeso ? (
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.9rem'}}>
+                <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1rem',color:'#0D3D3D',margin:0}}>
+                  {is_es
+                    ? `Racha de ${rachaDias} ${rachaDias === 1 ? 'día' : 'días'} · ${diasCompletadosSemana}/7 esta semana`
+                    : `${rachaDias}-day streak · ${diasCompletadosSemana}/7 this week`}
+                </p>
+                <span onClick={()=>setProgresoDetalleVisible(!progresoDetalleVisible)} style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.72rem',color:'#C9935A',fontWeight:600,cursor:'pointer',whiteSpace:'nowrap',marginLeft:'0.5rem'}}>
+                  {progresoDetalleVisible ? (is_es ? '▲ Ocultar' : '▲ Hide') : (is_es ? 'Ver detalle →' : 'See detail →')}
+                </span>
+              </div>
+              {progresoDetalleVisible && (!esObjetivoPeso ? (
                 <TendenciaCard tipo={esObjetivoSueno ? 'sueno' : 'energia'} checkins={ultimosCheckins} is_es={is_es} bare />
               ) : !user?.pesoMeta ? (
                 <div onClick={()=>setShowPesoModal(true)} style={{textAlign:'center',cursor:'pointer',padding:'0.5rem 0'}}>
@@ -993,7 +1004,7 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
                     </button>
                   </div>
                 );
-              })()}
+              })())}
             </div>
             <div onClick={()=>router.push('/escaner')} style={{position:'relative',cursor:'pointer'}}>
               <video autoPlay muted loop playsInline style={{width:'100%',height:'140px',objectFit:'cover',display:'block'}}>
