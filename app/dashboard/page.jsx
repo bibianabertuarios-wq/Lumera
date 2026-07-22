@@ -346,6 +346,7 @@ export default function Dashboard() {
   const [planGenerado, setPlanGenerado] = useState(null);
   const [planLoading, setPlanLoading] = useState(false);
   const [planHecho, setPlanHecho] = useState([]);
+  const [ritualHecho, setRitualHecho] = useState([]);
   const [toolsVisible, setToolsVisible] = useState(false);
   const [usoVisible, setUsoVisible] = useState(false);
   const [recursosVisible, setRecursosVisible] = useState(false);
@@ -476,6 +477,7 @@ export default function Dashboard() {
     try {
       const hk = new Date().toISOString().split('T')[0];
       setPlanHecho(JSON.parse(localStorage.getItem(`lumi_plan_done_${session.user.id}_${hk}`) || '[]'));
+      setRitualHecho(JSON.parse(localStorage.getItem(`lumi_ritual_done_${session.user.id}_${hk}`) || '[]'));
     } catch(e) {}
 
     try {
@@ -675,6 +677,16 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
     setPlanHecho(prev => {
       const next = prev.includes(idx) ? prev.filter(x => x !== idx) : [...prev, idx];
       try { localStorage.setItem(`lumi_plan_done_${user?.id}_${hk}`, JSON.stringify(next)); } catch(e) {}
+      return next;
+    });
+  };
+
+  const marcarRitualHecho = (idx) => {
+    const hk = new Date().toISOString().split('T')[0];
+    setRitualHecho(prev => {
+      if (prev.includes(idx)) return prev;
+      const next = [...prev, idx];
+      try { localStorage.setItem(`lumi_ritual_done_${user?.id}_${hk}`, JSON.stringify(next)); } catch(e) {}
       return next;
     });
   };
@@ -912,6 +924,34 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
               </button>
             </div>
           )}
+
+          {/* TU RITUAL — secuencia guiada, no biblioteca */}
+          <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
+            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.5rem'}}>
+              {is_es ? `Tu ritual · ${Math.max(1, ritualHecho.length)}/4` : `Your ritual · ${Math.max(1, ritualHecho.length)}/4`}
+            </div>
+            {[
+              { label: is_es?'Respiración':'Breathing', sub: is_es?'1 minuto guiado':'1 guided minute', onClick: () => { marcarRitualHecho(0); setCalmaActiva(true); } },
+              { label: is_es?'Suelo pélvico':'Pelvic floor', sub: is_es?'10 contracciones de 5 segundos, donde estés':'10 five-second contractions, wherever you are', onClick: () => marcarRitualHecho(1), masInfo:'/lumera?tab=exercise' },
+              { label: is_es?'Movimiento':'Movement', sub: is_es?'Tu rutina de hoy':'Your routine today', onClick: () => { marcarRitualHecho(2); window.location.href='/lumera?tab=exercise'; } },
+              { label: is_es?'Nutrición':'Nutrition', sub: is_es?'Tu menú de hoy':'Your menu today', onClick: () => { marcarRitualHecho(3); window.location.href='/lumera?tab=nutrition'; } },
+            ].map((paso, i) => (
+              <div key={i} style={{display:'flex',alignItems:'center',gap:'0.6rem',padding:'0.6rem 0',borderBottom:i<3?'1px solid rgba(201,147,90,0.12)':'none'}}>
+                <div onClick={paso.onClick} style={{display:'flex',alignItems:'center',gap:'0.75rem',flex:1,cursor:'pointer'}}>
+                  <span style={{width:'26px',height:'26px',borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.8rem',fontWeight:700,border:'1.5px solid '+(ritualHecho.includes(i)?'#C9935A':'rgba(201,147,90,0.3)'),background:ritualHecho.includes(i)?'#C9935A':'transparent',color:ritualHecho.includes(i)?'white':'#A06030'}}>{ritualHecho.includes(i) ? '✓' : i+1}</span>
+                  <div>
+                    <div style={{fontSize:'0.9rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>{paso.label}</div>
+                    <div style={{fontSize:'0.72rem',color:'rgba(13,61,61,0.45)',fontFamily:'Montserrat,sans-serif'}}>{paso.sub}</div>
+                  </div>
+                </div>
+                {paso.masInfo && (
+                  <span onClick={()=>window.location.href=paso.masInfo} style={{fontSize:'0.68rem',color:'#C9935A',fontFamily:'Montserrat,sans-serif',cursor:'pointer',whiteSpace:'nowrap'}}>
+                    {is_es ? 'más info →' : 'more info →'}
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
 
           {/* TU PROGRESO — gráfica/meta + silueta en una sola card */}
           <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',overflow:'hidden',marginBottom:'1.25rem'}}>
