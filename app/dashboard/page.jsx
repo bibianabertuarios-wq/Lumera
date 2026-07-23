@@ -252,6 +252,10 @@ function BarraSemana({ diasCompletados = 0, diasTotales = 7, is_es }) {
 const ETIQUETA_ESTADO_ES = { bien:'bien', cansada:'cansada', niebla:'con niebla', regular:'regular' };
 const ETIQUETA_ESTADO_EN = { bien:'good', cansada:'tired', niebla:'foggy', regular:'so-so' };
 
+const ICONO_TIPO_PLAN = { nutricion:'🍽', movimiento:'🚶‍♀️', interior:'🌙' };
+const LABEL_TIPO_PLAN_ES = { nutricion:'Nutrición', movimiento:'Movimiento', interior:'Momento interior' };
+const LABEL_TIPO_PLAN_EN = { nutricion:'Nutrition', movimiento:'Movement', interior:'Inner moment' };
+
 function CalmaOverlay({ is_es, onClose }) {
   const [fase, setFase] = useState('exhala');
   const [resp, setResp] = useState(0);
@@ -311,6 +315,7 @@ export default function Dashboard() {
   const [ultimosSintomas, setUltimosSintomas] = useState([]);
   const [visible, setVisible] = useState(false);
   const [planVisible, setPlanVisible] = useState(false);
+  const [porqueVisible, setPorqueVisible] = useState([]);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showGestion, setShowGestion] = useState(false);
   const [pwaOculto, setPwaOculto] = useState(() => { try { return localStorage.getItem('lumera_pwa_hide') === '1'; } catch(e) { return false; } });
@@ -542,6 +547,10 @@ export default function Dashboard() {
     });
   };
 
+  const togglePorqueVisible = (idx) => {
+    setPorqueVisible(prev => prev.includes(idx) ? prev.filter(x => x !== idx) : [...prev, idx]);
+  };
+
   const marcarRitualHecho = (idx) => {
     const hk = new Date().toISOString().split('T')[0];
     setRitualHecho(prev => {
@@ -571,7 +580,7 @@ export default function Dashboard() {
       } else if (texto.includes('entrena') || texto.includes('train') || texto.includes('camina') || texto.includes('walk') || texto.includes('series') || texto.includes('sets') || texto.includes('movimiento') || texto.includes('movement')) {
         link = '/lumera?tab=exercise'; linkLabel = is_es ? 'Ver tu rutina →' : 'See your routine →';
       }
-      return { icono: p.icono, accion: p.accion, ciencia: p.porque, ...(p.etiqueta ? { etiqueta: p.etiqueta } : {}), ...(link ? { link, linkLabel } : {}) };
+      return { tipo: p.tipo, icono: p.icono, accion: p.accion, ciencia: p.porque, ...(p.fuente ? { fuente: p.fuente } : {}), ...(p.etiqueta ? { etiqueta: p.etiqueta } : {}), ...(link ? { link, linkLabel } : {}) };
     });
   };
 
@@ -775,135 +784,128 @@ export default function Dashboard() {
               {is_es ? 'Registro detallado de síntomas →' : 'Detailed symptom log →'}
             </a>
 
-            {mostrarPuertaRecordatorios && (
-              <div style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'1rem',padding:'1.1rem',marginBottom:'1.1rem'}}>
-                {!mostrarCuestionarioHorarios ? (
-                  <div>
-                    <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',color:'rgba(255,255,255,0.9)',lineHeight:1.5,marginBottom:'0.9rem'}}>
-                      {is_es
-                        ? `¿Me dejas ayudarte a alcanzar tu objetivo antes, ajustando tus horas de comida, qué comer y en qué orden?`
-                        : `Will you let me help you reach your goal sooner, by adjusting your meal times, what to eat and in what order?`}
-                    </p>
-                    <div style={{display:'flex',gap:'0.6rem'}}>
-                      <button onClick={()=>setMostrarCuestionarioHorarios(true)} style={{flex:1,background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer'}}>
-                        {is_es ? 'Sí, ayúdame' : 'Yes, help me'}
-                      </button>
-                      <button onClick={rechazarRecordatorios} style={{flex:1,background:'none',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(255,255,255,0.55)',cursor:'pointer'}}>
-                        {is_es ? 'Ahora no' : 'Not now'}
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#A06030',letterSpacing:'1px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
-                      {is_es ? '¿A qué hora sueles...' : 'What time do you usually...'}
-                    </p>
-                    {[
-                      { label: is_es ? 'Desayunar' : 'Have breakfast', val: horaDesayuno, set: setHoraDesayuno },
-                      { label: is_es ? 'Comer' : 'Have lunch', val: horaComida, set: setHoraComida },
-                      { label: is_es ? 'Cenar' : 'Have dinner', val: horaCena, set: setHoraCena },
-                    ].map(({label,val,set}) => (
-                      <div key={label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.7rem'}}>
-                        <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(255,255,255,0.85)'}}>{label}</label>
-                        <input type="time" value={val} onChange={e=>set(e.target.value)} style={{padding:'0.4rem 0.6rem',borderRadius:'0.5rem',border:'1px solid rgba(201,147,90,0.3)',fontSize:'0.85rem',background:'white'}}/>
-                      </div>
-                    ))}
-                    <button onClick={activarRecordatorios} disabled={guardandoRecordatorios} style={{width:'100%',background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer',marginTop:'0.4rem'}}>
-                      {guardandoRecordatorios ? (is_es?'Activando...':'Activating...') : (is_es ? 'Activar mis recordatorios' : 'Activate my reminders')}
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-
-            <button onClick={()=>setPlanVisible(!planVisible)} style={{width:'100%',background:'rgba(201,147,90,0.15)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.75rem',color:'#C9935A',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',fontWeight:600,cursor:'pointer',transition:'all 0.2s ease'}}>
-              {(() => {
-                const tp = (planGenerado || plan).length;
-                const h = planHecho.filter(x => x < tp).length;
-                const c = tp && !planLoading && h > 0 ? ` · ${h}/${tp}` : '';
-                return planVisible
-                  ? (is_es ? `▲ Ocultar plan de hoy${c}` : `▲ Hide today's plan${c}`)
-                  : (is_es ? `✦ Ver mi plan de hoy${c}` : `✦ See my plan for today${c}`);
-              })()}
-            </button>
-            {(() => {
-              const objetivoKcal = getObjetivoKcalHoy();
-              return objetivoKcal && (
-                <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(255,255,255,0.3)',textAlign:'center',marginTop:'0.4rem',marginBottom:0}}>
-                  {is_es ? `Objetivo diario de referencia: ~${objetivoKcal} kcal` : `Reference daily target: ~${objetivoKcal} kcal`}
-                </p>
-              );
-            })()}
-
-            {/* PLAN DEL DIA */}
-            {planVisible && (
-              <div style={{marginTop:'1rem',borderTop:'1px solid rgba(201,147,90,0.2)',paddingTop:'1rem'}}>
-                {planLoading ? (
-                  <div className="shimmer" style={{color:'rgba(255,255,255,0.4)',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',padding:'0.5rem 0'}}>
-                    {is_es ? 'Preparando tu plan personalizado...' : 'Preparing your personalised plan...'}
-                  </div>
-                ) : (planGenerado || plan).map((p, i) => (
-                  <div key={i} style={{marginBottom:'1rem',paddingBottom:'0.85rem',borderBottom:i<(planGenerado||plan).length-1?'1px solid rgba(255,255,255,0.06)':'none'}}>
-                    <div onClick={()=>togglePlanItem(i)} style={{display:'flex',alignItems:'flex-start',gap:'0.6rem',marginBottom:'0.25rem',cursor:'pointer'}}>
-                      <span style={{width:'22px',height:'22px',borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.8rem',border:'1.5px solid '+(planHecho.includes(i)?'#C9935A':'rgba(255,255,255,0.3)'),background:planHecho.includes(i)?'#C9935A':'transparent',color:'white',transition:'all 0.2s ease'}}>{planHecho.includes(i)?'✓':''}</span>
-                      <span style={{fontSize:'0.98rem',color:planHecho.includes(i)?'rgba(255,255,255,0.5)':'rgba(255,255,255,0.95)',lineHeight:1.5,flex:1,fontWeight:500,textDecoration:planHecho.includes(i)?'line-through':'none',transition:'all 0.2s ease'}}>{p.accion}</span>
-                    </div>
-                    <div style={{marginLeft:'1.7rem',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'rgba(255,255,255,0.45)',lineHeight:1.6,marginBottom:(p.etiqueta || p.link)?'0.4rem':'0'}}>
-                      {p.ciencia}
-                    </div>
-                    {p.etiqueta && (
-                      <div style={{marginLeft:'1.7rem',fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.72rem',color:'#C9935A',marginBottom:p.link?'0.4rem':'0'}}>
-                        {p.etiqueta}
-                      </div>
-                    )}
-                    {p.link && (
-                      <div style={{marginLeft:'1.7rem'}}>
-                        <span onClick={()=>window.location.href=p.link} style={{fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'#C9935A',cursor:'pointer',fontWeight:600}}>
-                          {p.linkLabel}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                ))}
-                {!planLoading && (planGenerado || plan).length > 0 && planHecho.filter(x => x < (planGenerado || plan).length).length === (planGenerado || plan).length && (
-                  <div style={{marginTop:'0.25rem',padding:'0.6rem 0.75rem',background:'rgba(201,147,90,0.12)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',color:'#C9935A',fontWeight:600}}>
-                    {is_es ? '✦ Plan de hoy completado. Tu constancia es la que cambia tu biología.' : '✦ Today\'s plan complete. Consistency is what changes your biology.'}
-                  </div>
-                )}
-                {!planLoading && (planGenerado || plan).length > 0 && planHecho.filter(x => x < (planGenerado || plan).length).length === (planGenerado || plan).length && (
-                  <div style={{marginTop:'0.6rem',padding:'0.9rem 1rem',background:'linear-gradient(135deg,rgba(13,61,61,0.95),rgba(13,61,61,0.85))',borderRadius:'0.75rem'}}>
-                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,letterSpacing:'2px',color:'#C9935A',textTransform:'uppercase',marginBottom:'0.4rem'}}>
-                      {is_es ? '✦ Descubrimiento desbloqueado' : '✦ Discovery unlocked'}
-                    </div>
-                    <p style={{fontSize:'0.9rem',color:'rgba(255,255,255,0.92)',lineHeight:1.65,fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',margin:0}}>
-                      {(is_es ? DESCUBRIMIENTOS_ES : DESCUBRIMIENTOS_EN)[new Date().getDate() % DESCUBRIMIENTOS_ES.length]}
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
 
-          {/* TU FOCO DE HOY — 1 problema · 1 acción · 1 porqué · 1 CTA */}
-          {checkinHecho && !planLoading && (planGenerado || plan)[0] && (
+          {/* TU PLAN DE HOY — tres patas, siempre visibles (nunca en acordeón); solo el "por qué" se pliega */}
+          {checkinHecho && (
             <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
-              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
-                {is_es ? 'Tu foco de hoy' : 'Your focus today'}
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.5rem'}}>
+                <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase'}}>
+                  {is_es ? 'Tu plan de hoy' : 'Your plan today'}
+                </span>
+                <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'#A06030',fontWeight:700}}>
+                  {planHecho.filter(x => x < (planGenerado||plan).length).length} {is_es?'de':'of'} {(planGenerado||plan).length}
+                </span>
               </div>
-              <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.15rem',color:'#0D3D3D',lineHeight:1.4,marginBottom:'0.4rem'}}>
-                {(planGenerado || plan)[0].accion}
-              </p>
-              <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'rgba(13,61,61,0.5)',lineHeight:1.5,marginBottom:(planGenerado || plan)[0].etiqueta ? '0.35rem' : '1rem'}}>
-                {(planGenerado || plan)[0].ciencia}
-              </p>
-              {(planGenerado || plan)[0].etiqueta && (
-                <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.75rem',color:'#A06030',marginBottom:'1rem'}}>
-                  {(planGenerado || plan)[0].etiqueta}
-                </p>
+              {(() => {
+                const objetivoKcal = getObjetivoKcalHoy();
+                return objetivoKcal && (
+                  <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(13,61,61,0.35)',marginBottom:'0.9rem'}}>
+                    {is_es ? `Objetivo diario de referencia: ~${objetivoKcal} kcal` : `Reference daily target: ~${objetivoKcal} kcal`}
+                  </p>
+                );
+              })()}
+
+              {mostrarPuertaRecordatorios && (
+                <div style={{background:'#FAF7F1',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1rem',padding:'1.1rem',marginBottom:'1.1rem'}}>
+                  {!mostrarCuestionarioHorarios ? (
+                    <div>
+                      <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',color:'#0D3D3D',lineHeight:1.5,marginBottom:'0.9rem'}}>
+                        {is_es
+                          ? `¿Me dejas ayudarte a alcanzar tu objetivo antes, ajustando tus horas de comida, qué comer y en qué orden?`
+                          : `Will you let me help you reach your goal sooner, by adjusting your meal times, what to eat and in what order?`}
+                      </p>
+                      <div style={{display:'flex',gap:'0.6rem'}}>
+                        <button onClick={()=>setMostrarCuestionarioHorarios(true)} style={{flex:1,background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer'}}>
+                          {is_es ? 'Sí, ayúdame' : 'Yes, help me'}
+                        </button>
+                        <button onClick={rechazarRecordatorios} style={{flex:1,background:'none',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(13,61,61,0.5)',cursor:'pointer'}}>
+                          {is_es ? 'Ahora no' : 'Not now'}
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#A06030',letterSpacing:'1px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
+                        {is_es ? '¿A qué hora sueles...' : 'What time do you usually...'}
+                      </p>
+                      {[
+                        { label: is_es ? 'Desayunar' : 'Have breakfast', val: horaDesayuno, set: setHoraDesayuno },
+                        { label: is_es ? 'Comer' : 'Have lunch', val: horaComida, set: setHoraComida },
+                        { label: is_es ? 'Cenar' : 'Have dinner', val: horaCena, set: setHoraCena },
+                      ].map(({label,val,set}) => (
+                        <div key={label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.7rem'}}>
+                          <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#0D3D3D'}}>{label}</label>
+                          <input type="time" value={val} onChange={e=>set(e.target.value)} style={{padding:'0.4rem 0.6rem',borderRadius:'0.5rem',border:'1px solid rgba(201,147,90,0.3)',fontSize:'0.85rem',background:'white'}}/>
+                        </div>
+                      ))}
+                      <button onClick={activarRecordatorios} disabled={guardandoRecordatorios} style={{width:'100%',background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer',marginTop:'0.4rem'}}>
+                        {guardandoRecordatorios ? (is_es?'Activando...':'Activating...') : (is_es ? 'Activar mis recordatorios' : 'Activate my reminders')}
+                      </button>
+                    </div>
+                  )}
+                </div>
               )}
-              <button onClick={()=>togglePlanItem(0)} style={{width:'100%',background:planHecho.includes(0)?'rgba(201,147,90,0.15)':'#C9935A',color:planHecho.includes(0)?'#A06030':'white',border:'none',borderRadius:'0.75rem',padding:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer'}}>
-                {planHecho.includes(0) ? (is_es ? '✓ Hecho' : '✓ Done') : (is_es ? 'Empezar →' : 'Start →')}
-              </button>
+
+              {planLoading ? (
+                <div className="shimmer" style={{color:'rgba(13,61,61,0.4)',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',padding:'0.5rem 0'}}>
+                  {is_es ? 'Preparando tu plan personalizado...' : 'Preparing your personalised plan...'}
+                </div>
+              ) : (planGenerado || plan).map((p, i) => (
+                <div key={i} style={{marginBottom:'1rem',paddingBottom:'0.85rem',borderBottom:i<(planGenerado||plan).length-1?'1px solid rgba(201,147,90,0.15)':'none'}}>
+                  <div onClick={()=>togglePlanItem(i)} style={{display:'flex',alignItems:'flex-start',gap:'0.6rem',marginBottom:'0.3rem',cursor:'pointer'}}>
+                    <span style={{width:'22px',height:'22px',marginTop:'0.1rem',borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.8rem',border:'1.5px solid '+(planHecho.includes(i)?'#C9935A':'rgba(13,61,61,0.25)'),background:planHecho.includes(i)?'#C9935A':'transparent',color:'white',transition:'all 0.2s ease'}}>{planHecho.includes(i)?'✓':''}</span>
+                    <div style={{flex:1}}>
+                      <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.62rem',fontWeight:700,color:'#C9935A',letterSpacing:'1.5px',textTransform:'uppercase',marginBottom:'0.15rem'}}>
+                        {ICONO_TIPO_PLAN[p.tipo]} {(is_es ? LABEL_TIPO_PLAN_ES : LABEL_TIPO_PLAN_EN)[p.tipo]}
+                      </div>
+                      <div style={{fontSize:'0.98rem',color:planHecho.includes(i)?'rgba(13,61,61,0.4)':'#0D3D3D',lineHeight:1.5,fontWeight:500,textDecoration:planHecho.includes(i)?'line-through':'none',transition:'all 0.2s ease'}}>
+                        {p.accion}
+                      </div>
+                    </div>
+                  </div>
+                  {p.etiqueta && (
+                    <div style={{marginLeft:'1.7rem',fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.75rem',color:'#A06030',marginBottom:'0.4rem'}}>
+                      {p.etiqueta}
+                    </div>
+                  )}
+                  <div onClick={()=>togglePorqueVisible(i)} style={{marginLeft:'1.7rem',fontSize:'0.72rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.4)',fontWeight:600,cursor:'pointer'}}>
+                    {porqueVisible.includes(i) ? (is_es?'▲ Por qué':'▲ Why') : (is_es?'▼ ¿Por qué?':'▼ Why?')}
+                  </div>
+                  {porqueVisible.includes(i) && (
+                    <div style={{marginLeft:'1.7rem',marginTop:'0.4rem'}}>
+                      <p style={{fontSize:'0.78rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.55)',lineHeight:1.6,margin:0}}>
+                        {p.ciencia}
+                      </p>
+                      {p.fuente && (
+                        <p style={{fontSize:'0.68rem',fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',color:'rgba(13,61,61,0.35)',marginTop:'0.3rem',marginBottom:0}}>
+                          {is_es ? 'Fuente: ' : 'Source: '}{p.fuente}
+                        </p>
+                      )}
+                      {p.link && (
+                        <span onClick={()=>window.location.href=p.link} style={{display:'inline-block',marginTop:'0.4rem',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'#C9935A',cursor:'pointer',fontWeight:600}}>
+                          {p.linkLabel}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+              {!planLoading && (planGenerado || plan).length > 0 && planHecho.filter(x => x < (planGenerado || plan).length).length === (planGenerado || plan).length && (
+                <div style={{marginTop:'0.25rem',padding:'0.6rem 0.75rem',background:'rgba(201,147,90,0.12)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',color:'#A06030',fontWeight:600}}>
+                  {is_es ? '✦ Plan de hoy completado. Tu constancia es la que cambia tu biología.' : '✦ Today\'s plan complete. Consistency is what changes your biology.'}
+                </div>
+              )}
+              {!planLoading && (planGenerado || plan).length > 0 && planHecho.filter(x => x < (planGenerado || plan).length).length === (planGenerado || plan).length && (
+                <div style={{marginTop:'0.6rem',padding:'0.9rem 1rem',background:'linear-gradient(135deg,rgba(13,61,61,0.95),rgba(13,61,61,0.85))',borderRadius:'0.75rem'}}>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,letterSpacing:'2px',color:'#C9935A',textTransform:'uppercase',marginBottom:'0.4rem'}}>
+                    {is_es ? '✦ Descubrimiento desbloqueado' : '✦ Discovery unlocked'}
+                  </div>
+                  <p style={{fontSize:'0.9rem',color:'rgba(255,255,255,0.92)',lineHeight:1.65,fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',margin:0}}>
+                    {(is_es ? DESCUBRIMIENTOS_ES : DESCUBRIMIENTOS_EN)[new Date().getDate() % DESCUBRIMIENTOS_ES.length]}
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
