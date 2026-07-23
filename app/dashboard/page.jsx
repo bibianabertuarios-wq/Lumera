@@ -461,6 +461,7 @@ export default function Dashboard() {
       pushEnabled: profile?.push_enabled || false,
       pesoMeta: profile?.peso_meta || null,
       pesoFecha: profile?.peso_fecha || null,
+      tdee: profile?.tdee || null,
     };
     setUser(userData);
     try {
@@ -592,6 +593,18 @@ export default function Dashboard() {
       }
       return { icono: p.icono, accion: p.accion, ciencia: p.porque, ...(p.etiqueta ? { etiqueta: p.etiqueta } : {}), ...(link ? { link, linkLabel } : {}) };
     });
+  };
+
+  const getObjetivoKcalHoy = () => {
+    const { objetivoKcal } = getLecturaDelDia({
+      nombre: user?.nombre,
+      objetivo: user?.objetivo,
+      sintoma: user?.sintoma,
+      is_es: user?.lang === 'es',
+      diasRegistrados: (ultimosCheckins || []).length,
+      tdee: user?.tdee,
+    });
+    return objetivoKcal;
   };
 
   const enviarMensajeChat = async () => {
@@ -1008,6 +1021,14 @@ export default function Dashboard() {
                   : (is_es ? `✦ Ver mi plan de hoy${c}` : `✦ See my plan for today${c}`);
               })()}
             </button>
+            {(() => {
+              const objetivoKcal = getObjetivoKcalHoy();
+              return objetivoKcal && (
+                <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(255,255,255,0.3)',textAlign:'center',marginTop:'0.4rem',marginBottom:0}}>
+                  {is_es ? `Objetivo diario de referencia: ~${objetivoKcal} kcal` : `Reference daily target: ~${objetivoKcal} kcal`}
+                </p>
+              );
+            })()}
 
             {/* PLAN DEL DIA */}
             {planVisible && (

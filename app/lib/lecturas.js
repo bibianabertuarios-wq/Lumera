@@ -339,8 +339,17 @@ function ajustarPorRestriccion(accion, restriccionKey, is_es) {
   return { accion: nuevaAccion, etiqueta: etiquetas[restriccionKey][is_es ? 'es' : 'en'] };
 }
 
+// Objetivo diario de referencia a partir del TDEE ya calculado en el registro (Mifflin-St Jeor).
+// Nunca se muestra como titular ni por acción — solo como dato secundario del día.
+function calcularObjetivoKcal(tdee, claveObjetivo) {
+  if (!tdee) return null;
+  if (claveObjetivo === 'peso') return Math.round((tdee - 400) / 10) * 10;
+  if (claveObjetivo === 'fuerza') return Math.round((tdee + 250) / 10) * 10;
+  return Math.round(tdee / 10) * 10;
+}
+
 // API principal: instantánea, sin llamadas de red.
-export function getLecturaDelDia({ nombre, objetivo, sintoma, is_es, diasRegistrados = 0, racha = 0, restricciones, condiciones }) {
+export function getLecturaDelDia({ nombre, objetivo, sintoma, is_es, diasRegistrados = 0, racha = 0, restricciones, condiciones, tdee }) {
   const claveSintoma = normalizarSintoma(sintoma);
   const claveObjetivo = normalizarObjetivo(objetivo);
   const entrada = (claveSintoma && LECTURAS[claveSintoma]) || GENERAL_POR_OBJETIVO[claveObjetivo];
@@ -370,5 +379,6 @@ export function getLecturaDelDia({ nombre, objetivo, sintoma, is_es, diasRegistr
   return {
     lectura: entrada.lectura(d),
     plan,
+    objetivoKcal: calcularObjetivoKcal(tdee, claveObjetivo),
   };
 }
