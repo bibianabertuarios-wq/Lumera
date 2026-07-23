@@ -319,6 +319,12 @@ export default function Dashboard() {
   const [pesoInput, setPesoInput] = useState('');
   const [metaInput, setMetaInput] = useState('');
   const [guardandoPeso, setGuardandoPeso] = useState(false);
+  const [showYoModal, setShowYoModal] = useState(false);
+  const [yoNombre, setYoNombre] = useState('');
+  const [yoObjetivo, setYoObjetivo] = useState('');
+  const [yoSintoma, setYoSintoma] = useState('');
+  const [guardandoYo, setGuardandoYo] = useState(false);
+  const [recursosVisibleYo, setRecursosVisibleYo] = useState(false);
   const [lumiChatInput, setLumiChatInput] = useState('');
   const [lumiChatMessages, setLumiChatMessages] = useState([]);
   const [lumiChatLoading, setLumiChatLoading] = useState(false);
@@ -329,7 +335,6 @@ export default function Dashboard() {
   const [toolsVisible, setToolsVisible] = useState(false);
   const [progresoDetalleVisible, setProgresoDetalleVisible] = useState(false);
   const [usoVisible, setUsoVisible] = useState(false);
-  const [recursosVisible, setRecursosVisible] = useState(false);
   const [periodLog, setPeriodLog] = useState([]);
   const router = useRouter();
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -402,6 +407,36 @@ export default function Dashboard() {
     setShowPesoModal(false);
     setPesoInput('');
     setMetaInput('');
+  };
+
+  const abrirYo = () => {
+    setYoNombre(user?.nombre || '');
+    setYoObjetivo(user?.objetivo || '');
+    setYoSintoma(user?.sintoma || '');
+    setShowYoModal(true);
+  };
+
+  const guardarYo = async () => {
+    setGuardandoYo(true);
+    const updates = {
+      profile_name: yoNombre,
+      objetivo: yoObjetivo,
+      sintoma_principal: yoSintoma,
+      hora_desayuno: horaDesayuno,
+      hora_comida: horaComida,
+      hora_cena: horaCena,
+    };
+    try {
+      await supabase.from('users').update(updates).eq('id', user.id);
+    } catch(e) {}
+    setUser(prev => ({
+      ...prev,
+      nombre: yoNombre,
+      objetivo: yoObjetivo,
+      sintoma: yoSintoma,
+      horaDesayuno, horaComida, horaCena,
+    }));
+    setGuardandoYo(false);
   };
 
   useEffect(() => { init(); }, []);
@@ -701,7 +736,7 @@ export default function Dashboard() {
         <div style={{background:'rgba(255,255,255,0.92)',borderBottom:'1px solid rgba(201,147,90,0.15)',backdropFilter:'blur(10px)',padding:'0.75rem 1.25rem',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,zIndex:100}}>
           <span style={{fontSize:'1.1rem',fontWeight:700,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>✦ Lumera</span>
           <div style={{display:'flex',alignItems:'center',gap:'0.6rem'}}>
-            <div style={{display:'flex',alignItems:'center',gap:'0.5rem',background:'rgba(201,147,90,0.08)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'99px',padding:'0.3rem 0.75rem'}}>
+            <div onClick={abrirYo} role="button" aria-label={is_es ? 'Abrir tu perfil' : 'Open your profile'} style={{display:'flex',alignItems:'center',gap:'0.5rem',background:'rgba(201,147,90,0.08)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'99px',padding:'0.3rem 0.75rem',cursor:'pointer'}}>
               <span style={{fontSize:'0.85rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>{user?.nombre}</span>
             </div>
             {!user?.isPremium && (
@@ -1066,6 +1101,118 @@ export default function Dashboard() {
             </div>
           )}
 
+          {/* PANTALLA YO — cabecera, cifras, datos editables, recursos */}
+          {showYoModal && (() => {
+            const diasContigo = user?.createdAt ? Math.max(0, Math.floor((new Date() - new Date(user.createdAt)) / (1000*60*60*24))) : 0;
+            const OBJETIVOS = is_es
+              ? ['Perder peso','Ganar energía y vitalidad','Equilibrio hormonal','Ganar fuerza y masa muscular','Dormir mejor']
+              : ['Lose weight','Gain energy and vitality','Hormonal balance','Build strength and muscle','Sleep better'];
+            const SINTOMAS = is_es
+              ? ['Cansancio constante','Antojos de dulce','Insomnio o despertar nocturno','Hinchazón','Cambios de humor','Sofocos','Bajo deseo sexual','Niebla mental']
+              : ['Constant fatigue','Sugar cravings','Insomnia or night waking','Bloating','Mood changes','Hot flashes','Low libido','Brain fog'];
+            return (
+              <div style={{position:'fixed',inset:0,background:'#FAF7F1',zIndex:200,overflowY:'auto'}}>
+                <div style={{padding:'1rem 1.25rem',borderBottom:'1px solid rgba(201,147,90,0.15)',display:'flex',alignItems:'center',justifyContent:'space-between',position:'sticky',top:0,background:'#FAF7F1',zIndex:1}}>
+                  <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',textTransform:'uppercase'}}>
+                    {is_es ? 'Yo' : 'Me'}
+                  </span>
+                  <button onClick={()=>setShowYoModal(false)} style={{background:'none',border:'none',color:'rgba(13,61,61,0.4)',fontSize:'1.3rem',cursor:'pointer'}}>✕</button>
+                </div>
+                <div style={{maxWidth:'520px',width:'100%',margin:'0 auto',padding:'1.5rem 1.25rem 2rem'}}>
+
+                  <div style={{textAlign:'center',marginBottom:'1.5rem'}}>
+                    <div style={{width:'64px',height:'64px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.5rem',fontWeight:700,color:'white',fontFamily:"'Cormorant Garamond',serif",margin:'0 auto 0.75rem'}}>
+                      {(user?.nombre || '?').charAt(0).toUpperCase()}
+                    </div>
+                    <h2 style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.4rem',color:'#0D3D3D',marginBottom:'0.25rem'}}>{user?.nombre}</h2>
+                    <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'rgba(13,61,61,0.45)'}}>
+                      {is_es ? `Contigo desde hace ${diasContigo} días` : `With you for ${diasContigo} days`}
+                    </p>
+                  </div>
+
+                  <div style={{display:'flex',gap:'0.75rem',marginBottom:'1.5rem'}}>
+                    <div style={{flex:1,background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1rem',padding:'1rem',textAlign:'center'}}>
+                      <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.6rem',color:'#0D3D3D',fontWeight:700}}>{diasContigo}</div>
+                      <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(13,61,61,0.45)',textTransform:'uppercase',letterSpacing:'1px'}}>{is_es?'días contigo':'days with you'}</div>
+                    </div>
+                    <div style={{flex:1,background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1rem',padding:'1rem',textAlign:'center'}}>
+                      <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.6rem',color:'#0D3D3D',fontWeight:700}}>{fragmentosSemana}/8</div>
+                      <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(13,61,61,0.45)',textTransform:'uppercase',letterSpacing:'1px'}}>{is_es?'fragmentos esta semana':'fragments this week'}</div>
+                    </div>
+                  </div>
+
+                  <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem'}}>
+                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
+                      {is_es ? 'Tus datos' : 'Your details'}
+                    </div>
+
+                    <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(13,61,61,0.5)'}}>
+                      {is_es ? '¿Cómo quieres que te llame?' : 'What should I call you?'}
+                    </label>
+                    <input type="text" value={yoNombre} onChange={e=>setYoNombre(e.target.value)} style={{width:'100%',padding:'0.6rem',borderRadius:'0.6rem',border:'1px solid rgba(201,147,90,0.3)',marginTop:'0.3rem',marginBottom:'0.9rem',fontSize:'0.9rem'}}/>
+
+                    <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(13,61,61,0.5)'}}>
+                      {is_es ? 'Tu objetivo' : 'Your goal'}
+                    </label>
+                    <select value={yoObjetivo} onChange={e=>setYoObjetivo(e.target.value)} style={{width:'100%',padding:'0.6rem',borderRadius:'0.6rem',border:'1px solid rgba(201,147,90,0.3)',marginTop:'0.3rem',marginBottom:'0.9rem',fontSize:'0.9rem',background:'white'}}>
+                      {OBJETIVOS.map(o => <option key={o} value={o}>{o}</option>)}
+                    </select>
+
+                    <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(13,61,61,0.5)'}}>
+                      {is_es ? 'Lo que más te molesta ahora' : 'What bothers you most right now'}
+                    </label>
+                    <select value={yoSintoma} onChange={e=>setYoSintoma(e.target.value)} style={{width:'100%',padding:'0.6rem',borderRadius:'0.6rem',border:'1px solid rgba(201,147,90,0.3)',marginTop:'0.3rem',marginBottom:'0.9rem',fontSize:'0.9rem',background:'white'}}>
+                      {SINTOMAS.map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+
+                    <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(13,61,61,0.5)',display:'block',marginBottom:'0.5rem'}}>
+                      {is_es ? 'Tus horas de comida' : 'Your meal times'}
+                    </label>
+                    {[
+                      { label: is_es ? 'Desayunar' : 'Breakfast', val: horaDesayuno, set: setHoraDesayuno },
+                      { label: is_es ? 'Comer' : 'Lunch', val: horaComida, set: setHoraComida },
+                      { label: is_es ? 'Cenar' : 'Dinner', val: horaCena, set: setHoraCena },
+                    ].map(({label,val,set}) => (
+                      <div key={label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.6rem'}}>
+                        <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#0D3D3D'}}>{label}</span>
+                        <input type="time" value={val} onChange={e=>set(e.target.value)} style={{padding:'0.4rem 0.6rem',borderRadius:'0.5rem',border:'1px solid rgba(201,147,90,0.3)',fontSize:'0.85rem',background:'white'}}/>
+                      </div>
+                    ))}
+
+                    <button onClick={guardarYo} disabled={guardandoYo} style={{width:'100%',background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer',marginTop:'0.4rem'}}>
+                      {guardandoYo ? (is_es?'Guardando...':'Saving...') : (is_es ? 'Guardar cambios' : 'Save changes')}
+                    </button>
+                  </div>
+
+                  {/* Recursos / biblioteca */}
+                  <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem'}}>
+                    <div onClick={()=>setRecursosVisibleYo(!recursosVisibleYo)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer'}}>
+                      <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase'}}>
+                        {is_es ? 'Recursos' : 'Resources'}
+                      </span>
+                      <span style={{fontSize:'0.75rem',color:'#C9935A',fontWeight:600}}>{recursosVisibleYo ? '▲' : '▼'}</span>
+                    </div>
+                    {recursosVisibleYo && (
+                      <div style={{display:'flex',flexDirection:'column',gap:'0.6rem',marginTop:'0.9rem'}}>
+                        {[
+                          {es:'7 días para sentirte menos hinchada y con menos antojos', en:'7 days to feel less bloated and fewer cravings', href:'/desinflamate'},
+                          {es:'7 noches para calmar tu ansiedad y volver a dormir', en:'7 nights to calm your anxiety and sleep again', href:'/duerme'},
+                          {es:'3 Hábitos GLP-1 Naturales que Cambian tu Energía', en:'3 Natural GLP-1 Habits for Stable Energy', href:'/guia-glp1'},
+                          {es:'Lente Alquímica — analiza tu plato', en:'Alchemical Lens — analyse your plate', href:'/lumera?tab=chat'},
+                        ].map((g,i)=>(
+                          <div key={i} onClick={()=>{ if (g.href.includes('/lumera')) window.location.href = g.href; else router.push(g.href); }} style={{background:'#FAF7F1',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'0.85rem',padding:'0.8rem 1rem',cursor:'pointer',fontFamily:'Montserrat,sans-serif',fontSize:'0.82rem',color:'#0D3D3D',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                            <span>{is_es?g.es:g.en}</span>
+                            <span style={{color:'#C9935A'}}>→</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
           {/* BARRA TRIAL */}
           {!user?.isPremium && (
             <div className={`fade d1 ${visible?'in':''}`} style={{marginBottom:'1rem'}}>
@@ -1144,29 +1291,6 @@ export default function Dashboard() {
                   <div key={i} style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'0.6rem'}}>
                     <div style={{width:'24px',height:'24px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',color:'white',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.7rem',fontWeight:700,flexShrink:0}}>{i+1}</div>
                     <span style={{fontSize:'0.85rem',color:'rgba(13,61,61,0.7)',fontFamily:'Montserrat,sans-serif'}}>{step}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* RECURSOS — acordeón cerrado por defecto (antes "Guías") */}
-            <div onClick={()=>setRecursosVisible(!recursosVisible)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',marginBottom:'0.75rem'}}>
-              <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase'}}>
-                {is_es ? 'Recursos' : 'Resources'}
-              </span>
-              <span style={{fontSize:'0.75rem',color:'#C9935A',fontWeight:600}}>{recursosVisible ? '▲' : '▼'}</span>
-            </div>
-            {recursosVisible && (
-              <div style={{display:'flex',flexDirection:'column',gap:'0.6rem',marginBottom:'1.5rem'}}>
-                {[
-                  {es:'7 días para sentirte menos hinchada y con menos antojos', en:'7 days to feel less bloated and fewer cravings', href:'/desinflamate'},
-                  {es:'7 noches para calmar tu ansiedad y volver a dormir', en:'7 nights to calm your anxiety and sleep again', href:'/duerme'},
-                  {es:'3 Hábitos GLP-1 Naturales que Cambian tu Energía', en:'3 Natural GLP-1 Habits for Stable Energy', href:'/guia-glp1'},
-                  {es:'Lente Alquímica — analiza tu plato', en:'Alchemical Lens — analyse your plate', href:'/lumera?tab=chat'},
-                ].map((g,i)=>(
-                  <div key={i} onClick={()=>{ if (g.href.includes('/lumera')) window.location.href = g.href; else router.push(g.href); }} style={{background:'white',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'0.85rem',padding:'0.8rem 1rem',cursor:'pointer',fontFamily:'Montserrat,sans-serif',fontSize:'0.82rem',color:'#0D3D3D',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                    <span>{is_es?g.es:g.en}</span>
-                    <span style={{color:'#C9935A'}}>→</span>
                   </div>
                 ))}
               </div>
