@@ -234,21 +234,6 @@ function AnilloVivo({ info, is_es, racha = 0, size = 150 }) {
   );
 }
 
-function BarraSemana({ diasCompletados = 0, diasTotales = 7, is_es }) {
-  const pct = Math.round((diasCompletados / diasTotales) * 100);
-  return (
-    <div style={{ margin: '10px 2px 4px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, color: 'rgba(13,61,61,0.5)', marginBottom: 5 }}>
-        <span>{is_es ? 'Tu semana' : 'Your week'}</span>
-        <span style={{ color: '#A06030' }}>{diasCompletados} {is_es ? 'de' : 'of'} {diasTotales}</span>
-      </div>
-      <div style={{ height: 5, background: 'rgba(201,147,90,0.15)', borderRadius: 3 }}>
-        <div style={{ height: 5, background: '#C9935A', borderRadius: 3, width: `${pct}%`, transition: 'width .6s ease' }} />
-      </div>
-    </div>
-  );
-}
-
 const ETIQUETA_ESTADO_ES = { bien:'bien', cansada:'cansada', niebla:'con niebla', regular:'regular' };
 const ETIQUETA_ESTADO_EN = { bien:'good', cansada:'tired', niebla:'foggy', regular:'so-so' };
 
@@ -660,17 +645,21 @@ export default function Dashboard() {
   const bloqueado = !user?.isPremium && diasRestantes === 0;
   const cicloCode = getCicloCode(user?.ciclo);
   const infoCiclo = getFaseCicloInfo(cicloCode, periodLog);
-  const rachaDias = (() => {
-    if (!ultimosCheckins || !ultimosCheckins.length) return 0;
-    const dias = new Set(ultimosCheckins.map(c => c.fecha));
-    let r = 0;
-    const d = new Date();
-    if (!dias.has(d.toISOString().split('T')[0])) d.setDate(d.getDate() - 1);
-    while (dias.has(d.toISOString().split('T')[0])) { r++; d.setDate(d.getDate() - 1); }
-    return r;
-  })();
   const hace7dias = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
   const diasCompletadosSemana = Math.min(7, (ultimosCheckins || []).filter(c => c.fecha >= hace7dias).length);
+  // La Obra: 1 fragmento por día con check-in esta semana (hasta 7) + 1 bonus si los 7 días tuvo el plan 3/3.
+  const fragmentosSemana = (() => {
+    let diasPlanCompleto = 0;
+    try {
+      for (let i = 0; i < 7; i++) {
+        const d = new Date(Date.now() - i * 86400000).toISOString().split('T')[0];
+        const hecho = JSON.parse(localStorage.getItem(`lumi_plan_done_${user?.id}_${d}`) || '[]');
+        if (Array.isArray(hecho) && hecho.length >= 3) diasPlanCompleto++;
+      }
+    } catch(e) {}
+    const bonus = diasCompletadosSemana >= 7 && diasPlanCompleto >= 7 ? 1 : 0;
+    return Math.min(8, diasCompletadosSemana + bonus);
+  })();
   const estadoAyer = (!checkinHecho && (ultimosCheckins || []).length >= 3 && ultimosCheckins?.[0]) ? estadoDesdeSintomaHoy(ultimosCheckins[0].sintoma_hoy) : null;
   const objLower = (user?.objetivo || '').toLowerCase();
   const esObjetivoPeso = objLower.includes('peso') || objLower.includes('weight') || objLower.includes('fuerza') || objLower.includes('muscul') || objLower.includes('strength') || objLower.includes('muscle');
@@ -800,12 +789,9 @@ export default function Dashboard() {
           {/* TU PLAN DE HOY — tres patas, siempre visibles (nunca en acordeón); solo el "por qué" se pliega */}
           {checkinHecho && (
             <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.5rem'}}>
+              <div style={{marginBottom:'0.5rem'}}>
                 <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase'}}>
                   {is_es ? 'Tu plan de hoy' : 'Your plan today'}
-                </span>
-                <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'#A06030',fontWeight:700}}>
-                  {planHecho.filter(x => x < (planGenerado||plan).length).length} {is_es?'de':'of'} {(planGenerado||plan).length}
                 </span>
               </div>
               {(() => {
@@ -953,7 +939,7 @@ export default function Dashboard() {
           {checkinHecho && (
           <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
             <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.5rem'}}>
-              {is_es ? `Tu ritual · ${Math.max(1, ritualHecho.length)}/4` : `Your ritual · ${Math.max(1, ritualHecho.length)}/4`}
+              {is_es ? 'Tu ritual' : 'Your ritual'}
             </div>
             {[
               { label: is_es?'Respiración':'Breathing', sub: is_es?'1 minuto guiado':'1 guided minute', onClick: () => { marcarRitualHecho(0); setCalmaActiva(true); } },
@@ -987,13 +973,8 @@ export default function Dashboard() {
                   {is_es ? `Tu progreso · ${user.objetivo}` : `Your progress · ${user.objetivo}`}
                 </p>
               )}
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.9rem'}}>
-                <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1rem',color:'#0D3D3D',margin:0}}>
-                  {is_es
-                    ? `Racha de ${rachaDias} ${rachaDias === 1 ? 'día' : 'días'} · ${diasCompletadosSemana}/7 esta semana`
-                    : `${rachaDias}-day streak · ${diasCompletadosSemana}/7 this week`}
-                </p>
-                <span onClick={()=>setProgresoDetalleVisible(!progresoDetalleVisible)} style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.72rem',color:'#C9935A',fontWeight:600,cursor:'pointer',whiteSpace:'nowrap',marginLeft:'0.5rem'}}>
+              <div style={{display:'flex',justifyContent:'flex-end',alignItems:'center',marginBottom:'0.9rem'}}>
+                <span onClick={()=>setProgresoDetalleVisible(!progresoDetalleVisible)} style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.72rem',color:'#C9935A',fontWeight:600,cursor:'pointer',whiteSpace:'nowrap'}}>
                   {progresoDetalleVisible ? (is_es ? '▲ Ocultar' : '▲ Hide') : (is_es ? 'Ver detalle →' : 'See detail →')}
                 </span>
               </div>
@@ -1111,22 +1092,36 @@ export default function Dashboard() {
               </div>
             </div>
             <div onClick={() => setCalmaActiva(true)} style={{flex:1,background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1rem',cursor:'pointer',textAlign:'center'}} role="button" aria-label={is_es ? 'Abrir tu minuto de calma' : 'Open your calm minute'}>
-              <AnilloVivo info={infoCiclo} is_es={is_es} racha={rachaDias} size={64} />
+              <AnilloVivo info={infoCiclo} is_es={is_es} size={64} />
               <p style={{textAlign:'center',fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',letterSpacing:'1px',color:'#A06030',textTransform:'uppercase',margin:'0.35rem 0 0'}}>
                 {is_es ? 'Momento de calma' : 'Calm minute'}
               </p>
             </div>
           </div>
           {calmaActiva && <CalmaOverlay is_es={is_es} onClose={() => setCalmaActiva(false)} />}
-          <div className={`fade d1 ${visible?'in':''}`} style={{marginBottom:'1.25rem'}}>
-            <BarraSemana diasCompletados={diasCompletadosSemana} diasTotales={7} is_es={is_es} />
-            {(diasCompletadosSemana === 3 || diasCompletadosSemana === 7) && (
-              <p style={{textAlign:'center',fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'0.85rem',fontStyle:'italic',color:'#A06030',marginTop:'0.6rem'}}>
-                {diasCompletadosSemana === 7
-                  ? (is_es ? '✦ Semana completa. Esto es lo que cambia tu biología.' : '✦ Full week. This is what changes your biology.')
-                  : (is_es ? '✦ Día 3 — tu constancia ya se nota.' : '✦ Day 3 — your consistency is already showing.')}
-              </p>
-            )}
+
+          {/* TU OBRA DE ESTA SEMANA — único marcador de progreso de Inicio */}
+          <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
+            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.4rem'}}>
+              {is_es ? `Tu obra de esta semana · ${fragmentosSemana} de 8 fragmentos` : `Your artwork this week · ${fragmentosSemana} of 8 fragments`}
+            </div>
+            <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.85rem',color:'rgba(13,61,61,0.55)',marginBottom:'0.9rem'}}>
+              {is_es ? 'Cada cosa que haces destapa un trozo.' : 'Everything you do uncovers a piece.'}
+            </p>
+            <div style={{position:'relative',borderRadius:'0.85rem',overflow:'hidden'}}>
+              <img src="/images/shula_principal.jpg" alt="" style={{width:'100%',height:'auto',display:'block',opacity:0.15,filter:'grayscale(1)'}} />
+              <svg viewBox="0 0 400 300" preserveAspectRatio="none" style={{position:'absolute',inset:0,width:'100%',height:'100%'}}>
+                <defs>
+                  <mask id="obraMask">
+                    <rect width="400" height="300" fill="black"/>
+                    {[...Array(8)].map((_, i) => i < fragmentosSemana && (
+                      <rect key={i} x={(i%4)*100} y={Math.floor(i/4)*150} width="100" height="150" fill="white"/>
+                    ))}
+                  </mask>
+                </defs>
+                <image href="/images/shula_principal.jpg" x="0" y="0" width="400" height="300" preserveAspectRatio="xMidYMid slice" mask="url(#obraMask)"/>
+              </svg>
+            </div>
           </div>
 
           {/* BLOQUE 3 — TU SEMANA + TOOLS */}
