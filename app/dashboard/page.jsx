@@ -449,6 +449,8 @@ export default function Dashboard() {
       nombre: (profile?.profile_name || session.user.email?.split('@')[0] || 'amiga').replace(/^./, c => c.toUpperCase()),
       sintoma: profile?.sintoma_principal || '',
       objetivo: profile?.objetivo || '',
+      restricciones: profile?.restricciones || '',
+      condiciones: profile?.health_conditions || null,
       createdAt: profile?.created_at || session.user.created_at,
       isPremium: ['active','paid'].includes(profile?.subscription_status),
       lang: profile?.language || 'es',
@@ -575,6 +577,8 @@ export default function Dashboard() {
       nombre: user?.nombre,
       objetivo: user?.objetivo,
       sintoma: user?.sintoma,
+      restricciones: user?.restricciones,
+      condiciones: user?.condiciones,
       is_es,
       diasRegistrados: (ultimosCheckins || []).length,
     });
@@ -586,7 +590,7 @@ export default function Dashboard() {
       } else if (texto.includes('entrena') || texto.includes('train') || texto.includes('camina') || texto.includes('walk') || texto.includes('series') || texto.includes('sets') || texto.includes('movimiento') || texto.includes('movement')) {
         link = '/lumera?tab=exercise'; linkLabel = is_es ? 'Ver tu rutina →' : 'See your routine →';
       }
-      return { icono: p.icono, accion: p.accion, ciencia: p.porque, ...(link ? { link, linkLabel } : {}) };
+      return { icono: p.icono, accion: p.accion, ciencia: p.porque, ...(p.etiqueta ? { etiqueta: p.etiqueta } : {}), ...(link ? { link, linkLabel } : {}) };
     });
   };
 
@@ -768,9 +772,14 @@ export default function Dashboard() {
               <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.15rem',color:'#0D3D3D',lineHeight:1.4,marginBottom:'0.4rem'}}>
                 {(planGenerado || plan)[0].accion}
               </p>
-              <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'rgba(13,61,61,0.5)',lineHeight:1.5,marginBottom:'1rem'}}>
+              <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'rgba(13,61,61,0.5)',lineHeight:1.5,marginBottom:(planGenerado || plan)[0].etiqueta ? '0.35rem' : '1rem'}}>
                 {(planGenerado || plan)[0].ciencia}
               </p>
+              {(planGenerado || plan)[0].etiqueta && (
+                <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.75rem',color:'#A06030',marginBottom:'1rem'}}>
+                  {(planGenerado || plan)[0].etiqueta}
+                </p>
+              )}
               <button onClick={()=>togglePlanItem(0)} style={{width:'100%',background:planHecho.includes(0)?'rgba(201,147,90,0.15)':'#C9935A',color:planHecho.includes(0)?'#A06030':'white',border:'none',borderRadius:'0.75rem',padding:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer'}}>
                 {planHecho.includes(0) ? (is_es ? '✓ Hecho' : '✓ Done') : (is_es ? 'Empezar →' : 'Start →')}
               </button>
@@ -1013,9 +1022,14 @@ export default function Dashboard() {
                       <span style={{width:'22px',height:'22px',borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.8rem',border:'1.5px solid '+(planHecho.includes(i)?'#C9935A':'rgba(255,255,255,0.3)'),background:planHecho.includes(i)?'#C9935A':'transparent',color:'white',transition:'all 0.2s ease'}}>{planHecho.includes(i)?'✓':''}</span>
                       <span style={{fontSize:'0.98rem',color:planHecho.includes(i)?'rgba(255,255,255,0.5)':'rgba(255,255,255,0.95)',lineHeight:1.5,flex:1,fontWeight:500,textDecoration:planHecho.includes(i)?'line-through':'none',transition:'all 0.2s ease'}}>{p.accion}</span>
                     </div>
-                    <div style={{marginLeft:'1.7rem',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'rgba(255,255,255,0.45)',lineHeight:1.6,marginBottom:p.link?'0.4rem':'0'}}>
+                    <div style={{marginLeft:'1.7rem',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'rgba(255,255,255,0.45)',lineHeight:1.6,marginBottom:(p.etiqueta || p.link)?'0.4rem':'0'}}>
                       {p.ciencia}
                     </div>
+                    {p.etiqueta && (
+                      <div style={{marginLeft:'1.7rem',fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.72rem',color:'#C9935A',marginBottom:p.link?'0.4rem':'0'}}>
+                        {p.etiqueta}
+                      </div>
+                    )}
                     {p.link && (
                       <div style={{marginLeft:'1.7rem'}}>
                         <span onClick={()=>window.location.href=p.link} style={{fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'#C9935A',cursor:'pointer',fontWeight:600}}>

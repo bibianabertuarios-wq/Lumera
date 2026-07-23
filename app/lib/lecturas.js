@@ -264,14 +264,111 @@ function normalizarObjetivo(raw) {
   return 'hormonal';
 }
 
+// Condiciones reales del quiz (pregunta "condiciones") que tienen adaptación de nutrición.
+// El resto (hipotiroidismo, SOP, endometriosis, miomas, menopausia quirúrgica, otra) no
+// tiene aquí una adaptación propia — no se inventa etiqueta si no hay nada real que adaptar.
+const MAPA_CONDICIONES = {
+  'hipertensión': 'hipertension',
+  'high blood pressure': 'hipertension',
+  'diabetes o resistencia a la insulina': 'diabetes',
+  'diabetes or insulin resistance': 'diabetes',
+  'fibromialgia': 'fibromialgia',
+  'fibromyalgia': 'fibromialgia',
+};
+
+function normalizarCondiciones(raw) {
+  const lista = Array.isArray(raw) ? raw : (raw ? [raw] : []);
+  const claves = lista.map(c => MAPA_CONDICIONES[String(c).trim().toLowerCase()]).filter(Boolean);
+  return [...new Set(claves)];
+}
+
+// Prioridad si hay varias: la más específica para el plato de hoy va primero.
+const ORDEN_CONDICIONES = ['diabetes', 'hipertension', 'fibromialgia'];
+
+// TODO copy pendiente revisión Bibiana — formulación blanda, no diagnóstica
+const ADAPTACION_CONDICION = {
+  diabetes: {
+    es: { accion: 'Verdura primero, proteína después, hidrato al final — nunca el hidrato solo', porque: 'El orden en que comes suaviza el pico de glucosa hasta un 30%, aunque comas exactamente lo mismo.', etiqueta: 'Adaptado a tu diabetes: el orden del plato importa tanto como lo que comes.' },
+    en: { accion: 'Vegetables first, protein next, carbs last — never carbs alone', porque: 'The order you eat in softens the glucose spike by up to 30%, even eating exactly the same food.', etiqueta: "Adapted for your diabetes: the order of your plate matters as much as what's on it." },
+  },
+  hipertension: {
+    es: { accion: 'Hoy sin sal añadida — dale sabor con limón, ajo o hierbas frescas', porque: 'El potasio de la verdura ayuda a tu tensión más que reducir la sal por sí sola.', etiqueta: 'Adaptado a tu tensión: sin sal añadida, con potasio de la verdura.' },
+    en: { accion: 'No added salt today — flavour with lemon, garlic or fresh herbs', porque: 'Potassium from vegetables helps your blood pressure more than cutting salt alone.', etiqueta: 'Adapted for your blood pressure: no added salt, with potassium from vegetables.' },
+  },
+  fibromialgia: {
+    es: { accion: 'Come cada 3-4 horas hoy — evita ayunos largos', porque: 'Los picos y bajones de glucosa agravan el dolor y la fatiga en fibromialgia.', etiqueta: 'Adaptado a tu fibromialgia: comidas regulares, sin ayunos largos.' },
+    en: { accion: 'Eat every 3-4 hours today — avoid long fasts', porque: 'Glucose spikes and dips make fibromyalgia pain and fatigue worse.', etiqueta: 'Adapted for your fibromyalgia: regular meals, no long fasts.' },
+  },
+};
+
+const MAPA_RESTRICCIONES = {
+  'vegetariana': 'vegetariana', 'vegetarian': 'vegetariana',
+  'vegana': 'vegana', 'vegan': 'vegana',
+  'sin gluten': 'sin_gluten', 'gluten-free': 'sin_gluten',
+  'sin lácteos': 'sin_lacteos', 'dairy-free': 'sin_lacteos',
+};
+
+function normalizarRestriccion(raw) {
+  return MAPA_RESTRICCIONES[(raw || '').trim().toLowerCase()] || null;
+}
+
+// Ajusta la fuente de proteína/lácteos/gluten del texto SOLO si de verdad hay conflicto.
+// Si no hay nada que cambiar, no se toca el texto ni se muestra etiqueta.
+function ajustarPorRestriccion(accion, restriccionKey, is_es) {
+  const conflictos = {
+    vegetariana: /salmón|pescado|carne|salmon|fish|meat/i,
+    vegana: /salmón|pescado|carne|huevo|yogur|queso|lácte|salmon|fish|meat|egg|yoghurt|cheese|dairy/i,
+    sin_gluten: /avena|pan\b|trigo|oat|bread|wheat/i,
+    sin_lacteos: /yogur|queso|leche|yoghurt|cheese|milk/i,
+  };
+  const reemplazos = {
+    vegetariana: { es: 'huevo, queso o legumbres', en: 'eggs, cheese or legumes' },
+    vegana: { es: 'legumbres, tofu o frutos secos', en: 'legumes, tofu or nuts' },
+    sin_gluten: { es: 'avena certificada sin gluten o quinoa', en: 'certified gluten-free oats or quinoa' },
+    sin_lacteos: { es: 'bebida vegetal o alternativa sin lácteos', en: 'plant milk or a dairy-free alternative' },
+  };
+  const etiquetas = {
+    vegetariana: { es: 'Adaptado a que eres vegetariana.', en: "Adapted because you're vegetarian." },
+    vegana: { es: 'Adaptado a que eres vegana, sin lácteos ni huevo.', en: "Adapted because you're vegan, no dairy or egg." },
+    sin_gluten: { es: 'Sin gluten, como me dijiste.', en: 'Gluten-free, as you told me.' },
+    sin_lacteos: { es: 'Sin lácteos, como me dijiste.', en: 'Dairy-free, as you told me.' },
+  };
+  const patron = conflictos[restriccionKey];
+  if (!patron || !patron.test(accion)) return null;
+  const nuevaAccion = accion.replace(patron, reemplazos[restriccionKey][is_es ? 'es' : 'en']);
+  return { accion: nuevaAccion, etiqueta: etiquetas[restriccionKey][is_es ? 'es' : 'en'] };
+}
+
 // API principal: instantánea, sin llamadas de red.
-export function getLecturaDelDia({ nombre, objetivo, sintoma, is_es, diasRegistrados = 0, racha = 0 }) {
+export function getLecturaDelDia({ nombre, objetivo, sintoma, is_es, diasRegistrados = 0, racha = 0, restricciones, condiciones }) {
   const claveSintoma = normalizarSintoma(sintoma);
   const claveObjetivo = normalizarObjetivo(objetivo);
   const entrada = (claveSintoma && LECTURAS[claveSintoma]) || GENERAL_POR_OBJETIVO[claveObjetivo];
   const d = { nombre: nombre || (is_es ? 'Hola' : 'Hi'), is_es, diasRegistrados, racha, objetivo: claveObjetivo };
+
+  const plan = entrada.plan(d).map(item => {
+    if (item.tipo !== 'nutricion') return item;
+
+    // Prioridad: una condición médica real (si aplica) reemplaza la acción de nutrición.
+    const clavesCondicion = normalizarCondiciones(condiciones);
+    const condicionAplicable = ORDEN_CONDICIONES.find(c => clavesCondicion.includes(c));
+    if (condicionAplicable) {
+      const ad = ADAPTACION_CONDICION[condicionAplicable][is_es ? 'es' : 'en'];
+      return { ...item, accion: ad.accion, porque: ad.porque, etiqueta: ad.etiqueta };
+    }
+
+    // Si no hay condición, ajustamos por restricción alimentaria solo si el texto entra en conflicto.
+    const claveRestriccion = normalizarRestriccion(restricciones);
+    if (claveRestriccion) {
+      const ajuste = ajustarPorRestriccion(item.accion, claveRestriccion, is_es);
+      if (ajuste) return { ...item, accion: ajuste.accion, etiqueta: ajuste.etiqueta };
+    }
+
+    return item;
+  });
+
   return {
     lectura: entrada.lectura(d),
-    plan: entrada.plan(d),
+    plan,
   };
 }
