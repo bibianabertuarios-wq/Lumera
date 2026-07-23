@@ -43,11 +43,11 @@ const LECTURAS = {
           ? `${d.nombre}, you've logged ${d.diasRegistrados} days and the bloating keeps showing up. That points to how and when you eat, not what you have for breakfast — today we work on exactly that.`
           : `${d.nombre}, bloating is your main symptom right now. With these first logged days I'll start narrowing down exactly when it shows up for you.`),
     plan: (d) => d.is_es ? [
-      { tipo:'nutricion', icono:'🍽', accion:'Empieza el plato por la verdura y deja el hidrato para el final', porque:'Cambia la velocidad a la que digieres y suaviza la subida de glucosa de después de comer.' },
+      { tipo:'nutricion', icono:'🍽', accion:'Empieza el plato por la verdura (medio plato) y deja el hidrato (una taza) para el final', porque:'Cambia la velocidad a la que digieres y suaviza la subida de glucosa de después de comer.' },
       { tipo:'movimiento', icono:'🚶‍♀️', accion:'15 min de paseo justo al terminar de comer', porque:'Mover el cuerpo después de comer ayuda a que el estómago se vacíe mejor.' },
       { tipo:'interior', icono:'🌙', accion:'3 respiraciones lentas antes del primer bocado', porque:'Comer con el cuerpo en calma cambia cómo lo digieres. Un minuto, nada más.' },
     ] : [
-      { tipo:'nutricion', icono:'🍽', accion:'Start your plate with vegetables, leave the carbs for last', porque:'It changes how fast you digest and softens the glucose rise after eating.' },
+      { tipo:'nutricion', icono:'🍽', accion:'Start your plate with vegetables (half the plate), leave the carbs (one cup) for last', porque:'It changes how fast you digest and softens the glucose rise after eating.' },
       { tipo:'movimiento', icono:'🚶‍♀️', accion:'15 min walk right after your meal', porque:'Moving after eating helps your stomach empty more comfortably.' },
       { tipo:'interior', icono:'🌙', accion:'3 slow breaths before your first bite', porque:'Eating with a calm body changes how you digest. Just one minute.' },
     ],
@@ -79,11 +79,11 @@ const LECTURAS = {
           ? `${d.nombre}, over your last ${d.diasRegistrados} days, brain fog keeps showing up. It's not a lack of effort — it's hydration and good fat for your brain. Today we work from there.`
           : `${d.nombre}, brain fog is what weighs on you most right now. Let's start with what your brain needs first: water and omega-3.`),
     plan: (d) => d.is_es ? [
-      { tipo:'nutricion', icono:'🥑', accion:'Omega-3 en el desayuno: nueces, aguacate o salmón', porque:'El DHA es el principal ácido graso del cerebro y reduce la neuroinflamación que causa niebla.' },
+      { tipo:'nutricion', icono:'🥑', accion:'Omega-3 en el desayuno: un puñado de nueces, medio aguacate o una palma de mano de salmón', porque:'El DHA es el principal ácido graso del cerebro y reduce la neuroinflamación que causa niebla.' },
       { tipo:'movimiento', icono:'💧', accion:'Botella de agua a la vista todo el día', porque:'Tu cerebro es 75% agua — una deshidratación del 2% ya nubla la memoria y el foco.' },
       { tipo:'interior', icono:'⏸️', accion:'Una sola tarea a la vez durante 25 min, sin cambiar de ventana', porque:'Cambiar de tarea constantemente es lo que más agota tu claridad mental, más que el cansancio en sí.' },
     ] : [
-      { tipo:'nutricion', icono:'🥑', accion:'Omega-3 at breakfast: walnuts, avocado or salmon', porque:'DHA is the brain\'s main fatty acid and reduces the neuroinflammation behind brain fog.' },
+      { tipo:'nutricion', icono:'🥑', accion:'Omega-3 at breakfast: a handful of walnuts, half an avocado or a palm-sized piece of salmon', porque:'DHA is the brain\'s main fatty acid and reduces the neuroinflammation behind brain fog.' },
       { tipo:'movimiento', icono:'💧', accion:'Keep a water bottle in sight all day', porque:'Your brain is 75% water — 2% dehydration already clouds memory and focus.' },
       { tipo:'interior', icono:'⏸️', accion:'One task at a time for 25 min, no tab-switching', porque:'Constantly switching tasks drains your mental clarity more than tiredness itself.' },
     ],
@@ -115,11 +115,11 @@ const LECTURAS = {
           ? `${d.nombre}, over your ${d.diasRegistrados} logged days your mood shifts more than you'd like. It has a real biological base — today we work on it through gut and movement.`
           : `${d.nombre}, mood swings are what you notice most right now. Let's start with something that acts fast: fibre and gentle movement.`),
     plan: (d) => d.is_es ? [
-      { tipo:'nutricion', icono:'🌾', accion:'Una ración extra de fibra hoy: legumbres, avena o verdura', porque:'La fibra alimenta bacterias que fabrican serotonina — tu ánimo también se cocina en el intestino.' },
+      { tipo:'nutricion', icono:'🌾', accion:'Una ración extra de fibra hoy: un puñado de legumbres, media taza de avena o un plato de verdura', porque:'La fibra alimenta bacterias que fabrican serotonina — tu ánimo también se cocina en el intestino.' },
       { tipo:'movimiento', icono:'🚶‍♀️', accion:'20 min de movimiento suave, al aire libre si puedes', porque:'El movimiento libera endorfinas y baja el cortisol de forma medible en menos de media hora.' },
       { tipo:'interior', icono:'🫁', accion:'Respiración lenta, 4-6 veces por minuto, 2 minutos', porque:'Activa el nervio vago y baja el cortisol en minutos — es la vía más rápida para calmar el ánimo.' },
     ] : [
-      { tipo:'nutricion', icono:'🌾', accion:'One extra serving of fibre today: legumes, oats or veg', porque:'Fibre feeds bacteria that make serotonin — your mood is also cooked in your gut.' },
+      { tipo:'nutricion', icono:'🌾', accion:'An extra serving of fibre today: a handful of legumes, half a cup of oats or a plate of vegetables', porque:'Fibre feeds bacteria that make serotonin — your mood is also cooked in your gut.' },
       { tipo:'movimiento', icono:'🚶‍♀️', accion:'20 min of gentle movement, outdoors if you can', porque:'Movement releases endorphins and measurably lowers cortisol in under half an hour.' },
       { tipo:'interior', icono:'🫁', accion:'Slow breathing, 4-6 breaths per minute, for 2 minutes', porque:'It activates the vagus nerve and lowers cortisol within minutes — the fastest way to steady your mood.' },
     ],
@@ -151,11 +151,11 @@ const LECTURAS = {
           ? `${d.nombre}, over ${d.diasRegistrados} logged days sugar cravings keep showing up, especially when your energy dips. That is chemistry, not a lack of willpower.`
           : `${d.nombre}, sugar cravings are what you notice most right now. Let's start with what calms them best: protein from breakfast.`),
     plan: (d) => d.is_es ? [
-      { tipo:'nutricion', icono:'🥚', accion:'Proteína real en el desayuno: huevo, yogur griego o similar', porque:'La proteína del desayuno reduce los antojos de dulce por la tarde — es química, no fuerza de voluntad.' },
+      { tipo:'nutricion', icono:'🥚', accion:'Proteína real en el desayuno: 2 huevos, un vaso de yogur griego o similar', porque:'La proteína del desayuno reduce los antojos de dulce por la tarde — es química, no fuerza de voluntad.' },
       { tipo:'movimiento', icono:'🚶‍♀️', accion:'2 min de caminar cuando llegue el antojo', porque:'Mover el cuerpo desvía la atención y baja el pico de glucosa que dispara las ganas de dulce.' },
       { tipo:'interior', icono:'💧', accion:'Un vaso de agua antes de decidir', porque:'La sed se confunde muchas veces con hambre de dulce — el cuerpo pide una cosa y suena a otra.' },
     ] : [
-      { tipo:'nutricion', icono:'🥚', accion:'Real protein at breakfast: eggs, Greek yoghurt or similar', porque:'Protein at breakfast reduces afternoon sugar cravings — it is chemistry, not willpower.' },
+      { tipo:'nutricion', icono:'🥚', accion:'Real protein at breakfast: 2 eggs, a glass of Greek yoghurt or similar', porque:'Protein at breakfast reduces afternoon sugar cravings — it is chemistry, not willpower.' },
       { tipo:'movimiento', icono:'🚶‍♀️', accion:'A 2-min walk when the craving hits', porque:'Moving shifts your focus and lowers the glucose spike that triggers the craving for sugar.' },
       { tipo:'interior', icono:'💧', accion:'A glass of water before you decide', porque:'Thirst is often mistaken for a sugar craving — the body asks for one thing and it sounds like another.' },
     ],
@@ -169,11 +169,11 @@ const LECTURAS = {
           ? `${d.nombre}, over ${d.diasRegistrados} logged days your desire has stayed low. It is often more linked to rest and built-up stress than anything else.`
           : `${d.nombre}, low desire is what concerns you most right now. Let's start with what affects it most at the root: rest.`),
     plan: (d) => d.is_es ? [
-      { tipo:'nutricion', icono:'🥑', accion:'Grasas buenas hoy: aceite de oliva, aguacate o frutos secos', porque:'Tus hormonas sexuales se fabrican a partir de grasa — sin suficiente, la producción baja.' },
+      { tipo:'nutricion', icono:'🥑', accion:'Grasas buenas hoy: una cucharada de aceite de oliva, medio aguacate o un puñado de frutos secos', porque:'Tus hormonas sexuales se fabrican a partir de grasa — sin suficiente, la producción baja.' },
       { tipo:'movimiento', icono:'🚶‍♀️', accion:'20 min de movimiento que disfrutes, sin más objetivo que eso', porque:'El movimiento baja el cortisol acumulado, que es uno de los frenos más directos del deseo.' },
       { tipo:'interior', icono:'🌙', accion:'Prioriza dormir 7-8h esta noche', porque:'El descanso insuficiente baja directamente las hormonas relacionadas con el deseo al día siguiente.' },
     ] : [
-      { tipo:'nutricion', icono:'🥑', accion:'Good fats today: olive oil, avocado or nuts', porque:'Your sex hormones are built from fat — without enough, production drops.' },
+      { tipo:'nutricion', icono:'🥑', accion:'Good fats today: a tablespoon of olive oil, half an avocado or a handful of nuts', porque:'Your sex hormones are built from fat — without enough, production drops.' },
       { tipo:'movimiento', icono:'🚶‍♀️', accion:'20 min of movement you enjoy, no other goal', porque:'Movement lowers built-up cortisol, one of the most direct brakes on desire.' },
       { tipo:'interior', icono:'🌙', accion:'Prioritise 7-8h of sleep tonight', porque:'Not enough rest directly lowers desire-related hormones the next day.' },
     ],
@@ -187,11 +187,11 @@ const GENERAL_POR_OBJETIVO = {
       ? `${d.nombre}, estamos empezando a conocer tu cuerpo. Con lo que registres estos días, tu plan se irá afinando — hoy arrancamos por lo más simple.`
       : `${d.nombre}, we're just starting to get to know your body. As you log these first days, your plan will get sharper — today we start with the simplest thing.`,
     plan: (d) => d.is_es ? [
-      { tipo:'nutricion', icono:'🕗', accion:'Desayuna antes de las 9am con proteína', porque:'El cortisol matutino está en su pico — la proteína lo estabiliza y frena el catabolismo muscular.' },
+      { tipo:'nutricion', icono:'🕗', accion:'Desayuna antes de las 9am con una palma de mano de proteína', porque:'El cortisol matutino está en su pico — la proteína lo estabiliza y frena el catabolismo muscular.' },
       { tipo:'movimiento', icono:'🚶', accion:'Camina 20 min después de comer', porque:'Reduce el pico de insulina postcomida hasta un 30%.' },
       { tipo:'interior', icono:'🌙', accion:'Cena antes de las 8pm', porque:'La sensibilidad a la insulina baja por la noche — cenar tarde almacena más grasa.' },
     ] : [
-      { tipo:'nutricion', icono:'🕗', accion:'Breakfast before 9am with protein', porque:'Morning cortisol peaks early — protein stabilises it and prevents muscle breakdown.' },
+      { tipo:'nutricion', icono:'🕗', accion:'Breakfast before 9am with a palm-sized portion of protein', porque:'Morning cortisol peaks early — protein stabilises it and prevents muscle breakdown.' },
       { tipo:'movimiento', icono:'🚶', accion:'Walk 20 min after meals', porque:'Reduces the post-meal insulin spike by up to 30%.' },
       { tipo:'interior', icono:'🌙', accion:'Dinner before 8pm', porque:'Insulin sensitivity drops at night — a late dinner stores more fat.' },
     ],
@@ -229,11 +229,11 @@ const GENERAL_POR_OBJETIVO = {
       ? `${d.nombre}, estamos empezando a conocer tu cuerpo. Con lo que registres estos días, tu plan se irá afinando — hoy trabajamos las bases.`
       : `${d.nombre}, we're just starting to get to know your body. As you log these first days, your plan will get sharper — today we work on the basics.`,
     plan: (d) => d.is_es ? [
-      { tipo:'nutricion', icono:'🥑', accion:'Grasas buenas en cada comida principal', porque:'Tus hormonas se fabrican a partir de grasa — sin suficiente, la producción baja.' },
+      { tipo:'nutricion', icono:'🥑', accion:'Grasas buenas en cada comida principal: una cucharada de aceite de oliva o un puñado de frutos secos', porque:'Tus hormonas se fabrican a partir de grasa — sin suficiente, la producción baja.' },
       { tipo:'movimiento', icono:'🏋️', accion:'20 min de fuerza o movimiento hoy', porque:'El ejercicio de fuerza es lo que más impacta tu metabolismo hormonal después de los 40.' },
       { tipo:'interior', icono:'🌙', accion:'Rutina fija para acostarte, misma hora', porque:'La regularidad del sueño estabiliza el eje hormonal más que la duración exacta.' },
     ] : [
-      { tipo:'nutricion', icono:'🥑', accion:'Good fats at every main meal', porque:'Your hormones are built from fat — without enough, production drops.' },
+      { tipo:'nutricion', icono:'🥑', accion:'Good fats at every main meal: a tablespoon of olive oil or a handful of nuts', porque:'Your hormones are built from fat — without enough, production drops.' },
       { tipo:'movimiento', icono:'🏋️', accion:'20 min of strength or movement today', porque:'Strength training has the biggest impact on hormonal metabolism after 40.' },
       { tipo:'interior', icono:'🌙', accion:'A fixed bedtime routine, same time', porque:'Sleep regularity stabilises your hormonal axis more than exact duration.' },
     ],
@@ -243,11 +243,11 @@ const GENERAL_POR_OBJETIVO = {
       ? `${d.nombre}, estamos empezando a conocer tu cuerpo. Con lo que registres estos días, tu plan se irá afinando — hoy arrancamos por lo esencial.`
       : `${d.nombre}, we're just starting to get to know your body. As you log these first days, your plan will get sharper — today we start with the essentials.`,
     plan: (d) => d.is_es ? [
-      { tipo:'nutricion', icono:'🥩', accion:'1.6g de proteína por kg de peso hoy', porque:'Tu músculo necesita proteína constante para crecer — sin ella, el ejercicio no rinde igual.' },
+      { tipo:'nutricion', icono:'🥩', accion:'Una palma de mano de proteína en cada comida principal hoy', porque:'Tu músculo necesita proteína constante para crecer — sin ella, el ejercicio no rinde igual.' },
       { tipo:'movimiento', icono:'🏋️', accion:'Entrena fuerza, 3 series al fallo', porque:'El ejercicio de fuerza es lo que más impacta tu metabolismo hormonal después de los 40.' },
       { tipo:'interior', icono:'✦', accion:'Duerme 8h — el músculo crece mientras duermes', porque:'Tu cuerpo regenera y crece durante el sueño, no durante el entrenamiento en sí.' },
     ] : [
-      { tipo:'nutricion', icono:'🥩', accion:'1.6g protein per kg of bodyweight today', porque:'Your muscle needs steady protein to grow — without it, training won\'t pay off the same.' },
+      { tipo:'nutricion', icono:'🥩', accion:'A palm-sized portion of protein at every main meal today', porque:'Your muscle needs steady protein to grow — without it, training won\'t pay off the same.' },
       { tipo:'movimiento', icono:'🏋️', accion:'Strength train, 3 sets to failure', porque:'Strength training has the biggest impact on hormonal metabolism after 40.' },
       { tipo:'interior', icono:'✦', accion:'Sleep 8h — muscle grows while you sleep', porque:'Your body regenerates and grows during sleep, not during the workout itself.' },
     ],
@@ -288,8 +288,8 @@ const ORDEN_CONDICIONES = ['diabetes', 'hipertension', 'fibromialgia'];
 // TODO copy pendiente revisión Bibiana — formulación blanda, no diagnóstica
 const ADAPTACION_CONDICION = {
   diabetes: {
-    es: { accion: 'Verdura primero, proteína después, hidrato al final — nunca el hidrato solo', porque: 'El orden en que comes suaviza el pico de glucosa hasta un 30%, aunque comas exactamente lo mismo.', etiqueta: 'Adaptado a tu diabetes: el orden del plato importa tanto como lo que comes.' },
-    en: { accion: 'Vegetables first, protein next, carbs last — never carbs alone', porque: 'The order you eat in softens the glucose spike by up to 30%, even eating exactly the same food.', etiqueta: "Adapted for your diabetes: the order of your plate matters as much as what's on it." },
+    es: { accion: 'Verdura primero, proteína después, y el hidrato (una taza) al final — nunca el hidrato solo', porque: 'El orden en que comes suaviza el pico de glucosa hasta un 30%, aunque comas exactamente lo mismo.', etiqueta: 'Adaptado a tu diabetes: el orden del plato importa tanto como lo que comes.' },
+    en: { accion: 'Vegetables first, protein next, and the carbs (one cup) last — never carbs alone', porque: 'The order you eat in softens the glucose spike by up to 30%, even eating exactly the same food.', etiqueta: "Adapted for your diabetes: the order of your plate matters as much as what's on it." },
   },
   hipertension: {
     es: { accion: 'Hoy sin sal añadida — dale sabor con limón, ajo o hierbas frescas', porque: 'El potasio de la verdura ayuda a tu tensión más que reducir la sal por sí sola.', etiqueta: 'Adaptado a tu tensión: sin sal añadida, con potasio de la verdura.' },
