@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
+import { getLecturaDelDia } from '../lib/lecturas';
 
 const SUPABASE_URL = 'https://pyekwpmbdnmglrjieexc.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5ZWt3cG1iZG5tZ2xyamllZXhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0ODM0OTgsImV4cCI6MjA4MTA1OTQ5OH0.zQl7GF3E6BhDqW3bEMixAbdDcOsW8BsFOBeAGa-5bzY';
@@ -12,16 +13,6 @@ const getHora = () => {
   if (h < 12) return 'mañana';
   if (h < 19) return 'tarde';
   return 'noche';
-};
-
-const getEstadoHormonal = (ciclo, is_es) => {
-  const c = (ciclo || '').toLowerCase();
-  if (!c) return is_es ? 'estado de ciclo no informado — no asumir fase ni menopausia' : 'cycle status unknown — do not assume phase or menopause';
-  if (c.startsWith('regular')) return is_es ? 'ciclo menstrual regular — puede referirse a fases del ciclo en sus recomendaciones' : 'regular menstrual cycle — cycle phases can inform advice';
-  if (c.includes('quir') || c.includes('surgic')) return is_es ? 'menopausia quirurgica — sin ciclo, transicion hormonal abrupta, NUNCA mencionar fases del ciclo' : 'surgical menopause — no cycle, abrupt hormonal transition, NEVER mention cycle phases';
-  if (c.includes('m\u00e1s de 12') || c.includes('over 12')) return is_es ? 'posmenopausia (sin periodo mas de 12 meses) — NUNCA mencionar fases del ciclo ni el periodo' : 'postmenopause (no period over 12 months) — NEVER mention cycle phases or periods';
-  if (c.includes('menos de 12') || c.includes('less than 12')) return is_es ? 'transicion avanzada (sin periodo menos de 12 meses) — no asumir ciclo activo' : 'late transition (no period under 12 months) — do not assume an active cycle';
-  return is_es ? 'ciclo irregular — transicion hormonal activa, no asumir una fase concreta' : 'irregular cycle — active hormonal transition, do not assume a specific phase';
 };
 
 function getCicloCode(cicloRaw) {
@@ -514,152 +505,20 @@ export default function Dashboard() {
     setLoading(false);
     setTimeout(() => setVisible(true), 100);
 
-    // Generar mensaje de LUMI
+    // Generar mensaje de LUMI — instantáneo, local, sin esperar a ninguna API.
     generarMensajeLumi(userData, checkins || [], checkinHoy);
-    generarPlanDelDia(userData, checkins || []);
   };
 
-  const generarMensajeLumi = async (userData, checkins, checkinHoy) => {
-    setLumiLoading(true);
-    try {
-      const is_es = userData.lang === 'es';
-      const diasEnApp = Math.floor((new Date() - new Date(userData.createdAt)) / (1000*60*60*24));
-      const ayer = checkins?.[0];
-      
-      const patronSemana = checkins.length >= 3 ? (() => {
-        const promedioEnergia = checkins.slice(0,3).reduce((a,c) => a+(c.energia||3), 0) / 3;
-        const promedioSueno = checkins.slice(0,3).reduce((a,c) => a+(c.sueno||3), 0) / 3;
-        const tendencia = promedioEnergia < 2.5 ? 'baja energía persistente' : promedioSueno < 2.5 ? 'sueño deficiente' : 'progreso estable';
-        return tendencia;
-      })() : null;
-
-      const imc = userData.peso && userData.talla ?
-        (userData.peso / Math.pow(userData.talla > 3 ? userData.talla/100 : userData.talla, 2)).toFixed(1) : null;
-
-      const objetivoDetalle = (() => {
-        const obj = (userData.objetivo || '').toLowerCase();
-        if (!userData.peso) return '';
-        const tallaM = userData.talla > 3 ? userData.talla/100 : userData.talla;
-        const pesoIdeal = tallaM ? Math.round(21.5 * tallaM * tallaM) : null;
-        if (obj.includes('peso') || obj.includes('weight')) {
-          const diff = pesoIdeal ? (userData.peso - pesoIdeal).toFixed(1) : null;
-          const meses = diff > 0 ? Math.round(diff / 0.75) : null;
-          return diff > 0 ? `Peso: ${userData.peso}kg, IMC: ${imc}. Objetivo: ~${pesoIdeal}kg (-${diff}kg). Tiempo estimado: ${meses} meses a 0.5-1kg/mes.` : `Peso: ${userData.peso}kg, IMC: ${imc}. Ya en rango saludable.`;
-        }
-        if (obj.includes('músculo') || obj.includes('fuerza') || obj.includes('muscle')) {
-          return `Peso: ${userData.peso}kg, IMC: ${imc}. Ganar músculo: superávit 200-300kcal/día, fuerza 3x/semana. Resultados en 8-12 semanas.`;
-        }
-        if (obj.includes('hormonal') || obj.includes('equilibrio') || obj.includes('balance')) {
-          return `IMC: ${imc}. El equilibrio hormonal mejora en 4-6 semanas con hábitos consistentes. Síntomas reducen 40-60% en 3 meses con nutrición, movimiento y sueño optimizados.`;
-        }
-        if (obj.includes('energía') || obj.includes('energy') || obj.includes('sueño') || obj.includes('sleep') || obj.includes('niebla')) {
-          return `IMC: ${imc}. La energía y el sueño mejoran en 2-3 semanas al regular el cortisol. El 70% de la hormona de crecimiento se libera durmiendo — el sueño es tu primera prioridad.`;
-        }
-        return imc ? `IMC: ${imc}.` : '';
-      })();
-
-      const ayerKey = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-      let planAyerHechas = null;
-      try {
-        const a = JSON.parse(localStorage.getItem(`lumi_plan_done_${userData.id}_${ayerKey}`) || 'null');
-        if (Array.isArray(a)) planAyerHechas = Math.min(a.length, 3);
-      } catch(e) {}
-
-      const contexto = [
-        `Eres LUMI, asesora científica de bienestar hormonal. Idioma: ${is_es ? 'español' : 'inglés'}.`,
-        `Usuaria: ${userData.nombre}. Objetivo: ${userData.objetivo || 'equilibrio hormonal'}. Síntoma: ${userData.sintoma || 'bienestar general'}.`,
-        `Estado hormonal (del quiz): ${getEstadoHormonal(userData.ciclo, is_es)}.`,
-        `Días en app: ${diasEnApp}. Fecha: ${hoy}, ${hora}h.`,
-        objetivoDetalle ? `Datos: ${objetivoDetalle}` : '',
-        ayer ? `Ayer: energía ${ayer.energia}/5, sueño ${ayer.sueno}/5, ánimo ${ayer.animo}/5.` : 'Sin checkin previo.',
-        planAyerHechas !== null ? `Ayer completó ${planAyerHechas} de 3 acciones de su plan. Si fueron 3, reconóceselo; si fueron menos, anímala sin culpabilizar.` : '',
-        patronSemana ? `Patrón semana: ${patronSemana}.` : '',
-        ultimosSintomas.length > 0
-          ? `Sintomas recientes registrados: ${ultimosSintomas.slice(0,3).map(s => s.symptoms || s.symptom_name || 'sintoma').join(', ')}. Usalos para anticiparte a lo que puede necesitar hoy.`
-          : '',
-        'Escribe UN mensaje de máximo 4 frases para cuando abra la app hoy.',
-        'Día 1 sin checkins: preséntate, menciona punto de partida con datos reales, primer paso concreto, invita a explorar.',
-        'Día 2+: referencia ayer específicamente, patrón si existe, acción concreta.',
-        'Tono: asesora científica cercana, directa, con números reales. Sin diagnósticos médicos.',
-        'NUNCA: emojis, "no estás rota", "te entiendo", "amiga".',
-        'Termina con invitación a preguntar o explorar la app.',
-      ].filter(Boolean).join(' ');
-
-      const res = await fetch('/api/lumi', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: [{ role: 'user', content: contexto }]
-        })
-      });
-      const data = await res.json();
-      const msg = data.content?.[0]?.text || '';
-      setLumiMsg(msg);
-    } catch(e) {
-      setLumiMsg(userData.lang === 'es' 
-        ? (() => { const h = new Date().getHours(); const sal = h < 12 ? 'Buenos días' : h < 19 ? 'Buenas tardes' : 'Buenas noches'; const o = (userData.objetivo || '').toLowerCase(); const foco = o.includes('peso') ? 'Hoy protege tu insulina: proteína en el desayuno y un paseo corto después de comer.' : (o.includes('energ') || o.includes('niebla')) ? 'Hoy cuida tu energía: agua al despertar y una pausa sin pantallas cada hora.' : (o.includes('sue') || o.includes('dorm')) ? 'Tu noche se prepara desde ahora: última cafeína antes de las 14h y cena ligera.' : 'Hoy elige una sola cosa y hazla bien: la constancia gana a la intensidad.'; return `${sal}, ${userData.nombre}. ${foco} Tu plan te espera abajo — ve marcándolo.`; })()
-        : (() => { const h = new Date().getHours(); const sal = h < 12 ? 'Good morning' : h < 19 ? 'Good afternoon' : 'Good evening'; const o = (userData.objetivo || '').toLowerCase(); const foco = o.includes('weight') ? 'Today, protect your insulin: protein at breakfast and a short walk after meals.' : (o.includes('energ') || o.includes('fog')) ? 'Guard your energy today: water on waking and a screen-free pause every hour.' : o.includes('sleep') ? 'Tonight starts now: last caffeine before 2pm and a light dinner.' : 'Pick one thing today and do it well — consistency beats intensity.'; return `${sal}, ${userData.nombre}. ${foco} Your plan is below — tick it as you go.`; })());
-    }
-    setLumiLoading(false);
-  };
-
-  const generarPlanDelDia = async (userData, checkins) => {
-    const hoy = new Date().toISOString().split('T')[0];
-    const cacheKey = `lumi_plan_${userData.id}_${hoy}`;
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) { setPlanGenerado(JSON.parse(cached)); return; }
-    setPlanLoading(true);
-    try {
-      const is_es = userData.lang === 'es';
-      const ayer = checkins?.[0];
-      const prompt = `Eres LUMI, asesora científica de bienestar hormonal.
-Usuaria: ${userData.nombre}
-Objetivo: ${userData.objetivo || 'equilibrio hormonal'}
-Síntoma principal: ${userData.sintoma || 'bienestar general'}
-Estado hormonal (del quiz): ${getEstadoHormonal(userData.ciclo, is_es)}
-IMC: ${userData.peso && userData.talla ? (userData.peso / Math.pow(userData.talla > 3 ? userData.talla/100 : userData.talla, 2)).toFixed(1) : 'no disponible'}
-Estado ayer: ${ayer ? `energía ${ayer.energia}/5, sueño ${ayer.sueno}/5, ánimo ${ayer.animo}/5` : 'primer día'}
-Fecha: ${hoy}
-Idioma: ${is_es ? 'español' : 'inglés'}
-
-Genera exactamente 3 acciones concretas para hoy basadas en su objetivo y estado actual.
-Responde SOLO en JSON válido, sin texto adicional:
-[
-  {"icono": "✦", "accion": "acción concreta y específica", "ciencia": "explicación breve en lenguaje claro, no técnico"},
-  {"icono": "✦", "accion": "...", "ciencia": "..."},
-  {"icono": "✦", "accion": "...", "ciencia": "..."}
-]
-Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin emojis en iconos, solo ✦. Máximo 15 palabras por acción.`;
-
-      const res = await fetch('/api/lumi', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({
-          messages: [{role:'user', content: prompt}]
-        })
-      });
-      const data = await res.json();
-      const text = data.content?.[0]?.text || '[]';
-      const clean = text.replace(/```json|```/g, '').trim();
-      const plan = JSON.parse(clean);
-      // Añadir links automáticos según contenido
-      const planConLinks = plan.map(p => {
-        const texto = (p.accion || '').toLowerCase();
-        if (texto.includes('proteína') || texto.includes('protein') || texto.includes('come') || texto.includes('eat') || texto.includes('desayuno') || texto.includes('breakfast') || texto.includes('menú') || texto.includes('menu') || texto.includes('cena') || texto.includes('dinner') || texto.includes('almuerzo') || texto.includes('lunch')) {
-          return {...p, link: '/lumera?tab=nutrition', linkLabel: is_es ? 'Ver tu menú →' : 'See your menu →'};
-        }
-        if (texto.includes('entrena') || texto.includes('train') || texto.includes('ejercicio') || texto.includes('exercise') || texto.includes('fuerza') || texto.includes('strength') || texto.includes('camina') || texto.includes('walk') || texto.includes('series') || texto.includes('sets')) {
-          return {...p, link: '/lumera?tab=exercise', linkLabel: is_es ? 'Ver tu rutina →' : 'See your routine →'};
-        }
-        return p;
-      });
-      localStorage.setItem(cacheKey, JSON.stringify(planConLinks));
-      setPlanGenerado(planConLinks);
-    } catch(e) {
-      console.error('Plan error:', e);
-      setPlanGenerado(null);
-    }
-    setPlanLoading(false);
+  const generarMensajeLumi = (userData, checkins) => {
+    const is_es = userData.lang === 'es';
+    const { lectura } = getLecturaDelDia({
+      nombre: userData.nombre,
+      objetivo: userData.objetivo,
+      sintoma: userData.sintoma,
+      is_es,
+      diasRegistrados: (checkins || []).length,
+    });
+    setLumiMsg(lectura);
   };
 
   const hacerCheckin = async (estado) => {
@@ -712,49 +571,23 @@ Reglas: acciones específicas para HOY, no genéricas. Sin diagnósticos. Sin em
 
   const getPlanDelDia = () => {
     const is_es = user?.lang === 'es';
-    const obj = user?.objetivo?.toLowerCase() || '';
-    const diaSemana = new Date().getDay(); // 0=dom, 1=lun... rota el plan
-    
-    if (obj.includes('peso') || obj.includes('weight')) return is_es ? [
-      { icono: '🕗', accion: 'Desayuna antes de las 9am con proteína', ciencia: 'El cortisol matutino está en su pico — la proteína lo estabiliza y frena el catabolismo muscular.' },
-      { icono: '🚶', accion: 'Camina 20 min después de comer', ciencia: 'Reduce el pico de insulina postcomida hasta un 30%. El músculo activo capta glucosa sin necesitar insulina.' },
-      { icono: '🌙', accion: 'Cena antes de las 8pm', ciencia: 'La sensibilidad a la insulina baja por la noche. Cenar tarde almacena más grasa que la misma comida a mediodía.' },
-    ] : [
-      { icono: '🕗', accion: 'Breakfast before 9am with protein', ciencia: 'Morning cortisol is at its peak — protein stabilises it and prevents muscle breakdown.' },
-      { icono: '🚶', accion: 'Walk 20 min after meals', ciencia: 'Reduces post-meal insulin spike by up to 30%. Active muscle absorbs glucose without needing insulin.' },
-      { icono: '🌙', accion: 'Dinner before 8pm', ciencia: 'Insulin sensitivity drops at night. Late dinner stores more fat than the same meal at noon.' },
-    ];
-
-    if (obj.includes('energía') || obj.includes('energy') || obj.includes('niebla') || obj.includes('fog')) return is_es ? [
-      { icono: '💧', accion: 'Hidratación: 2 vasos de agua al despertar', ciencia: 'La deshidratación leve (1-2%) reduce el rendimiento cognitivo. El cerebro es 75% agua.' },
-      { icono: '🥑', accion: 'Omega-3 en el desayuno: nueces, aguacate o salmón', ciencia: 'El DHA es el principal ácido graso del cerebro. Reduce la neuroinflamación que causa niebla mental.' },
-      { icono: '⏸️', accion: 'Pausa de 5 min cada hora sin pantallas', ciencia: 'El cortisol acumulado bloquea el córtex prefrontal. Micro-pausas lo regulan y restauran el foco.' },
-    ] : [
-      { icono: '💧', accion: '2 glasses of water on waking', ciencia: 'Mild dehydration (1-2%) reduces cognitive performance. The brain is 75% water.' },
-      { icono: '🥑', accion: 'Omega-3 at breakfast: walnuts, avocado or salmon', ciencia: 'DHA is the brain\'s main fatty acid. Reduces neuroinflammation that causes brain fog.' },
-      { icono: '⏸️', accion: '5-min screen-free break every hour', ciencia: 'Accumulated cortisol blocks the prefrontal cortex. Micro-breaks regulate it and restore focus.' },
-    ];
-
-    if (obj.includes('sueño') || obj.includes('sleep') || obj.includes('ánimo') || obj.includes('mood')) return is_es ? [
-      { icono: '🌡️', accion: 'Dormitorio a 18-20°C esta noche', ciencia: 'La temperatura corporal debe bajar 1°C para iniciar el sueño profundo. El frío lo facilita.' },
-      { icono: '💊', accion: 'Magnesio bisglicinato 300mg por la noche', ciencia: 'El magnesio activa el GABA, el neurotransmisor del descanso. El 70% de mujeres 40+ tiene déficit.' },
-      { icono: '🚫', accion: 'Sin pantallas 1h antes de dormir', ciencia: 'La luz azul suprime la melatonina hasta 3 horas. Sin luz azul, el ciclo circadiano se regula solo.' },
-    ] : [
-      { icono: '🌡️', accion: 'Bedroom at 18-20°C tonight', ciencia: 'Body temperature must drop 1°C to enter deep sleep. Cool rooms facilitate this.' },
-      { icono: '💊', accion: 'Magnesium bisglycinate 300mg at night', ciencia: 'Magnesium activates GABA, the rest neurotransmitter. 70% of women 40+ are deficient.' },
-      { icono: '🚫', accion: 'No screens 1h before bed', ciencia: 'Blue light suppresses melatonin for up to 3 hours. Without it, the circadian cycle self-regulates.' },
-    ];
-
-    // Ganar músculo / default
-    return is_es ? [
-      { icono: '🥩', accion: '1.6g proteína por kg de peso hoy', ciencia: 'Tu músculo necesita proteína de forma constante para crecer. Sin ella, el ejercicio no da resultados.' },
-      { icono: '🏋️', accion: 'Entrena fuerza 3 series al fallo', ciencia: 'El ejercicio de fuerza es lo que más impacto tiene en tu metabolismo hormonal después de los 40.' },
-      { icono: '✦', accion: 'Duerme 8h — el músculo crece durmiendo', ciencia: 'Tu cuerpo regenera y crece mientras duermes. Sin sueño suficiente, el resto del plan no funciona.' },
-    ] : [
-      { icono: '🥩', accion: '1.6g protein per kg of bodyweight today', ciencia: 'Muscle protein synthesis requires a minimum leucine threshold per meal. Without enough protein, muscle won\'t grow regardless of training.' },
-      { icono: '🏋️', accion: 'Strength train 3 sets to failure', ciencia: 'Strength training has the highest impact on your hormonal metabolism after 40.' },
-      { icono: '✦', accion: 'Sleep 8h — muscle grows while sleeping', ciencia: 'Your body regenerates while you sleep. Without enough sleep, the rest of the plan will not work.' },
-    ];
+    const { plan } = getLecturaDelDia({
+      nombre: user?.nombre,
+      objetivo: user?.objetivo,
+      sintoma: user?.sintoma,
+      is_es,
+      diasRegistrados: (ultimosCheckins || []).length,
+    });
+    return plan.map(p => {
+      const texto = (p.accion || '').toLowerCase();
+      let link, linkLabel;
+      if (texto.includes('proteína') || texto.includes('protein') || texto.includes('come') || texto.includes('eat') || texto.includes('desayuno') || texto.includes('breakfast') || texto.includes('menú') || texto.includes('menu') || texto.includes('cena') || texto.includes('dinner') || texto.includes('almuerzo') || texto.includes('lunch')) {
+        link = '/lumera?tab=nutrition'; linkLabel = is_es ? 'Ver tu menú →' : 'See your menu →';
+      } else if (texto.includes('entrena') || texto.includes('train') || texto.includes('camina') || texto.includes('walk') || texto.includes('series') || texto.includes('sets') || texto.includes('movimiento') || texto.includes('movement')) {
+        link = '/lumera?tab=exercise'; linkLabel = is_es ? 'Ver tu rutina →' : 'See your routine →';
+      }
+      return { icono: p.icono, accion: p.accion, ciencia: p.porque, ...(link ? { link, linkLabel } : {}) };
+    });
   };
 
   const enviarMensajeChat = async () => {
