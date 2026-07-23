@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
-import { getLecturaDelDia } from '../lib/lecturas';
+import { getLecturaDelDia, estadoDesdeSintomaHoy } from '../lib/lecturas';
 
 const SUPABASE_URL = 'https://pyekwpmbdnmglrjieexc.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5ZWt3cG1iZG5tZ2xyamllZXhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0ODM0OTgsImV4cCI6MjA4MTA1OTQ5OH0.zQl7GF3E6BhDqW3bEMixAbdDcOsW8BsFOBeAGa-5bzY';
@@ -249,30 +249,8 @@ function BarraSemana({ diasCompletados = 0, diasTotales = 7, is_es }) {
   );
 }
 
-const SINTOMA_A_ESTADO = { 'bien':'bien', 'cansancio':'cansada', 'niebla mental':'niebla', 'regular':'regular' };
-
-// TODO copy pendiente revisión Bibiana — formulación blanda, no diagnóstica
-const INSIGHTS_CHECKIN = {
-  bien:    { es: 'Buena señal. Aprovecha para dejar hecha la cosa que más te cuesta hoy.', en: 'Good sign. Use it to get the hardest thing on your list done today.' },
-  cansada: { es: 'Algunas mujeres notan más cansancio en ciertas fases — hoy tu palanca es elegir una sola tarea y dejar que el resto espere.', en: 'Some women notice more tiredness at certain phases — today your lever is picking one task and letting the rest wait.' },
-  niebla:  { es: 'La claridad mental va y viene. Una cosa sola, bien hecha, gana a hacer diez a medias.', en: 'Mental clarity comes and goes. One thing done well beats ten done halfway.' },
-  regular: { es: 'Un día regular sigue contando. Marcar una acción pequeña ya cambia la semana.', en: 'An average day still counts. Ticking one small action already shifts the week.' },
-};
-
-function InsightCheckin({ estado, is_es, onAmpliar }) {
-  const texto = INSIGHTS_CHECKIN[estado]?.[is_es ? 'es' : 'en'];
-  if (!texto) return null;
-  return (
-    <div style={{marginTop:'0.75rem',padding:'0.9rem 1rem',background:'#FAF7F1',borderRadius:'1rem'}}>
-      <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#5b5147',lineHeight:1.55,margin:0}}>
-        {texto}
-      </p>
-      <button onClick={onAmpliar} style={{marginTop:'0.5rem',background:'none',border:'none',padding:0,color:'#C9935A',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.8rem',cursor:'pointer'}}>
-        {is_es ? 'Cuéntame más →' : 'Tell me more →'}
-      </button>
-    </div>
-  );
-}
+const ETIQUETA_ESTADO_ES = { bien:'bien', cansada:'cansada', niebla:'con niebla', regular:'regular' };
+const ETIQUETA_ESTADO_EN = { bien:'good', cansada:'tired', niebla:'foggy', regular:'so-so' };
 
 function CalmaOverlay({ is_es, onClose }) {
   const [fase, setFase] = useState('exhala');
@@ -328,6 +306,7 @@ export default function Dashboard() {
   const [checkinHecho, setCheckinHecho] = useState(false);
   const [checkinData, setCheckinData] = useState(null);
   const [estadoCheckin, setEstadoCheckin] = useState(null);
+  const [mostrarPickerCompleto, setMostrarPickerCompleto] = useState(false);
   const [ultimosCheckins, setUltimosCheckins] = useState([]);
   const [ultimosSintomas, setUltimosSintomas] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -509,10 +488,10 @@ export default function Dashboard() {
     setTimeout(() => setVisible(true), 100);
 
     // Generar mensaje de LUMI — instantáneo, local, sin esperar a ninguna API.
-    generarMensajeLumi(userData, checkins || [], checkinHoy);
+    generarMensajeLumi(userData, checkins || [], checkinHoy ? estadoDesdeSintomaHoy(checkinHoy.sintoma_hoy) : null);
   };
 
-  const generarMensajeLumi = (userData, checkins) => {
+  const generarMensajeLumi = (userData, checkins, estadoHoy) => {
     const is_es = userData.lang === 'es';
     const { lectura } = getLecturaDelDia({
       nombre: userData.nombre,
@@ -520,6 +499,7 @@ export default function Dashboard() {
       sintoma: userData.sintoma,
       is_es,
       diasRegistrados: (checkins || []).length,
+      estadoHoy,
     });
     setLumiMsg(lectura);
   };
@@ -542,8 +522,8 @@ export default function Dashboard() {
       fecha: hoy,
       ...datos
     });
-    // Regenerar mensaje con el nuevo checkin
-    generarMensajeLumi(user, ultimosCheckins, datos);
+    // Regenerar mensaje con el nuevo checkin: se antepone el reconocimiento del estado de hoy.
+    generarMensajeLumi(user, ultimosCheckins, estado);
   };
 
   const getPromedioSemana = (campo) => {
@@ -671,7 +651,7 @@ export default function Dashboard() {
   })();
   const hace7dias = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
   const diasCompletadosSemana = Math.min(7, (ultimosCheckins || []).filter(c => c.fecha >= hace7dias).length);
-  const estadoLectura = estadoCheckin || SINTOMA_A_ESTADO[checkinData?.sintoma_hoy] || null;
+  const estadoAyer = (!checkinHecho && (ultimosCheckins || []).length >= 3 && ultimosCheckins?.[0]) ? estadoDesdeSintomaHoy(ultimosCheckins[0].sintoma_hoy) : null;
   const objLower = (user?.objetivo || '').toLowerCase();
   const esObjetivoPeso = objLower.includes('peso') || objLower.includes('weight') || objLower.includes('fuerza') || objLower.includes('muscul') || objLower.includes('strength') || objLower.includes('muscle');
   const esObjetivoSueno = objLower.includes('sue') || objLower.includes('dorm') || objLower.includes('sleep');
@@ -731,53 +711,181 @@ export default function Dashboard() {
             <h1 style={{fontSize:'clamp(1.6rem,4vw,2rem)',fontWeight:700,color:'#0D3D3D',lineHeight:1.15}}>{user?.nombre}</h1>
           </div>
 
-          {/* TU LECTURA DE HOY — el regalo, héroe: el check-in alimenta la lectura */}
-          <div className={`fade d3 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
-            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
-              {is_es ? '⭐ Tu lectura de hoy' : '⭐ Your reading for today'}
+          {/* MI PLAN — mensaje de LUMI + puerta de recordatorios + plan de hoy (resumen que expande) */}
+          <div className={`fade d2 ${visible?'in':''}`} style={{background:'linear-gradient(135deg,rgba(13,61,61,0.97),rgba(10,45,45,0.98))',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'1.25rem',padding:'1.25rem',margin:'0 0.3rem 1.25rem',boxShadow:'0 4px 20px rgba(13,61,61,0.15)'}}>
+            <div style={{display:'flex',alignItems:'center',gap:'0.5rem',marginBottom:'1rem'}}>
+              <div style={{width:'32px',height:'32px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.85rem',fontWeight:700,color:'white',fontFamily:'Montserrat,sans-serif'}}>L</div>
+              <div>
+                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px'}}>LUMI</div>
+                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.3)'}}>
+                  {is_es ? 'Tu asesora de bienestar' : 'Your wellness advisor'}
+                </div>
+              </div>
             </div>
+
             {!checkinHecho ? (
               <>
                 {/* TODO copy pendiente revisión Bibiana */}
-                <p style={{fontSize:'0.95rem',fontStyle:'italic',color:'rgba(13,61,61,0.6)',lineHeight:1.5,marginBottom:'0.4rem'}}>
+                <p style={{fontSize:'0.95rem',fontStyle:'italic',color:'rgba(255,255,255,0.7)',lineHeight:1.5,marginBottom:'0.9rem'}}>
                   {is_es ? 'Un toque y te digo qué está pasando en tu cuerpo hoy.' : "One tap and I'll tell you what's happening in your body today."}
                 </p>
-                <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'#A06030',fontWeight:600,marginBottom:'0.75rem'}}>
-                  {is_es ? 'Tócame para tu lectura de hoy ↓' : 'Tap for your reading today ↓'}
-                </p>
-                <div style={{display:'flex',gap:'0.5rem'}}>
-                  {(is_es
-                    ? [{k:'bien',emoji:'😊',l:'Bien'},{k:'cansada',emoji:'😴',l:'Cansada'},{k:'niebla',emoji:'🌫️',l:'Con niebla'},{k:'regular',emoji:'😐',l:'Regular'}]
-                    : [{k:'bien',emoji:'😊',l:'Good'},{k:'cansada',emoji:'😴',l:'Tired'},{k:'niebla',emoji:'🌫️',l:'Foggy'},{k:'regular',emoji:'😐',l:'Regular'}]
-                  ).map(({k,emoji,l}) => (
-                    <button key={k} className="estado-btn" onClick={()=>hacerCheckin(k)}>
-                      <span style={{fontSize:'1.5rem',lineHeight:1}}>{emoji}</span>
-                      <span style={{fontSize:'0.68rem'}}>{l}</span>
-                    </button>
-                  ))}
-                </div>
+                {estadoAyer && !mostrarPickerCompleto ? (
+                  <div style={{marginBottom:'1.25rem'}}>
+                    <p style={{fontSize:'0.95rem',color:'rgba(255,255,255,0.9)',lineHeight:1.5,marginBottom:'0.75rem'}}>
+                      {is_es
+                        ? `Ayer me dijiste ${ETIQUETA_ESTADO_ES[estadoAyer]}, ¿seguimos igual?`
+                        : `Yesterday you told me ${ETIQUETA_ESTADO_EN[estadoAyer]}, are we still the same?`}
+                    </p>
+                    <div style={{display:'flex',gap:'0.6rem'}}>
+                      <button onClick={()=>hacerCheckin(estadoAyer)} style={{flex:1,background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer'}}>
+                        {is_es ? 'Sí, seguimos igual' : 'Yes, still the same'}
+                      </button>
+                      <button onClick={()=>setMostrarPickerCompleto(true)} style={{flex:1,background:'none',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(255,255,255,0.55)',cursor:'pointer'}}>
+                        {is_es ? 'Ha cambiado' : 'It changed'}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'#C9935A',fontWeight:600,marginBottom:'0.75rem'}}>
+                      {is_es ? '¿Cómo amaneces? · Tócame para tu lectura ↓' : 'How do you wake up? · Tap for your reading ↓'}
+                    </p>
+                    <div style={{display:'flex',gap:'0.5rem',marginBottom:'1.25rem'}}>
+                      {(is_es
+                        ? [{k:'bien',emoji:'😊',l:'Bien'},{k:'cansada',emoji:'😴',l:'Cansada'},{k:'niebla',emoji:'🌫️',l:'Con niebla'},{k:'regular',emoji:'😐',l:'Regular'}]
+                        : [{k:'bien',emoji:'😊',l:'Good'},{k:'cansada',emoji:'😴',l:'Tired'},{k:'niebla',emoji:'🌫️',l:'Foggy'},{k:'regular',emoji:'😐',l:'Regular'}]
+                      ).map(({k,emoji,l}) => (
+                        <button key={k} className="estado-btn" onClick={()=>hacerCheckin(k)}>
+                          <span style={{fontSize:'1.5rem',lineHeight:1}}>{emoji}</span>
+                          <span style={{fontSize:'0.68rem'}}>{l}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
               </>
-            ) : estadoLectura ? (
-              <InsightCheckin
-                estado={estadoLectura}
-                is_es={is_es}
-                onAmpliar={() => { setShowLumiChat(true); if (lumiChatMessages.length === 0) setLumiChatMessages([{role:'assistant', content: lumiMsg}]); }}
-              />
-            ) : (
-              <div style={{display:'flex',alignItems:'center',gap:'0.5rem'}}>
-                <div style={{width:'8px',height:'8px',borderRadius:'50%',background:'#C9935A'}}/>
-                <span style={{fontSize:'0.9rem',color:'rgba(13,61,61,0.6)',fontStyle:'italic'}}>
-                  {is_es ? `LUMI tiene en cuenta cómo te sientes hoy` : `LUMI is taking into account how you feel today`}
-                </span>
+            ) : lumiLoading ? (
+              <div className="shimmer" style={{fontSize:'1rem',fontStyle:'italic',color:'rgba(255,255,255,0.4)',lineHeight:1.7}}>
+                {is_es ? 'Preparando tu plan...' : 'Preparing your plan...'}
               </div>
+            ) : (
+              <p style={{fontSize:'1.05rem',fontStyle:'italic',color:'rgba(255,255,255,0.9)',lineHeight:1.75,marginBottom:'1.25rem'}}>{lumiMsg}</p>
             )}
-            <a href="/lumera?tab=symptoms" style={{display:'block',marginTop:'0.9rem',paddingTop:'0.75rem',borderTop:'1px solid rgba(201,147,90,0.15)',fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'#A06030',textDecoration:'none'}}>
+            <a href="/lumera?tab=symptoms" style={{display:'block',marginTop:'-0.4rem',marginBottom:'1.1rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(255,255,255,0.4)',textDecoration:'none'}}>
               {is_es ? 'Registro detallado de síntomas →' : 'Detailed symptom log →'}
             </a>
+
+            {mostrarPuertaRecordatorios && (
+              <div style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'1rem',padding:'1.1rem',marginBottom:'1.1rem'}}>
+                {!mostrarCuestionarioHorarios ? (
+                  <div>
+                    <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',color:'rgba(255,255,255,0.9)',lineHeight:1.5,marginBottom:'0.9rem'}}>
+                      {is_es
+                        ? `¿Me dejas ayudarte a alcanzar tu objetivo antes, ajustando tus horas de comida, qué comer y en qué orden?`
+                        : `Will you let me help you reach your goal sooner, by adjusting your meal times, what to eat and in what order?`}
+                    </p>
+                    <div style={{display:'flex',gap:'0.6rem'}}>
+                      <button onClick={()=>setMostrarCuestionarioHorarios(true)} style={{flex:1,background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer'}}>
+                        {is_es ? 'Sí, ayúdame' : 'Yes, help me'}
+                      </button>
+                      <button onClick={rechazarRecordatorios} style={{flex:1,background:'none',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(255,255,255,0.55)',cursor:'pointer'}}>
+                        {is_es ? 'Ahora no' : 'Not now'}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#A06030',letterSpacing:'1px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
+                      {is_es ? '¿A qué hora sueles...' : 'What time do you usually...'}
+                    </p>
+                    {[
+                      { label: is_es ? 'Desayunar' : 'Have breakfast', val: horaDesayuno, set: setHoraDesayuno },
+                      { label: is_es ? 'Comer' : 'Have lunch', val: horaComida, set: setHoraComida },
+                      { label: is_es ? 'Cenar' : 'Have dinner', val: horaCena, set: setHoraCena },
+                    ].map(({label,val,set}) => (
+                      <div key={label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.7rem'}}>
+                        <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(255,255,255,0.85)'}}>{label}</label>
+                        <input type="time" value={val} onChange={e=>set(e.target.value)} style={{padding:'0.4rem 0.6rem',borderRadius:'0.5rem',border:'1px solid rgba(201,147,90,0.3)',fontSize:'0.85rem',background:'white'}}/>
+                      </div>
+                    ))}
+                    <button onClick={activarRecordatorios} disabled={guardandoRecordatorios} style={{width:'100%',background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer',marginTop:'0.4rem'}}>
+                      {guardandoRecordatorios ? (is_es?'Activando...':'Activating...') : (is_es ? 'Activar mis recordatorios' : 'Activate my reminders')}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            <button onClick={()=>setPlanVisible(!planVisible)} style={{width:'100%',background:'rgba(201,147,90,0.15)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.75rem',color:'#C9935A',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',fontWeight:600,cursor:'pointer',transition:'all 0.2s ease'}}>
+              {(() => {
+                const tp = (planGenerado || plan).length;
+                const h = planHecho.filter(x => x < tp).length;
+                const c = tp && !planLoading && h > 0 ? ` · ${h}/${tp}` : '';
+                return planVisible
+                  ? (is_es ? `▲ Ocultar plan de hoy${c}` : `▲ Hide today's plan${c}`)
+                  : (is_es ? `✦ Ver mi plan de hoy${c}` : `✦ See my plan for today${c}`);
+              })()}
+            </button>
+            {(() => {
+              const objetivoKcal = getObjetivoKcalHoy();
+              return objetivoKcal && (
+                <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(255,255,255,0.3)',textAlign:'center',marginTop:'0.4rem',marginBottom:0}}>
+                  {is_es ? `Objetivo diario de referencia: ~${objetivoKcal} kcal` : `Reference daily target: ~${objetivoKcal} kcal`}
+                </p>
+              );
+            })()}
+
+            {/* PLAN DEL DIA */}
+            {planVisible && (
+              <div style={{marginTop:'1rem',borderTop:'1px solid rgba(201,147,90,0.2)',paddingTop:'1rem'}}>
+                {planLoading ? (
+                  <div className="shimmer" style={{color:'rgba(255,255,255,0.4)',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',padding:'0.5rem 0'}}>
+                    {is_es ? 'Preparando tu plan personalizado...' : 'Preparing your personalised plan...'}
+                  </div>
+                ) : (planGenerado || plan).map((p, i) => (
+                  <div key={i} style={{marginBottom:'1rem',paddingBottom:'0.85rem',borderBottom:i<(planGenerado||plan).length-1?'1px solid rgba(255,255,255,0.06)':'none'}}>
+                    <div onClick={()=>togglePlanItem(i)} style={{display:'flex',alignItems:'flex-start',gap:'0.6rem',marginBottom:'0.25rem',cursor:'pointer'}}>
+                      <span style={{width:'22px',height:'22px',borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.8rem',border:'1.5px solid '+(planHecho.includes(i)?'#C9935A':'rgba(255,255,255,0.3)'),background:planHecho.includes(i)?'#C9935A':'transparent',color:'white',transition:'all 0.2s ease'}}>{planHecho.includes(i)?'✓':''}</span>
+                      <span style={{fontSize:'0.98rem',color:planHecho.includes(i)?'rgba(255,255,255,0.5)':'rgba(255,255,255,0.95)',lineHeight:1.5,flex:1,fontWeight:500,textDecoration:planHecho.includes(i)?'line-through':'none',transition:'all 0.2s ease'}}>{p.accion}</span>
+                    </div>
+                    <div style={{marginLeft:'1.7rem',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'rgba(255,255,255,0.45)',lineHeight:1.6,marginBottom:(p.etiqueta || p.link)?'0.4rem':'0'}}>
+                      {p.ciencia}
+                    </div>
+                    {p.etiqueta && (
+                      <div style={{marginLeft:'1.7rem',fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.72rem',color:'#C9935A',marginBottom:p.link?'0.4rem':'0'}}>
+                        {p.etiqueta}
+                      </div>
+                    )}
+                    {p.link && (
+                      <div style={{marginLeft:'1.7rem'}}>
+                        <span onClick={()=>window.location.href=p.link} style={{fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'#C9935A',cursor:'pointer',fontWeight:600}}>
+                          {p.linkLabel}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {!planLoading && (planGenerado || plan).length > 0 && planHecho.filter(x => x < (planGenerado || plan).length).length === (planGenerado || plan).length && (
+                  <div style={{marginTop:'0.25rem',padding:'0.6rem 0.75rem',background:'rgba(201,147,90,0.12)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',color:'#C9935A',fontWeight:600}}>
+                    {is_es ? '✦ Plan de hoy completado. Tu constancia es la que cambia tu biología.' : '✦ Today\'s plan complete. Consistency is what changes your biology.'}
+                  </div>
+                )}
+                {!planLoading && (planGenerado || plan).length > 0 && planHecho.filter(x => x < (planGenerado || plan).length).length === (planGenerado || plan).length && (
+                  <div style={{marginTop:'0.6rem',padding:'0.9rem 1rem',background:'linear-gradient(135deg,rgba(13,61,61,0.95),rgba(13,61,61,0.85))',borderRadius:'0.75rem'}}>
+                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,letterSpacing:'2px',color:'#C9935A',textTransform:'uppercase',marginBottom:'0.4rem'}}>
+                      {is_es ? '✦ Descubrimiento desbloqueado' : '✦ Discovery unlocked'}
+                    </div>
+                    <p style={{fontSize:'0.9rem',color:'rgba(255,255,255,0.92)',lineHeight:1.65,fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',margin:0}}>
+                      {(is_es ? DESCUBRIMIENTOS_ES : DESCUBRIMIENTOS_EN)[new Date().getDate() % DESCUBRIMIENTOS_ES.length]}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* TU FOCO DE HOY — 1 problema · 1 acción · 1 porqué · 1 CTA */}
-          {!planLoading && (planGenerado || plan)[0] && (
+          {checkinHecho && !planLoading && (planGenerado || plan)[0] && (
             <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
               <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
                 {is_es ? 'Tu foco de hoy' : 'Your focus today'}
@@ -799,7 +907,8 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* TU RITUAL — secuencia guiada, no biblioteca */}
+          {/* TU RITUAL — secuencia guiada, no biblioteca. Revelado progresivo: solo tras registrar hoy. */}
+          {checkinHecho && (
           <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
             <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.5rem'}}>
               {is_es ? `Tu ritual · ${Math.max(1, ritualHecho.length)}/4` : `Your ritual · ${Math.max(1, ritualHecho.length)}/4`}
@@ -826,6 +935,7 @@ export default function Dashboard() {
               </div>
             ))}
           </div>
+          )}
 
           {/* TU PROGRESO — gráfica/meta + silueta en una sola card */}
           <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',overflow:'hidden',marginBottom:'1.25rem'}}>
@@ -949,135 +1059,6 @@ export default function Dashboard() {
               </div>
             </div>
           )}
-
-          {/* MI PLAN — mensaje de LUMI + puerta de recordatorios + plan de hoy (resumen que expande) */}
-          <div className={`fade d2 ${visible?'in':''}`} style={{background:'linear-gradient(135deg,rgba(13,61,61,0.97),rgba(10,45,45,0.98))',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'1.25rem',padding:'1.25rem',margin:'0 0.3rem 1.25rem',boxShadow:'0 4px 20px rgba(13,61,61,0.15)'}}>
-            <div style={{display:'flex',alignItems:'center',gap:'0.5rem',marginBottom:'1rem'}}>
-              <div style={{width:'32px',height:'32px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.85rem',fontWeight:700,color:'white',fontFamily:'Montserrat,sans-serif'}}>L</div>
-              <div>
-                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px'}}>LUMI</div>
-                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.3)'}}>
-                  {is_es ? 'Tu asesora de bienestar' : 'Your wellness advisor'}
-                </div>
-              </div>
-            </div>
-
-            {lumiLoading ? (
-              <div className="shimmer" style={{fontSize:'1rem',fontStyle:'italic',color:'rgba(255,255,255,0.4)',lineHeight:1.7}}>
-                {is_es ? 'Preparando tu plan...' : 'Preparing your plan...'}
-              </div>
-            ) : (
-              <p style={{fontSize:'1.05rem',fontStyle:'italic',color:'rgba(255,255,255,0.9)',lineHeight:1.75,marginBottom:'1.25rem'}}>{lumiMsg}</p>
-            )}
-
-            {mostrarPuertaRecordatorios && (
-              <div style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'1rem',padding:'1.1rem',marginBottom:'1.1rem'}}>
-                {!mostrarCuestionarioHorarios ? (
-                  <div>
-                    <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',color:'rgba(255,255,255,0.9)',lineHeight:1.5,marginBottom:'0.9rem'}}>
-                      {is_es
-                        ? `¿Me dejas ayudarte a alcanzar tu objetivo antes, ajustando tus horas de comida, qué comer y en qué orden?`
-                        : `Will you let me help you reach your goal sooner, by adjusting your meal times, what to eat and in what order?`}
-                    </p>
-                    <div style={{display:'flex',gap:'0.6rem'}}>
-                      <button onClick={()=>setMostrarCuestionarioHorarios(true)} style={{flex:1,background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer'}}>
-                        {is_es ? 'Sí, ayúdame' : 'Yes, help me'}
-                      </button>
-                      <button onClick={rechazarRecordatorios} style={{flex:1,background:'none',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(255,255,255,0.55)',cursor:'pointer'}}>
-                        {is_es ? 'Ahora no' : 'Not now'}
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#A06030',letterSpacing:'1px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
-                      {is_es ? '¿A qué hora sueles...' : 'What time do you usually...'}
-                    </p>
-                    {[
-                      { label: is_es ? 'Desayunar' : 'Have breakfast', val: horaDesayuno, set: setHoraDesayuno },
-                      { label: is_es ? 'Comer' : 'Have lunch', val: horaComida, set: setHoraComida },
-                      { label: is_es ? 'Cenar' : 'Have dinner', val: horaCena, set: setHoraCena },
-                    ].map(({label,val,set}) => (
-                      <div key={label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.7rem'}}>
-                        <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(255,255,255,0.85)'}}>{label}</label>
-                        <input type="time" value={val} onChange={e=>set(e.target.value)} style={{padding:'0.4rem 0.6rem',borderRadius:'0.5rem',border:'1px solid rgba(201,147,90,0.3)',fontSize:'0.85rem',background:'white'}}/>
-                      </div>
-                    ))}
-                    <button onClick={activarRecordatorios} disabled={guardandoRecordatorios} style={{width:'100%',background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer',marginTop:'0.4rem'}}>
-                      {guardandoRecordatorios ? (is_es?'Activando...':'Activating...') : (is_es ? 'Activar mis recordatorios' : 'Activate my reminders')}
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-
-            <button onClick={()=>setPlanVisible(!planVisible)} style={{width:'100%',background:'rgba(201,147,90,0.15)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.75rem',color:'#C9935A',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',fontWeight:600,cursor:'pointer',transition:'all 0.2s ease'}}>
-              {(() => {
-                const tp = (planGenerado || plan).length;
-                const h = planHecho.filter(x => x < tp).length;
-                const c = tp && !planLoading && h > 0 ? ` · ${h}/${tp}` : '';
-                return planVisible
-                  ? (is_es ? `▲ Ocultar plan de hoy${c}` : `▲ Hide today's plan${c}`)
-                  : (is_es ? `✦ Ver mi plan de hoy${c}` : `✦ See my plan for today${c}`);
-              })()}
-            </button>
-            {(() => {
-              const objetivoKcal = getObjetivoKcalHoy();
-              return objetivoKcal && (
-                <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(255,255,255,0.3)',textAlign:'center',marginTop:'0.4rem',marginBottom:0}}>
-                  {is_es ? `Objetivo diario de referencia: ~${objetivoKcal} kcal` : `Reference daily target: ~${objetivoKcal} kcal`}
-                </p>
-              );
-            })()}
-
-            {/* PLAN DEL DIA */}
-            {planVisible && (
-              <div style={{marginTop:'1rem',borderTop:'1px solid rgba(201,147,90,0.2)',paddingTop:'1rem'}}>
-                {planLoading ? (
-                  <div className="shimmer" style={{color:'rgba(255,255,255,0.4)',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',padding:'0.5rem 0'}}>
-                    {is_es ? 'Preparando tu plan personalizado...' : 'Preparing your personalised plan...'}
-                  </div>
-                ) : (planGenerado || plan).map((p, i) => (
-                  <div key={i} style={{marginBottom:'1rem',paddingBottom:'0.85rem',borderBottom:i<(planGenerado||plan).length-1?'1px solid rgba(255,255,255,0.06)':'none'}}>
-                    <div onClick={()=>togglePlanItem(i)} style={{display:'flex',alignItems:'flex-start',gap:'0.6rem',marginBottom:'0.25rem',cursor:'pointer'}}>
-                      <span style={{width:'22px',height:'22px',borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.8rem',border:'1.5px solid '+(planHecho.includes(i)?'#C9935A':'rgba(255,255,255,0.3)'),background:planHecho.includes(i)?'#C9935A':'transparent',color:'white',transition:'all 0.2s ease'}}>{planHecho.includes(i)?'✓':''}</span>
-                      <span style={{fontSize:'0.98rem',color:planHecho.includes(i)?'rgba(255,255,255,0.5)':'rgba(255,255,255,0.95)',lineHeight:1.5,flex:1,fontWeight:500,textDecoration:planHecho.includes(i)?'line-through':'none',transition:'all 0.2s ease'}}>{p.accion}</span>
-                    </div>
-                    <div style={{marginLeft:'1.7rem',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'rgba(255,255,255,0.45)',lineHeight:1.6,marginBottom:(p.etiqueta || p.link)?'0.4rem':'0'}}>
-                      {p.ciencia}
-                    </div>
-                    {p.etiqueta && (
-                      <div style={{marginLeft:'1.7rem',fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.72rem',color:'#C9935A',marginBottom:p.link?'0.4rem':'0'}}>
-                        {p.etiqueta}
-                      </div>
-                    )}
-                    {p.link && (
-                      <div style={{marginLeft:'1.7rem'}}>
-                        <span onClick={()=>window.location.href=p.link} style={{fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'#C9935A',cursor:'pointer',fontWeight:600}}>
-                          {p.linkLabel}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                ))}
-                {!planLoading && (planGenerado || plan).length > 0 && planHecho.filter(x => x < (planGenerado || plan).length).length === (planGenerado || plan).length && (
-                  <div style={{marginTop:'0.25rem',padding:'0.6rem 0.75rem',background:'rgba(201,147,90,0.12)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',color:'#C9935A',fontWeight:600}}>
-                    {is_es ? '✦ Plan de hoy completado. Tu constancia es la que cambia tu biología.' : '✦ Today\'s plan complete. Consistency is what changes your biology.'}
-                  </div>
-                )}
-                {!planLoading && (planGenerado || plan).length > 0 && planHecho.filter(x => x < (planGenerado || plan).length).length === (planGenerado || plan).length && (
-                  <div style={{marginTop:'0.6rem',padding:'0.9rem 1rem',background:'linear-gradient(135deg,rgba(13,61,61,0.95),rgba(13,61,61,0.85))',borderRadius:'0.75rem'}}>
-                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,letterSpacing:'2px',color:'#C9935A',textTransform:'uppercase',marginBottom:'0.4rem'}}>
-                      {is_es ? '✦ Descubrimiento desbloqueado' : '✦ Discovery unlocked'}
-                    </div>
-                    <p style={{fontSize:'0.9rem',color:'rgba(255,255,255,0.92)',lineHeight:1.65,fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',margin:0}}>
-                      {(is_es ? DESCUBRIMIENTOS_ES : DESCUBRIMIENTOS_EN)[new Date().getDate() % DESCUBRIMIENTOS_ES.length]}
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
 
           {/* HABLA CON TU ASESORA + MOMENTO DE CALMA — tiles chicos en fila */}
           <div className={`fade d1 ${visible?'in':''}`} style={{display:'flex',gap:'0.75rem',marginBottom:'0.75rem'}}>

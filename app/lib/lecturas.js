@@ -4,6 +4,23 @@
 // esperar a ninguna API (instantáneo). /api/lumi queda solo para el chat y
 // la ampliación bajo demanda.
 
+// Check-in de hoy (4 emojis: Bien/Cansada/Con niebla/Regular) → reconocimiento breve,
+// específico a ella (nunca "algunas mujeres..."), que se antepone a la lectura del día.
+// TODO copy pendiente revisión Bibiana — formulación blanda, no diagnóstica
+const RECONOCIMIENTO_ESTADO = {
+  bien: { es: 'Hoy amaneces bien.', en: 'You wake up feeling good today.' },
+  cansada: { es: 'Hoy amaneces cansada.', en: 'You wake up tired today.' },
+  niebla: { es: 'Hoy notas la mente con niebla.', en: 'You notice your mind foggy today.' },
+  regular: { es: 'Hoy amaneces regular.', en: 'You wake up so-so today.' },
+};
+
+// El check-in guarda 'sintoma_hoy' como texto (bien/cansancio/niebla mental/regular).
+// Este mapa recupera la clave del emoji original a partir de ese texto guardado.
+const SINTOMA_HOY_A_ESTADO = { 'bien':'bien', 'cansancio':'cansada', 'niebla mental':'niebla', 'regular':'regular' };
+export function estadoDesdeSintomaHoy(sintomaHoy) {
+  return SINTOMA_HOY_A_ESTADO[sintomaHoy] || null;
+}
+
 // Síntomas reales del quiz (app/quiz/page.jsx, pregunta "sintomas"), ES/EN → clave canónica.
 const MAPA_SINTOMAS = {
   'cansancio constante': 'cansancio',
@@ -349,11 +366,12 @@ function calcularObjetivoKcal(tdee, claveObjetivo) {
 }
 
 // API principal: instantánea, sin llamadas de red.
-export function getLecturaDelDia({ nombre, objetivo, sintoma, is_es, diasRegistrados = 0, racha = 0, restricciones, condiciones, tdee }) {
+export function getLecturaDelDia({ nombre, objetivo, sintoma, is_es, diasRegistrados = 0, racha = 0, restricciones, condiciones, tdee, estadoHoy }) {
   const claveSintoma = normalizarSintoma(sintoma);
   const claveObjetivo = normalizarObjetivo(objetivo);
   const entrada = (claveSintoma && LECTURAS[claveSintoma]) || GENERAL_POR_OBJETIVO[claveObjetivo];
   const d = { nombre: nombre || (is_es ? 'Hola' : 'Hi'), is_es, diasRegistrados, racha, objetivo: claveObjetivo };
+  const reconocimiento = estadoHoy && RECONOCIMIENTO_ESTADO[estadoHoy] ? RECONOCIMIENTO_ESTADO[estadoHoy][is_es ? 'es' : 'en'] + ' ' : '';
 
   const plan = entrada.plan(d).map(item => {
     if (item.tipo !== 'nutricion') return item;
@@ -377,7 +395,7 @@ export function getLecturaDelDia({ nombre, objetivo, sintoma, is_es, diasRegistr
   });
 
   return {
-    lectura: entrada.lectura(d),
+    lectura: reconocimiento + entrada.lectura(d),
     plan,
     objetivoKcal: calcularObjetivoKcal(tdee, claveObjetivo),
   };
