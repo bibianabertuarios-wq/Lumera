@@ -323,8 +323,9 @@ export default function Dashboard() {
   const [calmaActiva, setCalmaActiva] = useState(false);
   const [mostrarPuertaRecordatorios, setMostrarPuertaRecordatorios] = useState(false);
   const [mostrarCuestionarioHorarios, setMostrarCuestionarioHorarios] = useState(false);
+  // Comer a las 14:00 cae ya en la bajada del ritmo circadiano — sugerimos antes por defecto.
   const [horaDesayuno, setHoraDesayuno] = useState('08:00');
-  const [horaComida, setHoraComida] = useState('14:00');
+  const [horaComida, setHoraComida] = useState('13:00');
   const [horaCena, setHoraCena] = useState('20:30');
   const [guardandoRecordatorios, setGuardandoRecordatorios] = useState(false);
   const [showMasMenu, setShowMasMenu] = useState(false);
@@ -420,6 +421,13 @@ export default function Dashboard() {
 
   useEffect(() => { init(); }, []);
 
+  // Si ya guardó sus horas antes, el formulario arranca desde ahí, no desde los defaults.
+  useEffect(() => {
+    if (user?.horaDesayuno) setHoraDesayuno(user.horaDesayuno);
+    if (user?.horaComida) setHoraComida(user.horaComida);
+    if (user?.horaCena) setHoraCena(user.horaCena);
+  }, [user?.horaDesayuno, user?.horaComida, user?.horaCena]);
+
   const init = async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) { router.push('/start'); return; }
@@ -446,6 +454,9 @@ export default function Dashboard() {
       pesoMeta: profile?.peso_meta || null,
       pesoFecha: profile?.peso_fecha || null,
       tdee: profile?.tdee || null,
+      horaDesayuno: profile?.hora_desayuno || null,
+      horaComida: profile?.hora_comida || null,
+      horaCena: profile?.hora_cena || null,
     };
     setUser(userData);
     try {
@@ -831,12 +842,18 @@ export default function Dashboard() {
                       </p>
                       {[
                         { label: is_es ? 'Desayunar' : 'Have breakfast', val: horaDesayuno, set: setHoraDesayuno },
-                        { label: is_es ? 'Comer' : 'Have lunch', val: horaComida, set: setHoraComida },
+                        { label: is_es ? 'Comer' : 'Have lunch', val: horaComida, set: setHoraComida,
+                          nota: is_es ? 'Te aviso 15 min antes — comer pronto te sienta mejor que a las 14h.' : "I'll remind you 15 min before — eating earlier sits better than 2pm." },
                         { label: is_es ? 'Cenar' : 'Have dinner', val: horaCena, set: setHoraCena },
-                      ].map(({label,val,set}) => (
-                        <div key={label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.7rem'}}>
-                          <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#0D3D3D'}}>{label}</label>
-                          <input type="time" value={val} onChange={e=>set(e.target.value)} style={{padding:'0.4rem 0.6rem',borderRadius:'0.5rem',border:'1px solid rgba(201,147,90,0.3)',fontSize:'0.85rem',background:'white'}}/>
+                      ].map(({label,val,set,nota}) => (
+                        <div key={label} style={{marginBottom:'0.7rem'}}>
+                          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                            <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#0D3D3D'}}>{label}</label>
+                            <input type="time" value={val} onChange={e=>set(e.target.value)} style={{padding:'0.4rem 0.6rem',borderRadius:'0.5rem',border:'1px solid rgba(201,147,90,0.3)',fontSize:'0.85rem',background:'white'}}/>
+                          </div>
+                          {nota && (
+                            <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.72rem',color:'#A06030',margin:'0.3rem 0 0'}}>{nota}</p>
+                          )}
                         </div>
                       ))}
                       <button onClick={activarRecordatorios} disabled={guardandoRecordatorios} style={{width:'100%',background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer',marginTop:'0.4rem'}}>
@@ -906,6 +923,29 @@ export default function Dashboard() {
                   </p>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* TU RITMO DE HOY — LUMI secretaria: horas ya guardadas, sin carga mental para ella */}
+          {checkinHecho && user?.pushEnabled && (user?.horaDesayuno || user?.horaComida || user?.horaCena) && (
+            <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
+              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.5rem'}}>
+                {is_es ? 'Tu ritmo de hoy' : 'Your rhythm today'}
+              </div>
+              {/* TODO copy pendiente revisión Bibiana */}
+              <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.9rem',color:'rgba(13,61,61,0.6)',lineHeight:1.5,marginBottom:'0.9rem'}}>
+                {is_es ? 'Yo me encargo de avisarte — tú solo vive el día.' : 'I take care of the reminders — you just live the day.'}
+              </p>
+              {[
+                { label: is_es?'Desayuno':'Breakfast', val: user?.horaDesayuno, icono:'☀️' },
+                { label: is_es?'Comida':'Lunch', val: user?.horaComida, icono:'🍽' },
+                { label: is_es?'Cena':'Dinner', val: user?.horaCena, icono:'🌙' },
+              ].filter(x => x.val).map(x => (
+                <div key={x.label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'0.4rem 0'}}>
+                  <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#0D3D3D'}}>{x.icono} {x.label}</span>
+                  <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#A06030',fontWeight:600}}>{x.val}</span>
+                </div>
+              ))}
             </div>
           )}
 
