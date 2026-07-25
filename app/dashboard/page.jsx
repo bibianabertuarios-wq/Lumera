@@ -809,7 +809,10 @@ export default function Dashboard() {
             ) : (
               <p style={{fontSize:'1.05rem',fontStyle:'italic',color:'rgba(255,255,255,0.9)',lineHeight:1.75,marginBottom:'1.25rem'}}>{lumiMsg}</p>
             )}
-            <a href="/lumera?tab=symptoms" style={{display:'block',marginTop:'-0.4rem',marginBottom:'1.1rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(255,255,255,0.4)',textDecoration:'none'}}>
+            <span onClick={()=>{setShowLumiChat(true); if(lumiChatMessages.length===0) setLumiChatMessages([{role:'assistant', content: lumiMsg}]);}} style={{display:'block',marginBottom:'0.6rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',color:'#C9935A',fontWeight:600,cursor:'pointer'}}>
+              {is_es ? 'Pregúntame tus dudas →' : 'Ask me anything →'}
+            </span>
+            <a href="/lumera?tab=symptoms" style={{display:'block',marginTop:'-0.2rem',marginBottom:'1.1rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(255,255,255,0.4)',textDecoration:'none'}}>
               {is_es ? 'Registro detallado de síntomas →' : 'Detailed symptom log →'}
             </a>
 
@@ -1020,20 +1023,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* PREMIUM COMO SIGUIENTE PASO — valor primero, no "suscripción" */}
-          {!user?.isPremium && diasRestantes > 1 && (
-            <div onClick={()=>setShowPremiumModal(true)} className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'1.25rem',padding:'1rem 1.25rem',marginBottom:'1.25rem',cursor:'pointer',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-              <div>
-                <div style={{fontSize:'0.95rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>
-                  {is_es ? 'Tu plan personalizado completo' : 'Your full personalised plan'}
-                </div>
-                <div style={{fontSize:'0.75rem',color:'rgba(13,61,61,0.5)',fontFamily:'Montserrat,sans-serif'}}>
-                  {is_es ? 'Más claridad, un plan guiado paso a paso para ti' : 'More clarity, a step-by-step plan guided just for you'}
-                </div>
-              </div>
-              <span style={{color:'#C9935A',fontSize:'1.1rem'}}>→</span>
-            </div>
-          )}
+
 
                     {showPesoModal && (
             <div style={{position:'fixed',inset:0,background:'rgba(13,61,61,0.6)',zIndex:250,display:'flex',alignItems:'flex-end',justifyContent:'center'}} onClick={()=>setShowPesoModal(false)}>
@@ -1209,8 +1199,7 @@ export default function Dashboard() {
             <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.85rem',color:'rgba(13,61,61,0.55)',marginBottom:'0.9rem'}}>
               {is_es ? 'Cada cosa que haces destapa un trozo.' : 'Everything you do uncovers a piece.'}
             </p>
-            <div style={{position:'relative',borderRadius:'0.85rem',overflow:'hidden'}}>
-              <img src="/images/shula_principal.jpg" alt="" style={{width:'100%',height:'auto',display:'block',opacity:0.15,filter:'grayscale(1)'}} />
+            <div style={{position:'relative',borderRadius:'0.85rem',overflow:'hidden',aspectRatio:'4/3',background:'#EFE7DA'}}>
               <svg viewBox="0 0 400 300" preserveAspectRatio="none" style={{position:'absolute',inset:0,width:'100%',height:'100%'}}>
                 <defs>
                   <mask id="obraMask">
