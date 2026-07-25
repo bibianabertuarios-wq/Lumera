@@ -456,6 +456,12 @@ export default function Dashboard() {
       .from('users').select('*').eq('id', session.user.id).limit(1);
     const profile = profiles?.[0];
 
+    // Gate del Día 1: independiente de si entró por alta o por login.
+    if (!profile?.onboarding_dia1_completo) {
+      router.push('/bienvenida/dia-1');
+      return;
+    }
+
     const userData = {
       id: session.user.id,
       nombre: (profile?.profile_name || session.user.email?.split('@')[0] || 'amiga').replace(/^./, c => c.toUpperCase()),

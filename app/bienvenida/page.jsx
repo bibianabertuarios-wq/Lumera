@@ -272,7 +272,7 @@ function BienvenidaInner() {
     }
 
     setLoading(false);
-    router.push('/bienvenida/dia-1');
+    router.push('/dashboard');
   };
 
   return (

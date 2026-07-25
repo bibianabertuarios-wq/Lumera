@@ -3,9 +3,11 @@
 /**
  * Lumera — Pantalla Día 1 (mapa de bienvenida)
  * ------------------------------------------------------------
- * Se llega aquí desde app/bienvenida/page.jsx justo después de crear la
- * cuenta (en vez de ir directo a /dashboard). Al terminar, handleFinish
- * guarda nombre preferido + hora de comida y entra a /dashboard (o a
+ * El gate vive en app/dashboard/page.jsx: al cargar, si el perfil tiene
+ * onboarding_dia1_completo = false (o null), redirige aquí antes de
+ * mostrar el dashboard — sin importar si llegó por alta o por login.
+ * Al terminar, handleFinish guarda nombre preferido + hora de comida,
+ * pone onboarding_dia1_completo = true, y entra a /dashboard (o a
  * /escaner si eligió medirse ahora).
  *
  * Todo el copy es borrador // TODO copy pendiente revisión Bibiana.
@@ -98,6 +100,7 @@ export default function BienvenidaDia1() {
       await supabase.from('users').update({
         profile_name: nombre || user.nombre || null,
         hora_comida: HORA_COMIDA_POR_BUCKET[horaComidaBucket] || '13:30',
+        onboarding_dia1_completo: true,
       }).eq('id', user.id);
     } catch (e) {}
     setGuardando(false);
