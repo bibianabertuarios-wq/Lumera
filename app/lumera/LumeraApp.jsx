@@ -5134,9 +5134,6 @@ query = query.eq('region', region.toUpperCase());
                             </div>
                         </div>
 
-                        {/* CHALLENGE SUELO PÉLVICO */}
-                        <PelvicFloorChallenge language={language} darkMode={darkMode} userTier={getUserTier()} />
-
                         {/* EJERCICIOS PERSONALIZADOS - Trial y Premium */}
                         {(getUserTier() === 'premium' || getUserTier() === 'trial') && (
                             <div className={`${darkMode ? 'bg-gray-800 border-amber-700' : 'bg-amber-50 border-amber-200'} rounded-xl p-5 border`}>
@@ -5241,6 +5238,9 @@ query = query.eq('region', region.toUpperCase());
                                 )}
                             </div>
                         )}
+
+                        {/* CHALLENGE SUELO PÉLVICO */}
+                        <PelvicFloorChallenge language={language} darkMode={darkMode} userTier={getUserTier()} />
 
                         {/* NUDGE FREE → PREMIUM */}
                         {getUserTier() === 'free' && (
