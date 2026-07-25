@@ -4,7 +4,7 @@
 // esperar a ninguna API (instantáneo). /api/lumi queda solo para el chat y
 // la ampliación bajo demanda.
 
-// Check-in de hoy (4 emojis: Bien/Cansada/Con niebla/Regular) → reconocimiento breve,
+// Check-in de hoy (5 emojis: Bien/Cansada/Con niebla/Regular/Hinchada) → reconocimiento breve,
 // específico a ella (nunca "algunas mujeres..."), que se antepone a la lectura del día.
 // TODO copy pendiente revisión Bibiana — formulación blanda, no diagnóstica
 const RECONOCIMIENTO_ESTADO = {
@@ -12,11 +12,12 @@ const RECONOCIMIENTO_ESTADO = {
   cansada: { es: 'Hoy amaneces cansada.', en: 'You wake up tired today.' },
   niebla: { es: 'Hoy notas la mente con niebla.', en: 'You notice your mind foggy today.' },
   regular: { es: 'Hoy amaneces regular.', en: 'You wake up so-so today.' },
+  hinchada: { es: 'Hoy amaneces hinchada.', en: 'You wake up bloated today.' },
 };
 
-// El check-in guarda 'sintoma_hoy' como texto (bien/cansancio/niebla mental/regular).
+// El check-in guarda 'sintoma_hoy' como texto (bien/cansancio/niebla mental/regular/hinchazón).
 // Este mapa recupera la clave del emoji original a partir de ese texto guardado.
-const SINTOMA_HOY_A_ESTADO = { 'bien':'bien', 'cansancio':'cansada', 'niebla mental':'niebla', 'regular':'regular' };
+const SINTOMA_HOY_A_ESTADO = { 'bien':'bien', 'cansancio':'cansada', 'niebla mental':'niebla', 'regular':'regular', 'hinchazón':'hinchada' };
 export function estadoDesdeSintomaHoy(sintomaHoy) {
   return SINTOMA_HOY_A_ESTADO[sintomaHoy] || null;
 }

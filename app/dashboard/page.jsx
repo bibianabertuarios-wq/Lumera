@@ -234,8 +234,8 @@ function AnilloVivo({ info, is_es, racha = 0, size = 150 }) {
   );
 }
 
-const ETIQUETA_ESTADO_ES = { bien:'bien', cansada:'cansada', niebla:'con niebla', regular:'regular' };
-const ETIQUETA_ESTADO_EN = { bien:'good', cansada:'tired', niebla:'foggy', regular:'so-so' };
+const ETIQUETA_ESTADO_ES = { bien:'bien', cansada:'cansada', niebla:'con niebla', regular:'regular', hinchada:'hinchada' };
+const ETIQUETA_ESTADO_EN = { bien:'good', cansada:'tired', niebla:'foggy', regular:'so-so', hinchada:'bloated' };
 
 const ICONO_TIPO_PLAN = { nutricion:'🍽', movimiento:'🚶‍♀️', interior:'🌙' };
 const LABEL_TIPO_PLAN_ES = { nutricion:'Nutrición', movimiento:'Movimiento', interior:'Momento interior' };
@@ -331,7 +331,6 @@ export default function Dashboard() {
   const [planGenerado, setPlanGenerado] = useState(null);
   const [planLoading, setPlanLoading] = useState(false);
   const [planHecho, setPlanHecho] = useState([]);
-  const [ritualHecho, setRitualHecho] = useState([]);
   const [toolsVisible, setToolsVisible] = useState(false);
   const [progresoDetalleVisible, setProgresoDetalleVisible] = useState(false);
   const [usoVisible, setUsoVisible] = useState(false);
@@ -511,7 +510,6 @@ export default function Dashboard() {
     try {
       const hk = new Date().toISOString().split('T')[0];
       setPlanHecho(JSON.parse(localStorage.getItem(`lumi_plan_done_${session.user.id}_${hk}`) || '[]'));
-      setRitualHecho(JSON.parse(localStorage.getItem(`lumi_ritual_done_${session.user.id}_${hk}`) || '[]'));
     } catch(e) {}
 
     try {
@@ -554,6 +552,7 @@ export default function Dashboard() {
       'cansada':  { energia: 2, animo: 3, sueno: 2, sintoma_hoy: 'cansancio' },
       'niebla':   { energia: 2, animo: 2, sueno: 3, sintoma_hoy: 'niebla mental' },
       'regular':  { energia: 3, animo: 2, sueno: 3, sintoma_hoy: 'regular' },
+      'hinchada': { energia: 3, animo: 3, sueno: 3, sintoma_hoy: 'hinchazón' },
     };
     const datos = valores[estado];
     setCheckinHecho(true);
@@ -586,16 +585,6 @@ export default function Dashboard() {
 
   const togglePorqueVisible = (idx) => {
     setPorqueVisible(prev => prev.includes(idx) ? prev.filter(x => x !== idx) : [...prev, idx]);
-  };
-
-  const marcarRitualHecho = (idx) => {
-    const hk = new Date().toISOString().split('T')[0];
-    setRitualHecho(prev => {
-      if (prev.includes(idx)) return prev;
-      const next = [...prev, idx];
-      try { localStorage.setItem(`lumi_ritual_done_${user?.id}_${hk}`, JSON.stringify(next)); } catch(e) {}
-      return next;
-    });
   };
 
   const getPlanDelDia = () => {
@@ -802,8 +791,8 @@ export default function Dashboard() {
                     </p>
                     <div style={{display:'flex',gap:'0.5rem',marginBottom:'1.25rem'}}>
                       {(is_es
-                        ? [{k:'bien',emoji:'😊',l:'Bien'},{k:'cansada',emoji:'😴',l:'Cansada'},{k:'niebla',emoji:'🌫️',l:'Con niebla'},{k:'regular',emoji:'😐',l:'Regular'}]
-                        : [{k:'bien',emoji:'😊',l:'Good'},{k:'cansada',emoji:'😴',l:'Tired'},{k:'niebla',emoji:'🌫️',l:'Foggy'},{k:'regular',emoji:'😐',l:'Regular'}]
+                        ? [{k:'bien',emoji:'😊',l:'Bien'},{k:'cansada',emoji:'😴',l:'Cansada'},{k:'niebla',emoji:'🌫️',l:'Con niebla'},{k:'regular',emoji:'😐',l:'Regular'},{k:'hinchada',emoji:'🎈',l:'Hinchada'}]
+                        : [{k:'bien',emoji:'😊',l:'Good'},{k:'cansada',emoji:'😴',l:'Tired'},{k:'niebla',emoji:'🌫️',l:'Foggy'},{k:'regular',emoji:'😐',l:'Regular'},{k:'hinchada',emoji:'🎈',l:'Bloated'}]
                       ).map(({k,emoji,l}) => (
                         <button key={k} className="estado-btn" onClick={()=>hacerCheckin(k)}>
                           <span style={{fontSize:'1.5rem',lineHeight:1}}>{emoji}</span>
@@ -976,36 +965,6 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* TU RITUAL — secuencia guiada, no biblioteca. Revelado progresivo: solo tras registrar hoy. */}
-          {checkinHecho && (
-          <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
-            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.5rem'}}>
-              {is_es ? 'Tu ritual' : 'Your ritual'}
-            </div>
-            {[
-              { label: is_es?'Respiración':'Breathing', sub: is_es?'1 minuto guiado':'1 guided minute', onClick: () => { marcarRitualHecho(0); setCalmaActiva(true); } },
-              { label: is_es?'Suelo pélvico':'Pelvic floor', sub: is_es?'10 contracciones de 5 segundos, donde estés':'10 five-second contractions, wherever you are', onClick: () => marcarRitualHecho(1), masInfo:'/lumera?tab=exercise' },
-              { label: is_es?'Movimiento':'Movement', sub: is_es?'Tu rutina de hoy':'Your routine today', onClick: () => { marcarRitualHecho(2); window.location.href='/lumera?tab=exercise'; } },
-              { label: is_es?'Nutrición':'Nutrition', sub: is_es?'Tu menú de hoy':'Your menu today', onClick: () => { marcarRitualHecho(3); window.location.href='/lumera?tab=nutrition'; } },
-            ].map((paso, i) => (
-              <div key={i} style={{display:'flex',alignItems:'center',gap:'0.6rem',padding:'0.6rem 0',borderBottom:i<3?'1px solid rgba(201,147,90,0.12)':'none'}}>
-                <div onClick={paso.onClick} style={{display:'flex',alignItems:'center',gap:'0.75rem',flex:1,cursor:'pointer'}}>
-                  <span style={{width:'26px',height:'26px',borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.8rem',fontWeight:700,border:'1.5px solid '+(ritualHecho.includes(i)?'#C9935A':'rgba(201,147,90,0.3)'),background:ritualHecho.includes(i)?'#C9935A':'transparent',color:ritualHecho.includes(i)?'white':'#A06030'}}>{ritualHecho.includes(i) ? '✓' : i+1}</span>
-                  <div>
-                    <div style={{fontSize:'0.9rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>{paso.label}</div>
-                    <div style={{fontSize:'0.72rem',color:'rgba(13,61,61,0.45)',fontFamily:'Montserrat,sans-serif'}}>{paso.sub}</div>
-                  </div>
-                </div>
-                {paso.masInfo && (
-                  <span onClick={()=>window.location.href=paso.masInfo} style={{fontSize:'0.68rem',color:'#C9935A',fontFamily:'Montserrat,sans-serif',cursor:'pointer',whiteSpace:'nowrap'}}>
-                    {is_es ? 'más info →' : 'more info →'}
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
-          )}
-
           {/* TU PROGRESO — gráfica/meta + silueta en una sola card */}
           <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',overflow:'hidden',marginBottom:'1.25rem'}}>
             <div style={{padding:'1.25rem'}}>
@@ -1053,23 +1012,6 @@ export default function Dashboard() {
                 );
               })())}
             </div>
-            <div onClick={()=>router.push('/escaner')} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'0.75rem 1.25rem',borderTop:'1px solid rgba(201,147,90,0.15)',cursor:'pointer'}}>
-              <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'#A06030'}}>
-                {is_es ? 'Tu Silueta Hormonal' : 'Your Hormonal Silhouette'}
-              </span>
-              <span style={{color:'#C9935A',fontSize:'0.85rem'}}>→</span>
-            </div>
-          </div>
-
-          {/* VERDAD DE HOY — mito/verdad, 1 línea */}
-          <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1rem 1.25rem',marginBottom:'1.25rem'}}>
-            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.4rem'}}>
-              {is_es ? '✦ Verdad de hoy' : '✦ Truth of the day'}
-            </div>
-            {/* TODO copy pendiente revisión Bibiana */}
-            <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'0.95rem',color:'#0D3D3D',lineHeight:1.5,margin:0}}>
-              {(is_es ? MITOS_VERDAD_ES : MITOS_VERDAD_EN)[new Date().getDate() % MITOS_VERDAD_ES.length]}
-            </p>
           </div>
 
           {/* PREMIUM COMO SIGUIENTE PASO — valor primero, no "suscripción" */}
@@ -1200,6 +1142,28 @@ export default function Dashboard() {
                     </div>
                     {recursosVisibleYo && (
                       <div style={{display:'flex',flexDirection:'column',gap:'0.6rem',marginTop:'0.9rem'}}>
+                        <div style={{background:'#FAF7F1',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'0.85rem',padding:'0.9rem 1rem'}}>
+                          <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.4rem'}}>
+                            {is_es ? '✦ Verdad de hoy' : '✦ Truth of the day'}
+                          </div>
+                          {/* TODO copy pendiente revisión Bibiana */}
+                          <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'0.9rem',color:'#0D3D3D',lineHeight:1.5,margin:0}}>
+                            {(is_es ? MITOS_VERDAD_ES : MITOS_VERDAD_EN)[new Date().getDate() % MITOS_VERDAD_ES.length]}
+                          </p>
+                        </div>
+
+                        <div onClick={() => setCalmaActiva(true)} style={{background:'#FAF7F1',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'0.85rem',padding:'0.8rem 1rem',cursor:'pointer',display:'flex',alignItems:'center',gap:'0.9rem'}} role="button" aria-label={is_es ? 'Abrir tu minuto de calma' : 'Open your calm minute'}>
+                          <AnilloVivo info={infoCiclo} is_es={is_es} size={48} />
+                          <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.82rem',color:'#0D3D3D',fontWeight:600}}>
+                            {is_es ? 'Momento de calma' : 'Calm minute'}
+                          </span>
+                        </div>
+
+                        <div onClick={()=>router.push('/escaner')} style={{background:'#FAF7F1',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'0.85rem',padding:'0.8rem 1rem',cursor:'pointer',fontFamily:'Montserrat,sans-serif',fontSize:'0.82rem',color:'#0D3D3D',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                          <span>{is_es ? 'Tu Silueta Hormonal' : 'Your Hormonal Silhouette'}</span>
+                          <span style={{color:'#C9935A'}}>→</span>
+                        </div>
+
                         {[
                           {es:'7 días para sentirte menos hinchada y con menos antojos', en:'7 days to feel less bloated and fewer cravings', href:'/desinflamate'},
                           {es:'7 noches para calmar tu ansiedad y volver a dormir', en:'7 nights to calm your anxiety and sleep again', href:'/duerme'},
@@ -1236,21 +1200,6 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* HABLA CON TU ASESORA + MOMENTO DE CALMA — tiles chicos en fila */}
-          <div className={`fade d1 ${visible?'in':''}`} style={{display:'flex',gap:'0.75rem',marginBottom:'0.75rem'}}>
-            <div onClick={()=>{ setShowLumiChat(true); if (lumiChatMessages.length === 0) setLumiChatMessages([{role:'assistant', content: lumiMsg}]); }} style={{flex:1,background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1rem',cursor:'pointer',textAlign:'center'}}>
-              <img src="/images/lumi.png" alt="LUMI" style={{width:'40px',height:'40px',objectFit:'cover',borderRadius:'50%',marginBottom:'0.4rem'}} onError={e=>{e.target.style.display='none'}}/>
-              <div style={{fontSize:'0.85rem',fontWeight:600,color:'#0D3D3D',fontFamily:"'Cormorant Garamond',serif"}}>
-                {is_es ? 'Habla con tu asesora' : 'Talk to your advisor'}
-              </div>
-            </div>
-            <div onClick={() => setCalmaActiva(true)} style={{flex:1,background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1rem',cursor:'pointer',textAlign:'center'}} role="button" aria-label={is_es ? 'Abrir tu minuto de calma' : 'Open your calm minute'}>
-              <AnilloVivo info={infoCiclo} is_es={is_es} size={64} />
-              <p style={{textAlign:'center',fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',letterSpacing:'1px',color:'#A06030',textTransform:'uppercase',margin:'0.35rem 0 0'}}>
-                {is_es ? 'Momento de calma' : 'Calm minute'}
-              </p>
-            </div>
-          </div>
           {calmaActiva && <CalmaOverlay is_es={is_es} onClose={() => setCalmaActiva(false)} />}
 
           {/* TU OBRA DE ESTA SEMANA — único marcador de progreso de Inicio */}
