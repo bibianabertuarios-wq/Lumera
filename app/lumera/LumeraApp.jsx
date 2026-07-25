@@ -4239,7 +4239,7 @@ query = query.eq('region', region.toUpperCase());
                     }
 
                     // Si no hay síntomas registrados, usar síntoma del quiz
-                    const primarySymptom = currentUser?.primary_symptom || currentUser?.main_symptom;
+                    const primarySymptom = currentUser?.sintoma_principal || currentUser?.primary_symptom || currentUser?.main_symptom;
                     const symptomMap = {
                         'hot_flashes': 'sofocos',
                         'sofocos': 'sofocos',
