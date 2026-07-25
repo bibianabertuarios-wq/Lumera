@@ -599,13 +599,12 @@ export default function Dashboard() {
       diasRegistrados: (ultimosCheckins || []).length,
     });
     return plan.map(p => {
-      const texto = (p.accion || '').toLowerCase();
-      let link, linkLabel;
-      if (texto.includes('proteína') || texto.includes('protein') || texto.includes('come') || texto.includes('eat') || texto.includes('desayuno') || texto.includes('breakfast') || texto.includes('menú') || texto.includes('menu') || texto.includes('cena') || texto.includes('dinner') || texto.includes('almuerzo') || texto.includes('lunch')) {
-        link = '/lumera?tab=nutrition'; linkLabel = is_es ? 'Ver tu menú →' : 'See your menu →';
-      } else if (texto.includes('entrena') || texto.includes('train') || texto.includes('camina') || texto.includes('walk') || texto.includes('series') || texto.includes('sets') || texto.includes('movimiento') || texto.includes('movement')) {
-        link = '/lumera?tab=exercise'; linkLabel = is_es ? 'Ver tu rutina →' : 'See your routine →';
-      }
+      const LINKS_POR_TIPO = {
+        nutricion:  { link: '/lumera?tab=nutrition', linkLabel: is_es ? 'Ver menú o Lente Alquímica →' : 'See menu or Alchemy Lens →' },
+        movimiento: { link: '/lumera?tab=exercise',  linkLabel: is_es ? 'Ver tu rutina →' : 'See your routine →' },
+      };
+      const destino = LINKS_POR_TIPO[p.tipo];
+      const link = destino?.link, linkLabel = destino?.linkLabel;
       return { tipo: p.tipo, icono: p.icono, accion: p.accion, ciencia: p.porque, ...(p.fuente ? { fuente: p.fuente } : {}), ...(p.etiqueta ? { etiqueta: p.etiqueta } : {}), ...(link ? { link, linkLabel } : {}) };
     });
   };
@@ -902,6 +901,18 @@ export default function Dashboard() {
                       {p.etiqueta}
                     </div>
                   )}
+                  {p.tipo === 'interior' ? (
+                    <div onClick={() => setCalmaActiva(true)} style={{marginLeft:'1.7rem',marginBottom:'0.5rem',display:'flex',alignItems:'center',gap:'0.6rem',cursor:'pointer'}} role="button" aria-label={is_es ? 'Abrir tu minuto de calma' : 'Open your calm minute'}>
+                      <AnilloVivo info={infoCiclo} is_es={is_es} size={40} />
+                      <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'#C9935A',fontWeight:600}}>
+                        {is_es ? 'Empezar a respirar →' : 'Start breathing →'}
+                      </span>
+                    </div>
+                  ) : p.link && (
+                    <span onClick={()=>window.location.href=p.link} style={{marginLeft:'1.7rem',display:'inline-block',marginBottom:'0.4rem',fontSize:'0.78rem',fontFamily:'Montserrat,sans-serif',color:'#C9935A',cursor:'pointer',fontWeight:600}}>
+                      {p.linkLabel}
+                    </span>
+                  )}
                   <div onClick={()=>togglePorqueVisible(i)} style={{marginLeft:'1.7rem',fontSize:'0.72rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.4)',fontWeight:600,cursor:'pointer'}}>
                     {porqueVisible.includes(i) ? (is_es?'▲ Por qué':'▲ Why') : (is_es?'▼ ¿Por qué?':'▼ Why?')}
                   </div>
@@ -914,11 +925,6 @@ export default function Dashboard() {
                         <p style={{fontSize:'0.68rem',fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',color:'rgba(13,61,61,0.35)',marginTop:'0.3rem',marginBottom:0}}>
                           {is_es ? 'Fuente: ' : 'Source: '}{p.fuente}
                         </p>
-                      )}
-                      {p.link && (
-                        <span onClick={()=>window.location.href=p.link} style={{display:'inline-block',marginTop:'0.4rem',fontSize:'0.75rem',fontFamily:'Montserrat,sans-serif',color:'#C9935A',cursor:'pointer',fontWeight:600}}>
-                          {p.linkLabel}
-                        </span>
                       )}
                     </div>
                   )}
@@ -1150,13 +1156,6 @@ export default function Dashboard() {
                           <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'0.9rem',color:'#0D3D3D',lineHeight:1.5,margin:0}}>
                             {(is_es ? MITOS_VERDAD_ES : MITOS_VERDAD_EN)[new Date().getDate() % MITOS_VERDAD_ES.length]}
                           </p>
-                        </div>
-
-                        <div onClick={() => setCalmaActiva(true)} style={{background:'#FAF7F1',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'0.85rem',padding:'0.8rem 1rem',cursor:'pointer',display:'flex',alignItems:'center',gap:'0.9rem'}} role="button" aria-label={is_es ? 'Abrir tu minuto de calma' : 'Open your calm minute'}>
-                          <AnilloVivo info={infoCiclo} is_es={is_es} size={48} />
-                          <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.82rem',color:'#0D3D3D',fontWeight:600}}>
-                            {is_es ? 'Momento de calma' : 'Calm minute'}
-                          </span>
                         </div>
 
                         <div onClick={()=>router.push('/escaner')} style={{background:'#FAF7F1',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'0.85rem',padding:'0.8rem 1rem',cursor:'pointer',fontFamily:'Montserrat,sans-serif',fontSize:'0.82rem',color:'#0D3D3D',display:'flex',justifyContent:'space-between',alignItems:'center'}}>
