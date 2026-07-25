@@ -1470,16 +1470,12 @@ export default function Dashboard() {
           {(is_es ? [
             {img:"/images/kling_20260321_作品_Extremely__4837_0.png", label:'Inicio', route:'/dashboard'},
             {img:"/images/kling_20260321_作品__Extremely_4730_1.png", label:'Nutrición', route:'/lumera?tab=nutrition'},
-            {img:'/images/sintomas.png', label:'Síntomas', route:'/lumera?tab=symptoms'},
-            {img:'/images/mitos.png', label:'Más', route:'__mas_menu__'},
-            {img:'/images/lumi.png', label:'LUMI', route:'/lumera?tab=chat'},
+            {img:'/images/mitos.png', label:'Descubre', route:'__mas_menu__'},
             {img:"/images/kling_20260321_作品_Extremely__4896_1.png", label:'Ejercicio', route:'/lumera?tab=exercise'},
           ] : [
             {img:"/images/kling_20260321_作品_Extremely__4837_0.png", label:'Home', route:'/dashboard'},
             {img:"/images/kling_20260321_作品__Extremely_4730_1.png", label:'Nutrition', route:'/lumera?tab=nutrition'},
-            {img:'/images/sintomas.png', label:'Síntomas', route:'/lumera?tab=symptoms'},
-            {img:'/images/mitos.png', label:'Más', route:'__mas_menu__'},
-            {img:'/images/lumi.png', label:'LUMI', route:'/lumera?tab=chat'},
+            {img:'/images/mitos.png', label:'Descubre', route:'__mas_menu__'},
             {img:"/images/kling_20260321_作品_Extremely__4896_1.png", label:'Exercise', route:'/lumera?tab=exercise'},
           ]).map((n,i) => (
             <div key={i} className="nav-item" onClick={()=>{ if(n.route==='__lumi_chat__'){setShowLumiChat(true);if(lumiChatMessages.length===0)setLumiChatMessages([{role:'assistant',content:lumiMsg}]);} else if(n.route==='__mas_menu__'){setShowMasMenu(true);} else if(n.route.includes('/lumera')) window.location.href=n.route; else router.push(n.route); }}>
