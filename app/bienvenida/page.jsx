@@ -259,6 +259,8 @@ function BienvenidaInner() {
         region: params.get('region') || '',
         weight: pesoParam,
         height: tallaParam,
+        peso: pesoParam,
+        talla: tallaParam,
         activity_level: activityKeyParam,
         age: edadParam,
         bmi: imcPreview,
