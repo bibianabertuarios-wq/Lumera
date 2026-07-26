@@ -254,6 +254,7 @@ function BienvenidaInner() {
         sintoma_principal: sintoma,
         goal: objetivoParam,
         weight_goal: objetivoParam,
+        objetivo: objetivoParam,
         ciclo: params.get('ciclo') || '',
         region: params.get('region') || '',
         weight: pesoParam,
