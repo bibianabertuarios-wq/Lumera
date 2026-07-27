@@ -4302,155 +4302,17 @@ query = query.eq('region', region.toUpperCase());
             // ✨ DASHBOARD PREMIUM
 
             const renderNutrition = () => {
-                const mealLabels = language === 'es' ? { 
-                    Desayuno: 'Desayuno', 
-                    Almuerzo: 'Almuerzo', 
-                    Cena: 'Cena', 
-                    Snack: 'Snack' 
-                } : { 
-                    Desayuno: 'Breakfast', 
-                    Almuerzo: 'Lunch', 
-                    Cena: 'Dinner', 
-                    Snack: 'Snack' 
+                const mealLabels = language === 'es' ? {
+                    desayuno: 'Desayuno',
+                    almuerzo: 'Almuerzo',
+                    cena: 'Cena',
+                    snack: 'Snack'
+                } : {
+                    desayuno: 'Breakfast',
+                    almuerzo: 'Lunch',
+                    cena: 'Dinner',
+                    snack: 'Snack'
                 };
-
-                // Función para seleccionar menú adaptado según síntomas
-                const getSelectedSymptom = () => {
-                    const tier = getUserTier();
-
-                    // Verificar si está en período - múltiples formas de detectarlo
-                    if (symptoms && symptoms.length > 0) {
-                        const recent = symptoms.slice(-3);
-                        const isOnPeriod = recent.some(s => 
-                            s.period_active === true || 
-                            s.is_period === true ||
-                            s.on_period === true ||
-                            (s.notes && (
-                                s.notes.toLowerCase().includes('período') ||
-                                s.notes.toLowerCase().includes('periodo') ||
-                                s.notes.toLowerCase().includes('period') ||
-                                s.notes.toLowerCase().includes('regla') ||
-                                s.notes.toLowerCase().includes('menstruación')
-                            ))
-                        );
-                        if (isOnPeriod) {
-                            return 'periodo';
-                        }
-                    }
-
-                    // Si no hay síntomas registrados, usar síntoma del quiz
-                    const primarySymptom = currentUser?.sintoma_principal || currentUser?.primary_symptom || currentUser?.main_symptom;
-                    const symptomMap = {
-                        'hot_flashes': 'sofocos',
-                        'sofocos': 'sofocos',
-                        'fatigue': 'fatiga',
-                        'fatiga': 'fatiga',
-                        'baja_energia': 'fatiga',
-                        'low_energy': 'fatiga',
-                        'insomnia': 'insomnio',
-                        'insomnio': 'insomnio',
-                        'anxiety': 'ansiedad',
-                        'ansiedad': 'ansiedad',
-                        'brain_fog': 'niebla_mental',
-                        'niebla_mental': 'niebla_mental',
-                        'mood': 'cambios_humor',
-                        'cambios_humor': 'cambios_humor'
-                    };
-
-                    // Helper: leer campo de síntoma con ambas nomenclaturas (camelCase y snake_case)
-                    const sf = (s, camel, snake, defaultVal = 0) => {
-                        const v = s[camel] !== undefined ? s[camel] : (s[snake] !== undefined ? s[snake] : defaultVal);
-                        return typeof v === 'number' ? v : defaultVal;
-                    };
-
-                    // PREMIUM y TRIAL: scoring ponderado - gana el síntoma MÁS dominante
-                    if (tier === 'premium' || tier === 'trial') {
-                        if (symptoms && symptoms.length >= 1) {
-                            const n = tier === 'premium' ? 3 : 2;
-                            const recent = symptoms.slice(0, n);
-
-                            // Leer todos los campos normalizando camelCase ↔ snake_case
-                            const avgSleep      = recent.reduce((s, r) => s + sf(r, 'sleep',      'sleep',       5), 0) / recent.length;
-                            const avgEnergy     = recent.reduce((s, r) => s + sf(r, 'energy',     'energy',      5), 0) / recent.length;
-                            const avgHotFlashes = recent.reduce((s, r) => s + sf(r, 'hotFlashes', 'hot_flashes', 0), 0) / recent.length;
-                            const avgAnxiety    = recent.reduce((s, r) => s + sf(r, 'anxiety',    'anxiety',     0), 0) / recent.length;
-                            const avgBrainFog   = recent.reduce((s, r) => s + sf(r, 'brainFog',   'brain_fog',   0), 0) / recent.length;
-                            const avgMood       = recent.reduce((s, r) => s + sf(r, 'mood',       'mood',        5), 0) / recent.length;
-                            const avgJointPain  = recent.reduce((s, r) => s + sf(r, 'jointPain',  'joint_pain',  0), 0) / recent.length;
-                            const avgBloating   = recent.reduce((s, r) => s + sf(r, 'bloating',   'bloating',    0), 0) / recent.length;
-                            const avgMemory     = recent.reduce((s, r) => s + sf(r, 'memory',     'memory',      5), 0) / recent.length;
-
-                            // Score de alarma: mayor = más urgente
-                            // Para síntomas donde ALTO es malo (sofocos, ansiedad, niebla)
-                            // Para síntomas donde BAJO es malo (sueño, energía, ánimo, memoria)
-                            const scores = {
-                                'fatiga':          avgEnergy  < 6 ? (6 - avgEnergy)  * 2.0 : 0,
-                                'insomnio':        avgSleep   < 6 ? (6 - avgSleep)   * 2.0 : 0,
-                                'sofocos':         avgHotFlashes > 3 ? (avgHotFlashes - 3) * 2.0 : 0,
-                                'ansiedad':        avgAnxiety    > 3 ? (avgAnxiety    - 3) * 2.0 : 0,
-                                'niebla_mental':   (avgBrainFog > 3 ? (avgBrainFog - 3) * 2.0 : 0) + (avgMemory < 6 ? (6 - avgMemory) * 2.0 : 0),
-                                'cambios_humor':   avgMood    < 6 ? (6 - avgMood)   * 2.0 : 0,
-                                'dolor_articular': avgJointPain  > 3 ? (avgJointPain - 3) * 2.0 : 0,
-                                'hinchazon':       avgBloating   > 3 ? (avgBloating  - 3) * 2.0 : 0,
-                            };
-
-                            // Si hay síntoma principal del perfil, darle un boost para desempates
-                            const profileSymptom = primarySymptom && symptomMap[primarySymptom];
-                            if (profileSymptom && scores[profileSymptom] !== undefined) {
-                                scores[profileSymptom] += 1; // pequeño boost al síntoma declarado
-                            }
-
-                            const topSymptom = Object.entries(scores).sort((a, b) => b[1] - a[1])[0];
-
-                            if (topSymptom[1] > 0) return topSymptom[0];
-                        }
-
-                        // Sin registros → usar síntoma principal del perfil
-                        if (primarySymptom && symptomMap[primarySymptom]) {
-                            return symptomMap[primarySymptom];
-                        }
-                        return 'sofocos';
-                    }
-
-                    // FREE: menú rotativo semanal
-                    const weekNumber = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 1)) / 604800000);
-                    const symptomsList = ['sofocos', 'fatiga', 'insomnio', 'ansiedad', 'niebla_mental', 'dolor_articular', 'cambios_humor', 'hinchazon'];
-                    return symptomsList[weekNumber % symptomsList.length];
-                };
-
-                const selectedSymptom = getSelectedSymptom();
-
-                // Para periodo: usar sofocos como base si no hay menú específico
-                const menuKey = selectedSymptom === 'periodo' ? 'sofocos' : selectedSymptom;
-                const langKey = language === 'es' ? 'es' : 'en';
-                const menuLang = menus[langKey] || {};
-
-                // Buscar menú: 1) idioma+síntoma exacto, 2) idioma+sofocos, 3) otro idioma+síntoma, 4) []
-                let recipes = menuLang[menuKey] 
-                    || menuLang['sofocos']
-                    || menuLang[Object.keys(menuLang)[0]]  // primer síntoma disponible en ese idioma
-                    || menus['es']?.[menuKey]               // fallback español si inglés vacío
-                    || menus['es']?.['sofocos']
-                    || [];
-
-                if (!menuLang[menuKey] && Object.keys(menuLang).length === 0) {
-                }
-
-                // Aplicar restricciones dietéticas a los menús de Supabase (trial y premium)
-                const userConditions = parseHealthConditions(currentUser?.health_conditions);
-                if (userConditions.length > 0 && getUserTier() !== 'free') {
-                    recipes = recipes.map(recipe => {
-                        if (!recipe.ingredients) return recipe;
-                        const filteredIngredients = recipe.ingredients
-                            .map(ing => {
-                                // Normalizar ingrediente a objeto si viene como string
-                                const ingObj = typeof ing === 'string' ? { name: ing } : ing;
-                                return applyDietaryRestrictions(ingObj, userConditions);
-                            })
-                            .filter(ing => ing !== null);
-                        return { ...recipe, ingredients: filteredIngredients };
-                    });
-                }
 
                 return (
                     <div className="pb-32 space-y-8" key={`nutrition-${language}`} style={{position: 'relative'}}>
@@ -4616,206 +4478,200 @@ query = query.eq('region', region.toUpperCase());
                         {getUserTier() !== 'free' && presupuestoSemana && (
                         <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-lg overflow-hidden`}>
                             <div className="bg-gradient-to-r from-rose-400 to-amber-300 text-white p-6">
-                                <h3 className="text-2xl font-semibold">{language === 'es' ? '✨ Tu Menú de Hoy' : '✨ Your Menu Today'}</h3>
+                                <h3 className="text-2xl font-semibold">{language === 'es' ? '✨ Tu Menú de la Semana' : '✨ Your Weekly Menu'}</h3>
                                 <p className="text-sm opacity-90 mt-1">
-                                    {getUserTier() === 'free'
-                                        ? (language === 'es' ? 'Tu menú de esta semana' : 'Your menu this week')
-                                        : (language === 'es' ? 'Adaptado según cómo te sientes' : 'Adapted based on how you feel')}
+                                    {language === 'es' ? 'Preparado por LUMI para ti' : 'Prepared by LUMI for you'}
                                 </p>
                             </div>
 
                             <div className="p-8 space-y-8">
-                                {recipes.map((recipe, idx) => (
-                                    <div key={idx} className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-6 border-l-4 border-rose-400 space-y-6`}>
-                                        {/* HEADER CON NOMBRE Y CALORÍAS */}
-                                        <div className="flex justify-between items-start">
-                                            <div className="flex-1">
-                                                <h4 className="text-2xl font-bold mb-2 gradient-text">{recipe.name}</h4>
-                                                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-3`}>
-                                                    {mealLabels[recipe.meal] || recipe.meal}
-                                                </p>
+                                {weeklyMenuLoading && (
+                                    <div className="text-center py-8">
+                                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-400 mx-auto mb-4"></div>
+                                        <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
+                                            {language === 'es' ? 'Preparando tu menú de la semana...' : 'Preparing your weekly menu...'}
+                                        </p>
+                                    </div>
+                                )}
 
-                                                {/* HORARIO RECOMENDADO */}
-                                                {recipe.horario && (
-                                                    <div className={`${darkMode ? 'bg-blue-900' : 'bg-blue-100'} inline-block px-4 py-2 rounded-lg`}>
-                                                        <p className={`text-sm font-bold ${darkMode ? 'text-blue-200' : 'text-blue-900'}`}>
-                                                            🕐 {language === 'es' ? 'Hora recomendada' : 'Recommended time'}: {recipe.horario}
-                                                        </p>
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <span className={`${darkMode ? 'bg-stone-900' : 'bg-amber-50'} text-amber-700 px-4 py-2 rounded-xl text-lg font-bold`}>
-                                                {recipe.calories} cal
-                                            </span>
-                                        </div>
+                                {!weeklyMenuLoading && weeklyMenuError && (
+                                    <div className="text-center py-8">
+                                        {/* TODO copy pendiente revisión Bibiana */}
+                                        <p className={`text-sm mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                            {language === 'es' ? 'Estamos preparando tu menú, vuelve a intentarlo en un momento.' : "We're preparing your menu, please try again in a moment."}
+                                        </p>
+                                        <button
+                                            onClick={() => fetchWeeklyMenu(presupuestoSemana)}
+                                            className="bg-gradient-to-r from-amber-600 to-amber-400 text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition"
+                                        >
+                                            {language === 'es' ? 'Reintentar' : 'Retry'}
+                                        </button>
+                                    </div>
+                                )}
 
-                                        {/* POR QUÉ ESTE HORARIO - CIENCIA */}
-                                        {recipe.whyHorario && (
-                                            <div className={`${darkMode ? 'bg-indigo-900' : 'bg-indigo-50'} p-4 rounded-lg border-l-4 border-indigo-500`}>
-                                                <p className={`text-sm ${darkMode ? 'text-indigo-200' : 'text-indigo-900'} leading-relaxed`}>
-                                                    <strong className="font-bold">⏰ {language === 'es' ? '¿Por qué a esta hora?' : 'Why at this time?'}</strong><br/>
-                                                    {recipe.whyHorario}
+                                {!weeklyMenuLoading && !weeklyMenuError && weeklyMenu && (
+                                    <>
+                                        {weeklyMenu.resumen && (
+                                            <div className={`${darkMode ? 'bg-rose-900' : 'bg-amber-50'} rounded-xl shadow p-5 border-l-4 border-rose-400`}>
+                                                <p className={`text-sm ${darkMode ? 'text-amber-200' : 'text-rose-900'} font-medium leading-relaxed italic`}>
+                                                    {weeklyMenu.resumen}
                                                 </p>
                                             </div>
                                         )}
 
-                                        {/* POR QUÉ ESTE MENÚ - BENEFICIOS */}
-                                        <div className={`${darkMode ? 'bg-stone-900' : 'bg-amber-50'} p-4 rounded-lg border-l-4 border-amber-500`}>
-                                            <p className={`text-sm ${darkMode ? 'text-amber-200' : 'text-amber-900'} font-medium leading-relaxed`}>
-                                                <strong className="font-bold">✦ {language === 'es' ? '¿Por qué este menú?' : 'Why this menu?'}</strong><br/>
-                                                {recipe.why}
-                                            </p>
-                                        </div>
+                                        {weeklyMenu.tipDelDia && (
+                                            <div className={`${darkMode ? 'bg-stone-900' : 'bg-amber-50'} p-4 rounded-lg border-l-4 border-amber-500`}>
+                                                <p className={`text-sm ${darkMode ? 'text-amber-200' : 'text-amber-900'} font-medium leading-relaxed`}>
+                                                    <strong className="font-bold">✦ {language === 'es' ? 'Tip del día' : "Today's tip"}</strong><br/>
+                                                    {weeklyMenu.tipDelDia}
+                                                </p>
+                                            </div>
+                                        )}
 
-                                        {/* INGREDIENTES — ACORDEON */}
-                                        <details style={{borderRadius:'0.85rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)'}}>
-                                            <summary style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0.9rem 1.1rem',cursor:'pointer',background:darkMode?'rgba(201,147,90,0.1)':'rgba(201,147,90,0.07)',listStyle:'none',userSelect:'none'}}>
-                                                <span style={{fontFamily:"'Cormorant', serif",fontSize:'1.05rem',fontWeight:600,color:darkMode?'#e8c89f':'#8A7055',display:'flex',alignItems:'center',gap:'0.5rem'}}>
-                                                    <span style={{color:'#C4A882'}}>&#10022;</span> {t[language].ingredients}
-                                                </span>
-                                                <span style={{color:'#C4A882',fontSize:'0.85rem'}}>&#9662;</span>
-                                            </summary>
-                                            <div style={{padding:'0.75rem 1rem 1rem',display:'flex',flexDirection:'column',gap:'0.6rem'}}>
-                                                {recipe.ingredients.map((ing, i) => {
-                                                    const isString = typeof ing === 'string';
-                                                    const userRegionKey = getRegionCode(currentUser?.region) || userRegion || 'latam';
-                                                    const ingredientName = isString ? ing : (ing.region?.[userRegionKey] || ing.ingredient || ing.name);
-                                                    const hasDetails = !isString && (ing.qty || ing.why);
-                                                    return (
-                                                        <div key={i} style={{background:darkMode?'rgba(255,255,255,0.04)':'rgba(255,255,255,0.9)',borderRadius:'0.65rem',padding:'0.65rem 0.85rem',borderLeft:'3px solid #C4A882'}}>
-                                                            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:hasDetails&&ing.why?'0.35rem':0}}>
-                                                                <span style={{fontWeight:600,fontSize:'0.88rem',color:darkMode?'#f5f0eb':'#292524'}}>{ingredientName}</span>
-                                                                {hasDetails && ing.qty && (
-                                                                    <span style={{background:'rgba(201,147,90,0.15)',color:'#8A7055',padding:'0.15rem 0.6rem',borderRadius:'9999px',fontSize:'0.75rem',fontWeight:700}}>
-                                                                        {ing.qty}{ing.unit||''}
-                                                                    </span>
+                                        {(weeklyMenu.dias || []).map((diaData, dIdx) => (
+                                            <div key={dIdx} className="space-y-4">
+                                                <h4 className="text-xl font-bold gradient-text">{diaData.dia}</h4>
+                                                {(diaData.comidas || []).map((comida, cIdx) => (
+                                                    <div key={cIdx} className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-6 border-l-4 border-rose-400 space-y-6`}>
+                                                        {/* HEADER CON NOMBRE Y CALORÍAS */}
+                                                        <div className="flex justify-between items-start">
+                                                            <div className="flex-1">
+                                                                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>
+                                                                    {mealLabels[comida.tipo] || comida.tipo}
+                                                                </p>
+                                                                <h4 className="text-2xl font-bold mb-2 gradient-text">{comida.nombre}</h4>
+
+                                                                {/* HORARIO RECOMENDADO */}
+                                                                {comida.horario && (
+                                                                    <div className={`${darkMode ? 'bg-blue-900' : 'bg-blue-100'} inline-block px-4 py-2 rounded-lg`}>
+                                                                        <p className={`text-sm font-bold ${darkMode ? 'text-blue-200' : 'text-blue-900'}`}>
+                                                                            🕐 {language === 'es' ? 'Hora recomendada' : 'Recommended time'}: {comida.horario}
+                                                                        </p>
+                                                                        {comida.porQueHorario && (
+                                                                            <p className={`text-xs mt-1 ${darkMode ? 'text-blue-300' : 'text-blue-700'}`}>{comida.porQueHorario}</p>
+                                                                        )}
+                                                                    </div>
                                                                 )}
                                                             </div>
-                                                            {hasDetails && ing.why && (
-                                                                <p style={{fontSize:'0.78rem',color:darkMode?'#a8a29e':'#78716c',lineHeight:1.45,margin:0}}>{ing.why}</p>
-                                                            )}
-                                                            {hasDetails && (ing.eco || ing.gourmet) && (
-                                                                <div style={{display:'flex',gap:'0.4rem',flexWrap:'wrap',marginTop:'0.4rem'}}>
-                                                                    {ing.eco && <span style={{background:'rgba(201,147,90,0.1)',color:'#8A7055',padding:'0.1rem 0.5rem',borderRadius:'9999px',fontSize:'0.7rem',fontWeight:600}}>{language==='es'?'Asequible':'Budget'}: {ing.eco}</span>}
-                                                                    {ing.gourmet && <span style={{background:'rgba(201,147,90,0.1)',color:'#8A7055',padding:'0.1rem 0.5rem',borderRadius:'9999px',fontSize:'0.7rem',fontWeight:600}}>Gourmet: {ing.gourmet}</span>}
-                                                                </div>
+                                                            {comida.kcal != null && (
+                                                                <span className={`${darkMode ? 'bg-stone-900' : 'bg-amber-50'} text-amber-700 px-4 py-2 rounded-xl text-lg font-bold`}>
+                                                                    {comida.kcal} cal
+                                                                </span>
                                                             )}
                                                         </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        </details>
-                                        {/* PREPARACION — ACORDEON */}
-                                        <details style={{borderRadius:'0.85rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)'}}>
-                                            <summary style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0.9rem 1.1rem',cursor:'pointer',background:darkMode?'rgba(201,147,90,0.1)':'rgba(201,147,90,0.07)',listStyle:'none',userSelect:'none'}}>
-                                                <span style={{fontFamily:"'Cormorant', serif",fontSize:'1.05rem',fontWeight:600,color:darkMode?'#e8c89f':'#8A7055',display:'flex',alignItems:'center',gap:'0.5rem'}}>
-                                                    <span style={{color:'#C4A882'}}>&#10022;</span> {t[language].preparation}
-                                                </span>
-                                                <span style={{color:'#C4A882',fontSize:'0.85rem'}}>&#9662;</span>
-                                            </summary>
-                                            <ol style={{padding:'0.75rem 1rem 1rem',display:'flex',flexDirection:'column',gap:'0.55rem',margin:0,listStyle:'none'}}>
-                                                {recipe.steps.map((step, i) => (
-                                                    <li key={i} style={{display:'flex',gap:'0.65rem',alignItems:'flex-start'}}>
-                                                        <span style={{flexShrink:0,width:'1.4rem',height:'1.4rem',background:'linear-gradient(135deg,#C4A882,#e8c89f)',color:'white',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.7rem',fontWeight:700,marginTop:'0.1rem'}}>{i+1}</span>
-                                                        <span style={{fontSize:'0.85rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.5}}>{step}</span>
-                                                    </li>
-                                                ))}
-                                            </ol>
-                                        </details>
 
-                                        {/* COOKING TIPS - IA para trial y premium */}
-                                        {getUserTier() !== 'free' && (
-                                            <div className={`${darkMode ? 'bg-green-900/40' : 'bg-green-50'} p-4 rounded-lg border-l-4 border-green-500`}>
-                                                <div className="flex items-center justify-between mb-3">
-                                                    <h5 className="text-sm font-bold flex items-center gap-2">
-                                                        <span>💡</span>
-                                                        {language === 'es' ? 'Consejos para preservar nutrientes' : 'Tips to preserve nutrients'}
-                                                    </h5>
-                                                    {!aiCookingTips[recipe.name] && (
-                                                        <button
-                                                            onClick={() => fetchCookingTips(recipe)}
-                                                            disabled={loadingTips[recipe.name]}
-                                                            className="text-xs bg-green-500 text-white px-3 py-1 rounded-full font-semibold hover:bg-green-600 transition disabled:opacity-50"
-                                                        >
-                                                            {loadingTips[recipe.name] 
-                                                                ? '⏳ Generando...' 
-                                                                : '✨ Ver consejos'}
-                                                        </button>
-                                                    )}
-                                                </div>
+                                                        {/* MACROS */}
+                                                        <div className="grid grid-cols-3 gap-3">
+                                                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg p-3 text-center`}>
+                                                                <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{language === 'es' ? 'Proteína' : 'Protein'}</p>
+                                                                <p className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{comida.proteina_g ?? '–'}g</p>
+                                                            </div>
+                                                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg p-3 text-center`}>
+                                                                <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{language === 'es' ? 'Carbos' : 'Carbs'}</p>
+                                                                <p className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{comida.carbos_g ?? '–'}g</p>
+                                                            </div>
+                                                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg p-3 text-center`}>
+                                                                <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{language === 'es' ? 'Grasas' : 'Fats'}</p>
+                                                                <p className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{comida.grasas_g ?? '–'}g</p>
+                                                            </div>
+                                                        </div>
 
-                                                {/* Tips estáticos (siempre visibles) */}
-                                                {recipe.cookingTips && recipe.cookingTips.length > 0 && !aiCookingTips[recipe.name] && (
-                                                    <p className={`text-sm ${darkMode ? 'text-green-100' : 'text-green-800'} leading-relaxed`}>
-                                                        {recipe.cookingTips[0].tip || recipe.cookingTips[0]}
-                                                    </p>
-                                                )}
-
-                                                {/* Tips generados por IA */}
-                                                {aiCookingTips[recipe.name] && (
-                                                    <div className="space-y-2">
-                                                        {aiCookingTips[recipe.name].map((tip, i) => (
-                                                            <div key={i} className="flex items-start gap-2">
-                                                                <span className="text-green-500 font-bold text-sm mt-0.5">✓</span>
-                                                                <p className={`text-sm ${darkMode ? 'text-green-100' : 'text-green-800'} leading-relaxed`}>
-                                                                    {tip}
+                                                        {/* PARA QUÉ - BLOQUE DESTACADO */}
+                                                        {comida.paraQue && (
+                                                            <div className={`${darkMode ? 'bg-stone-900' : 'bg-amber-50'} p-4 rounded-lg border-l-4 border-amber-500`}>
+                                                                <p className={`text-sm ${darkMode ? 'text-amber-200' : 'text-amber-900'} font-medium leading-relaxed`}>
+                                                                    <strong className="font-bold">✦ {language === 'es' ? '¿Por qué este menú?' : 'Why this menu?'}</strong><br/>
+                                                                    {comida.paraQue}
                                                                 </p>
                                                             </div>
-                                                        ))}
-                                                        <p className={`text-xs mt-2 ${darkMode ? 'text-green-400' : 'text-green-600'} italic`}>
-                                                            ✨ {language === 'es' ? 'Consejos personalizados para esta receta' : 'Personalized tips for this recipe'}
-                                                        </p>
-                                                    </div>
-                                                )}
+                                                        )}
 
-                                                {/* Estado cargando */}
-                                                {loadingTips[recipe.name] && (
-                                                    <div className="flex items-center gap-2 mt-2">
-                                                        <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
-                                                        <p className={`text-sm ${darkMode ? 'text-green-300' : 'text-green-700'}`}>
-                                                            {language === 'es' ? 'LUMI está analizando los ingredientes...' : 'LUMI is analyzing the ingredients...'}
-                                                        </p>
+                                                        {/* INGREDIENTES — ACORDEON */}
+                                                        {comida.ingredientes?.length > 0 && (
+                                                            <details style={{borderRadius:'0.85rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)'}}>
+                                                                <summary style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0.9rem 1.1rem',cursor:'pointer',background:darkMode?'rgba(201,147,90,0.1)':'rgba(201,147,90,0.07)',listStyle:'none',userSelect:'none'}}>
+                                                                    <span style={{fontFamily:"'Cormorant', serif",fontSize:'1.05rem',fontWeight:600,color:darkMode?'#e8c89f':'#8A7055',display:'flex',alignItems:'center',gap:'0.5rem'}}>
+                                                                        <span style={{color:'#C4A882'}}>&#10022;</span> {t[language].ingredients}
+                                                                    </span>
+                                                                    <span style={{color:'#C4A882',fontSize:'0.85rem'}}>&#9662;</span>
+                                                                </summary>
+                                                                <div style={{padding:'0.75rem 1rem 1rem',display:'flex',flexDirection:'column',gap:'0.5rem'}}>
+                                                                    {comida.ingredientes.map((ing, i) => (
+                                                                        <div key={i} style={{background:darkMode?'rgba(255,255,255,0.04)':'rgba(255,255,255,0.9)',borderRadius:'0.65rem',padding:'0.55rem 0.85rem',borderLeft:'3px solid #C4A882'}}>
+                                                                            <span style={{fontSize:'0.85rem',color:darkMode?'#f5f0eb':'#292524'}}>{ing}</span>
+                                                                        </div>
+                                                                    ))}
+                                                                </div>
+                                                            </details>
+                                                        )}
+
+                                                        {/* PREPARACION — ACORDEON */}
+                                                        {comida.pasos?.length > 0 && (
+                                                            <details style={{borderRadius:'0.85rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)'}}>
+                                                                <summary style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0.9rem 1.1rem',cursor:'pointer',background:darkMode?'rgba(201,147,90,0.1)':'rgba(201,147,90,0.07)',listStyle:'none',userSelect:'none'}}>
+                                                                    <span style={{fontFamily:"'Cormorant', serif",fontSize:'1.05rem',fontWeight:600,color:darkMode?'#e8c89f':'#8A7055',display:'flex',alignItems:'center',gap:'0.5rem'}}>
+                                                                        <span style={{color:'#C4A882'}}>&#10022;</span> {t[language].preparation}
+                                                                    </span>
+                                                                    <span style={{color:'#C4A882',fontSize:'0.85rem'}}>&#9662;</span>
+                                                                </summary>
+                                                                <ol style={{padding:'0.75rem 1rem 1rem',display:'flex',flexDirection:'column',gap:'0.5rem',margin:0,listStyle:'none'}}>
+                                                                    {comida.pasos.map((step, i) => (
+                                                                        <li key={i} style={{display:'flex',gap:'0.65rem',alignItems:'flex-start'}}>
+                                                                            <span style={{flexShrink:0,width:'1.4rem',height:'1.4rem',background:'linear-gradient(135deg,#C4A882,#e8c89f)',color:'white',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.7rem',fontWeight:700,marginTop:'0.1rem'}}>{i+1}</span>
+                                                                            <span style={{fontSize:'0.85rem',color:darkMode?'#d6d3d1':'#57534e',lineHeight:1.5}}>{step}</span>
+                                                                        </li>
+                                                                    ))}
+                                                                </ol>
+                                                            </details>
+                                                        )}
+
+                                                        {/* TIP DE COCINA + VERSIÓN SIN TIEMPO */}
+                                                        {(comida.tipCocina || comida.sinTiempo) && (
+                                                            <details style={{borderRadius:'0.85rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)'}}>
+                                                                <summary style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0.9rem 1.1rem',cursor:'pointer',background:darkMode?'rgba(201,147,90,0.1)':'rgba(201,147,90,0.07)',listStyle:'none',userSelect:'none'}}>
+                                                                    <span style={{fontFamily:"'Cormorant', serif",fontSize:'1.05rem',fontWeight:600,color:darkMode?'#e8c89f':'#8A7055',display:'flex',alignItems:'center',gap:'0.5rem'}}>
+                                                                        <span style={{color:'#C4A882'}}>&#10022;</span> {language === 'es' ? 'Trucos' : 'Tips'}
+                                                                    </span>
+                                                                    <span style={{color:'#C4A882',fontSize:'0.85rem'}}>&#9662;</span>
+                                                                </summary>
+                                                                <div style={{padding:'0.75rem 1rem 1rem',display:'flex',flexDirection:'column',gap:'0.5rem'}}>
+                                                                    {comida.tipCocina && (
+                                                                        <p className={`text-sm ${darkMode ? 'text-green-100' : 'text-green-800'} leading-relaxed`}>
+                                                                            💡 {comida.tipCocina}
+                                                                        </p>
+                                                                    )}
+                                                                    {comida.sinTiempo && (
+                                                                        <p className={`text-sm ${darkMode ? 'text-blue-100' : 'text-blue-800'} leading-relaxed`}>
+                                                                            ⏱ {comida.sinTiempo}
+                                                                        </p>
+                                                                    )}
+                                                                </div>
+                                                            </details>
+                                                        )}
                                                     </div>
-                                                )}
+                                                ))}
                                             </div>
-                                        )}
+                                        ))}
 
-                                        {/* NUTRIENT TIPS - CIENCIA DETRÁS */}
-                                        {recipe.nutrientTips && recipe.nutrientTips.length > 0 && (
-                                            <div>
-                                                <h5 className="text-lg font-bold mb-4 flex items-center gap-2">
-                                                    <span>🔬</span>
-                                                    {language === 'es' ? 'Ciencia detrás de este menú' : 'Science behind this menu'}
-                                                </h5>
-                                                <div className="space-y-3">
-                                                    {recipe.nutrientTips.map((tip, i) => (
-                                                        <div key={i} className={`${darkMode ? 'bg-blue-900' : 'bg-blue-50'} p-4 rounded-lg border-l-4 border-blue-500`}>
-                                                            <p className={`font-bold mb-2 ${darkMode ? 'text-blue-200' : 'text-blue-900'}`}>
-                                                                {tip.icon} {tip.title}
-                                                            </p>
-                                                            <p className={`text-sm ${darkMode ? 'text-blue-100' : 'text-blue-800'} leading-relaxed`}>
-                                                                {tip.tip}
-                                                            </p>
+                                        {weeklyMenu.listaCompra?.length > 0 && (
+                                            <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-6`}>
+                                                <h4 className="text-lg font-bold mb-3 gradient-text">{language === 'es' ? 'Lista de la compra' : 'Shopping list'}</h4>
+                                                <div className="grid grid-cols-2 gap-2">
+                                                    {weeklyMenu.listaCompra.map((item, i) => (
+                                                        <div key={i} style={{display:'flex',alignItems:'center',gap:'8px'}}>
+                                                            <div style={{width:'6px',height:'6px',borderRadius:'50%',background:'#C4A882',flexShrink:0}}/>
+                                                            <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>{item}</p>
                                                         </div>
                                                     ))}
                                                 </div>
                                             </div>
                                         )}
-                                    </div>
-                                ))}
+                                    </>
+                                )}
                             </div>
                         </div>
                         )}
 
-
-
-                                                <div className={`${darkMode ? 'bg-indigo-900' : 'bg-indigo-50'} rounded-xl p-6 border-l-4 border-indigo-500`}>
-                            <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                {language === 'es'
-                                    ? '💡 Este menú se adapta según tus síntomas registrados. Vuelve mañana para un menú diferente basado en cómo te sientes.'
-                                    : '💡 This menu adapts based on your logged symptoms. Come back tomorrow for a different menu based on how you feel.'}
-                            </p>
-                        </div>
             </div>
                         </details>
                         <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
