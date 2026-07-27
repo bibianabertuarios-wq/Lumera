@@ -477,6 +477,11 @@ import './lumera.css'
             // MENUS - Estado global
             const [menus, setMenus] = useState({ es: {}, en: {} });
             const [menusLoading, setMenusLoading] = useState(true);
+            const [presupuestoSemana, setPresupuestoSemana] = useState(null); // 'hormiga' | 'equilibrio' | 'capricho' | null
+            const [weeklyMenu, setWeeklyMenu] = useState(null); // { resumen, tipDelDia, listaCompra, dias }
+            const [weeklyMenuLoading, setWeeklyMenuLoading] = useState(false);
+            const [weeklyMenuError, setWeeklyMenuError] = useState(false);
+            const [weeklyMenuFetchedFor, setWeeklyMenuFetchedFor] = useState(null); // guarda `${userId}_${semana}_${idioma}` ya cargado
 
             const [formData, setFormData] = useState({
                 profileName: '',
@@ -1973,6 +1978,23 @@ query = query.eq('region', region.toUpperCase());
                 }
             }, [userRegion, currentUser]);
 
+            // Restaurar el presupuesto ya elegido esta semana por este usuario (si lo hay)
+            useEffect(() => {
+                if (!currentUser?.id) return;
+                const semana = getSemanaISO();
+                try {
+                    const saved = localStorage.getItem(`lumi_presupuesto_${currentUser.id}_${semana}`);
+                    setPresupuestoSemana(saved || null);
+                } catch (e) {}
+            }, [currentUser?.id]);
+
+            // Disparar la carga del menú semanal nuevo en cuanto haya presupuesto elegido
+            useEffect(() => {
+                if (currentPage !== 'nutrition') return;
+                if (!presupuestoSemana) return;
+                fetchWeeklyMenu(presupuestoSemana);
+            }, [currentPage, presupuestoSemana, currentUser?.id, language]);
+
             // EJERCICIOS
             const getExercises = () => {
                 const allExercises = {
@@ -2596,6 +2618,16 @@ query = query.eq('region', region.toUpperCase());
                 return Math.round(bmr * multiplier);
             };
 
+            // Misma fórmula ISO-8601 que usa el backend en /api/menu-de-la-semana, para que la clave de localStorage coincida
+            const getSemanaISO = (fecha = new Date()) => {
+                const d = new Date(Date.UTC(fecha.getFullYear(), fecha.getMonth(), fecha.getDate()));
+                const dayNum = d.getUTCDay() || 7;
+                d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+                const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+                const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+                return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+            };
+
             const getBMICategory = (bmi, lang = 'es') => {
                 if (!bmi) return null;
                 const categories = {
@@ -2782,6 +2814,88 @@ query = query.eq('region', region.toUpperCase());
                     }
                 } finally {
                     setLoadingExercises(false);
+                }
+            };
+
+            // Mapear el objetivo guardado (formatos mezclados: 'lose'/'maintain'/'gain' del editor de perfil,
+            // 'weightLoss'/'strength'/'hormonal' del quiz) a las 5 etiquetas que reconoce el prompt de LUMI
+            const getObjetivoParaMenu = () => {
+                const goalMap = {
+                    lose: 'Perder peso',
+                    weightLoss: 'Perder peso',
+                    gain: 'Ganar fuerza y masa muscular',
+                    strength: 'Ganar fuerza y masa muscular',
+                    hormonal: 'Equilibrio hormonal',
+                    maintain: 'Equilibrio hormonal',
+                };
+                return goalMap[currentUser?.goal] || 'Equilibrio hormonal';
+            };
+
+            const getRegionParaMenu = () => {
+                const regionMap = {
+                    latam: 'Latinoamérica',
+                    emea: 'España',
+                    usa: 'Estados Unidos y Canadá',
+                };
+                const code = getRegionCode(currentUser?.region) || userRegion || 'latam';
+                return regionMap[code] || 'Latinoamérica';
+            };
+
+            // Nota corta sobre cómo se siente hoy, a partir del último síntoma registrado (no lee la tabla `menus`)
+            const getSintomaHoyTexto = () => {
+                if (!symptoms || symptoms.length === 0) return null;
+                const s = symptoms[0];
+                const val = (camel, snake, def = 0) => (s[camel] !== undefined ? s[camel] : (s[snake] !== undefined ? s[snake] : def));
+                if (val('hotFlashes', 'hot_flashes', 0) > 5) return language === 'es' ? 'sofocos intensos hoy' : 'intense hot flashes today';
+                if (val('energy', 'energy', 5) < 4) return language === 'es' ? 'energía baja hoy' : 'low energy today';
+                if (val('sleep', 'sleep', 5) < 4) return language === 'es' ? 'mal descanso hoy' : 'poor sleep today';
+                if (val('anxiety', 'anxiety', 0) > 5) return language === 'es' ? 'ansiedad elevada hoy' : 'elevated anxiety today';
+                if (val('mood', 'mood', 5) < 4) return language === 'es' ? 'ánimo bajo hoy' : 'low mood today';
+                return language === 'es' ? 'sensación general estable' : 'generally stable';
+            };
+
+            // MENÚ SEMANAL — motor nuevo, cacheado por usuario+semana+idioma en /api/menu-de-la-semana
+            const fetchWeeklyMenu = async (presupuestoElegido) => {
+                if (!currentUser?.id) return;
+                if (getUserTier() === 'free') return;
+
+                const semana = getSemanaISO();
+                const fetchKey = `${currentUser.id}_${semana}_${language}`;
+                if (weeklyMenuFetchedFor === fetchKey || weeklyMenuLoading) return;
+
+                setWeeklyMenuLoading(true);
+                setWeeklyMenuError(false);
+
+                try {
+                    const response = await fetch('/api/menu-de-la-semana', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            userId: currentUser.id,
+                            nombre: currentUser.profile_name || '',
+                            objetivo: getObjetivoParaMenu(),
+                            region: getRegionParaMenu(),
+                            restricciones: currentUser.restricciones || null,
+                            condiciones: currentUser.health_conditions || null,
+                            sintomaHoy: getSintomaHoyTexto(),
+                            presupuesto: presupuestoElegido,
+                            tdee: getMetrics()?.tdee || currentUser.tdee,
+                            idioma: language,
+                        }),
+                    });
+
+                    const data = await response.json();
+
+                    if (!data.ok) {
+                        setWeeklyMenuError(true);
+                    } else {
+                        setWeeklyMenu(data.menu);
+                        setWeeklyMenuFetchedFor(fetchKey);
+                    }
+                } catch (error) {
+                    setWeeklyMenuError(true);
+                } finally {
+                    setWeeklyMenuLoading(false);
                 }
             };
 
