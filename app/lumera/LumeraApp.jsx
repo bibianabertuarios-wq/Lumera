@@ -480,7 +480,7 @@ import './lumera.css'
             const [presupuestoSemana, setPresupuestoSemana] = useState(null); // 'hormiga' | 'equilibrio' | 'capricho' | null
             const [weeklyMenu, setWeeklyMenu] = useState(null); // { resumen, tipDelDia, listaCompra, dias }
             const [weeklyMenuLoading, setWeeklyMenuLoading] = useState(false);
-            const [weeklyMenuError, setWeeklyMenuError] = useState(false);
+            const [weeklyMenuError, setWeeklyMenuError] = useState(null); // null | 'profile' | 'generic'
             const [weeklyMenuFetchedFor, setWeeklyMenuFetchedFor] = useState(null); // guarda `${userId}_${semana}_${idioma}` ya cargado
 
             const [formData, setFormData] = useState({
@@ -1989,11 +1989,12 @@ query = query.eq('region', region.toUpperCase());
             }, [currentUser?.id]);
 
             // Disparar la carga del menú semanal nuevo en cuanto haya presupuesto elegido
+            // (currentUser?.tdee en las deps: si estaba en 'profile' y completa su perfil, reintenta solo)
             useEffect(() => {
                 if (currentPage !== 'nutrition') return;
                 if (!presupuestoSemana) return;
                 fetchWeeklyMenu(presupuestoSemana);
-            }, [currentPage, presupuestoSemana, currentUser?.id, language]);
+            }, [currentPage, presupuestoSemana, currentUser?.id, currentUser?.tdee, language]);
 
             // EJERCICIOS
             const getExercises = () => {
@@ -2859,12 +2860,19 @@ query = query.eq('region', region.toUpperCase());
                 if (!currentUser?.id) return;
                 if (getUserTier() === 'free') return;
 
+                // Sin TDEE (perfil metabólico incompleto) el motor nuevo no puede calcular el menú
+                const tdeeDisponible = getMetrics()?.tdee || currentUser.tdee;
+                if (!tdeeDisponible) {
+                    setWeeklyMenuError('profile');
+                    return;
+                }
+
                 const semana = getSemanaISO();
                 const fetchKey = `${currentUser.id}_${semana}_${language}`;
                 if (weeklyMenuFetchedFor === fetchKey || weeklyMenuLoading) return;
 
                 setWeeklyMenuLoading(true);
-                setWeeklyMenuError(false);
+                setWeeklyMenuError(null);
 
                 try {
                     const response = await fetch('/api/menu-de-la-semana', {
@@ -2879,7 +2887,7 @@ query = query.eq('region', region.toUpperCase());
                             condiciones: currentUser.health_conditions || null,
                             sintomaHoy: getSintomaHoyTexto(),
                             presupuesto: presupuestoElegido,
-                            tdee: getMetrics()?.tdee || currentUser.tdee,
+                            tdee: tdeeDisponible,
                             idioma: language,
                         }),
                     });
@@ -2887,13 +2895,13 @@ query = query.eq('region', region.toUpperCase());
                     const data = await response.json();
 
                     if (!data.ok) {
-                        setWeeklyMenuError(true);
+                        setWeeklyMenuError('generic');
                     } else {
                         setWeeklyMenu(data.menu);
                         setWeeklyMenuFetchedFor(fetchKey);
                     }
                 } catch (error) {
-                    setWeeklyMenuError(true);
+                    setWeeklyMenuError('generic');
                 } finally {
                     setWeeklyMenuLoading(false);
                 }
@@ -4494,7 +4502,29 @@ query = query.eq('region', region.toUpperCase());
                                     </div>
                                 )}
 
-                                {!weeklyMenuLoading && weeklyMenuError && (
+                                {!weeklyMenuLoading && weeklyMenuError === 'profile' && (
+                                    <div className="text-center py-8">
+                                        {/* TODO copy pendiente revisión Bibiana */}
+                                        <p className={`text-sm mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                            {language === 'es' ? 'Completa tu perfil metabólico (peso, altura y edad) para que LUMI pueda calcular tu menú.' : 'Complete your metabolic profile (weight, height and age) so LUMI can calculate your menu.'}
+                                        </p>
+                                        <button
+                                            onClick={() => {
+                                                setEditWeight(currentUser?.weight || '');
+                                                setEditHeight(currentUser?.height || '');
+                                                setEditAge(currentUser?.age || '');
+                                                setEditActivityLevel(currentUser?.activity_level || 'moderate');
+                                                setEditGoal(currentUser?.goal || 'maintain');
+                                                setShowProfileModal(true);
+                                            }}
+                                            className="bg-gradient-to-r from-amber-600 to-amber-400 text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition"
+                                        >
+                                            {language === 'es' ? 'Completar perfil' : 'Complete profile'}
+                                        </button>
+                                    </div>
+                                )}
+
+                                {!weeklyMenuLoading && weeklyMenuError === 'generic' && (
                                     <div className="text-center py-8">
                                         {/* TODO copy pendiente revisión Bibiana */}
                                         <p className={`text-sm mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
