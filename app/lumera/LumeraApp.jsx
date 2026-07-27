@@ -459,7 +459,7 @@ import './lumera.css'
             const [editHeight, setEditHeight] = useState('');
             const [editAge, setEditAge] = useState('');
             const [editActivityLevel, setEditActivityLevel] = useState('moderate');
-            const [editGoal, setEditGoal] = useState('maintain');
+            const [editObjetivo, setEditObjetivo] = useState('');
             const [showDashboardModal, setShowDashboardModal] = useState(false);
             const [showWelcomePremium, setShowWelcomePremium] = useState(false);
             const [showWelcomeTrial, setShowWelcomeTrial] = useState(false);
@@ -2677,23 +2677,45 @@ query = query.eq('region', region.toUpperCase());
                 return { bmi, tdee };
             };
 
+            // Los 5 objetivos reales de Lumera (mismo texto que app/quiz/page.jsx y app/dashboard/page.jsx)
+            const OBJETIVOS_ES = ['Perder peso', 'Ganar energía y vitalidad', 'Equilibrio hormonal', 'Ganar fuerza y masa muscular', 'Dormir mejor'];
+            const OBJETIVOS_EN = ['Lose weight', 'Gain energy and vitality', 'Hormonal balance', 'Build strength and muscle', 'Sleep better'];
+            const OBJETIVOS = language === 'es' ? OBJETIVOS_ES : OBJETIVOS_EN;
+
+            // En cuentas reales (alta por /quiz) 'goal' ya es el mismo texto que 'objetivo'.
+            // Solo las cuentas que tocaron el editor de perfil antiguo tienen lose/maintain/gain.
+            const goalToObjetivo = (goalValue) => {
+                if (!goalValue) return null;
+                if (OBJETIVOS_ES.includes(goalValue) || OBJETIVOS_EN.includes(goalValue)) return goalValue;
+                const legacyMap = { lose: OBJETIVOS_ES[0], maintain: OBJETIVOS_ES[2], gain: OBJETIVOS_ES[3] };
+                return legacyMap[goalValue] || null;
+            };
+
+            // Ajuste calórico según objetivo (por índice, válido en ambos idiomas)
+            const getObjetivoAdjustment = (objetivoValue) => {
+                const adjustments = [-500, 0, 0, 300, 0]; // Perder peso, Energía, Hormonal, Fuerza, Dormir
+                let idx = OBJETIVOS_ES.indexOf(objetivoValue);
+                if (idx === -1) idx = OBJETIVOS_EN.indexOf(objetivoValue);
+                return idx !== -1 ? adjustments[idx] : 0;
+            };
+
             const getMetrics = () => {
                 if (!currentUser) return null;
-                const { weight, height, age, activity_level, goal, bmi, bmr, tdee, target_calories } = currentUser;
+                const { weight, height, age, activity_level, goal, objetivo, bmi, bmr, tdee, target_calories } = currentUser;
                 if (!weight || !height || !age) return null;
 
                 // Usar valores calculados por BD si existen, sino calcular en frontend
                 const bmiVal = bmi || calculateBMI(weight, height);
                 const bmrVal = bmr || Math.round((10 * weight) + (6.25 * height) - (5 * age) - 161);
                 const tdeeVal = tdee || calculateTDEE(weight, height, age, activity_level || 'moderate');
-                const adjustments = { lose: -500, maintain: 0, gain: 300 };
-                const targetVal = target_calories || (tdeeVal + (adjustments[goal || 'maintain'] || 0));
+                const objetivoEfectivo = objetivo || goalToObjetivo(goal);
+                const targetVal = target_calories || (tdeeVal + getObjetivoAdjustment(objetivoEfectivo));
 
-                return { 
-                    bmi: bmiVal, 
-                    bmr: bmrVal, 
-                    tdee: tdeeVal, 
-                    target: targetVal 
+                return {
+                    bmi: bmiVal,
+                    bmr: bmrVal,
+                    tdee: tdeeVal,
+                    target: targetVal
                 };
             };
 
@@ -2721,8 +2743,9 @@ query = query.eq('region', region.toUpperCase());
                             height,
                             age,
                             activity_level: editActivityLevel,
-                            goal: editGoal,
-                            weight_goal: editGoal
+                            objetivo: editObjetivo,
+                            goal: editObjetivo,
+                            weight_goal: editObjetivo
                         })
                         .eq('id', session.user.id)
                         .select()
@@ -2737,6 +2760,30 @@ query = query.eq('region', region.toUpperCase());
                 } catch (error) {
                     alert((language === 'es' ? 'Error: ' : 'Error: ') + error.message);
                 }
+            };
+
+            // Prefiltra el modal de perfil con lo que currentUser ya tenga (peso/talla/edad/objetivo
+            // ya se recogen en el quiz de alta), en vez de dejarlo en blanco
+            const prefillProfileModal = () => {
+                setEditWeight(currentUser?.weight || '');
+                setEditHeight(currentUser?.height || '');
+                setEditAge(currentUser?.age || '');
+                setEditActivityLevel(currentUser?.activity_level || 'moderate');
+                setEditObjetivo(currentUser?.objetivo || goalToObjetivo(currentUser?.goal) || '');
+            };
+
+            // Para los CTAs de "completar perfil": si ya está todo, no hace falta volver a pedirlo
+            const openCompleteProfileModal = () => {
+                prefillProfileModal();
+                const yaCompleto = getMetrics() && (currentUser?.objetivo || goalToObjetivo(currentUser?.goal));
+                if (yaCompleto) return;
+                setShowProfileModal(true);
+            };
+
+            // Para "Editar": abre siempre, es una edición deliberada de un perfil ya completo
+            const openEditProfileModal = () => {
+                prefillProfileModal();
+                setShowProfileModal(true);
             };
 
             // GENERAR DATOS PARA GRÁFICOS
@@ -2820,16 +2867,14 @@ query = query.eq('region', region.toUpperCase());
 
             // Mapear el objetivo guardado (formatos mezclados: 'lose'/'maintain'/'gain' del editor de perfil,
             // 'weightLoss'/'strength'/'hormonal' del quiz) a las 5 etiquetas que reconoce el prompt de LUMI
+            // El prompt de LUMI (menu-semanal) solo reconoce los 5 objetivos en español, así que
+            // normalizamos aunque la cuenta los tenga guardados en inglés
             const getObjetivoParaMenu = () => {
-                const goalMap = {
-                    lose: 'Perder peso',
-                    weightLoss: 'Perder peso',
-                    gain: 'Ganar fuerza y masa muscular',
-                    strength: 'Ganar fuerza y masa muscular',
-                    hormonal: 'Equilibrio hormonal',
-                    maintain: 'Equilibrio hormonal',
-                };
-                return goalMap[currentUser?.goal] || 'Equilibrio hormonal';
+                const raw = currentUser?.objetivo || goalToObjetivo(currentUser?.goal);
+                if (!raw) return OBJETIVOS_ES[2];
+                let idx = OBJETIVOS_ES.indexOf(raw);
+                if (idx === -1) idx = OBJETIVOS_EN.indexOf(raw);
+                return idx !== -1 ? OBJETIVOS_ES[idx] : OBJETIVOS_ES[2];
             };
 
             const getRegionParaMenu = () => {
@@ -4512,14 +4557,7 @@ query = query.eq('region', region.toUpperCase());
                                             {language === 'es' ? 'Completa tu perfil metabólico (peso, altura y edad) para que LUMI pueda calcular tu menú.' : 'Complete your metabolic profile (weight, height and age) so LUMI can calculate your menu.'}
                                         </p>
                                         <button
-                                            onClick={() => {
-                                                setEditWeight(currentUser?.weight || '');
-                                                setEditHeight(currentUser?.height || '');
-                                                setEditAge(currentUser?.age || '');
-                                                setEditActivityLevel(currentUser?.activity_level || 'moderate');
-                                                setEditGoal(currentUser?.goal || 'maintain');
-                                                setShowProfileModal(true);
-                                            }}
+                                            onClick={openCompleteProfileModal}
                                             className="bg-gradient-to-r from-amber-600 to-amber-400 text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition"
                                         >
                                             {language === 'es' ? 'Completar perfil' : 'Complete profile'}
@@ -4869,14 +4907,7 @@ query = query.eq('region', region.toUpperCase());
                                                 </button>
                                             )}
                                             <button
-                                                onClick={() => {
-                                                    setEditWeight(currentUser?.weight || '');
-                                                    setEditHeight(currentUser?.height || '');
-                                                    setEditAge(currentUser?.age || '');
-                                                    setEditActivityLevel(currentUser?.activity_level || 'moderate');
-                                                    setEditGoal(currentUser?.goal || 'maintain');
-                                                    setShowProfileModal(true);
-                                                }}
+                                                onClick={openEditProfileModal}
                                                 className="text-amber-700 hover:text-amber-800 text-sm font-semibold"
                                             >
                                                 ✏️ {language === 'es' ? 'Editar' : 'Edit'}
@@ -4927,14 +4958,7 @@ query = query.eq('region', region.toUpperCase());
                                                 : '⚠️ Complete your metabolic profile for ultra-personalized menus'}
                                         </p>
                                         <button
-                                            onClick={() => {
-                                                setEditWeight(currentUser?.weight || '');
-                                                setEditHeight(currentUser?.height || '');
-                                                setEditAge(currentUser?.age || '');
-                                                setEditActivityLevel(currentUser?.activity_level || 'moderate');
-                                                setEditGoal(currentUser?.goal || 'maintain');
-                                                setShowProfileModal(true);
-                                            }}
+                                            onClick={openCompleteProfileModal}
                                             className="bg-gradient-to-r from-amber-600 to-amber-400 text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition"
                                         >
                                             {language === 'es' ? 'Completar Ahora' : 'Complete Now'}
@@ -8015,13 +8039,12 @@ query = query.eq('region', region.toUpperCase());
                                             {language === 'es' ? 'Objetivo' : 'Goal'}
                                         </label>
                                         <select
-                                            value={editGoal}
-                                            onChange={(e) => setEditGoal(e.target.value)}
+                                            value={editObjetivo}
+                                            onChange={(e) => setEditObjetivo(e.target.value)}
                                             className="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-amber-500"
                                         >
-                                            <option value="lose">{language === 'es' ? 'Perder peso' : 'Lose weight'}</option>
-                                            <option value="maintain">{language === 'es' ? 'Mantener peso' : 'Maintain weight'}</option>
-                                            <option value="gain">{language === 'es' ? 'Ganar peso' : 'Gain weight'}</option>
+                                            <option value="" disabled>{language === 'es' ? 'Elige un objetivo' : 'Choose a goal'}</option>
+                                            {OBJETIVOS.map(o => <option key={o} value={o}>{o}</option>)}
                                         </select>
                                     </div>
 
