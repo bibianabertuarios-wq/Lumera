@@ -6,6 +6,9 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 
+// La generación completa de 7 días puede tardar ~45-50s; el default de Vercel (10s Hobby) la cortaría
+export const maxDuration = 60;
+
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const PRESUPUESTO = {

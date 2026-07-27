@@ -1,5 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
+// Espera a la generación completa en /api/menu-semanal (~45-50s) cuando no hay caché; el default de Vercel (10s Hobby) la cortaría
+export const maxDuration = 60;
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
