@@ -102,7 +102,9 @@ export default function BienvenidaDia1() {
         hora_comida: HORA_COMIDA_POR_BUCKET[horaComidaBucket] || '13:30',
         onboarding_dia1_completo: true,
       }).eq('id', user.id);
-    } catch (e) {}
+    } catch (e) {
+      console.error('Error guardando Día 1:', e.message || e);
+    }
     setGuardando(false);
     next();
   }
