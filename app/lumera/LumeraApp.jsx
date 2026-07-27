@@ -2360,10 +2360,24 @@ query = query.eq('region', region.toUpperCase());
                         { youtube: language === 'es' ? 'https://www.youtube.com/results?search_query=respiracion+consciente+menopausia+sofocos' : 'https://www.youtube.com/results?search_query=conscious+breathing+menopause+hot+flashes', name: language === 'es' ? 'Respiración Consciente' : 'Conscious Breathing', duration: '15 min', difficulty: language === 'es' ? 'Fácil' : 'Easy', freq: '4-5x semana', day: language === 'es' ? 'Diariamente' : 'Daily', why: language === 'es' ? 'Activa sistema nervioso parasimpático (calma). Reduce sofocos instantáneamente.' : 'Activates parasympathetic nervous system (calm). Reduces hot flashes instantly.', science: language === 'es' ? 'Respiración 4-4-6 reduce cortisol 30%. En sofoco: respira y baja 50% intensidad.' : '4-4-6 breathing reduces cortisol 30%. In a hot flash: breathe and reduce intensity 50%.' },
                         { youtube: language === 'es' ? 'https://www.youtube.com/results?search_query=caminata+meditativa+mujeres+50' : 'https://www.youtube.com/results?search_query=meditative+walk+women+over+50', name: language === 'es' ? 'Caminata Meditativa' : 'Meditative Walk', duration: '30 min', difficulty: language === 'es' ? 'Fácil' : 'Easy', freq: '5x semana', day: language === 'es' ? 'Diariamente' : 'Daily', why: language === 'es' ? 'Mezcla cardio suave con conexión emocional. Anti-ansiedad natural.' : 'Mixes light cardio with emotional connection. Natural anti-anxiety.', science: language === 'es' ? 'Naturaleza reduce cortisol en 20 min. Caminar mejora serotonina naturalmente.' : 'Nature reduces cortisol in 20 min. Walking improves serotonin naturally.' },
                         { youtube: language === 'es' ? 'https://www.youtube.com/results?search_query=estiramientos+profundos+menopausia+mujeres' : 'https://www.youtube.com/results?search_query=deep+stretching+menopause+women', name: language === 'es' ? 'Estiramientos Profundos' : 'Deep Stretching', duration: '20 min', difficulty: language === 'es' ? 'Fácil' : 'Easy', freq: '3x semana', day: language === 'es' ? 'Miércoles, Viernes, Domingo' : 'Wed, Fri, Sun', why: language === 'es' ? 'Libera tensión física. Mejora flexibilidad.' : 'Releases physical tension. Improves flexibility.', science: language === 'es' ? 'Estrés se almacena en músculos. Estiramientos liberan tensión y reduce cortisol.' : 'Stress is stored in muscles. Stretching releases tension and reduces cortisol.' }
+                    ],
+                    // TODO copy pendiente revisión Bibiana
+                    energia: [
+                        { youtube: language === 'es' ? 'https://www.youtube.com/results?search_query=caminata+energica+mujeres+50' : 'https://www.youtube.com/results?search_query=energizing+walk+women+over+50', name: language === 'es' ? 'Caminata Enérgica Matutina' : 'Energizing Morning Walk', duration: '25 min', difficulty: language === 'es' ? 'Fácil' : 'Easy', freq: '5x semana', day: language === 'es' ? 'Diariamente' : 'Daily', why: language === 'es' ? 'Activa circulación y despierta el cuerpo sin agotarlo. Ideal a primera hora.' : 'Activates circulation and wakes up the body without draining it. Ideal first thing.', science: language === 'es' ? 'El movimiento matutino sube la temperatura corporal y la alerta mental de forma natural, sin necesitar cafeína extra.' : 'Morning movement naturally raises body temperature and mental alertness, without needing extra caffeine.' },
+                        { youtube: language === 'es' ? 'https://www.youtube.com/results?search_query=baile+cardio+mujeres+energia' : 'https://www.youtube.com/results?search_query=dance+cardio+women+energy', name: language === 'es' ? 'Baile Cardio' : 'Dance Cardio', duration: '20 min', difficulty: language === 'es' ? 'Fácil-Moderada' : 'Easy-Moderate', freq: '3x semana', day: language === 'es' ? 'Lunes, Miércoles, Viernes' : 'Mon, Wed, Fri', why: language === 'es' ? 'Sube el ánimo y la energía a la vez. Cardio que no se siente como obligación.' : 'Lifts mood and energy together. Cardio that doesn\'t feel like a chore.', science: language === 'es' ? 'El ejercicio rítmico libera endorfinas y mejora el uso de oxígeno, clave para sentir menos fatiga durante el día.' : 'Rhythmic exercise releases endorphins and improves oxygen use, key to feeling less fatigue during the day.' },
+                        { youtube: language === 'es' ? 'https://www.youtube.com/results?search_query=natacion+suave+mujeres+energia' : 'https://www.youtube.com/results?search_query=easy+swimming+women+energy', name: language === 'es' ? 'Natación Suave' : 'Easy Swimming', duration: '30 min', difficulty: language === 'es' ? 'Fácil' : 'Easy', freq: '2-3x semana', day: language === 'es' ? 'Martes, Jueves' : 'Tue, Thu', why: language === 'es' ? 'Trabaja todo el cuerpo sin impacto en articulaciones. Deja sensación de ligereza.' : 'Works the whole body with no joint impact. Leaves a feeling of lightness.', science: language === 'es' ? 'El ejercicio en agua mejora la circulación venosa y reduce la sensación de pesadez en piernas.' : 'Water exercise improves venous circulation and reduces the feeling of heavy legs.' },
+                        { youtube: language === 'es' ? 'https://www.youtube.com/results?search_query=subir+escaleras+ejercicio+energia' : 'https://www.youtube.com/results?search_query=stair+climbing+exercise+energy', name: language === 'es' ? 'Escaleras Activas' : 'Stair Climbing', duration: '10 min', difficulty: language === 'es' ? 'Moderada' : 'Moderate', freq: '4x semana', day: language === 'es' ? 'Diariamente' : 'Daily', why: language === 'es' ? 'Ráfaga corta que activa piernas y corazón. Cabe en cualquier hueco del día.' : 'Short burst that activates legs and heart. Fits into any gap in the day.', science: language === 'es' ? 'Ráfagas cortas de esfuerzo mejoran la capacidad cardiovascular tanto como sesiones largas, en menos tiempo.' : 'Short bursts of effort improve cardiovascular capacity as much as long sessions, in less time.' }
+                    ],
+                    // TODO copy pendiente revisión Bibiana
+                    dormir: [
+                        { youtube: language === 'es' ? 'https://www.youtube.com/results?search_query=yoga+nocturno+restaurativo+dormir' : 'https://www.youtube.com/results?search_query=restorative+night+yoga+sleep', name: language === 'es' ? 'Yoga Nocturno Restaurativo' : 'Restorative Night Yoga', duration: '20 min', difficulty: language === 'es' ? 'Fácil' : 'Easy', freq: '4-5x semana', day: language === 'es' ? 'Diariamente' : 'Daily', why: language === 'es' ? 'Posturas suaves que bajan el ritmo antes de dormir. Prepara el cuerpo para descansar.' : 'Gentle poses that slow you down before bed. Prepares the body to rest.', science: language === 'es' ? 'El yoga suave por la noche reduce la activación nerviosa y favorece la transición al sueño.' : 'Gentle evening yoga reduces nervous system activation and favors the transition to sleep.' },
+                        { youtube: language === 'es' ? 'https://www.youtube.com/results?search_query=estiramientos+antes+de+dormir+mujeres' : 'https://www.youtube.com/results?search_query=pre+sleep+stretching+women', name: language === 'es' ? 'Estiramiento Antes de Dormir' : 'Pre-Sleep Stretching', duration: '10 min', difficulty: language === 'es' ? 'Fácil' : 'Easy', freq: 'Diariamente', day: language === 'es' ? 'Diariamente' : 'Daily', why: language === 'es' ? 'Libera tensión acumulada del día. Rutina corta antes de la cama.' : 'Releases tension built up during the day. Short routine before bed.', science: language === 'es' ? 'Estirar antes de dormir reduce la tensión muscular que puede interrumpir el sueño profundo.' : 'Stretching before bed reduces muscle tension that can interrupt deep sleep.' },
+                        { youtube: language === 'es' ? 'https://www.youtube.com/results?search_query=caminata+suave+tarde+dormir+mejor' : 'https://www.youtube.com/results?search_query=gentle+evening+walk+better+sleep', name: language === 'es' ? 'Caminata Vespertina Suave' : 'Gentle Evening Walk', duration: '20 min', difficulty: language === 'es' ? 'Fácil' : 'Easy', freq: '3-4x semana', day: language === 'es' ? 'Tras la cena' : 'After dinner', why: language === 'es' ? 'Ayuda a la digestión y baja revoluciones tras el día, sin activar de más.' : 'Helps digestion and winds you down after the day, without over-activating.', science: language === 'es' ? 'Caminar suave por la tarde, lejos de la hora de dormir, no eleva la temperatura corporal lo suficiente como para retrasar el sueño.' : 'A gentle evening walk, away from bedtime, doesn\'t raise body temperature enough to delay sleep.' },
+                        { youtube: language === 'es' ? 'https://www.youtube.com/results?search_query=respiracion+4-7-8+dormir' : 'https://www.youtube.com/results?search_query=4-7-8+breathing+sleep', name: language === 'es' ? 'Respiración 4-7-8' : '4-7-8 Breathing', duration: '5 min', difficulty: language === 'es' ? 'Fácil' : 'Easy', freq: 'Diariamente', day: language === 'es' ? 'En la cama' : 'In bed', why: language === 'es' ? 'Técnica de respiración que ayuda a conciliar el sueño desde la cama.' : 'Breathing technique that helps you fall asleep from bed.', science: language === 'es' ? 'Alargar la exhalación activa el sistema nervioso de calma y facilita quedarse dormida.' : 'Lengthening the exhale activates the calming nervous system and makes it easier to fall asleep.' }
                     ]
                 };
 
-                // PERSONALIZACIÓN: Ya filtra por exerciseGoal (strength/weightLoss/hormonal)
+                // PERSONALIZACIÓN: Ya filtra por exerciseGoal (weightLoss/energia/hormonal/strength/dormir)
                 // TODO futuro: Ajustar intensidad según edad y condiciones físicas
                 return allExercises[exerciseGoal] || [];
             };
@@ -5113,7 +5127,13 @@ query = query.eq('region', region.toUpperCase());
 
             const renderExercise = () => {
                 const allExercises = getExercises();
-                const objectives = { strength: language === 'es' ? '💪 Ganar Fuerza' : '💪 Build Strength', weightLoss: language === 'es' ? '⚡ Perder Peso' : '⚡ Lose Weight', hormonal: language === 'es' ? '🧘 Equilibrio Hormonal' : '🧘 Hormonal Balance' };
+                const objectives = {
+                    weightLoss: language === 'es' ? '⚡ Perder Peso' : '⚡ Lose Weight',
+                    energia: language === 'es' ? '🔆 Ganar Energía y Vitalidad' : '🔆 Gain Energy and Vitality',
+                    hormonal: language === 'es' ? '🧘 Equilibrio Hormonal' : '🧘 Hormonal Balance',
+                    strength: language === 'es' ? '💪 Ganar Fuerza' : '💪 Build Strength',
+                    dormir: language === 'es' ? '🌙 Dormir Mejor' : '🌙 Sleep Better',
+                };
 
                 // Función para filtrar ejercicios según nivel de usuario
                 const getFiltered = () => {
@@ -5344,11 +5364,25 @@ query = query.eq('region', region.toUpperCase());
                             </div>
                         )}
 
+                        <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
+                            <summary style={{listStyle:'none',cursor:'pointer'}}>
+                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
+                                    <img src='/images/ejer_fuerza.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
+                                    <div style={{flex:1}}>
+                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Más ejercicios por objetivo':'More exercises by goal'}</p>
+                                        <p style={{fontSize:'0.78rem',color:'#C4A882',margin:0}}>{language==='es'?'Elige una categoría para explorar':'Pick a category to explore'}</p>
+                                    </div>
+                                </div>
+                            </summary>
+                            <div style={{padding:'1.25rem 1.5rem'}}>
+
                         <div style={{display:'flex',gap:'0.75rem',overflowX:'auto',paddingBottom:'1rem'}}>
                             {[
-                                {key:'strength',img:'/images/ejer_fuerza.png'},
                                 {key:'weightLoss',img:'/images/ejer_espiral.png'},
+                                {key:'energia',img:'/images/ejer_pendulo.png'},
                                 {key:'hormonal',img:'/images/ejer_hormonal.png'},
+                                {key:'strength',img:'/images/ejer_fuerza.png'},
+                                {key:'dormir',img:'/images/ejer_suelo.png'},
                             ].map((obj) => (
                                 <button key={obj.key} onClick={() => setExerciseGoal(obj.key)} style={{
                                     display:'flex',alignItems:'center',gap:'0.5rem',
@@ -5360,7 +5394,7 @@ query = query.eq('region', region.toUpperCase());
                                     fontSize:'0.82rem',
                                 }}>
                                     <img src={obj.img} style={{width:'22px',height:'22px',borderRadius:'50%',objectFit:'cover',flexShrink:0}}/>
-                                    {obj.key === 'strength' ? t[language].strength : obj.key === 'weightLoss' ? t[language].weightLoss : t[language].hormonal}
+                                    {objectives[obj.key]}
                                 </button>
                             ))}
                         </div>
@@ -5403,6 +5437,8 @@ query = query.eq('region', region.toUpperCase());
                             ))}
                         </div>
 
+                            </div>
+                        </details>
 
                                                 <div className={`${darkMode ? 'bg-indigo-900' : 'bg-indigo-50'} rounded-xl p-6 border-l-4 border-indigo-500`}>
                             <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
