@@ -4499,6 +4499,9 @@ query = query.eq('region', region.toUpperCase());
                                         <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
                                             {language === 'es' ? 'Preparando tu menú de la semana...' : 'Preparing your weekly menu...'}
                                         </p>
+                                        <p className={`text-xs mt-2 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                                            {language === 'es' ? 'La primera vez puede tardar hasta un minuto.' : 'The first time can take up to a minute.'}
+                                        </p>
                                     </div>
                                 )}
 
@@ -4558,9 +4561,47 @@ query = query.eq('region', region.toUpperCase());
                                             </div>
                                         )}
 
-                                        {(weeklyMenu.dias || []).map((diaData, dIdx) => (
-                                            <div key={dIdx} className="space-y-4">
-                                                <h4 className="text-xl font-bold gradient-text">{diaData.dia}</h4>
+                                        {(() => {
+                                            const diasOrden = language === 'es'
+                                                ? ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']
+                                                : ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+                                            const hoyLabel = new Date().toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US', { weekday: 'long' }).toLowerCase();
+                                            const hoyIdx = diasOrden.indexOf(hoyLabel);
+
+                                            return (weeklyMenu.dias || []).map((diaData, dIdx) => {
+                                                const diaIdx = diasOrden.indexOf((diaData.dia || '').toLowerCase());
+                                                const esHoy = hoyIdx !== -1 && diaIdx === hoyIdx;
+                                                const desbloqueado = hoyIdx === -1 || diaIdx === -1 || diaIdx <= hoyIdx;
+
+                                                if (!desbloqueado) {
+                                                    return (
+                                                        <div key={dIdx} style={{borderRadius:'1rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',position:'relative',minHeight:'110px'}}>
+                                                            <div style={{filter:'blur(4px)',opacity:0.6,pointerEvents:'none',padding:'1.25rem'}}>
+                                                                <h4 className="text-xl font-bold gradient-text mb-2">{diaData.dia}</h4>
+                                                                <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                                                    {(diaData.comidas || []).map(c => c.nombre).join(' · ')}
+                                                                </p>
+                                                            </div>
+                                                            <div style={{position:'absolute',inset:0,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:'0.35rem'}}>
+                                                                <span style={{fontSize:'1.4rem'}}>🔒</span>
+                                                                {/* TODO copy pendiente revisión Bibiana */}
+                                                                <p style={{fontSize:'0.82rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0,textAlign:'center'}}>
+                                                                    {language === 'es' ? `Se desbloquea el ${diaData.dia}` : `Unlocks on ${diaData.dia}`}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }
+
+                                                return (
+                                                <details key={dIdx} open={esHoy} style={{borderRadius:'1rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)'}}>
+                                                    <summary style={{listStyle:'none',cursor:'pointer',padding:'1rem 1.25rem',display:'flex',alignItems:'center',justifyContent:'space-between',background:darkMode?'rgba(201,147,90,0.1)':'rgba(201,147,90,0.07)'}}>
+                                                        <h4 className="text-xl font-bold gradient-text" style={{margin:0}}>
+                                                            {diaData.dia}{esHoy ? (language === 'es' ? ' · Hoy' : ' · Today') : ''}
+                                                        </h4>
+                                                        <span style={{color:'#C4A882',fontSize:'0.85rem'}}>&#9662;</span>
+                                                    </summary>
+                                                    <div className="space-y-4 p-4">
                                                 {(diaData.comidas || []).map((comida, cIdx) => (
                                                     <div key={cIdx} className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-6 border-l-4 border-rose-400 space-y-6`}>
                                                         {/* HEADER CON NOMBRE Y CALORÍAS */}
@@ -4680,8 +4721,11 @@ query = query.eq('region', region.toUpperCase());
                                                         )}
                                                     </div>
                                                 ))}
-                                            </div>
-                                        ))}
+                                                    </div>
+                                                </details>
+                                                );
+                                            });
+                                        })()}
 
                                         {weeklyMenu.listaCompra?.length > 0 && (
                                             <div className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-6`}>
