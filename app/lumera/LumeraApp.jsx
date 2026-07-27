@@ -4314,20 +4314,6 @@ query = query.eq('region', region.toUpperCase());
                     Snack: 'Snack' 
                 };
 
-                if (menusLoading) {
-                    return (
-                        <div className="pb-32 space-y-8">
-                            <h2 className="text-3xl font-light gradient-text">{t[language].nutrition}</h2>
-                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-lg p-8 text-center`}>
-                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-rose-400 mx-auto mb-4"></div>
-                                <p className={darkMode ? 'text-gray-400' : 'text-gray-600'}>
-                                    {language === 'es' ? 'Cargando menús...' : 'Loading menus...'}
-                                </p>
-                            </div>
-                        </div>
-                    );
-                }
-
                 // Función para seleccionar menú adaptado según síntomas
                 const getSelectedSymptom = () => {
                     const tier = getUserTier();
@@ -4575,7 +4561,59 @@ query = query.eq('region', region.toUpperCase());
                             </div>
                         </div>
 
-                        {/* DASHBOARD METABÓLICO - Trial y Premium */}
+                        {getUserTier() !== 'free' && !presupuestoSemana && (
+                        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-lg overflow-hidden`}>
+                            <div className="bg-gradient-to-r from-rose-400 to-amber-300 text-white p-6">
+                                <h3 className="text-2xl font-semibold">{language === 'es' ? '✨ Tu menú de esta semana' : '✨ Your menu this week'}</h3>
+                                <p className="text-sm opacity-90 mt-1">
+                                    {/* TODO copy pendiente revisión Bibiana */}
+                                    {language === 'es' ? '¿Con qué presupuesto quieres que lo prepare?' : 'What budget should I plan it around?'}
+                                </p>
+                            </div>
+                            <div className="p-6 space-y-3">
+                                {[
+                                    { value: 'hormiga', es: 'Modo hormiga', esSub: 'Ajustado, ingredientes básicos', en: 'Thrifty mode', enSub: 'Tight budget, basic ingredients' },
+                                    { value: 'equilibrio', es: 'Modo equilibrio', esSub: 'Término medio', en: 'Balanced mode', enSub: 'Middle ground' },
+                                    { value: 'capricho', es: 'Modo capricho', esSub: 'Sin límite', en: 'Treat mode', enSub: 'No limit' },
+                                ].map(opt => (
+                                    <button
+                                        key={opt.value}
+                                        onClick={() => {
+                                            const semana = getSemanaISO();
+                                            try { localStorage.setItem(`lumi_presupuesto_${currentUser.id}_${semana}`, opt.value); } catch (e) {}
+                                            setPresupuestoSemana(opt.value);
+                                        }}
+                                        className={`w-full text-left ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-50 hover:bg-amber-50'} rounded-xl p-4 border-l-4 border-amber-400 transition`}
+                                    >
+                                        <p className={`font-semibold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{language === 'es' ? opt.es : opt.en}</p>
+                                        <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{language === 'es' ? opt.esSub : opt.enSub}</p>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        )}
+
+                        {getUserTier() === 'free' && (
+                        <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-lg overflow-hidden`}>
+                            <div className="bg-gradient-to-r from-rose-400 to-amber-300 text-white p-6">
+                                <h3 className="text-2xl font-semibold">{language === 'es' ? '✨ Tu Menú de Hoy' : '✨ Your Menu Today'}</h3>
+                            </div>
+                            <div className="p-8 text-center">
+                                {/* TODO copy pendiente revisión Bibiana */}
+                                <p className={`text-sm mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                    {language === 'es' ? 'Tu menú semanal personalizado está en Premium.' : 'Your personalised weekly menu is a Premium feature.'}
+                                </p>
+                                <div onClick={() => setCurrentPage('upgrade')} style={{background:'rgba(184,115,51,0.1)',border:'1px solid rgba(184,115,51,0.3)',borderRadius:'9999px',padding:'0.875rem 2rem',display:'inline-flex',alignItems:'center',gap:'0.5rem',cursor:'pointer',justifyContent:'center'}}>
+                                    <span style={{fontSize:'0.9rem'}}>✦</span>
+                                    <span style={{color:'#C4A882',fontFamily:"'Cormorant',serif",fontWeight:600,fontSize:'1rem'}}>
+                                        {language === 'es' ? 'Hazte Premium para activar' : 'Go Premium to activate'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        )}
+
+                        {getUserTier() !== 'free' && presupuestoSemana && (
                         <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-lg overflow-hidden`}>
                             <div className="bg-gradient-to-r from-rose-400 to-amber-300 text-white p-6">
                                 <h3 className="text-2xl font-semibold">{language === 'es' ? '✨ Tu Menú de Hoy' : '✨ Your Menu Today'}</h3>
@@ -4767,7 +4805,7 @@ query = query.eq('region', region.toUpperCase());
                                 ))}
                             </div>
                         </div>
-
+                        )}
 
 
 
