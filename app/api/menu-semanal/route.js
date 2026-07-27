@@ -35,10 +35,21 @@ REGLAS INNEGOCIABLES:
 7. Prohibido usar las palabras "menopausia", "perimenopausia" o "IA" en el texto visible.
 8. El síntoma del día NO cambia el menú entero — solo aporta un tip corto.
 
+LÍMITES DE LONGITUD ESTRICTOS (muy importante, para que la respuesta quepa entera):
+- "resumen": máximo 20 palabras
+- "tipDelDia": máximo 15 palabras
+- "porQueHorario": máximo 12 palabras
+- "paraQue": máximo 15 palabras
+- "tipCocina": máximo 10 palabras
+- "sinTiempo": máximo 15 palabras
+- "pasos": máximo 4 pasos, cada uno máximo 8 palabras
+- "ingredientes": solo "cantidad + nombre", sin frases largas
+No escribas frases completas con conectores largos. Ve directa al grano, estilo nota, no párrafo.
+
 Devuelve SOLO un objeto JSON válido, sin texto antes ni después, sin markdown, con esta forma exacta:
 {
-  "resumen": "1 frase cálida de LUMI sobre el enfoque de la semana",
-  "tipDelDia": "1 tip corto ligado a cómo se siente hoy",
+  "resumen": "frase corta",
+  "tipDelDia": "tip corto",
   "listaCompra": ["ingrediente 1", "ingrediente 2", "..."],
   "dias": [
     {
@@ -48,21 +59,21 @@ Devuelve SOLO un objeto JSON válido, sin texto antes ni después, sin markdown,
           "tipo": "desayuno|almuerzo|snack|cena",
           "nombre": "nombre del plato",
           "horario": "hora sugerida (ej. 8:00)",
-          "porQueHorario": "1 frase: por qué a esa hora (ritmo circadiano, insulina, cortisol...)",
+          "porQueHorario": "frase muy corta",
           "kcal": 0,
           "proteina_g": 0, "carbos_g": 0, "grasas_g": 0,
-          "ingredientes": ["ingrediente con cantidad casera (ej. 1 taza de arroz)"],
-          "pasos": ["paso 1", "paso 2"],
-          "paraQue": "1 frase: por qué te conviene, con base científica",
-          "tipCocina": "1 truco de cocina corto",
-          "sinTiempo": "versión rápida del plato para días de prisa"
+          "ingredientes": ["cantidad + ingrediente"],
+          "pasos": ["paso corto", "paso corto"],
+          "paraQue": "frase muy corta",
+          "tipCocina": "truco muy corto",
+          "sinTiempo": "versión rápida, muy corta"
         }
       ]
     }
   ]
 }
 
-Genera 7 días. Recuerda: puedes repetir base de plato hasta 3 días para que sea realista y económico.`;
+Genera 7 días completos. Recuerda: puedes repetir base de plato hasta 3 días. PRIORIDAD: que quepan los 7 días enteros respetando los límites de longitud, antes que hacerlos más largos.`;
 }
 
 function construirMensajeUsuario(datos) {
@@ -86,7 +97,7 @@ DATOS DE ${nombre.toUpperCase()}:
 - Condiciones de salud a tener en cuenta: ${condiciones || 'ninguna'}
 - Cómo se siente hoy: ${sintomaHoy || 'sin dato'}
 
-Escribe TODO en ${lang}.`;
+Escribe TODO en ${lang}. Recuerda: textos MUY cortos en cada campo.`;
 }
 
 export async function POST(req) {
@@ -105,10 +116,21 @@ export async function POST(req) {
 
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 8000,
+      max_tokens: 16000,
       system,
       messages: [{ role: 'user', content: mensajeUsuario }],
     });
+
+    // Detectar si se cortó por límite de tokens, para diagnóstico claro
+    if (response.stop_reason === 'max_tokens') {
+      return Response.json(
+        {
+          error: 'La respuesta se cortó por límite de tokens (max_tokens). Sube max_tokens o recorta más el prompt.',
+          stop_reason: response.stop_reason,
+        },
+        { status: 502 }
+      );
+    }
 
     let raw = response.content?.[0]?.text || '';
     raw = raw.replace(/```json|```/g, '').trim();
