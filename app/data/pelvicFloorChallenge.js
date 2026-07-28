@@ -25,7 +25,7 @@ export const pelvicFloorChallenge = {
   introduction: {
     es: {
       heading: "¿Por qué este challenge ahora?",
-      body: `Durante la perimenopausia, los niveles de estrógeno comienzan a descender. Lo que muchas mujeres no saben es que el estrógeno no solo regula el ciclo menstrual — también mantiene la elasticidad y el tono de los músculos del suelo pélvico.
+      body: `En esta etapa, los niveles de estrógeno comienzan a descender. Lo que muchas mujeres no saben es que el estrógeno no solo regula el ciclo menstrual — también mantiene la elasticidad y el tono de los músculos del suelo pélvico.
 
 Al reducirse el estrógeno, estos músculos pierden fuerza progresivamente. El resultado: escapes de orina al reír, toser o saltar, sensación de pesadez pélvica, menor sensibilidad durante las relaciones íntimas, y mayor riesgo de prolapso con el paso de los años.
 
@@ -42,7 +42,7 @@ Este challenge te acompaña paso a paso para convertir los ejercicios Kegel en u
     },
     en: {
       heading: "Why this challenge, why now?",
-      body: `During perimenopause, estrogen levels begin to decline. What many women don't realize is that estrogen doesn't only regulate the menstrual cycle — it also maintains the elasticity and tone of the pelvic floor muscles.
+      body: `During this stage, estrogen levels begin to decline. What many women don't realize is that estrogen doesn't only regulate the menstrual cycle — it also maintains the elasticity and tone of the pelvic floor muscles.
 
 As estrogen decreases, these muscles gradually lose strength. The result: leaks when laughing, coughing, or jumping, a feeling of pelvic heaviness, reduced sensation during intimacy, and a higher risk of prolapse over time.
 
@@ -130,14 +130,14 @@ This challenge guides you step by step to turn Kegel exercises into a habit your
       es: {
         title: "Conoce tu suelo pélvico",
         instruction: "Hoy no entrenas — hoy te presentas. Tómate 5 minutos para identificar los músculos del suelo pélvico. Intenta contraerlos una sola vez, despacio, y observa qué sientes.",
-        scienceFact: "El suelo pélvico es un grupo de músculos en forma de hamaca que soporta el útero, la vejiga y el recto. En la perimenopausia, el descenso de estrógeno reduce su elasticidad hasta en un 30%.",
+        scienceFact: "El suelo pélvico es un grupo de músculos en forma de hamaca que soporta el útero, la vejiga y el recto. En esta etapa, el descenso de estrógeno reduce su elasticidad hasta en un 30%.",
         duration: "5 min",
         reps: null,
       },
       en: {
         title: "Meet your pelvic floor",
         instruction: "Today you don't train — today you connect. Take 5 minutes to locate your pelvic floor muscles. Try contracting them once, slowly, and notice what you feel.",
-        scienceFact: "The pelvic floor is a hammock-shaped muscle group supporting the uterus, bladder, and rectum. During perimenopause, declining estrogen can reduce its elasticity by up to 30%.",
+        scienceFact: "The pelvic floor is a hammock-shaped muscle group supporting the uterus, bladder, and rectum. During this stage, declining estrogen can reduce its elasticity by up to 30%.",
         duration: "5 min",
         reps: null,
       },
@@ -150,14 +150,14 @@ This challenge guides you step by step to turn Kegel exercises into a habit your
       es: {
         title: "Primera contracción",
         instruction: "Contrae el suelo pélvico durante 3 segundos y suelta durante 3 segundos. Haz 10 repeticiones. Puedes hacerlo tumbada boca arriba con las rodillas flexionadas.",
-        scienceFact: "Estudios clínicos demuestran que 6-8 semanas de ejercicios Kegel reducen los episodios de incontinencia urinaria de esfuerzo en un 56-70% en mujeres perimenopáusicas.",
+        scienceFact: "Estudios clínicos demuestran que 6-8 semanas de ejercicios Kegel reducen los episodios de incontinencia urinaria de esfuerzo en un 56-70% en mujeres en esta etapa.",
         duration: "5 min",
         reps: "10 reps × 1 serie",
       },
       en: {
         title: "First contraction",
         instruction: "Contract your pelvic floor for 3 seconds and release for 3 seconds. Do 10 repetitions. You can do this lying on your back with knees bent.",
-        scienceFact: "Clinical studies show that 6-8 weeks of Kegel exercises reduce stress urinary incontinence episodes by 56-70% in perimenopausal women.",
+        scienceFact: "Clinical studies show that 6-8 weeks of Kegel exercises reduce stress urinary incontinence episodes by 56-70% in women at this stage.",
         duration: "5 min",
         reps: "10 reps × 1 set",
       },
@@ -434,14 +434,14 @@ This challenge guides you step by step to turn Kegel exercises into a habit your
       es: {
         title: "Kegel + postura",
         instruction: "De pie, activa el suelo pélvico y al mismo tiempo alarga la columna (como si un hilo tirara de tu cabeza hacia el techo). Mantén 5 segundos. 10 repeticiones. El suelo pélvico y la postura están profundamente conectados.",
-        scienceFact: "El suelo pélvico forma parte del 'core' junto con el diafragma, el transverso abdominal y el multífido lumbar. Activarlo mejora la estabilidad lumbar y reduce el dolor de espalda baja, muy frecuente en la perimenopausia.",
+        scienceFact: "El suelo pélvico forma parte del 'core' junto con el diafragma, el transverso abdominal y el multífido lumbar. Activarlo mejora la estabilidad lumbar y reduce el dolor de espalda baja, muy frecuente en esta etapa.",
         duration: "10 min",
         reps: "10 reps × 2 series",
       },
       en: {
         title: "Kegel + posture",
         instruction: "Standing, activate the pelvic floor while lengthening your spine (as if a string pulls your head toward the ceiling). Hold 5 seconds. 10 repetitions. The pelvic floor and posture are deeply connected.",
-        scienceFact: "The pelvic floor is part of the 'core' along with the diaphragm, transverse abdominis, and lumbar multifidus. Activating it improves lumbar stability and reduces lower back pain, very common in perimenopause.",
+        scienceFact: "The pelvic floor is part of the 'core' along with the diaphragm, transverse abdominis, and lumbar multifidus. Activating it improves lumbar stability and reduces lower back pain, very common at this stage.",
         duration: "10 min",
         reps: "10 reps × 2 sets",
       },
@@ -474,14 +474,14 @@ This challenge guides you step by step to turn Kegel exercises into a habit your
       es: {
         title: "Suelo pélvico e intimidad",
         instruction: "Hoy es un día de conciencia, no de esfuerzo. Dedica 5 minutos a contracciones muy suaves y lentas. Conecta con la sensación de control y presencia en esa zona de tu cuerpo.",
-        scienceFact: "Un suelo pélvico tonificado mejora la sensibilidad en las relaciones íntimas y puede aumentar la intensidad del orgasmo. Durante la perimenopausia, este beneficio es especialmente relevante dado el impacto hormonal en la libido.",
+        scienceFact: "Un suelo pélvico tonificado mejora la sensibilidad en las relaciones íntimas y puede aumentar la intensidad del orgasmo. En esta etapa, este beneficio es especialmente relevante dado el impacto hormonal en la libido.",
         duration: "5 min",
         reps: "10 reps suaves × 1 serie",
       },
       en: {
         title: "Pelvic floor and intimacy",
         instruction: "Today is a day of awareness, not effort. Spend 5 minutes on very gentle, slow contractions. Connect with the feeling of control and presence in that area of your body.",
-        scienceFact: "A toned pelvic floor improves sensation during intimacy and can increase orgasm intensity. During perimenopause, this benefit is especially relevant given the hormonal impact on libido.",
+        scienceFact: "A toned pelvic floor improves sensation during intimacy and can increase orgasm intensity. At this stage, this benefit is especially relevant given the hormonal impact on libido.",
         duration: "5 min",
         reps: "10 gentle reps × 1 set",
       },
