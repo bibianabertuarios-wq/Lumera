@@ -347,24 +347,44 @@ export default function Dashboard() {
     setGuardandoRecordatorios(true);
     try {
       const permiso = await Notification.requestPermission();
-      if (permiso === 'granted') {
-        const reg = await navigator.serviceWorker.ready;
-        const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-        const sub = await reg.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: urlBase64ToUint8Array(vapidKey),
-        });
-        await fetch('/api/push/subscribe', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: user.id,
-            subscription: sub,
-            horaDesayuno, horaComida, horaCena,
-          }),
-        });
+      if (permiso !== 'granted') {
+        alert(is_es
+          ? 'No pudimos activar los recordatorios porque el navegador no dio permiso de notificaciones. Puedes activarlo desde los ajustes del navegador e intentarlo de nuevo.'
+          : 'We could not enable reminders because the browser did not grant notification permission. You can enable it in your browser settings and try again.');
+        setGuardandoRecordatorios(false);
+        return;
       }
-    } catch(e) {}
+      const reg = await navigator.serviceWorker.ready;
+      const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
+      const sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(vapidKey),
+      });
+      // Zona horaria real del dispositivo (ej. "Europe/Madrid"), necesaria para que el
+      // servidor sepa a qué hora UTC corresponden tus horas de comida/cena.
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || null;
+      const resp = await fetch('/api/push/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          subscription: sub,
+          horaDesayuno, horaComida, horaCena,
+          timezone,
+        }),
+      });
+      if (!resp.ok) {
+        const body = await resp.json().catch(() => ({}));
+        throw new Error(body.error || 'Error guardando la suscripción de notificaciones');
+      }
+    } catch(e) {
+      console.error('Error activando recordatorios:', e.message || e);
+      alert(is_es
+        ? 'No pudimos activar los recordatorios. Por favor intenta de nuevo en unos minutos.'
+        : 'We could not enable reminders. Please try again in a few minutes.');
+      setGuardandoRecordatorios(false);
+      return;
+    }
     try { localStorage.setItem(`lumi_puerta_recordatorios_${user.id}`, '1'); } catch(e) {}
     setGuardandoRecordatorios(false);
     setMostrarCuestionarioHorarios(false);

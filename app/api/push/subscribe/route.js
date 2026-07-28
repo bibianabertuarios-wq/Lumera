@@ -7,7 +7,7 @@ const supabase = createClient(
 
 export async function POST(request) {
   try {
-    const { userId, subscription, horaDesayuno, horaComida, horaCena, hora } = await request.json();
+    const { userId, subscription, horaDesayuno, horaComida, horaCena, hora, timezone } = await request.json();
 
     if (!userId || !subscription) {
       return Response.json({ error: 'Faltan datos' }, { status: 400 });
@@ -21,6 +21,7 @@ export async function POST(request) {
         hora_comida: horaComida || null,
         hora_cena: horaCena || null,
         push_hora: hora || horaDesayuno || '09:00',
+        timezone: timezone || null,
         push_enabled: true,
       })
       .eq('id', userId);
