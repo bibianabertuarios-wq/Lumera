@@ -371,7 +371,8 @@ import './lumera.css'
             // Sync idioma con Supabase cuando cambia
             useEffect(() => {
                 if (!currentUser || !currentUser.id) return;
-                supabase.from('users').update({ language }).eq('id', currentUser.id);
+                supabase.from('users').update({ language }).eq('id', currentUser.id)
+                    .then(({ error }) => { if (error) console.error('Error guardando idioma:', error.message); });
             }, [language]);
             const [darkMode, setDarkMode] = useState(false);
             const [session, setSession] = useState(null);
@@ -695,10 +696,12 @@ import './lumera.css'
                             .limit(20);
 
                         if (error) {
+                            console.error('Error cargando posts de comunidad:', error.message);
                         } else {
                             setCommunityPosts(data || []);
                         }
                     } catch (err) {
+                        console.error('Error cargando posts de comunidad:', err.message || err);
                     } finally {
                         setLoadingPosts(false);
                     }
@@ -2482,6 +2485,7 @@ query = query.eq('region', region.toUpperCase());
                         .single();
 
                     if (profileError) {
+                        console.error('Error cargando perfil tras login:', profileError.message);
                     }
 
                     setSession(data.session);
@@ -4018,8 +4022,12 @@ query = query.eq('region', region.toUpperCase());
                                 if (newHeight && !currentUser?.height) updatePayload.height = newHeight;
 
                                 if (Object.keys(updatePayload).length > 0) {
-                                    await supabase.from('users').update(updatePayload).eq('id', currentUser.id);
-                                    setCurrentUser({ ...currentUser, ...updatePayload });
+                                    const { error: updateErr } = await supabase.from('users').update(updatePayload).eq('id', currentUser.id);
+                                    if (updateErr) {
+                                        console.error('Error guardando peso/altura extraídos del chat:', updateErr.message);
+                                    } else {
+                                        setCurrentUser({ ...currentUser, ...updatePayload });
+                                    }
                                 }
                             }
                         } catch (extractErr) {
@@ -5516,7 +5524,7 @@ query = query.eq('region', region.toUpperCase());
 
                                 if (saveError) {
                                     // Continuar con estado local aunque falle Supabase
-                                } else {
+                                    console.error('Error guardando síntomas en Supabase:', saveError.message);
                                 }
 
                                 // Usar el record de Supabase si se guardó (tiene ambas nomenclaturas via el select)
