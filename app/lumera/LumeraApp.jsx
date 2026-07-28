@@ -4562,7 +4562,7 @@ query = query.eq('region', region.toUpperCase());
                                             {language === 'es' ? 'Preparando tu menú de la semana...' : 'Preparing your weekly menu...'}
                                         </p>
                                         <p className={`text-xs mt-2 ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                                            {language === 'es' ? 'La primera vez puede tardar hasta un minuto.' : 'The first time can take up to a minute.'}
+                                            {language === 'es' ? 'La primera vez puede tardar hasta 90 segundos.' : 'The first time can take up to 90 seconds.'}
                                         </p>
                                     </div>
                                 )}
