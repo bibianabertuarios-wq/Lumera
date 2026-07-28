@@ -1,0 +1,22 @@
+name: Send Daily Push Notification
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'   # cada 15 minutos, todo el día (cubre cualquier push_hora)
+  workflow_dispatch:
+
+jobs:
+  send-daily-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger send-daily-push Edge Function
+        run: |
+          curl -f -X POST \
+            https://pyekwpmbdnmglrjieexc.supabase.co/functions/v1/send-daily-push \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{}'
+
+      - name: Log execution
+        run: echo "✅ send-daily-push ejecutado a las $(date)"
