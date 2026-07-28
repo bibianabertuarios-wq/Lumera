@@ -805,16 +805,15 @@ export default function Dashboard() {
                 ) : (
                   <>
                     <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'#C9935A',fontWeight:600,marginBottom:'0.75rem'}}>
-                      {is_es ? '¿Cómo amaneces? · Tócame para tu lectura ↓' : 'How do you wake up? · Tap for your reading ↓'}
+                      {is_es ? 'Registra tu síntoma de hoy →' : 'Log your symptom today →'}
                     </p>
                     <div style={{display:'flex',gap:'0.5rem',marginBottom:'1.25rem'}}>
                       {(is_es
-                        ? [{k:'bien',emoji:'😊',l:'Bien'},{k:'cansada',emoji:'😴',l:'Cansada'},{k:'niebla',emoji:'🌫️',l:'Con niebla'},{k:'regular',emoji:'😐',l:'Regular'},{k:'hinchada',emoji:'🎈',l:'Hinchada'}]
-                        : [{k:'bien',emoji:'😊',l:'Good'},{k:'cansada',emoji:'😴',l:'Tired'},{k:'niebla',emoji:'🌫️',l:'Foggy'},{k:'regular',emoji:'😐',l:'Regular'},{k:'hinchada',emoji:'🎈',l:'Bloated'}]
-                      ).map(({k,emoji,l}) => (
+                        ? [{k:'bien',l:'Bien'},{k:'cansada',l:'Cansada'},{k:'niebla',l:'Con niebla'},{k:'regular',l:'Regular'},{k:'hinchada',l:'Hinchada'}]
+                        : [{k:'bien',l:'Good'},{k:'cansada',l:'Tired'},{k:'niebla',l:'Foggy'},{k:'regular',l:'Regular'},{k:'hinchada',l:'Bloated'}]
+                      ).map(({k,l}) => (
                         <button key={k} className="estado-btn" onClick={()=>hacerCheckin(k)}>
-                          <span style={{fontSize:'1.5rem',lineHeight:1}}>{emoji}</span>
-                          <span style={{fontSize:'0.68rem'}}>{l}</span>
+                          <span style={{fontSize:'0.78rem',fontWeight:600}}>{l}</span>
                         </button>
                       ))}
                     </div>
