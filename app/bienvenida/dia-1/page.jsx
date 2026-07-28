@@ -208,15 +208,17 @@ export default function BienvenidaDia1() {
               <Lumi ini="L" nombre="LUMI" rol={is_es ? 'solo tres cosas y empezamos' : "just three things and we start"} />
               <h1 style={s.h1}>{is_es ? <>Tres cosas<br /><b style={s.b}>y nada más.</b></> : <>Three things<br /><b style={s.b}>and nothing else.</b></>}</h1>
 
-              <div style={s.q}>
-                <div style={s.ql}>{is_es ? '¿CÓMO TE LLAMO?' : 'WHAT SHOULD I CALL YOU?'}</div>
-                <input
-                  style={s.inp}
-                  placeholder={is_es ? 'Tu nombre' : 'Your name'}
-                  value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
-                />
-              </div>
+              {!user.nombre && (
+                <div style={s.q}>
+                  <div style={s.ql}>{is_es ? '¿CÓMO TE LLAMO?' : 'WHAT SHOULD I CALL YOU?'}</div>
+                  <input
+                    style={s.inp}
+                    placeholder={is_es ? 'Tu nombre' : 'Your name'}
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                  />
+                </div>
+              )}
 
               <div style={s.q}>
                 <div style={s.ql}>{is_es ? '¿A QUÉ HORA SUELES COMER?' : 'WHAT TIME DO YOU USUALLY EAT LUNCH?'}</div>
