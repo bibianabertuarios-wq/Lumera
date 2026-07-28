@@ -3,6 +3,7 @@ import React from 'react'
 import PelvicFloorChallenge from "../components/PelvicFloorChallenge";
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@supabase/supabase-js'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import './lumera.css'
 
 // hooks imported above
@@ -7687,12 +7688,46 @@ query = query.eq('region', region.toUpperCase());
                                     </p>
                                 </div>
 
-                                {/* GRÁFICO MINI — 3 días, 6 métricas */}
+                                {/* GRÁFICO MINI — 3 días, sueño/energía/ánimo */}
                                 <div style={{margin: '1.25rem 1rem 0', padding: '1rem', borderRadius: '0.875rem', background: darkMode ? 'rgba(255,255,255,0.05)' : '#fafaf9', border: '1px solid rgba(0,0,0,0.06)'}}>
                                     <p style={{fontSize: '0.72rem', fontWeight: 600, color: '#a8a29e', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.75rem'}}>
                                         📊 {language === 'es' ? 'Tus últimos 3 días' : 'Your last 3 days'}
                                     </p>
-                                    <canvas id="patternChart" height="130"></canvas>
+                                    {(() => {
+                                        const last3 = symptoms.slice(0, 3).reverse();
+                                        const chartData = last3.map((s, i) => {
+                                            const dateStr = s.symptom_date || s.date;
+                                            let dia;
+                                            if (dateStr) {
+                                                const d = new Date(dateStr);
+                                                dia = language === 'es'
+                                                    ? ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][d.getDay()]
+                                                    : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+                                            } else {
+                                                dia = language === 'es' ? `Día ${i + 1}` : `Day ${i + 1}`;
+                                            }
+                                            return {
+                                                dia,
+                                                [language === 'es' ? 'Sueño' : 'Sleep']: s.sleep || 0,
+                                                [language === 'es' ? 'Energía' : 'Energy']: s.energy || 0,
+                                                [language === 'es' ? 'Ánimo' : 'Mood']: s.mood || 0,
+                                            };
+                                        });
+                                        return (
+                                            <ResponsiveContainer width="100%" height={160}>
+                                                <LineChart data={chartData} margin={{ top: 5, right: 8, left: -20, bottom: 0 }}>
+                                                    <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'} />
+                                                    <XAxis dataKey="dia" tick={{ fontSize: 11, fill: darkMode ? '#9ca3af' : '#6b7280' }} axisLine={false} tickLine={false} />
+                                                    <YAxis domain={[0, 10]} tick={{ fontSize: 10, fill: darkMode ? '#9ca3af' : '#6b7280' }} axisLine={false} tickLine={false} width={22} />
+                                                    <Tooltip contentStyle={{ fontSize: '0.78rem', borderRadius: '0.5rem' }} />
+                                                    <Legend wrapperStyle={{ fontSize: '0.7rem' }} />
+                                                    <Line type="monotone" dataKey={language === 'es' ? 'Sueño' : 'Sleep'} stroke="#60a5fa" strokeWidth={2} dot={{ r: 4 }} />
+                                                    <Line type="monotone" dataKey={language === 'es' ? 'Energía' : 'Energy'} stroke="#C9935A" strokeWidth={2} dot={{ r: 4 }} />
+                                                    <Line type="monotone" dataKey={language === 'es' ? 'Ánimo' : 'Mood'} stroke="#0D3D3D" strokeWidth={2} dot={{ r: 4 }} />
+                                                </LineChart>
+                                            </ResponsiveContainer>
+                                        );
+                                    })()}
                                 </div>
 
                                 {/* TARJETAS RESUMEN — sueño, energía, ánimo, sofocos */}
@@ -7744,6 +7779,37 @@ query = query.eq('region', region.toUpperCase());
                                     <p style={{fontSize: '0.78rem', color: '#a8a29e', marginTop: '0.5rem', fontWeight: 600}}>— LUMI</p>
                                 </div>
 
+                                {/* TUS PRÓXIMOS PASOS — qué hacer para seguir avanzando con la app */}
+                                <div style={{margin: '0 1rem 1rem'}}>
+                                    <p style={{fontSize: '0.72rem', fontWeight: 600, color: '#a8a29e', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.6rem'}}>
+                                        {language === 'es' ? 'Tus próximos pasos' : 'Your next steps'}
+                                    </p>
+                                    <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+                                        {[
+                                            {
+                                                icon: '📝',
+                                                text: language === 'es' ? 'Sigue registrando cada día — cuanto más me cuentes, más se afina tu plan.' : 'Keep logging every day — the more you tell me, the sharper your plan gets.',
+                                                onClick: () => setCurrentPage('symptoms'),
+                                            },
+                                            {
+                                                icon: '🍽',
+                                                text: language === 'es' ? 'Prueba tu menú semanal, ya ajustado a tu objetivo.' : 'Try your weekly menu, already adjusted to your goal.',
+                                                onClick: () => setCurrentPage('nutrition'),
+                                            },
+                                            {
+                                                icon: '💬',
+                                                text: language === 'es' ? 'Cuéntame cualquier cambio en el chat — ajusto tu plan al momento.' : 'Tell me about any change in the chat — I adjust your plan right away.',
+                                                onClick: () => { setShowPatternModal(false); setShowLumiChat(true); },
+                                            },
+                                        ].map((step, i) => (
+                                            <div key={i} onClick={step.onClick} style={{display: 'flex', alignItems: 'center', gap: '0.6rem', padding: '0.6rem 0.75rem', borderRadius: '0.65rem', background: darkMode ? 'rgba(255,255,255,0.04)' : '#fff', border: '1px solid rgba(184,115,51,0.15)', cursor: 'pointer'}}>
+                                                <span style={{fontSize: '1.1rem', flexShrink: 0}}>{step.icon}</span>
+                                                <span style={{fontSize: '0.8rem', lineHeight: 1.4, color: darkMode ? '#e7e5e4' : '#44403c'}}>{step.text}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
                                 {/* CTA conversión día 3 */}
                                 {getTrialDaysLeft() <= 1 && getUserTier() !== 'premium' && (
                                     <div style={{margin: '0 1rem 1rem', background: 'linear-gradient(135deg, #C4A882, #C4A882)', borderRadius: '0.875rem', padding: '1.25rem', textAlign: 'center'}}>
@@ -7779,48 +7845,6 @@ query = query.eq('region', region.toUpperCase());
                             </div>
                         </div>
                     )}
-
-                    {/* Renderiza el chart cuando se abre el modal */}
-                    {showPatternModal && patternResult && (() => {
-                        setTimeout(() => {
-                            const canvas = document.getElementById('patternChart');
-                            if (!canvas) return;
-                            if (canvas.__chartInstance) canvas.__chartInstance.destroy();
-                            const ctx = canvas.getContext('2d');
-                            const last3 = symptoms.slice(0, 3).reverse();
-                            const labels = last3.map((s, i) => {
-                                const dateStr = s.symptom_date || s.date;
-                                if (dateStr) {
-                                    const d = new Date(dateStr);
-                                    return language === 'es' 
-                                        ? ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][d.getDay()]
-                                        : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
-                                }
-                                return language === 'es' ? 'Día ' + (i+1) : 'Day ' + (i+1);
-                            });
-                            canvas.__chartInstance = new window.Chart(ctx, {
-                                type: 'line',
-                                data: {
-                                    labels: labels,
-                                    datasets: [
-                                        { label: language === 'es' ? 'Sueño' : 'Sleep', data: last3.map(s => s.sleep || 0), borderColor: '#60a5fa', tension: 0.4, fill: false, pointRadius: 4, pointBackgroundColor: '#60a5fa' },
-                                        { label: language === 'es' ? 'Energía' : 'Energy', data: last3.map(s => s.energy || 0), borderColor: '#fbbf24', tension: 0.4, fill: false, pointRadius: 4, pointBackgroundColor: '#fbbf24' },
-                                        { label: language === 'es' ? 'Ánimo' : 'Mood', data: last3.map(s => s.mood || 0), borderColor: '#DEB98A', tension: 0.4, fill: false, pointRadius: 4, pointBackgroundColor: '#DEB98A' }
-                                    ]
-                                },
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: true,
-                                    scales: {
-                                        y: { min: 0, max: 10, ticks: { stepSize: 2, color: darkMode ? '#9ca3af' : '#6b7280', font: { size: 10 } }, grid: { color: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)' } },
-                                        x: { ticks: { color: darkMode ? '#9ca3af' : '#6b7280', font: { size: 11 } }, grid: { display: false } }
-                                    },
-                                    plugins: { legend: { labels: { color: darkMode ? '#d1d5db' : '#374151', font: { size: 10 }, boxWidth: 10 } } }
-                                }
-                            });
-                        }, 120);
-                        return null;
-                    })()}
 
                     {/* MODAL GUÍA: SIN PERIODO / PERIODO IRREGULAR */}
                     {currentUser && periodLog.length > 0 && getMonthsWithoutPeriod() >= 12 && currentPage === 'period' && (
