@@ -1,4 +1,3 @@
-// TODO copy pendiente revisión Bibiana — formulación blanda, no diagnóstica.
 // Motor de lecturas: convierte objetivo + síntoma principal (del quiz) + datos
 // reales de la usuaria en una lectura diaria y un plan de 3 acciones, sin
 // esperar a ninguna API (instantáneo). /api/lumi queda solo para el chat y
@@ -6,7 +5,6 @@
 
 // Check-in de hoy (5 emojis: Bien/Cansada/Con niebla/Regular/Hinchada) → reconocimiento breve,
 // específico a ella (nunca "algunas mujeres..."), que se antepone a la lectura del día.
-// TODO copy pendiente revisión Bibiana — formulación blanda, no diagnóstica
 const RECONOCIMIENTO_ESTADO = {
   bien: { es: 'Hoy amaneces bien.', en: 'You wake up feeling good today.' },
   cansada: { es: 'Hoy amaneces cansada.', en: 'You wake up tired today.' },
@@ -303,7 +301,6 @@ function normalizarCondiciones(raw) {
 // Prioridad si hay varias: la más específica para el plato de hoy va primero.
 const ORDEN_CONDICIONES = ['diabetes', 'hipertension', 'fibromialgia'];
 
-// TODO copy pendiente revisión Bibiana — formulación blanda, no diagnóstica
 const ADAPTACION_CONDICION = {
   diabetes: {
     es: { accion: 'Verdura primero, proteína después, y el hidrato (una taza) al final — nunca el hidrato solo', porque: 'El orden en que comes suaviza el pico de glucosa hasta un 30%, aunque comas exactamente lo mismo.', etiqueta: 'Adaptado a tu diabetes: el orden del plato importa tanto como lo que comes.' },

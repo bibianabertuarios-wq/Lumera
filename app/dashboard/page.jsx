@@ -89,21 +89,20 @@ const DESCUBRIMIENTOS_EN = [
   'Protein at breakfast reduces afternoon sugar cravings — it is chemistry, not willpower.',
 ];
 
-// TODO copy pendiente revisión Bibiana — rigor científico, formato mito/verdad
 const MITOS_VERDAD_ES = [
   'Mito: sudar más quema más grasa. Verdad: el sudor regula tu temperatura, no tu grasa corporal.',
   'Mito: los carbohidratos de noche engordan más. Verdad: lo que más pesa es el total del día, no la hora.',
   'Mito: hay que aguantar hambre para adelgazar. Verdad: el músculo que pierdes con hambre es el que más te protege a los 60.',
-  'Mito: el cansancio se arregla con más cafeína. Verdad: el magnesio y el sueño profundo lo resuelven de raíz.',
-  'Mito: la niebla mental es solo cosa de la edad. Verdad: la hidratación y el omega-3 la mejoran de forma medible.',
+  'Mito: el cansancio se arregla con más cafeína. Verdad: el magnesio y el sueño profundo ayudan más que la cafeína a medio plazo.',
+  'Mito: la niebla mental es solo cosa de la edad. Verdad: la hidratación y el omega-3 pueden ayudar a mejorarla.',
   'Mito: hay que hacer cardio largo para perder peso. Verdad: el músculo que ganas con fuerza sigue quemando en reposo.',
 ];
 const MITOS_VERDAD_EN = [
   'Myth: sweating more burns more fat. Truth: sweat regulates your temperature, not your body fat.',
   'Myth: carbs at night are more fattening. Truth: your daily total matters more than the time.',
   'Myth: you have to push through hunger to lose weight. Truth: the muscle you lose to hunger is what protects you most at 60.',
-  'Myth: tiredness is fixed with more caffeine. Truth: magnesium and deep sleep solve it at the root.',
-  'Myth: brain fog is just an age thing. Truth: hydration and omega-3 measurably improve it.',
+  'Myth: tiredness is fixed with more caffeine. Truth: magnesium and deep sleep help more than caffeine over time.',
+  'Myth: brain fog is just an age thing. Truth: hydration and omega-3 can help improve it.',
   'Myth: you need long cardio to lose weight. Truth: the muscle you build with strength keeps burning at rest.',
 ];
 
@@ -200,7 +199,6 @@ function AnilloVivo({ info, is_es, racha = 0, size = 150 }) {
     const r = 62, C = 2 * Math.PI * r;
     const p = Math.min(racha / 7, 1);
     const titulo = racha > 0 ? String(racha) : (is_es ? 'Hoy' : 'Today');
-    // TODO copy pendiente revisión Bibiana — sin marcar "cero", encuadre de semana ya en marcha
     const sub = racha > 0
       ? (is_es ? (racha === 1 ? 'día de constancia' : 'días de constancia') : (racha === 1 ? 'day of consistency' : 'days of consistency'))
       : (is_es ? 'tu semana ya está en marcha' : 'your week is already underway');
@@ -785,7 +783,6 @@ export default function Dashboard() {
 
             {!checkinHecho ? (
               <>
-                {/* TODO copy pendiente revisión Bibiana */}
                 <p style={{fontSize:'0.95rem',fontStyle:'italic',color:'rgba(255,255,255,0.7)',lineHeight:1.5,marginBottom:'0.9rem'}}>
                   {is_es ? 'Un toque y te digo qué está pasando en tu cuerpo hoy.' : "One tap and I'll tell you what's happening in your body today."}
                 </p>
@@ -979,7 +976,6 @@ export default function Dashboard() {
               <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.5rem'}}>
                 {is_es ? 'Tu ritmo de hoy' : 'Your rhythm today'}
               </div>
-              {/* TODO copy pendiente revisión Bibiana */}
               <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.9rem',color:'rgba(13,61,61,0.6)',lineHeight:1.5,marginBottom:'0.9rem'}}>
                 {is_es ? 'Yo me encargo de avisarte — tú solo vive el día.' : 'I take care of the reminders — you just live the day.'}
               </p>
@@ -1164,7 +1160,6 @@ export default function Dashboard() {
                           <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.4rem'}}>
                             {is_es ? '✦ Verdad de hoy' : '✦ Truth of the day'}
                           </div>
-                          {/* TODO copy pendiente revisión Bibiana */}
                           <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'0.9rem',color:'#0D3D3D',lineHeight:1.5,margin:0}}>
                             {(is_es ? MITOS_VERDAD_ES : MITOS_VERDAD_EN)[new Date().getDate() % MITOS_VERDAD_ES.length]}
                           </p>

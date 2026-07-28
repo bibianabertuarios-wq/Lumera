@@ -9,8 +9,6 @@
  * Al terminar, handleFinish guarda nombre preferido + hora de comida,
  * pone onboarding_dia1_completo = true, y entra a /dashboard (o a
  * /escaner si eligió medirse ahora).
- *
- * Todo el copy es borrador // TODO copy pendiente revisión Bibiana.
  */
 
 import { useState, useEffect, useMemo } from 'react';
