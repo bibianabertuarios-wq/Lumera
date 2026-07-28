@@ -392,9 +392,20 @@ export default function Dashboard() {
       updates.peso_inicial = nuevoPeso;
       updates.peso_fecha = new Date().toISOString().split('T')[0];
     }
+    let pesoGuardado = true;
     try {
-      await supabase.from('users').update(updates).eq('id', user.id);
-    } catch(e) {}
+      const { error } = await supabase.from('users').update(updates).eq('id', user.id);
+      if (error) {
+        pesoGuardado = false;
+        console.error('Error guardando peso:', error.message);
+      }
+    } catch(e) {
+      pesoGuardado = false;
+      console.error('Error guardando peso:', e.message || e);
+    }
+    if (!pesoGuardado) {
+      alert(is_es ? 'No se pudo guardar tu peso. Intenta de nuevo.' : 'Could not save your weight. Please try again.');
+    }
     setUser(prev => ({
       ...prev,
       peso: nuevoPeso,
@@ -425,9 +436,20 @@ export default function Dashboard() {
       hora_comida: horaComida,
       hora_cena: horaCena,
     };
+    let yoGuardado = true;
     try {
-      await supabase.from('users').update(updates).eq('id', user.id);
-    } catch(e) {}
+      const { error } = await supabase.from('users').update(updates).eq('id', user.id);
+      if (error) {
+        yoGuardado = false;
+        console.error('Error guardando perfil (Yo):', error.message);
+      }
+    } catch(e) {
+      yoGuardado = false;
+      console.error('Error guardando perfil (Yo):', e.message || e);
+    }
+    if (!yoGuardado) {
+      alert(user?.lang === 'es' ? 'No se pudo guardar tu perfil. Intenta de nuevo.' : 'Could not save your profile. Please try again.');
+    }
     setUser(prev => ({
       ...prev,
       nombre: yoNombre,
