@@ -371,25 +371,34 @@ export function getLecturaDelDia({ nombre, objetivo, sintoma, is_es, diasRegistr
   const d = { nombre: nombre || (is_es ? 'Hola' : 'Hi'), is_es, diasRegistrados, racha, objetivo: claveObjetivo };
   const reconocimiento = estadoHoy && RECONOCIMIENTO_ESTADO[estadoHoy] ? RECONOCIMIENTO_ESTADO[estadoHoy][is_es ? 'es' : 'en'] + ' ' : '';
 
+  // Flecha corta desde el consejo de hoy hacia el programa semanal correspondiente
+  // (el semanal sigue atado al objetivo, esto solo enlaza a él desde el consejo diario).
+  const ENLACE_SEMANAL = {
+    nutricion: { link: '/lumera?tab=nutrition', linkLabel: is_es ? 'Ver menú semanal →' : 'See weekly menu →' },
+    movimiento: { link: '/lumera?tab=exercise', linkLabel: is_es ? 'Ver ejercicio semanal →' : 'See weekly exercise →' },
+  };
+
   const plan = entrada.plan(d).map(item => {
-    if (item.tipo !== 'nutricion') return item;
+    const enlace = ENLACE_SEMANAL[item.tipo] || {};
+
+    if (item.tipo !== 'nutricion') return { ...item, ...enlace };
 
     // Prioridad: una condición médica real (si aplica) reemplaza la acción de nutrición.
     const clavesCondicion = normalizarCondiciones(condiciones);
     const condicionAplicable = ORDEN_CONDICIONES.find(c => clavesCondicion.includes(c));
     if (condicionAplicable) {
       const ad = ADAPTACION_CONDICION[condicionAplicable][is_es ? 'es' : 'en'];
-      return { ...item, accion: ad.accion, porque: ad.porque, etiqueta: ad.etiqueta };
+      return { ...item, ...enlace, accion: ad.accion, porque: ad.porque, etiqueta: ad.etiqueta };
     }
 
     // Si no hay condición, ajustamos por restricción alimentaria solo si el texto entra en conflicto.
     const claveRestriccion = normalizarRestriccion(restricciones);
     if (claveRestriccion) {
       const ajuste = ajustarPorRestriccion(item.accion, claveRestriccion, is_es);
-      if (ajuste) return { ...item, accion: ajuste.accion, etiqueta: ajuste.etiqueta };
+      if (ajuste) return { ...item, ...enlace, accion: ajuste.accion, etiqueta: ajuste.etiqueta };
     }
 
-    return item;
+    return { ...item, ...enlace };
   });
 
   return {
