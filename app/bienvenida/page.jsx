@@ -247,7 +247,7 @@ function BienvenidaInner() {
       const objetivoParam = params.get('objetivo') || '';
       const condicionesArray = (params.get('condiciones') || '').split('|').filter(Boolean);
 
-      await supabase.from('users').upsert({
+      const { error: upsertError } = await supabase.from('users').upsert({
         id: userId,
         email,
         profile_name: nombre,
@@ -272,6 +272,17 @@ function BienvenidaInner() {
         language: lang,
         updated_at: new Date().toISOString()
       });
+
+      if (upsertError) {
+        // No navegar con un perfil a medias: antes esto fallaba en silencio y la
+        // usuaria terminaba en /dashboard con la cuenta vacía, sin saber por qué.
+        console.error('Error guardando perfil en /bienvenida:', upsertError.message);
+        setError(is_es
+          ? 'No pudimos guardar tu perfil. Por favor intenta de nuevo o escríbenos si el problema continúa.'
+          : 'We could not save your profile. Please try again or contact us if this keeps happening.');
+        setLoading(false);
+        return;
+      }
     }
 
     setLoading(false);
