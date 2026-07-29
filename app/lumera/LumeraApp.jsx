@@ -4388,7 +4388,7 @@ query = query.eq('region', region.toUpperCase());
                 };
 
                 return (
-                    <div className="pb-32 space-y-8" key={`nutrition-${language}`} style={{position: 'relative'}}>
+                    <div className="pb-32 space-y-8" key={`nutrition-${language}`} style={{position: 'relative', background: darkMode ? 'transparent' : 'linear-gradient(180deg,#fdf8f3,#fdf4ee)', minHeight: '100vh'}}>
                         {/* HEADER NUTRICIÓN */}
                         <div style={{marginBottom:'0.5rem'}}>
                             <h1 style={{fontFamily:"'Cormorant',serif",fontSize:'2.2rem',fontWeight:400,color:darkMode?'#fdf8f3':'#1c1917',lineHeight:1.2,marginBottom:'0.35rem'}}>
@@ -5224,7 +5224,7 @@ query = query.eq('region', region.toUpperCase());
                 const exercises = getFiltered();
 
                 return (
-                    <div className="pb-32 space-y-8" key={`exercise-${language}`} style={{position: 'relative'}}>
+                    <div className="pb-32 space-y-8" key={`exercise-${language}`} style={{position: 'relative', background: darkMode ? 'transparent' : 'linear-gradient(180deg,#fdf8f3,#fdf4ee)', minHeight: '100vh'}}>
                         <video autoPlay loop muted playsInline src="/videos/ejercicio.mp4"
                             style={{position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', zIndex: 0, pointerEvents: 'none', opacity: 0.18}} />
                         <div>
