@@ -319,6 +319,11 @@ export default function Dashboard() {
   const [yoSintoma, setYoSintoma] = useState('');
   const [guardandoYo, setGuardandoYo] = useState(false);
   const [recursosVisibleYo, setRecursosVisibleYo] = useState(false);
+  const [misRecordatorios, setMisRecordatorios] = useState([]);
+  const [nuevoRecordatorioCategoria, setNuevoRecordatorioCategoria] = useState('cita');
+  const [nuevoRecordatorioTexto, setNuevoRecordatorioTexto] = useState('');
+  const [nuevoRecordatorioFecha, setNuevoRecordatorioFecha] = useState('');
+  const [guardandoRecordatorioNuevo, setGuardandoRecordatorioNuevo] = useState(false);
   const [lumiChatInput, setLumiChatInput] = useState('');
   const [lumiChatMessages, setLumiChatMessages] = useState([]);
   const [lumiChatLoading, setLumiChatLoading] = useState(false);
@@ -433,11 +438,52 @@ export default function Dashboard() {
     setMetaInput('');
   };
 
-  const abrirYo = () => {
+  const abrirYo = async () => {
     setYoNombre(user?.nombre || '');
     setYoObjetivo(user?.objetivo || '');
     setYoSintoma(user?.sintoma || '');
     setShowYoModal(true);
+    const { data, error } = await supabase
+      .from('custom_reminders')
+      .select('*')
+      .eq('user_id', user.id)
+      .is('sent_at', null)
+      .order('remind_at', { ascending: true });
+    if (error) {
+      console.error('Error cargando recordatorios:', error.message);
+    } else {
+      setMisRecordatorios(data || []);
+    }
+  };
+
+  const crearRecordatorio = async () => {
+    if (!nuevoRecordatorioTexto.trim() || !nuevoRecordatorioFecha) return;
+    setGuardandoRecordatorioNuevo(true);
+    const { data, error } = await supabase
+      .from('custom_reminders')
+      .insert({
+        user_id: user.id,
+        categoria: nuevoRecordatorioCategoria,
+        texto: nuevoRecordatorioTexto.trim(),
+        remind_at: new Date(nuevoRecordatorioFecha).toISOString(),
+      })
+      .select()
+      .single();
+    if (error) {
+      console.error('Error creando recordatorio:', error.message);
+      alert(is_es ? 'No pudimos guardar el recordatorio. Intenta de nuevo.' : 'We could not save the reminder. Please try again.');
+    } else {
+      setMisRecordatorios(prev => [...prev, data].sort((a, b) => new Date(a.remind_at) - new Date(b.remind_at)));
+      setNuevoRecordatorioTexto('');
+      setNuevoRecordatorioFecha('');
+    }
+    setGuardandoRecordatorioNuevo(false);
+  };
+
+  const borrarRecordatorio = async (id) => {
+    setMisRecordatorios(prev => prev.filter(r => r.id !== id));
+    const { error } = await supabase.from('custom_reminders').delete().eq('id', id);
+    if (error) console.error('Error borrando recordatorio:', error.message);
   };
 
   const guardarYo = async () => {
@@ -1104,6 +1150,53 @@ export default function Dashboard() {
 
                     <button onClick={guardarYo} disabled={guardandoYo} style={{width:'100%',background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer',marginTop:'0.4rem'}}>
                       {guardandoYo ? (is_es?'Guardando...':'Saving...') : (is_es ? 'Guardar cambios' : 'Save changes')}
+                    </button>
+                  </div>
+
+                  {/* Recordatorios a demanda: comida, bebida, ejercicio o cita importante */}
+                  <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem'}}>
+                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
+                      {is_es ? 'Tus recordatorios' : 'Your reminders'}
+                    </div>
+
+                    {misRecordatorios.length > 0 && (
+                      <div style={{display:'flex',flexDirection:'column',gap:'0.5rem',marginBottom:'1rem'}}>
+                        {misRecordatorios.map(r => (
+                          <div key={r.id} style={{display:'flex',justifyContent:'space-between',alignItems:'center',background:'#FAF7F1',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'0.75rem',padding:'0.6rem 0.85rem'}}>
+                            <div>
+                              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',color:'#0D3D3D',fontWeight:600}}>
+                                {{comida:'🍽',bebida:'💧',ejercicio:'🏃‍♀️',cita:'📅'}[r.categoria]} {r.texto}
+                              </div>
+                              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',color:'rgba(13,61,61,0.45)'}}>
+                                {new Date(r.remind_at).toLocaleString(is_es ? 'es-ES' : 'en-US', { dateStyle: 'medium', timeStyle: 'short' })}
+                              </div>
+                            </div>
+                            <button onClick={()=>borrarRecordatorio(r.id)} style={{background:'none',border:'none',color:'rgba(13,61,61,0.35)',fontSize:'1rem',cursor:'pointer',padding:'0.2rem 0.4rem'}} aria-label={is_es?'Borrar recordatorio':'Delete reminder'}>✕</button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    <div style={{display:'flex',gap:'0.5rem',marginBottom:'0.6rem'}}>
+                      {[
+                        {k:'comida',es:'Comida',en:'Food',icon:'🍽'},
+                        {k:'bebida',es:'Bebida',en:'Drink',icon:'💧'},
+                        {k:'ejercicio',es:'Ejercicio',en:'Exercise',icon:'🏃‍♀️'},
+                        {k:'cita',es:'Cita',en:'Appointment',icon:'📅'},
+                      ].map(op => (
+                        <button key={op.k} onClick={()=>setNuevoRecordatorioCategoria(op.k)} style={{flex:1,padding:'0.5rem 0.3rem',borderRadius:'0.6rem',border:'1.5px solid '+(nuevoRecordatorioCategoria===op.k?'#C9935A':'rgba(201,147,90,0.25)'),background:nuevoRecordatorioCategoria===op.k?'rgba(201,147,90,0.12)':'white',cursor:'pointer',fontFamily:'Montserrat,sans-serif',fontSize:'0.68rem',color:'#0D3D3D',fontWeight:nuevoRecordatorioCategoria===op.k?700:500,textAlign:'center'}}>
+                          <div>{op.icon}</div>
+                          {is_es?op.es:op.en}
+                        </button>
+                      ))}
+                    </div>
+
+                    <input type="text" value={nuevoRecordatorioTexto} onChange={e=>setNuevoRecordatorioTexto(e.target.value)} placeholder={is_es ? '¿Qué quieres que te recuerde?' : 'What do you want me to remind you?'} style={{width:'100%',padding:'0.6rem',borderRadius:'0.6rem',border:'1px solid rgba(201,147,90,0.3)',marginBottom:'0.6rem',fontSize:'0.9rem'}}/>
+
+                    <input type="datetime-local" value={nuevoRecordatorioFecha} onChange={e=>setNuevoRecordatorioFecha(e.target.value)} style={{width:'100%',padding:'0.6rem',borderRadius:'0.6rem',border:'1px solid rgba(201,147,90,0.3)',marginBottom:'0.6rem',fontSize:'0.9rem',background:'white'}}/>
+
+                    <button onClick={crearRecordatorio} disabled={guardandoRecordatorioNuevo || !nuevoRecordatorioTexto.trim() || !nuevoRecordatorioFecha} style={{width:'100%',background:(!nuevoRecordatorioTexto.trim() || !nuevoRecordatorioFecha)?'rgba(201,147,90,0.4)':'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer'}}>
+                      {guardandoRecordatorioNuevo ? (is_es?'Guardando...':'Saving...') : (is_es ? 'Crear recordatorio' : 'Create reminder')}
                     </button>
                   </div>
 
