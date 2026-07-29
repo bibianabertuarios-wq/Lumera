@@ -838,9 +838,12 @@ export default function Dashboard() {
             <span onClick={()=>{setShowLumiChat(true); if(lumiChatMessages.length===0) setLumiChatMessages([{role:'assistant', content: lumiMsg}]);}} style={{display:'block',marginBottom:'0.6rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',color:'#C9935A',fontWeight:600,cursor:'pointer'}}>
               {is_es ? 'Pregúntame tus dudas →' : 'Ask me anything →'}
             </span>
-            <a href="/lumera?tab=symptoms" style={{display:'block',marginTop:'-0.2rem',marginBottom:'1.1rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(255,255,255,0.4)',textDecoration:'none'}}>
+            <a href="/lumera?tab=symptoms" style={{display:'block',marginTop:'-0.2rem',marginBottom:'0.4rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(255,255,255,0.4)',textDecoration:'none'}}>
               {is_es ? 'Registro detallado de síntomas →' : 'Detailed symptom log →'}
             </a>
+            <span onClick={abrirYo} role="button" style={{display:'block',marginBottom:'1.1rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(255,255,255,0.4)',cursor:'pointer'}}>
+              {is_es ? 'Tus recordatorios →' : 'Your reminders →'}
+            </span>
 
           </div>
 
