@@ -4346,7 +4346,7 @@ query = query.eq('region', region.toUpperCase());
                         <div style={{display:'flex',flexDirection:'column',gap:'0.75rem',marginBottom:'1.5rem'}}>
                         <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
                             <summary style={{listStyle:'none',cursor:'pointer'}}>
-                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
+                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(255,255,255,0.92))'}}>
                                     <img src='/images/nutri_huevo.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Tengo tiempo y ganas de cocinar':'I have time and feel like cooking'}</p>
@@ -4664,7 +4664,7 @@ query = query.eq('region', region.toUpperCase());
                         </details>
                         <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
                             <summary style={{listStyle:'none',cursor:'pointer'}}>
-                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
+                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(255,255,255,0.92))'}}>
                                     <img src='/images/nutri_reloj.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Sin tiempo — cocina el domingo':'No time — cook on Sunday'}</p>
@@ -4689,7 +4689,7 @@ query = query.eq('region', region.toUpperCase());
                         </details>
                         <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
                             <summary style={{listStyle:'none',cursor:'pointer'}}>
-                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
+                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(255,255,255,0.92))'}}>
                                     <img src='/images/nutri_chocolate.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Los Irresistibles':'The Irresistibles'}</p>
@@ -4699,7 +4699,7 @@ query = query.eq('region', region.toUpperCase());
                             </summary>
                             <div style={{padding:'1.25rem 1.5rem'}}>
                                 {[{icon:'🍫',es:'Mousse chocolate negro',en:'Dark chocolate mousse',cal:'180 kcal',glp:3,p_es:'200g choc 85% + 2 claras + frambuesas. Enfía 2h.',p_en:'200g 85% choc + 2 whites + raspberries. Chill 2h.',w_es:'Flavonoides activan GLP-1 en 30 min.',w_en:'Flavonoids activate GLP-1 in 30 min.'},{icon:'🍨',es:'Helado yogur griego',en:'Greek yogurt ice cream',cal:'120 kcal',glp:2,p_es:'Yogur griego + miel + nueces. Congela 4h.',p_en:'Greek yogurt + honey + walnuts. Freeze 4h.',w_es:'Proteína + probióticos = más GLP-1.',w_en:'Protein + probiotics = more GLP-1.'},{icon:'🟤',es:'Brownie alubias negras',en:'Black bean brownie',cal:'160 kcal',glp:3,p_es:'1 bote alubias + 3 huevos + cacao + miel. 20min 180°.',p_en:'1 tin beans + 3 eggs + cocoa + honey. 20min 180°.',w_es:'Triple: proteína + fibra + flavonoides.',w_en:'Triple: protein + fibre + flavonoids.'},{icon:'🫐',es:'Bowl arándanos',en:'Blueberry bowl',cal:'210 kcal',glp:2,p_es:'Arándanos + granola + yogur + chía + miel.',p_en:'Blueberries + granola + yogurt + chia + honey.',w_es:'Antioxidantes reducen inflamación que bloquea GLP-1.',w_en:'Antioxidants reduce inflammation blocking GLP-1.'},{icon:'🟡',es:'Tarta dátil sin horno',en:'No-bake date tart',cal:'140 kcal',glp:2,p_es:'12 dátiles + cacao + almendras. Tritura y enfía 1h.',p_en:'12 dates + cocoa + almonds. Blend and chill 1h.',w_es:'Fibra del dátil = GLP-1 activo horas.',w_en:'Date fibre = GLP-1 active for hours.'}].map((r,i)=>(
-                                    <div key={i} style={{borderRadius:'0.875rem',padding:'1rem',marginBottom:'0.75rem',background:darkMode?'rgba(255,255,255,0.04)':'rgba(253,248,243,0.8)',border:'1px solid rgba(201,147,90,0.15)'}}>
+                                    <div key={i} style={{borderRadius:'0.875rem',padding:'1rem',marginBottom:'0.75rem',background:darkMode?'rgba(255,255,255,0.04)':'rgba(255,255,255,0.92)',border:'1px solid rgba(201,147,90,0.3)'}}>
                                         <div style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'0.5rem'}}>
                                             <span style={{fontSize:'1.5rem'}}>{r.icon}</span>
                                             <div style={{flex:1}}>
@@ -4718,7 +4718,7 @@ query = query.eq('region', region.toUpperCase());
                         </details>
                         <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
                             <summary style={{listStyle:'none',cursor:'pointer'}}>
-                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
+                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(255,255,255,0.92))'}}>
                                     <img src='/images/nutri_lista.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Voy de compras':'Shopping list'}</p>
@@ -4742,7 +4742,7 @@ query = query.eq('region', region.toUpperCase());
                         </details>
                         <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
                             <summary style={{listStyle:'none',cursor:'pointer'}}>
-                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
+                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(255,255,255,0.92))'}}>
                                     <img src='/images/nutri_cerebro.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Aprendiendo':'Learning'}</p>
@@ -4752,7 +4752,7 @@ query = query.eq('region', region.toUpperCase());
                             </summary>
                             <div style={{padding:'1.25rem 1.5rem'}}>
                                 {[{term:'GLP-1',icon:'🔬',color:'#C4A882',d_es:'Tu hormona del apetito natural.',d_en:'Your natural appetite hormone.',x_es:'Cuando está alta: te sacias más rápido, menos antojos, mejor metabolismo. Ozempic la imita artificialmente. Tú puedes activarla con comida real.',x_en:'When high: you feel full faster, fewer cravings, better metabolism. Ozempic mimics it artificially. You can activate it with real food.'},{term:'IMC',icon:'📊',color:'#B8997A',d_es:'Índice de Masa Corporal. Una referencia, no un juicio.',d_en:'Body Mass Index. A reference, not a judgement.',x_es:'En la transición hormonal puede subir aunque comas igual: el estrógeno bajo redistribuye la grasa. No es tu fracaso, es biología.',x_en:'During hormonal transition it can rise even eating the same: low oestrogen redistributes fat. Not your failure, it is biology.'},{term:'TDEE',icon:'⚡',color:'#C4A882',d_es:'Las calorías que tu cuerpo necesita cada día.',d_en:'The calories your body needs each day.',x_es:'Comer muy por debajo sube el cortisol y baja el metabolismo. Tu menú está calibrado a tu TDEE.',x_en:'Eating far below raises cortisol and slows metabolism. Your menu is calibrated to your TDEE.'},{term:'Cortisol',icon:'😤',color:'#78716c',d_es:'La hormona del estrés. El enemigo del GLP-1.',d_en:'The stress hormone. The enemy of GLP-1.',x_es:'Cuando sube bloquea el GLP-1 y almacena grasa en la cintura. Dormir bien y no saltarse comidas es tan importante como qué comes.',x_en:'When it rises it blocks GLP-1 and stores fat around the waist. Sleeping well and not skipping meals is as important as what you eat.'}].map((item,i)=>(
-                                    <div key={i} style={{borderRadius:'0.875rem',padding:'1rem',marginBottom:'0.75rem',background:darkMode?'rgba(255,255,255,0.04)':'rgba(253,248,243,0.8)',border:'1px solid rgba(201,147,90,0.15)'}}>
+                                    <div key={i} style={{borderRadius:'0.875rem',padding:'1rem',marginBottom:'0.75rem',background:darkMode?'rgba(255,255,255,0.04)':'rgba(255,255,255,0.92)',border:'1px solid rgba(201,147,90,0.3)'}}>
                                         <div style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'0.5rem'}}>
                                             <span style={{fontSize:'1.4rem'}}>{item.icon}</span>
                                             <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.2rem',fontWeight:700,color:item.color,margin:0}}>{item.term}</p>
@@ -4767,7 +4767,7 @@ query = query.eq('region', region.toUpperCase());
                         {/* MI PROGRESO */}
                         <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white',marginTop:'1.5rem'}}>
                             <summary style={{listStyle:'none',cursor:'pointer'}}>
-                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
+                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(255,255,255,0.92))'}}>
                                     <img src='/images/nutri_progreso.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Mis datos metabólicos':'My metabolic data'}</p>
@@ -5113,7 +5113,7 @@ query = query.eq('region', region.toUpperCase());
                             <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{objectives[exerciseGoal]}</p>
                         </div>
 
-                        <div style={{background:darkMode?'rgba(201,147,90,0.08)':'rgba(253,248,243,0.95)',borderRadius:'1.1rem',padding:'1rem 1.25rem',borderLeft:'3px solid #C4A882'}}>
+                        <div style={{background:darkMode?'rgba(201,147,90,0.08)':'rgba(255,255,255,0.95)',borderRadius:'1.1rem',padding:'1rem 1.25rem',borderLeft:'3px solid #C4A882'}}>
                             <div style={{display:'flex',alignItems:'flex-start',gap:'0.75rem'}}>
                                 <img src="/images/lumi.png" style={{width:'28px',height:'28px',borderRadius:'50%',objectFit:'cover',flexShrink:0}} alt="LUMI" />
                                 <p style={{fontSize:'0.88rem',color:darkMode?'#e8d5c0':'#57534e',fontStyle:'italic',lineHeight:1.6}}>
@@ -5232,7 +5232,7 @@ query = query.eq('region', region.toUpperCase());
 
                         {/* NUDGE FREE → PREMIUM */}
                         {getUserTier() === 'free' && (
-                            <div style={{background:darkMode?'rgba(201,147,90,0.1)':'rgba(253,248,243,0.95)',borderRadius:'1.1rem',padding:'1rem 1.25rem',border:'1px solid rgba(201,147,90,0.25)',display:'flex',alignItems:'flex-start',gap:'0.75rem'}}>
+                            <div style={{background:darkMode?'rgba(201,147,90,0.1)':'rgba(255,255,255,0.95)',borderRadius:'1.1rem',padding:'1rem 1.25rem',border:'1px solid rgba(201,147,90,0.25)',display:'flex',alignItems:'flex-start',gap:'0.75rem'}}>
                                 <span style={{color:'#C4A882',fontSize:'1.1rem',flexShrink:0}}>✦</span>
                                 <div>
                                     <p style={{fontSize:'0.85rem',fontWeight:600,color:darkMode?'#e8d5c0':'#8A7055',marginBottom:'0.25rem'}}>
@@ -5249,7 +5249,7 @@ query = query.eq('region', region.toUpperCase());
 
                         <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white'}}>
                             <summary style={{listStyle:'none',cursor:'pointer'}}>
-                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(253,248,243,0.8))'}}>
+                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(255,255,255,0.92))'}}>
                                     <img src='/images/ejer_fuerza.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
                                     <div style={{flex:1}}>
                                         <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Más ejercicios por objetivo':'More exercises by goal'}</p>
