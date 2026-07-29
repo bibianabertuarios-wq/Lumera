@@ -3,7 +3,7 @@ import React from 'react'
 import PelvicFloorChallenge from "../components/PelvicFloorChallenge";
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@supabase/supabase-js'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import './lumera.css'
 
 // hooks imported above
@@ -516,21 +516,6 @@ import './lumera.css'
             const [communityPosts, setCommunityPosts] = useState([]);
             const [loadingPosts, setLoadingPosts] = useState(true);
 
-            // REFS PARA GRÁFICOS
-            const chartRefSleep = useRef(null);
-            const chartRefEnergy = useRef(null);
-            const chartRefMood = useRef(null);
-            const chartRefHotFlashes = useRef(null);
-            const chartRefPeriod = useRef(null);
-
-            const chartsRef = useRef({
-                sleep: null,
-                energy: null,
-                mood: null,
-                hotFlashes: null,
-                period: null
-            });
-
             const t = {
                 es: {
                     app_name: 'Lumera',
@@ -929,110 +914,6 @@ import './lumera.css'
                 // Mostrar banner solo si no es premium
                 setShowTrialBanner(!['active','paid'].includes(currentUser.subscription_status));
             }, [currentUser]);
-
-            // GRÁFICOS DE SÍNTOMAS
-            useEffect(() => {
-                if (symptoms.length === 0) return;
-
-                const labels = symptoms.map(s => {
-                    const d = new Date(s.symptom_date || s.date);
-                    return d.toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US', { month: 'short', day: 'numeric' });
-                }).slice(-14);
-                const sleepData = symptoms.map(s => s.sleep || 0).slice(-14);
-                const energyData = symptoms.map(s => s.energy || 0).slice(-14);
-                const moodData = symptoms.map(s => s.mood || 0).slice(-14);
-                const hotFlashesData = symptoms.map(s => s.hot_flashes || s.hotFlashes || 0).slice(-14);
-
-                const chartOptions = {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: { legend: { display: true } },
-                    scales: { y: { beginAtZero: true, max: 10 } }
-                };
-
-                setTimeout(() => {
-                    if (chartRefSleep.current && window.Chart) {
-                        if (chartsRef.current.sleep) chartsRef.current.sleep.destroy();
-                        chartsRef.current.sleep = new window.Chart(chartRefSleep.current, {
-                            type: 'line',
-                            data: {
-                                labels: labels,
-                                datasets: [{ label: language === 'es' ? 'Sueño' : 'Sleep', data: sleepData, borderColor: '#C4A882', backgroundColor: 'rgba(201,147,90,0.1)', borderWidth: 2, fill: true, tension: 0.4 }]
-                            },
-                            options: chartOptions
-                        });
-                    }
-
-                    if (chartRefEnergy.current && window.Chart) {
-                        if (chartsRef.current.energy) chartsRef.current.energy.destroy();
-                        chartsRef.current.energy = new window.Chart(chartRefEnergy.current, {
-                            type: 'line',
-                            data: {
-                                labels: labels,
-                                datasets: [{ label: language === 'es' ? 'Energía' : 'Energy', data: energyData, borderColor: '#B8997A', backgroundColor: 'rgba(184,115,51,0.1)', borderWidth: 2, fill: true, tension: 0.4 }]
-                            },
-                            options: chartOptions
-                        });
-                    }
-
-                    if (chartRefMood.current && window.Chart) {
-                        if (chartsRef.current.mood) chartsRef.current.mood.destroy();
-                        chartsRef.current.mood = new window.Chart(chartRefMood.current, {
-                            type: 'line',
-                            data: {
-                                labels: labels,
-                                datasets: [{ label: language === 'es' ? 'Ánimo' : 'Mood', data: moodData, borderColor: '#06b6d4', backgroundColor: 'rgba(6,182,212,0.1)', borderWidth: 2, fill: true, tension: 0.4 }]
-                            },
-                            options: chartOptions
-                        });
-                    }
-
-                    if (chartRefHotFlashes.current && window.Chart) {
-                        if (chartsRef.current.hotFlashes) chartsRef.current.hotFlashes.destroy();
-                        chartsRef.current.hotFlashes = new window.Chart(chartRefHotFlashes.current, {
-                            type: 'bar',
-                            data: {
-                                labels: labels,
-                                datasets: [{ label: language === 'es' ? 'Sofocos' : 'Hot Flashes', data: hotFlashesData, backgroundColor: '#f97316', borderColor: '#ea580c', borderWidth: 1 }]
-                            },
-                            options: chartOptions
-                        });
-                    }
-                }, 100);
-            }, [symptoms, language]);
-
-            // GRÁFICOS DE PERÍODO
-            useEffect(() => {
-                if (periodLog.length === 0) return;
-
-                const labels = periodLog.map(p => p.date).slice(-12);
-                const intensityData = periodLog.map(p => p.intensity).slice(-12);
-                const durationData = periodLog.map(p => p.duration).slice(-12);
-
-                const chartOptions = {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: { legend: { display: true } },
-                    scales: { y: { beginAtZero: true } }
-                };
-
-                setTimeout(() => {
-                    if (chartRefPeriod.current && window.Chart) {
-                        if (chartsRef.current.period) chartsRef.current.period.destroy();
-                        chartsRef.current.period = new window.Chart(chartRefPeriod.current, {
-                            type: 'bar',
-                            data: {
-                                labels: labels,
-                                datasets: [
-                                    { label: language === 'es' ? 'Intensidad' : 'Intensity', data: intensityData, backgroundColor: '#C4A882', borderColor: '#B8997A', borderWidth: 1 },
-                                    { label: language === 'es' ? 'Duración (días)' : 'Duration (days)', data: durationData, backgroundColor: '#f97316', borderColor: '#c2410c', borderWidth: 1 }
-                                ]
-                            },
-                            options: chartOptions
-                        });
-                    }
-                }, 100);
-            }, [periodLog, language]);
 
             // Helper: parsear health_conditions sea cual sea el formato (array, string JSON, CSV)
             const parseHealthConditions = (conditions) => {
@@ -5582,27 +5463,63 @@ query = query.eq('region', region.toUpperCase());
                             </button>
                         </div>
 
+                        {symptoms.length > 0 && (() => {
+                            const trendData = symptoms.slice(-14).map(s => ({
+                                label: new Date(s.symptom_date || s.date).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US', { month: 'short', day: 'numeric' }),
+                                Sueño: s.sleep || 0,
+                                Energía: s.energy || 0,
+                                Ánimo: s.mood || 0,
+                                Sofocos: s.hot_flashes || s.hotFlashes || 0,
+                            }));
+                            const ejeXProps = { dataKey: 'label', tick: { fontSize: 11, fill: darkMode ? '#9ca3af' : '#6b7280' }, axisLine: false, tickLine: false };
+                            const ejeYProps = { domain: [0, 10], tick: { fontSize: 10, fill: darkMode ? '#9ca3af' : '#6b7280' }, axisLine: false, tickLine: false, width: 24 };
+                            const rejilla = <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'} />;
+                            return (
+                                <>
+                                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                                        <h3 className="font-semibold text-lg mb-4">📈 {language === 'es' ? 'Tendencia de Sueño' : 'Sleep Trend'}</h3>
+                                        <ResponsiveContainer width="100%" height={220}>
+                                            <LineChart data={trendData}>
+                                                {rejilla}<XAxis {...ejeXProps} /><YAxis {...ejeYProps} /><Tooltip /><Legend wrapperStyle={{fontSize:'0.75rem'}} />
+                                                <Line type="monotone" dataKey="Sueño" name={language === 'es' ? 'Sueño' : 'Sleep'} stroke="#C4A882" strokeWidth={2} dot={{r:3}} />
+                                            </LineChart>
+                                        </ResponsiveContainer>
+                                    </div>
+
+                                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                                        <h3 className="font-semibold text-lg mb-4">📈 {language === 'es' ? 'Tendencia de Energía' : 'Energy Trend'}</h3>
+                                        <ResponsiveContainer width="100%" height={220}>
+                                            <LineChart data={trendData}>
+                                                {rejilla}<XAxis {...ejeXProps} /><YAxis {...ejeYProps} /><Tooltip /><Legend wrapperStyle={{fontSize:'0.75rem'}} />
+                                                <Line type="monotone" dataKey="Energía" name={language === 'es' ? 'Energía' : 'Energy'} stroke="#B8997A" strokeWidth={2} dot={{r:3}} />
+                                            </LineChart>
+                                        </ResponsiveContainer>
+                                    </div>
+
+                                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                                        <h3 className="font-semibold text-lg mb-4">📈 {language === 'es' ? 'Tendencia de Ánimo' : 'Mood Trend'}</h3>
+                                        <ResponsiveContainer width="100%" height={220}>
+                                            <LineChart data={trendData}>
+                                                {rejilla}<XAxis {...ejeXProps} /><YAxis {...ejeYProps} /><Tooltip /><Legend wrapperStyle={{fontSize:'0.75rem'}} />
+                                                <Line type="monotone" dataKey="Ánimo" name={language === 'es' ? 'Ánimo' : 'Mood'} stroke="#06b6d4" strokeWidth={2} dot={{r:3}} />
+                                            </LineChart>
+                                        </ResponsiveContainer>
+                                    </div>
+
+                                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
+                                        <h3 className="font-semibold text-lg mb-4">📈 {language === 'es' ? 'Tendencia de Sofocos' : 'Hot Flashes Trend'}</h3>
+                                        <ResponsiveContainer width="100%" height={220}>
+                                            <BarChart data={trendData}>
+                                                {rejilla}<XAxis {...ejeXProps} /><YAxis {...ejeYProps} /><Tooltip /><Legend wrapperStyle={{fontSize:'0.75rem'}} />
+                                                <Bar dataKey="Sofocos" name={language === 'es' ? 'Sofocos' : 'Hot Flashes'} fill="#f97316" />
+                                            </BarChart>
+                                        </ResponsiveContainer>
+                                    </div>
+                                </>
+                            );
+                        })()}
                         {symptoms.length > 0 && (
                             <>
-                                <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
-                                    <h3 className="font-semibold text-lg mb-4">📈 {language === 'es' ? 'Tendencia de Sueño' : 'Sleep Trend'}</h3>
-                                    <canvas ref={chartRefSleep} style={{maxHeight: '300px'}}></canvas>
-                                </div>
-
-                                <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
-                                    <h3 className="font-semibold text-lg mb-4">📈 {language === 'es' ? 'Tendencia de Energía' : 'Energy Trend'}</h3>
-                                    <canvas ref={chartRefEnergy} style={{maxHeight: '300px'}}></canvas>
-                                </div>
-
-                                <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
-                                    <h3 className="font-semibold text-lg mb-4">📈 {language === 'es' ? 'Tendencia de Ánimo' : 'Mood Trend'}</h3>
-                                    <canvas ref={chartRefMood} style={{maxHeight: '300px'}}></canvas>
-                                </div>
-
-                                <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
-                                    <h3 className="font-semibold text-lg mb-4">📈 {language === 'es' ? 'Tendencia de Sofocos' : 'Hot Flashes Trend'}</h3>
-                                    <canvas ref={chartRefHotFlashes} style={{maxHeight: '300px'}}></canvas>
-                                </div>
 
                                 <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
                                     <div className="flex justify-between items-center mb-4">
@@ -5877,7 +5794,16 @@ query = query.eq('region', region.toUpperCase());
                                             📥 {language === 'es' ? 'Descargar PDF' : 'Download PDF'}
                                         </button>
                                     </div>
-                                    <canvas ref={chartRefPeriod} style={{maxHeight: '300px'}}></canvas>
+                                    <ResponsiveContainer width="100%" height={220}>
+                                        <BarChart data={periodLog.slice(-12).map(p => ({ label: p.date, Intensidad: p.intensity, 'Duración (días)': p.duration }))}>
+                                            <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'} />
+                                            <XAxis dataKey="label" tick={{ fontSize: 11, fill: darkMode ? '#9ca3af' : '#6b7280' }} axisLine={false} tickLine={false} />
+                                            <YAxis tick={{ fontSize: 10, fill: darkMode ? '#9ca3af' : '#6b7280' }} axisLine={false} tickLine={false} width={24} />
+                                            <Tooltip /><Legend wrapperStyle={{fontSize:'0.75rem'}} />
+                                            <Bar dataKey="Intensidad" name={language === 'es' ? 'Intensidad' : 'Intensity'} fill="#C4A882" />
+                                            <Bar dataKey="Duración (días)" name={language === 'es' ? 'Duración (días)' : 'Duration (days)'} fill="#f97316" />
+                                        </BarChart>
+                                    </ResponsiveContainer>
                                 </div>
 
                                 {/* ANÁLISIS DE TENDENCIA - aparece con 3+ registros */}
