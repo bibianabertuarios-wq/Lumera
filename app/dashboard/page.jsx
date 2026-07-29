@@ -300,13 +300,10 @@ export default function Dashboard() {
   const [pwaOculto, setPwaOculto] = useState(() => { try { return localStorage.getItem('lumera_pwa_hide') === '1'; } catch(e) { return false; } });
   const [pwaInstruccionesVisibles, setPwaInstruccionesVisibles] = useState(false);
   const [calmaActiva, setCalmaActiva] = useState(false);
-  const [mostrarPuertaRecordatorios, setMostrarPuertaRecordatorios] = useState(false);
-  const [mostrarCuestionarioHorarios, setMostrarCuestionarioHorarios] = useState(false);
   // Comer a las 14:00 cae ya en la bajada del ritmo circadiano — sugerimos antes por defecto.
   const [horaDesayuno, setHoraDesayuno] = useState('08:00');
   const [horaComida, setHoraComida] = useState('13:00');
   const [horaCena, setHoraCena] = useState('20:30');
-  const [guardandoRecordatorios, setGuardandoRecordatorios] = useState(false);
   const [showMasMenu, setShowMasMenu] = useState(false);
   const [showLumiChat, setShowLumiChat] = useState(false);
   const [showPesoModal, setShowPesoModal] = useState(false);
@@ -344,16 +341,18 @@ export default function Dashboard() {
     return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)));
   };
 
-  const activarRecordatorios = async () => {
-    setGuardandoRecordatorios(true);
+  // Pide permiso de notificaciones y suscribe al usuario a push si aún no lo está.
+  // Se dispara desde donde la usuaria realmente gestiona sus recordatorios (pantalla "Yo"):
+  // al guardar sus horas de comida o al crear su primer recordatorio a demanda.
+  const activarPush = async () => {
+    if (user?.pushEnabled) return true;
     try {
       const permiso = await Notification.requestPermission();
       if (permiso !== 'granted') {
         alert(is_es
           ? 'No pudimos activar los recordatorios porque el navegador no dio permiso de notificaciones. Puedes activarlo desde los ajustes del navegador e intentarlo de nuevo.'
           : 'We could not enable reminders because the browser did not grant notification permission. You can enable it in your browser settings and try again.');
-        setGuardandoRecordatorios(false);
-        return;
+        return false;
       }
       const reg = await navigator.serviceWorker.ready;
       const vapidKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
@@ -378,23 +377,15 @@ export default function Dashboard() {
         const body = await resp.json().catch(() => ({}));
         throw new Error(body.error || 'Error guardando la suscripción de notificaciones');
       }
+      setUser(prev => ({ ...prev, pushEnabled: true }));
+      return true;
     } catch(e) {
       console.error('Error activando recordatorios:', e.message || e);
       alert(is_es
         ? 'No pudimos activar los recordatorios. Por favor intenta de nuevo en unos minutos.'
         : 'We could not enable reminders. Please try again in a few minutes.');
-      setGuardandoRecordatorios(false);
-      return;
+      return false;
     }
-    try { localStorage.setItem(`lumi_puerta_recordatorios_${user.id}`, '1'); } catch(e) {}
-    setGuardandoRecordatorios(false);
-    setMostrarCuestionarioHorarios(false);
-    setMostrarPuertaRecordatorios(false);
-  };
-
-  const rechazarRecordatorios = () => {
-    try { localStorage.setItem(`lumi_puerta_recordatorios_${user?.id}`, '1'); } catch(e) {}
-    setMostrarPuertaRecordatorios(false);
   };
 
   const guardarPeso = async () => {
@@ -459,6 +450,7 @@ export default function Dashboard() {
   const crearRecordatorio = async () => {
     if (!nuevoRecordatorioTexto.trim() || !nuevoRecordatorioFecha) return;
     setGuardandoRecordatorioNuevo(true);
+    await activarPush();
     const { data, error } = await supabase
       .from('custom_reminders')
       .insert({
@@ -517,6 +509,7 @@ export default function Dashboard() {
       sintoma: yoSintoma,
       horaDesayuno, horaComida, horaCena,
     }));
+    await activarPush();
     setGuardandoYo(false);
   };
 
@@ -566,10 +559,6 @@ export default function Dashboard() {
       horaCena: profile?.hora_cena || null,
     };
     setUser(userData);
-    try {
-      const yaRespondio = userData.pushEnabled || localStorage.getItem(`lumi_puerta_recordatorios_${session.user.id}`);
-      setMostrarPuertaRecordatorios(!yaRespondio);
-    } catch(e) {}
 
     // Cargar últimos 7 checkins
     const { data: checkins } = await supabase
@@ -838,12 +827,16 @@ export default function Dashboard() {
             <span onClick={()=>{setShowLumiChat(true); if(lumiChatMessages.length===0) setLumiChatMessages([{role:'assistant', content: lumiMsg}]);}} style={{display:'block',marginBottom:'0.6rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',color:'#C9935A',fontWeight:600,cursor:'pointer'}}>
               {is_es ? 'Pregúntame tus dudas →' : 'Ask me anything →'}
             </span>
-            <a href="/lumera?tab=symptoms" style={{display:'block',marginTop:'-0.2rem',marginBottom:'0.4rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(255,255,255,0.4)',textDecoration:'none'}}>
+            <a href="/lumera?tab=symptoms" style={{display:'block',marginTop:'-0.2rem',marginBottom:'0.9rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(255,255,255,0.4)',textDecoration:'none'}}>
               {is_es ? 'Registro detallado de síntomas →' : 'Detailed symptom log →'}
             </a>
-            <span onClick={abrirYo} role="button" style={{display:'block',marginBottom:'1.1rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(255,255,255,0.4)',cursor:'pointer'}}>
-              {is_es ? 'Tus recordatorios →' : 'Your reminders →'}
-            </span>
+
+            <div onClick={abrirYo} role="button" style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:'0.6rem',background:'rgba(201,147,90,0.12)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.9rem',padding:'0.85rem 1rem',cursor:'pointer'}}>
+              <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',fontWeight:600,color:'white',lineHeight:1.3}}>
+                {is_es ? '¿Necesitas que te recuerde tus horas o citas?' : 'Need a reminder for your times or appointments?'}
+              </span>
+              <span style={{fontSize:'1.1rem',color:'#C9935A',flexShrink:0}}>→</span>
+            </div>
 
           </div>
 
@@ -863,53 +856,6 @@ export default function Dashboard() {
                   </p>
                 );
               })()}
-
-              {mostrarPuertaRecordatorios && (
-                <div style={{background:'#FAF7F1',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1rem',padding:'1.1rem',marginBottom:'1.1rem'}}>
-                  {!mostrarCuestionarioHorarios ? (
-                    <div>
-                      <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',color:'#0D3D3D',lineHeight:1.5,marginBottom:'0.9rem'}}>
-                        {is_es
-                          ? `¿Me dejas ayudarte a alcanzar tu objetivo antes, ajustando tus horas de comida, qué comer y en qué orden?`
-                          : `Will you let me help you reach your goal sooner, by adjusting your meal times, what to eat and in what order?`}
-                      </p>
-                      <div style={{display:'flex',gap:'0.6rem'}}>
-                        <button onClick={()=>setMostrarCuestionarioHorarios(true)} style={{flex:1,background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer'}}>
-                          {is_es ? 'Sí, ayúdame' : 'Yes, help me'}
-                        </button>
-                        <button onClick={rechazarRecordatorios} style={{flex:1,background:'none',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(13,61,61,0.5)',cursor:'pointer'}}>
-                          {is_es ? 'Ahora no' : 'Not now'}
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',fontWeight:700,color:'#A06030',letterSpacing:'1px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
-                        {is_es ? '¿A qué hora sueles...' : 'What time do you usually...'}
-                      </p>
-                      {[
-                        { label: is_es ? 'Desayunar' : 'Have breakfast', val: horaDesayuno, set: setHoraDesayuno },
-                        { label: is_es ? 'Comer' : 'Have lunch', val: horaComida, set: setHoraComida,
-                          nota: is_es ? 'Te aviso 15 min antes — comer pronto te sienta mejor que a las 14h.' : "I'll remind you 15 min before — eating earlier sits better than 2pm." },
-                        { label: is_es ? 'Cenar' : 'Have dinner', val: horaCena, set: setHoraCena },
-                      ].map(({label,val,set,nota}) => (
-                        <div key={label} style={{marginBottom:'0.7rem'}}>
-                          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                            <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#0D3D3D'}}>{label}</label>
-                            <input type="time" value={val} onChange={e=>set(e.target.value)} style={{padding:'0.4rem 0.6rem',borderRadius:'0.5rem',border:'1px solid rgba(201,147,90,0.3)',fontSize:'0.85rem',background:'white'}}/>
-                          </div>
-                          {nota && (
-                            <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.72rem',color:'#A06030',margin:'0.3rem 0 0'}}>{nota}</p>
-                          )}
-                        </div>
-                      ))}
-                      <button onClick={activarRecordatorios} disabled={guardandoRecordatorios} style={{width:'100%',background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.75rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer',marginTop:'0.4rem'}}>
-                        {guardandoRecordatorios ? (is_es?'Activando...':'Activating...') : (is_es ? 'Activar mis recordatorios' : 'Activate my reminders')}
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
 
               {planLoading ? (
                 <div className="shimmer" style={{color:'rgba(13,61,61,0.4)',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',padding:'0.5rem 0'}}>
