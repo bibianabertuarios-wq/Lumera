@@ -5521,6 +5521,31 @@ query = query.eq('region', region.toUpperCase());
                                     console.error('Error guardando síntomas en Supabase:', saveError.message);
                                 }
 
+                                // El check-in rápido del dashboard (lumi_checkins: energía/ánimo/sueño 1-5 +
+                                // sintoma_hoy) ahora se alimenta también desde aquí, el registro detallado,
+                                // que es el único punto de entrada para registrar el síntoma del día.
+                                // Así el dashboard sigue mostrando el plan de hoy y las tendencias semanales
+                                // igual que antes, sin duplicar el check-in rápido en dos sitios.
+                                try {
+                                    const escalar5 = (v) => Math.max(1, Math.min(5, Math.round((v ?? 5) / 2)));
+                                    let sintomaHoyLumi = 'bien';
+                                    if ((symptomForm.brainFog || 0) > 5 || (symptomForm.memory ?? 10) < 4) sintomaHoyLumi = 'niebla mental';
+                                    else if ((symptomForm.energy ?? 10) < 4) sintomaHoyLumi = 'cansancio';
+                                    else if ((symptomForm.mood ?? 10) < 4) sintomaHoyLumi = 'regular';
+
+                                    const { error: checkinError } = await supabase.from('lumi_checkins').upsert({
+                                        user_id: currentUser.id,
+                                        fecha: symptomForm.date,
+                                        energia: escalar5(symptomForm.energy),
+                                        animo: escalar5(symptomForm.mood),
+                                        sueno: escalar5(symptomForm.sleep),
+                                        sintoma_hoy: sintomaHoyLumi,
+                                    });
+                                    if (checkinError) console.error('Error sincronizando lumi_checkins desde síntomas:', checkinError.message);
+                                } catch (e) {
+                                    console.error('Error sincronizando lumi_checkins desde síntomas:', e.message || e);
+                                }
+
                                 // Usar el record de Supabase si se guardó (tiene ambas nomenclaturas via el select)
                                 // O el form local como fallback - añadir ambas nomenclaturas para el scoring
                                 const symptomWithBothFormats = {

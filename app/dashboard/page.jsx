@@ -232,8 +232,6 @@ function AnilloVivo({ info, is_es, racha = 0, size = 150 }) {
   );
 }
 
-const ETIQUETA_ESTADO_ES = { bien:'bien', cansada:'cansada', niebla:'con niebla', regular:'regular', hinchada:'hinchada' };
-const ETIQUETA_ESTADO_EN = { bien:'good', cansada:'tired', niebla:'foggy', regular:'so-so', hinchada:'bloated' };
 
 const ICONO_TIPO_PLAN = { nutricion:'🍽', movimiento:'🚶‍♀️', interior:'🌙' };
 const LABEL_TIPO_PLAN_ES = { nutricion:'Nutrición', movimiento:'Movimiento', interior:'Momento interior' };
@@ -292,8 +290,6 @@ export default function Dashboard() {
   const [lumiLoading, setLumiLoading] = useState(false);
   const [checkinHecho, setCheckinHecho] = useState(false);
   const [checkinData, setCheckinData] = useState(null);
-  const [estadoCheckin, setEstadoCheckin] = useState(null);
-  const [mostrarPickerCompleto, setMostrarPickerCompleto] = useState(false);
   const [ultimosCheckins, setUltimosCheckins] = useState([]);
   const [ultimosSintomas, setUltimosSintomas] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -584,29 +580,6 @@ export default function Dashboard() {
     setLumiMsg(lectura);
   };
 
-  const hacerCheckin = async (estado) => {
-    if (checkinHecho) return;
-    const hoy = new Date().toISOString().split('T')[0];
-    const valores = {
-      'bien':     { energia: 4, animo: 4, sueno: 3, sintoma_hoy: 'bien' },
-      'cansada':  { energia: 2, animo: 3, sueno: 2, sintoma_hoy: 'cansancio' },
-      'niebla':   { energia: 2, animo: 2, sueno: 3, sintoma_hoy: 'niebla mental' },
-      'regular':  { energia: 3, animo: 2, sueno: 3, sintoma_hoy: 'regular' },
-      'hinchada': { energia: 3, animo: 3, sueno: 3, sintoma_hoy: 'hinchazón' },
-    };
-    const datos = valores[estado];
-    setCheckinHecho(true);
-    setCheckinData(datos);
-    setEstadoCheckin(estado);
-    await supabase.from('lumi_checkins').upsert({
-      user_id: user.id,
-      fecha: hoy,
-      ...datos
-    });
-    // Regenerar mensaje con el nuevo checkin: se antepone el reconocimiento del estado de hoy.
-    generarMensajeLumi(user, ultimosCheckins, estado);
-  };
-
   const getPromedioSemana = (campo) => {
     if (!ultimosCheckins.length) return 0;
     const vals = ultimosCheckins.filter(c => c[campo]).map(c => c[campo]);
@@ -729,7 +702,6 @@ export default function Dashboard() {
     const bonus = diasCompletadosSemana >= 7 && diasPlanCompleto >= 7 ? 1 : 0;
     return Math.min(8, diasCompletadosSemana + bonus);
   })();
-  const estadoAyer = (!checkinHecho && (ultimosCheckins || []).length >= 3 && ultimosCheckins?.[0]) ? estadoDesdeSintomaHoy(ultimosCheckins[0].sintoma_hoy) : null;
   const objLower = (user?.objetivo || '').toLowerCase();
   const esObjetivoPeso = objLower.includes('peso') || objLower.includes('weight') || objLower.includes('fuerza') || objLower.includes('muscul') || objLower.includes('strength') || objLower.includes('muscle');
   const esObjetivoSueno = objLower.includes('sue') || objLower.includes('dorm') || objLower.includes('sleep');
@@ -804,41 +776,11 @@ export default function Dashboard() {
             {!checkinHecho ? (
               <>
                 <p style={{fontSize:'0.95rem',fontStyle:'italic',color:'rgba(255,255,255,0.7)',lineHeight:1.5,marginBottom:'0.9rem'}}>
-                  {is_es ? 'Un toque y te digo qué está pasando en tu cuerpo hoy.' : "One tap and I'll tell you what's happening in your body today."}
+                  {is_es ? 'Cuéntame qué está pasando en tu cuerpo hoy y te preparo tu plan.' : "Tell me what's happening in your body today and I'll prepare your plan."}
                 </p>
-                {estadoAyer && !mostrarPickerCompleto ? (
-                  <div style={{marginBottom:'1.25rem'}}>
-                    <p style={{fontSize:'0.95rem',color:'rgba(255,255,255,0.9)',lineHeight:1.5,marginBottom:'0.75rem'}}>
-                      {is_es
-                        ? `Ayer me dijiste ${ETIQUETA_ESTADO_ES[estadoAyer]}, ¿seguimos igual?`
-                        : `Yesterday you told me ${ETIQUETA_ESTADO_EN[estadoAyer]}, are we still the same?`}
-                    </p>
-                    <div style={{display:'flex',gap:'0.6rem'}}>
-                      <button onClick={()=>hacerCheckin(estadoAyer)} style={{flex:1,background:'#C9935A',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontWeight:600,fontSize:'0.85rem',cursor:'pointer'}}>
-                        {is_es ? 'Sí, seguimos igual' : 'Yes, still the same'}
-                      </button>
-                      <button onClick={()=>setMostrarPickerCompleto(true)} style={{flex:1,background:'none',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',padding:'0.7rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(255,255,255,0.55)',cursor:'pointer'}}>
-                        {is_es ? 'Ha cambiado' : 'It changed'}
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'#C9935A',fontWeight:600,marginBottom:'0.75rem'}}>
-                      {is_es ? 'Registra tu síntoma de hoy →' : 'Log your symptom today →'}
-                    </p>
-                    <div style={{display:'flex',gap:'0.5rem',marginBottom:'1.25rem'}}>
-                      {(is_es
-                        ? [{k:'bien',l:'Bien'},{k:'cansada',l:'Cansada'},{k:'niebla',l:'Con niebla'},{k:'regular',l:'Regular'},{k:'hinchada',l:'Hinchada'}]
-                        : [{k:'bien',l:'Good'},{k:'cansada',l:'Tired'},{k:'niebla',l:'Foggy'},{k:'regular',l:'Regular'},{k:'hinchada',l:'Bloated'}]
-                      ).map(({k,l}) => (
-                        <button key={k} className="estado-btn" onClick={()=>hacerCheckin(k)}>
-                          <span style={{fontSize:'0.78rem',fontWeight:600}}>{l}</span>
-                        </button>
-                      ))}
-                    </div>
-                  </>
-                )}
+                <a href="/lumera?tab=symptoms" style={{display:'inline-flex',alignItems:'center',gap:'0.4rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#C9935A',fontWeight:600,textDecoration:'none',marginBottom:'1.25rem'}}>
+                  {is_es ? 'Registra tu síntoma de hoy →' : 'Log your symptom today →'}
+                </a>
               </>
             ) : lumiLoading ? (
               <div className="shimmer" style={{fontSize:'1rem',fontStyle:'italic',color:'rgba(255,255,255,0.4)',lineHeight:1.7}}>
