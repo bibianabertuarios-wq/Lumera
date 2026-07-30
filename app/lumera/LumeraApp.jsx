@@ -429,8 +429,6 @@ import './lumera.css'
             const [lumiMessages, setLumiMessages] = useState([]);
             const [lumiInput, setLumiInput] = useState('');
             const [lumiLoading, setLumiLoading] = useState(false);
-            const [dailyQuestions, setDailyQuestions] = useState(0);
-            const [lastQuestionDate, setLastQuestionDate] = useState(null);
 
             // MODAL PATRÓN DÍA 3
             const [showPatternModal, setShowPatternModal] = useState(false);
@@ -2981,6 +2979,9 @@ query = query.eq('region', region.toUpperCase());
             }, [showAuth]);
 
             // Auto-disparar patrón en día 3 del trial (movido aquí desde renderPremiumDashboard)
+            // Si Shula (el momento emocional del día 3) aún no se vio, dejamos que se abra ella
+            // primero — el patrón con datos + CTA se dispara al cerrarla (ver botón "Explorar un
+            // momento más" del modal Shula), para no apilar dos modales a la vez.
             useEffect(() => {
                 const trialDaysLeft = getTrialDaysLeft();
                 const isInTrial = !currentUser?.subscription_status || !['active','paid'].includes(currentUser?.subscription_status);
@@ -2989,10 +2990,15 @@ query = query.eq('region', region.toUpperCase());
                     const result = analyzePatterns(symptoms);
                     if (result && result.length > 0) {
                         setPatternResult(result);
-                        setTimeout(() => {
-                            if (getTrialDaysLeft() <= 1) setShowPatternModal(true);
+                        const hasSeenShula = currentUser?.id ? localStorage.getItem(`shula_day3_${currentUser.id}`) : true;
+                        if (hasSeenShula) {
+                            setTimeout(() => {
+                                if (getTrialDaysLeft() <= 1) setShowPatternModal(true);
+                                setPatternShown(true);
+                            }, 1500);
+                        } else {
                             setPatternShown(true);
-                        }, 1500);
+                        }
                     }
                 }
             // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -3643,18 +3649,15 @@ query = query.eq('region', region.toUpperCase());
             };
 
             // CHAT CON LUMI
-            const checkDailyLimit = () => {
+            const LUMI_LIMITE_DIARIO_FREE = 1; // tras el trial; durante trial/premium isPremium()===true y no aplica
+            const getLumiUsadasHoy = () => {
                 const today = new Date().toDateString();
-                if (lastQuestionDate !== today) {
-                    setDailyQuestions(0);
-                    setLastQuestionDate(today);
-                    return true;
-                }
-
-                const premium = isPremium();
-                if (premium) return true;
-                if (dailyQuestions >= 5) return false;
-                return true;
+                const lastDate = currentUser?.last_lumi_message_date ? new Date(currentUser.last_lumi_message_date).toDateString() : null;
+                return lastDate === today ? (currentUser?.lumi_messages_count || 0) : 0;
+            };
+            const checkDailyLimit = () => {
+                if (isPremium()) return true;
+                return getLumiUsadasHoy() < LUMI_LIMITE_DIARIO_FREE;
             };
 
             // MARCAR MENSAJES PROACTIVOS COMO LEÍDOS - NUEVO ✨
@@ -3763,9 +3766,9 @@ query = query.eq('region', region.toUpperCase());
 
                 // Verificar límite
                 if (!checkDailyLimit()) {
-                    const limitMsg = language === 'es' 
-                        ? 'Has usado tus 5 preguntas diarias. Hazte premium para preguntas ilimitadas ✦'
-                        : 'You\'ve used your 5 daily questions. Go premium for unlimited questions ✦';
+                    const limitMsg = language === 'es'
+                        ? 'Ya usé tu pregunta de hoy — mañana seguimos. Con premium no tendríamos que parar nunca ✦'
+                        : 'That was today\'s question — let\'s pick it up tomorrow. With premium, we\'d never have to pause ✦';
                     setLumiMessages([...lumiMessages, { role: 'assistant', content: limitMsg }]);
                     return;
                 }
@@ -3875,8 +3878,18 @@ query = query.eq('region', region.toUpperCase());
                         { role: 'assistant', content: assistantMessage }
                     ]);
 
-                    // Incrementar contador
-                    setDailyQuestions(dailyQuestions + 1);
+                    // Incrementar contador persistido (solo relevante para free; en trial/premium no limita)
+                    if (!isPremium()) {
+                        try {
+                            const nuevoCount = getLumiUsadasHoy() + 1;
+                            const nowIso = new Date().toISOString();
+                            setCurrentUser(prev => ({ ...prev, last_lumi_message_date: nowIso, lumi_messages_count: nuevoCount }));
+                            const { error: limitError } = await supabase.from('users').update({ last_lumi_message_date: nowIso, lumi_messages_count: nuevoCount }).eq('id', currentUser.id);
+                            if (limitError) console.error('Error guardando contador de LUMI:', limitError.message);
+                        } catch (e) {
+                            console.error('Error guardando contador de LUMI:', e.message || e);
+                        }
+                    }
 
                     // ── EXTRACCIÓN SEGURA DE PESO/ALTURA SI FALTABAN ──
                     if (!currentUser?.weight || !currentUser?.height) {
@@ -6213,8 +6226,8 @@ query = query.eq('region', region.toUpperCase());
             const renderContent = () => {
                 if (!currentUser) return renderLanding();
 
-                // Páginas premium que requieren suscripción
-                const premiumPages = ['workshops', 'community']; // nutrition y exercise tienen freemium interno
+                // Páginas premium que requieren suscripción (trial cubre hasta el día 3)
+                const premiumPages = ['workshops', 'community', 'nutrition', 'exercise'];
 
                 if (premiumPages.includes(currentPage) && !isPremium()) {
                     return (
@@ -6398,7 +6411,10 @@ query = query.eq('region', region.toUpperCase());
                             {language==='es'?'Mantener mi Santuario':'Keep my Sanctuary'}
                         </button>
                         <button
-                            onClick={()=>setShowShulaDay3(false)}
+                            onClick={()=>{
+                                setShowShulaDay3(false);
+                                if (patternResult && patternResult.length > 0) setShowPatternModal(true);
+                            }}
                             style={{background:'none',border:'none',color:'rgba(184,115,51,0.4)',fontSize:'0.78rem',cursor:'pointer',letterSpacing:'0.08em'}}>
                             {language==='es'?'Explorar un momento más':'Explore a little longer'}
                         </button>
@@ -7331,7 +7347,7 @@ query = query.eq('region', region.toUpperCase());
                                         <div>
                                             <h3 style={{fontFamily:"'Cormorant',serif",fontSize:'1.15rem',fontWeight:600,color:'#B8997A',margin:0}}>LUMI</h3>
                                             <p style={{fontSize:'0.72rem',color:'rgba(184,115,51,0.65)',margin:0}}>
-                                                {!isPremium() ? `${dailyQuestions}/5 ${language === 'es' ? 'preguntas hoy' : 'questions today'}` : (language==='es'?'✦ Tu reflejo biológico':'✦ Your biological reflection')}
+                                                {!isPremium() ? `${getLumiUsadasHoy()}/${LUMI_LIMITE_DIARIO_FREE} ${language === 'es' ? 'preguntas hoy' : 'questions today'}` : (language==='es'?'✦ Tu reflejo biológico':'✦ Your biological reflection')}
                                             </p>
                                         </div>
                                     </div>
