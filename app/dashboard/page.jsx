@@ -4,6 +4,7 @@ import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'rec
 import { useRouter } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import { getLecturaDelDia, estadoDesdeSintomaHoy } from '../lib/lecturas';
+import { DIAS_AUTO_COMPLETA, HITO_SEMANAS, getSemanaContigo, getFaseSemana, contarDiasEnSemanaActual } from '../lib/planBloques';
 
 const SUPABASE_URL = 'https://pyekwpmbdnmglrjieexc.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5ZWt3cG1iZG5tZ2xyamllZXhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0ODM0OTgsImV4cCI6MjA4MTA1OTQ5OH0.zQl7GF3E6BhDqW3bEMixAbdDcOsW8BsFOBeAGa-5bzY';
@@ -292,6 +293,8 @@ export default function Dashboard() {
   const [checkinData, setCheckinData] = useState(null);
   const [ultimosCheckins, setUltimosCheckins] = useState([]);
   const [ultimosSintomas, setUltimosSintomas] = useState([]);
+  const [progresoBloques, setProgresoBloques] = useState([]);
+  const [fechasActividadBloques, setFechasActividadBloques] = useState({ checkins: [], symptoms: [] });
   const [visible, setVisible] = useState(false);
   const [planVisible, setPlanVisible] = useState(false);
   const [porqueVisible, setPorqueVisible] = useState([]);
@@ -478,6 +481,22 @@ export default function Dashboard() {
     if (error) console.error('Error borrando recordatorio:', error.message);
   };
 
+  const toggleTareaBloque = async (blockIndex, taskIndex) => {
+    const yaHecha = progresoBloques.some(p => p.block_index === blockIndex && p.task_index === taskIndex);
+    if (yaHecha) {
+      setProgresoBloques(prev => prev.filter(p => !(p.block_index === blockIndex && p.task_index === taskIndex)));
+      const { error } = await supabase.from('weekly_plan_progress').delete()
+        .eq('user_id', user.id).eq('block_index', blockIndex).eq('task_index', taskIndex);
+      if (error) console.error('Error quitando tarea del plan:', error.message);
+    } else {
+      setProgresoBloques(prev => [...prev, { block_index: blockIndex, task_index: taskIndex }]);
+      const { error } = await supabase.from('weekly_plan_progress').upsert({
+        user_id: user.id, block_index: blockIndex, task_index: taskIndex,
+      });
+      if (error) console.error('Error guardando tarea del plan:', error.message);
+    }
+  };
+
   const guardarYo = async () => {
     setGuardandoYo(true);
     const updates = {
@@ -577,6 +596,30 @@ export default function Dashboard() {
       .order('symptom_date', { ascending: false })
       .limit(5);
     setUltimosSintomas(sintomasData || []);
+
+    // Fechas de actividad para el plan por bloques semanales (hasta 4 semanas atrás)
+    const { data: checkinsBloques } = await supabase
+      .from('lumi_checkins')
+      .select('fecha')
+      .eq('user_id', session.user.id)
+      .order('fecha', { ascending: false })
+      .limit(40);
+    const { data: sintomasBloques } = await supabase
+      .from('symptoms')
+      .select('symptom_date')
+      .eq('user_id', session.user.id)
+      .order('symptom_date', { ascending: false })
+      .limit(60);
+    setFechasActividadBloques({
+      checkins: (checkinsBloques || []).map(c => c.fecha),
+      symptoms: (sintomasBloques || []).map(s => s.symptom_date),
+    });
+    const { data: progresoData, error: progresoError } = await supabase
+      .from('weekly_plan_progress')
+      .select('block_index, task_index')
+      .eq('user_id', session.user.id);
+    if (progresoError) console.error('Error cargando progreso del plan:', progresoError.message);
+    setProgresoBloques(progresoData || []);
 
     try {
       const hk = new Date().toISOString().split('T')[0];
@@ -839,6 +882,57 @@ export default function Dashboard() {
             </div>
 
           </div>
+
+          {/* TU CAMINO — marco continuo, nunca "se acaba": semana en curso + hito de constancia */}
+          {(() => {
+            const semana = getSemanaContigo(user?.createdAt);
+            const faseInfo = getFaseSemana(semana, is_es);
+            const diasAuto = contarDiasEnSemanaActual({ semana, createdAt: user?.createdAt, checkinFechas: fechasActividadBloques.checkins, symptomFechas: fechasActividadBloques.symptoms });
+            const tareasHechas = faseInfo.tareas.map((_, ti) => progresoBloques.some(p => p.block_index === semana && p.task_index === ti));
+            const iluminado = diasAuto >= DIAS_AUTO_COMPLETA || tareasHechas.every(Boolean);
+            const esHito = semana >= HITO_SEMANAS;
+            return (
+              <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem'}}>
+                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
+                  {is_es ? 'Tu camino' : 'Your path'}
+                </div>
+                {esHito && (
+                  <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.85rem',color:'#A06030',marginBottom:'0.9rem'}}>
+                    {is_es ? `Llevas ${semana} semanas cuidándote con LUMI 🌿` : `You've been ${semana} weeks with LUMI 🌿`}
+                  </p>
+                )}
+                <div style={{display:'flex',gap:'0.75rem'}}>
+                  <div style={{width:'26px',height:'26px',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.75rem',fontWeight:700,flexShrink:0,
+                    background: iluminado ? 'linear-gradient(135deg,#C9935A,#A06030)' : 'rgba(201,147,90,0.15)',
+                    border: !iluminado ? '1.5px solid #C9935A' : 'none',
+                    color: iluminado ? 'white' : 'rgba(13,61,61,0.5)'}}>
+                    {iluminado ? '✓' : semana + 1}
+                  </div>
+                  <div style={{flex:1}}>
+                    <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',fontWeight:600,color:'#0D3D3D',marginBottom:'0.15rem'}}>
+                      {is_es ? `Semana ${semana + 1}` : `Week ${semana + 1}`} · {faseInfo.titulo}
+                    </div>
+                    <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(13,61,61,0.5)',lineHeight:1.4,marginBottom:'0.5rem'}}>
+                      {faseInfo.subtitulo}
+                    </p>
+                    <div style={{display:'flex',flexDirection:'column',gap:'0.35rem'}}>
+                      {faseInfo.tareas.map((tarea, ti) => (
+                        <div key={tarea.key} onClick={() => toggleTareaBloque(semana, ti)} role="button" style={{display:'flex',alignItems:'center',gap:'0.5rem',cursor:'pointer'}}>
+                          <span style={{width:'16px',height:'16px',borderRadius:'4px',border:'1.5px solid ' + (tareasHechas[ti] ? '#C9935A' : 'rgba(13,61,61,0.25)'),background:tareasHechas[ti] ? '#C9935A' : 'transparent',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.6rem',color:'white',flexShrink:0}}>{tareasHechas[ti] ? '✓' : ''}</span>
+                          <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'rgba(13,61,61,0.7)',textDecoration:tareasHechas[ti] ? 'line-through' : 'none'}}>{tarea.label}</span>
+                        </div>
+                      ))}
+                      {!iluminado && (
+                        <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.68rem',color:'rgba(13,61,61,0.35)',marginTop:'0.15rem'}}>
+                          {is_es ? `${diasAuto} de ${DIAS_AUTO_COMPLETA} días registrados esta semana` : `${diasAuto} of ${DIAS_AUTO_COMPLETA} days logged this week`}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
 
           {/* TU PLAN DE HOY — tres patas, siempre visibles (nunca en acordeón); solo el "por qué" se pliega */}
           {checkinHecho && (
