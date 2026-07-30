@@ -7385,7 +7385,7 @@ query = query.eq('region', region.toUpperCase());
                                             <div className={`max-w-[80%] rounded-2xl px-4 py-2 ${
                                                 msg.role === 'user'
                                                     ? 'bg-gradient-to-r from-rose-400 to-amber-300 text-white'
-                                                    : 'text-amber-100'
+                                                    : (['active','paid'].includes(currentUser?.subscription_status) || darkMode ? 'text-amber-100' : 'text-stone-700')
                                             }`}>
                                                 <p className="text-sm leading-relaxed" style={{fontFamily:"'Cormorant',serif",fontSize:'1rem',lineHeight:'1.6'}} dangerouslySetInnerHTML={{__html: msg.content.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br/>')}}></p>
                                             </div>
