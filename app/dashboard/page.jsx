@@ -870,9 +870,11 @@ export default function Dashboard() {
             <span onClick={()=>{setShowLumiChat(true); if(lumiChatMessages.length===0) setLumiChatMessages([{role:'assistant', content: lumiMsg}]);}} style={{display:'block',marginBottom:'0.6rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',color:'#C9935A',fontWeight:600,cursor:'pointer'}}>
               {is_es ? 'Pregúntame tus dudas →' : 'Ask me anything →'}
             </span>
-            <a href="/lumera?tab=symptoms" style={{display:'block',marginTop:'-0.2rem',marginBottom:'0.9rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(255,255,255,0.4)',textDecoration:'none'}}>
-              {is_es ? 'Registro detallado de síntomas →' : 'Detailed symptom log →'}
-            </a>
+            {checkinHecho && (
+              <a href="/lumera?tab=symptoms" style={{display:'block',marginTop:'-0.2rem',marginBottom:'0.9rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(255,255,255,0.4)',textDecoration:'none'}}>
+                {is_es ? 'Registro detallado de síntomas →' : 'Detailed symptom log →'}
+              </a>
+            )}
 
             <div onClick={abrirYo} role="button" style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:'0.6rem',background:'rgba(201,147,90,0.12)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.9rem',padding:'0.85rem 1rem',cursor:'pointer'}}>
               <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',fontWeight:600,color:'white',lineHeight:1.3}}>
@@ -882,57 +884,6 @@ export default function Dashboard() {
             </div>
 
           </div>
-
-          {/* TU CAMINO — marco continuo, nunca "se acaba": semana en curso + hito de constancia */}
-          {(() => {
-            const semana = getSemanaContigo(user?.createdAt);
-            const faseInfo = getFaseSemana(semana, is_es);
-            const diasAuto = contarDiasEnSemanaActual({ semana, createdAt: user?.createdAt, checkinFechas: fechasActividadBloques.checkins, symptomFechas: fechasActividadBloques.symptoms });
-            const tareasHechas = faseInfo.tareas.map((_, ti) => progresoBloques.some(p => p.block_index === semana && p.task_index === ti));
-            const iluminado = diasAuto >= DIAS_AUTO_COMPLETA || tareasHechas.every(Boolean);
-            const esHito = semana >= HITO_SEMANAS;
-            return (
-              <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem'}}>
-                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
-                  {is_es ? 'Tu camino' : 'Your path'}
-                </div>
-                {esHito && (
-                  <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.85rem',color:'#A06030',marginBottom:'0.9rem'}}>
-                    {is_es ? `Llevas ${semana} semanas cuidándote con LUMI 🌿` : `You've been ${semana} weeks with LUMI 🌿`}
-                  </p>
-                )}
-                <div style={{display:'flex',gap:'0.75rem'}}>
-                  <div style={{width:'26px',height:'26px',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.75rem',fontWeight:700,flexShrink:0,
-                    background: iluminado ? 'linear-gradient(135deg,#C9935A,#A06030)' : 'rgba(201,147,90,0.15)',
-                    border: !iluminado ? '1.5px solid #C9935A' : 'none',
-                    color: iluminado ? 'white' : 'rgba(13,61,61,0.5)'}}>
-                    {iluminado ? '✓' : semana + 1}
-                  </div>
-                  <div style={{flex:1}}>
-                    <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',fontWeight:600,color:'#0D3D3D',marginBottom:'0.15rem'}}>
-                      {is_es ? `Semana ${semana + 1}` : `Week ${semana + 1}`} · {faseInfo.titulo}
-                    </div>
-                    <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(13,61,61,0.5)',lineHeight:1.4,marginBottom:'0.5rem'}}>
-                      {faseInfo.subtitulo}
-                    </p>
-                    <div style={{display:'flex',flexDirection:'column',gap:'0.35rem'}}>
-                      {faseInfo.tareas.map((tarea, ti) => (
-                        <div key={tarea.key} onClick={() => toggleTareaBloque(semana, ti)} role="button" style={{display:'flex',alignItems:'center',gap:'0.5rem',cursor:'pointer'}}>
-                          <span style={{width:'16px',height:'16px',borderRadius:'4px',border:'1.5px solid ' + (tareasHechas[ti] ? '#C9935A' : 'rgba(13,61,61,0.25)'),background:tareasHechas[ti] ? '#C9935A' : 'transparent',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.6rem',color:'white',flexShrink:0}}>{tareasHechas[ti] ? '✓' : ''}</span>
-                          <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'rgba(13,61,61,0.7)',textDecoration:tareasHechas[ti] ? 'line-through' : 'none'}}>{tarea.label}</span>
-                        </div>
-                      ))}
-                      {!iluminado && (
-                        <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.68rem',color:'rgba(13,61,61,0.35)',marginTop:'0.15rem'}}>
-                          {is_es ? `${diasAuto} de ${DIAS_AUTO_COMPLETA} días registrados esta semana` : `${diasAuto} of ${DIAS_AUTO_COMPLETA} days logged this week`}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
 
           {/* TU PLAN DE HOY — tres patas, siempre visibles (nunca en acordeón); solo el "por qué" se pliega */}
           {checkinHecho && (
@@ -1019,6 +970,25 @@ export default function Dashboard() {
               )}
             </div>
           )}
+
+          {/* TU CAMINO — teaser compacto; el plan completo vive en Yo, para no saturar el dashboard */}
+          {(() => {
+            const semana = getSemanaContigo(user?.createdAt);
+            const faseInfo = getFaseSemana(semana, is_es);
+            return (
+              <div onClick={abrirYo} role="button" style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:'0.6rem',background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1rem',padding:'0.85rem 1.1rem',marginBottom:'1.25rem',cursor:'pointer'}}>
+                <div>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.2rem'}}>
+                    {is_es ? 'Tu camino' : 'Your path'}
+                  </div>
+                  <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'0.95rem',fontWeight:600,color:'#0D3D3D'}}>
+                    {is_es ? `Semana ${semana + 1}` : `Week ${semana + 1}`} · {faseInfo.titulo}
+                  </div>
+                </div>
+                <span style={{fontSize:'1.1rem',color:'#C9935A',flexShrink:0}}>→</span>
+              </div>
+            );
+          })()}
 
           {/* TU RITMO DE HOY — LUMI secretaria: horas ya guardadas, sin carga mental para ella */}
           {checkinHecho && user?.pushEnabled && (user?.horaDesayuno || user?.horaComida || user?.horaCena) && (
@@ -1195,6 +1165,57 @@ export default function Dashboard() {
                       {guardandoYo ? (is_es?'Guardando...':'Saving...') : (is_es ? 'Guardar cambios' : 'Save changes')}
                     </button>
                   </div>
+
+                  {/* TU CAMINO — marco continuo, nunca "se acaba": semana en curso + hito de constancia */}
+                  {(() => {
+                    const semana = getSemanaContigo(user?.createdAt);
+                    const faseInfo = getFaseSemana(semana, is_es);
+                    const diasAuto = contarDiasEnSemanaActual({ semana, createdAt: user?.createdAt, checkinFechas: fechasActividadBloques.checkins, symptomFechas: fechasActividadBloques.symptoms });
+                    const tareasHechas = faseInfo.tareas.map((_, ti) => progresoBloques.some(p => p.block_index === semana && p.task_index === ti));
+                    const iluminado = diasAuto >= DIAS_AUTO_COMPLETA || tareasHechas.every(Boolean);
+                    const esHito = semana >= HITO_SEMANAS;
+                    return (
+                      <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem'}}>
+                        <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
+                          {is_es ? 'Tu camino' : 'Your path'}
+                        </div>
+                        {esHito && (
+                          <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.85rem',color:'#A06030',marginBottom:'0.9rem'}}>
+                            {is_es ? `Llevas ${semana} semanas cuidándote con LUMI 🌿` : `You've been ${semana} weeks with LUMI 🌿`}
+                          </p>
+                        )}
+                        <div style={{display:'flex',gap:'0.75rem'}}>
+                          <div style={{width:'26px',height:'26px',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.75rem',fontWeight:700,flexShrink:0,
+                            background: iluminado ? 'linear-gradient(135deg,#C9935A,#A06030)' : 'rgba(201,147,90,0.15)',
+                            border: !iluminado ? '1.5px solid #C9935A' : 'none',
+                            color: iluminado ? 'white' : 'rgba(13,61,61,0.5)'}}>
+                            {iluminado ? '✓' : semana + 1}
+                          </div>
+                          <div style={{flex:1}}>
+                            <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',fontWeight:600,color:'#0D3D3D',marginBottom:'0.15rem'}}>
+                              {is_es ? `Semana ${semana + 1}` : `Week ${semana + 1}`} · {faseInfo.titulo}
+                            </div>
+                            <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(13,61,61,0.5)',lineHeight:1.4,marginBottom:'0.5rem'}}>
+                              {faseInfo.subtitulo}
+                            </p>
+                            <div style={{display:'flex',flexDirection:'column',gap:'0.35rem'}}>
+                              {faseInfo.tareas.map((tarea, ti) => (
+                                <div key={tarea.key} onClick={() => toggleTareaBloque(semana, ti)} role="button" style={{display:'flex',alignItems:'center',gap:'0.5rem',cursor:'pointer'}}>
+                                  <span style={{width:'16px',height:'16px',borderRadius:'4px',border:'1.5px solid ' + (tareasHechas[ti] ? '#C9935A' : 'rgba(13,61,61,0.25)'),background:tareasHechas[ti] ? '#C9935A' : 'transparent',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.6rem',color:'white',flexShrink:0}}>{tareasHechas[ti] ? '✓' : ''}</span>
+                                  <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'rgba(13,61,61,0.7)',textDecoration:tareasHechas[ti] ? 'line-through' : 'none'}}>{tarea.label}</span>
+                                </div>
+                              ))}
+                              {!iluminado && (
+                                <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.68rem',color:'rgba(13,61,61,0.35)',marginTop:'0.15rem'}}>
+                                  {is_es ? `${diasAuto} de ${DIAS_AUTO_COMPLETA} días registrados esta semana` : `${diasAuto} of ${DIAS_AUTO_COMPLETA} days logged this week`}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   {/* Recordatorios a demanda: comida, bebida, ejercicio o cita importante */}
                   <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem'}}>
