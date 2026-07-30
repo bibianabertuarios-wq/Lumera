@@ -889,7 +889,7 @@ export default function Dashboard() {
           {checkinHecho && (
             <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
               <div style={{marginBottom:'0.5rem'}}>
-                <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase'}}>
+                <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,background:'linear-gradient(135deg,#0D3D3D,#1F7A5C)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',letterSpacing:'2px',textTransform:'uppercase'}}>
                   {is_es ? 'Tu plan de hoy' : 'Your plan today'}
                 </span>
               </div>
@@ -978,7 +978,7 @@ export default function Dashboard() {
             return (
               <div onClick={abrirYo} role="button" style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:'0.6rem',background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1rem',padding:'0.85rem 1.1rem',marginBottom:'1.25rem',cursor:'pointer'}}>
                 <div>
-                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.2rem'}}>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,background:'linear-gradient(135deg,#0D3D3D,#1F7A5C)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.2rem'}}>
                     {is_es ? 'Tu camino' : 'Your path'}
                   </div>
                   <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'0.95rem',fontWeight:600,color:'#0D3D3D'}}>
@@ -993,7 +993,7 @@ export default function Dashboard() {
           {/* TU RITMO DE HOY — LUMI secretaria: horas ya guardadas, sin carga mental para ella */}
           {checkinHecho && user?.pushEnabled && (user?.horaDesayuno || user?.horaComida || user?.horaCena) && (
             <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
-              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.5rem'}}>
+              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,background:'linear-gradient(135deg,#0D3D3D,#1F7A5C)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.5rem'}}>
                 {is_es ? 'Tu ritmo de hoy' : 'Your rhythm today'}
               </div>
               <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.9rem',color:'rgba(13,61,61,0.6)',lineHeight:1.5,marginBottom:'0.9rem'}}>
@@ -1124,7 +1124,7 @@ export default function Dashboard() {
                   </div>
 
                   <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem'}}>
-                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
+                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,background:'linear-gradient(135deg,#0D3D3D,#1F7A5C)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
                       {is_es ? 'Tus datos' : 'Your details'}
                     </div>
 
@@ -1176,7 +1176,7 @@ export default function Dashboard() {
                     const esHito = semana >= HITO_SEMANAS;
                     return (
                       <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem'}}>
-                        <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
+                        <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,background:'linear-gradient(135deg,#0D3D3D,#1F7A5C)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
                           {is_es ? 'Tu camino' : 'Your path'}
                         </div>
                         {esHito && (
@@ -1219,7 +1219,7 @@ export default function Dashboard() {
 
                   {/* Recordatorios a demanda: comida, bebida, ejercicio o cita importante */}
                   <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem'}}>
-                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
+                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,background:'linear-gradient(135deg,#0D3D3D,#1F7A5C)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
                       {is_es ? 'Tus recordatorios' : 'Your reminders'}
                     </div>
 
@@ -1267,7 +1267,7 @@ export default function Dashboard() {
                   {/* Recursos / biblioteca */}
                   <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem'}}>
                     <div onClick={()=>setRecursosVisibleYo(!recursosVisibleYo)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer'}}>
-                      <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase'}}>
+                      <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,background:'linear-gradient(135deg,#0D3D3D,#1F7A5C)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',letterSpacing:'2px',textTransform:'uppercase'}}>
                         {is_es ? 'Recursos' : 'Resources'}
                       </span>
                       <span style={{fontSize:'0.75rem',color:'#C9935A',fontWeight:600}}>{recursosVisibleYo ? '▲' : '▼'}</span>
@@ -1275,7 +1275,7 @@ export default function Dashboard() {
                     {recursosVisibleYo && (
                       <div style={{display:'flex',flexDirection:'column',gap:'0.6rem',marginTop:'0.9rem'}}>
                         <div style={{background:'#FAF7F1',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'0.85rem',padding:'0.9rem 1rem'}}>
-                          <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.4rem'}}>
+                          <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,background:'linear-gradient(135deg,#0D3D3D,#1F7A5C)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.4rem'}}>
                             {is_es ? '✦ Verdad de hoy' : '✦ Truth of the day'}
                           </div>
                           <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'0.9rem',color:'#0D3D3D',lineHeight:1.5,margin:0}}>
@@ -1328,7 +1328,7 @@ export default function Dashboard() {
 
           {/* TU OBRA DE ESTA SEMANA — único marcador de progreso de Inicio */}
           <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
-            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.4rem'}}>
+            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,background:'linear-gradient(135deg,#0D3D3D,#1F7A5C)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.4rem'}}>
               {is_es ? `Tu obra de esta semana · ${fragmentosSemana} de 8 fragmentos` : `Your artwork this week · ${fragmentosSemana} of 8 fragments`}
             </div>
             <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.85rem',color:'rgba(13,61,61,0.55)',marginBottom:'0.9rem'}}>
@@ -1354,7 +1354,7 @@ export default function Dashboard() {
 
             {/* ¿CÓMO USAR LUMERA? — acordeón cerrado por defecto */}
             <div onClick={()=>setUsoVisible(!usoVisible)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',marginBottom:'0.75rem'}}>
-              <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase'}}>
+              <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,background:'linear-gradient(135deg,#0D3D3D,#1F7A5C)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',letterSpacing:'2px',textTransform:'uppercase'}}>
                 {is_es ? '¿Cómo usar Lumera?' : 'How to use Lumera?'}
               </span>
               <span style={{fontSize:'0.75rem',color:'#C9935A',fontWeight:600}}>{usoVisible ? '▲' : '▼'}</span>
@@ -1376,7 +1376,7 @@ export default function Dashboard() {
 
             {/* Tools grid */}
             <div onClick={()=>setToolsVisible(!toolsVisible)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',marginBottom:'0.75rem'}}>
-              <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'2px',textTransform:'uppercase'}}>
+              <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,background:'linear-gradient(135deg,#0D3D3D,#1F7A5C)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent',backgroundClip:'text',letterSpacing:'2px',textTransform:'uppercase'}}>
                 {is_es ? 'Tus herramientas' : 'Your tools'}
               </span>
               <span style={{fontSize:'0.75rem',color:'#C9935A',fontWeight:600}}>{toolsVisible ? '▲' : '▼'}</span>
