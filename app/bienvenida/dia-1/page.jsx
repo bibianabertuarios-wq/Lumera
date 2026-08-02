@@ -13,10 +13,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@supabase/supabase-js';
-
-const SUPABASE_URL = 'https://pyekwpmbdnmglrjieexc.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5ZWt3cG1iZG5tZ2xyamllZXhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0ODM0OTgsImV4cCI6MjA4MTA1OTQ5OH0.zQl7GF3E6BhDqW3bEMixAbdDcOsW8BsFOBeAGa-5bzY';
+import { supabase } from '../../lib/supabase';
 
 const C = {
   copper: '#C9935A',
@@ -32,7 +29,6 @@ const HORA_COMIDA_POR_BUCKET = { 'antes-13': '12:30', '13-14': '13:30', 'tarde':
 
 export default function BienvenidaDia1() {
   const router = useRouter();
-  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);

@@ -1,10 +1,7 @@
 'use client';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@supabase/supabase-js';
-
-const SUPABASE_URL = 'https://pyekwpmbdnmglrjieexc.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5ZWt3cG1iZG5tZ2xyamllZXhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzOTMyNDIsImV4cCI6MjA1Nzk2OTI0Mn0.xHHGOEDM9WFCxNBDjSDMGkpSqMNGMHFBvAjMEKpcMko';
+import { supabase } from '../lib/supabase';
 
 const css = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@400;500;600;700&display=swap');
@@ -46,7 +43,6 @@ export default function Escaner() {
     // Cargar datos usuario desde Supabase
     const loadUser = async () => {
       try {
-        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) { router.push('/start'); return; }
         if (session) {
@@ -136,7 +132,14 @@ export default function Escaner() {
     const torsoHeight = Math.abs(((leftShoulder.y + rightShoulder.y)/2) - ((leftHip.y + rightHip.y)/2));
     const legHeight = Math.abs(((leftHip.y + rightHip.y)/2) - ((leftKnee.y + rightKnee.y)/2));
 
-    const ratio = hipWidth / shoulderWidth;
+    // CALIBRACION: los landmarks 23/24 de MediaPipe marcan la articulacion de la cadera,
+    // que anatomicamente cae por dentro del contorno visual real de la cadera — a diferencia
+    // de los landmarks de hombro (11/12), que si coinciden con el borde visual del hombro.
+    // Sin corregir esto, el ratio sale sistematicamente bajo para casi cualquier foto y casi
+    // todo el mundo cae en "Manzana invertida". Factor de correccion aproximado (1.15) para
+    // compensar ese sesgo — revisar y ajustar con mas fotos de prueba de formas conocidas.
+    const FACTOR_CALIBRACION_CADERA = 1.15;
+    const ratio = (hipWidth / shoulderWidth) * FACTOR_CALIBRACION_CADERA;
     
     let tipo, zona, consejo;
     if (ratio > 1.1) {

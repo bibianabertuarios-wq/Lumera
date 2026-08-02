@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect, useMemo, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '../lib/supabase';
 
 function calcularEdad(fechaNacimientoStr) {
   if (!fechaNacimientoStr) return null;
@@ -201,11 +201,6 @@ function BienvenidaInner() {
     }
     setLoading(true);
     setError('');
-
-    const supabase = createClient(
-      'https://pyekwpmbdnmglrjieexc.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5ZWt3cG1iZG5tZ2xyamllZXhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0ODM0OTgsImV4cCI6MjA4MTA1OTQ5OH0.zQl7GF3E6BhDqW3bEMixAbdDcOsW8BsFOBeAGa-5bzY'
-    );
 
     const { error: signUpError } = await supabase.auth.signUp({
       email,

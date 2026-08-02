@@ -2,16 +2,12 @@
 import React from 'react'
 import PelvicFloorChallenge from "../components/PelvicFloorChallenge";
 import { useState, useEffect, useRef } from 'react'
-import { createClient } from '@supabase/supabase-js'
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
+import { supabase } from '../lib/supabase'
+import { LineChart, Line, BarChart, Bar, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import './lumera.css'
 
 // hooks imported above
-
-        // SUPABASE ACTIVADO
-        const SUPABASE_URL = 'https://pyekwpmbdnmglrjieexc.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5ZWt3cG1iZG5tZ2xyamllZXhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0ODM0OTgsImV4cCI6MjA4MTA1OTQ5OH0.zQl7GF3E6BhDqW3bEMixAbdDcOsW8BsFOBeAGa-5bzY';
-        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// SUPABASE ACTIVADO — cliente único compartido, ver app/lib/supabase.js
 
         // LEMON SQUEEZY - Configuración
         const LEMON_CONFIG = {
@@ -2514,6 +2510,18 @@ query = query.eq('region', region.toUpperCase());
                 return Math.round(bmr * multiplier);
             };
 
+            // Parsea 'YYYY-MM-DD' como fecha LOCAL (no UTC). new Date('2026-08-02') lo interpreta
+            // como medianoche UTC, y al pedir luego el día de la semana en local (getDay/toLocaleDateString)
+            // en cualquier zona horaria por detrás de UTC (todo Latinoamérica) el resultado se adelanta
+            // un día — un sábado registrado aparece como viernes. Por eso todo el módulo de síntomas/
+            // tendencias parte de aquí en vez de `new Date(dateStr)` directamente.
+            const parseLocalDate = (dateStr) => {
+                if (!dateStr) return null;
+                const [y, m, d] = String(dateStr).split('-').map(Number);
+                if (!y || !m || !d) return new Date(dateStr);
+                return new Date(y, m - 1, d);
+            };
+
             // Misma fórmula ISO-8601 que usa el backend en /api/menu-de-la-semana, para que la clave de localStorage coincida
             const getSemanaISO = (fecha = new Date()) => {
                 const d = new Date(Date.UTC(fecha.getFullYear(), fecha.getMonth(), fecha.getDate()));
@@ -2685,7 +2693,9 @@ query = query.eq('region', region.toUpperCase());
             const generateChartData = () => {
                 if (!symptoms || symptoms.length === 0) return null;
 
-                const last7Days = symptoms
+                // Copia (no mutar el state de React) ordenada del más reciente al más antiguo,
+                // cogemos los 7 más recientes y los invertimos para pintar antiguo → hoy, izq → der.
+                const last7Days = [...symptoms]
                     .sort((a, b) => new Date(b.symptom_date) - new Date(a.symptom_date))
                     .slice(0, 7)
                     .reverse();
@@ -2694,11 +2704,11 @@ query = query.eq('region', region.toUpperCase());
 
                 return {
                     labels: last7Days.map(s => {
-                        const date = new Date(s.symptom_date);
-                        return date.toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US', { 
-                            weekday: 'short', 
-                            month: 'short', 
-                            day: 'numeric' 
+                        const date = parseLocalDate(s.symptom_date) || new Date(s.symptom_date);
+                        return date.toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US', {
+                            weekday: 'short',
+                            month: 'short',
+                            day: 'numeric'
                         });
                     }),
                     energy: last7Days.map(s => s.energy || 5),
@@ -3528,9 +3538,14 @@ query = query.eq('region', region.toUpperCase());
             };
 
             // ANÁLISIS DE PATRONES REAL (se ejecuta cuando hay 3+ síntomas registrados)
+            // OJO: `symptoms` (y por tanto `data`) llega ordenado del más reciente al más antiguo
+            // (fetch con .order('symptom_date', {ascending:false}) + los nuevos se añaden con unshift).
+            // Todo el análisis de aquí abajo trabaja sobre una copia CRONOLÓGICA (más antiguo → más
+            // reciente) para que "iba bajando" y las correlaciones día-a-día tengan el sentido correcto.
             const analyzePatterns = (data = null) => {
-                const syms = data || symptoms;
-                if (syms.length < 3) return null;
+                const symsRecienteAAntiguo = data || symptoms;
+                if (symsRecienteAAntiguo.length < 3) return null;
+                const syms = [...symsRecienteAAntiguo].reverse(); // ahora: más antiguo → más reciente
 
                 const keys = ['sleep', 'energy', 'mood', 'hotFlashes', 'anxiety', 'brainFog', 'memory'];
                 const labels = {
@@ -3541,9 +3556,10 @@ query = query.eq('region', region.toUpperCase());
                 const patterns = [];
 
                 keys.forEach(key => {
-                    const values = syms.map(s => s[key] || 0);
+                    const values = syms.map(s => s[key] || 0); // más antiguo → más reciente
                     const avg = values.reduce((a, b) => a + b, 0) / values.length;
-                    const last3 = values.slice(-3);
+                    const last3 = values.slice(-3); // los 3 MÁS RECIENTES, en orden cronológico
+
                     const last3Avg = last3.reduce((a, b) => a + b, 0) / last3.length;
 
                     // Patrón 1: síntoma consistentemente alto (>=6 en los últimos 3 días)
@@ -3570,8 +3586,8 @@ query = query.eq('region', region.toUpperCase());
                         });
                     }
 
-                    // Patrón 3: tendencia de empeoramiento (cada día peor que el anterior)
-                    if (last3.length === 3 && last3[2] < last3[1] && last3[1] < last3[0] && (key === 'sleep' || key === 'energy' || key === 'mood')) {
+                    // Patrón 3: tendencia de empeoramiento (cada día peor que el anterior, en orden cronológico)
+                    if (last3.length === 3 && last3[0] > last3[1] && last3[1] > last3[2] && (key === 'sleep' || key === 'energy' || key === 'mood')) {
                         patterns.push({
                             type: 'worsening',
                             symptom: labels[lang][key],
@@ -3581,7 +3597,7 @@ query = query.eq('region', region.toUpperCase());
                         });
                     }
 
-                    // Patrón 4: correlación sueño-energía (sueño bajo = energía baja al día siguiente)
+                    // Patrón 4: correlación sueño-energía (sueño bajo un día = energía baja al día SIGUIENTE)
                     if (key === 'sleep' && syms.length >= 2) {
                         let correlation = 0;
                         for (let i = 0; i < syms.length - 1; i++) {
@@ -3600,10 +3616,12 @@ query = query.eq('region', region.toUpperCase());
                 });
 
                 // Si no encontró patrones automáticos, dar insight genérico basado en datos reales
+                // (últimos 3 = los 3 más recientes; syms ya está en orden cronológico, así que son los últimos del array)
                 if (patterns.length === 0) {
-                    const avgSleep = (syms.slice(-3).reduce((a, s) => a + (s.sleep || 0), 0) / 3).toFixed(1);
-                    const avgEnergy = (syms.slice(-3).reduce((a, s) => a + (s.energy || 0), 0) / 3).toFixed(1);
-                    const avgMood = (syms.slice(-3).reduce((a, s) => a + (s.mood || 0), 0) / 3).toFixed(1);
+                    const ultimos3 = syms.slice(-3);
+                    const avgSleep = (ultimos3.reduce((a, s) => a + (s.sleep || 0), 0) / ultimos3.length).toFixed(1);
+                    const avgEnergy = (ultimos3.reduce((a, s) => a + (s.energy || 0), 0) / ultimos3.length).toFixed(1);
+                    const avgMood = (ultimos3.reduce((a, s) => a + (s.mood || 0), 0) / ultimos3.length).toFixed(1);
                     patterns.push({
                         type: 'summary',
                         symptom: 'general',
@@ -4926,41 +4944,66 @@ query = query.eq('region', region.toUpperCase());
                                     })}
                                 </div>
 
-                                {/* Barra visual simple para cada métrica */}
-                                {[
-                                    { label: language === 'es' ? 'Sueño' : 'Sleep', key: 'sleep', color: '#C4A882' },
-                                    { label: language === 'es' ? 'Energía' : 'Energy', key: 'energy', color: '#C4A882' },
-                                    { label: language === 'es' ? 'Ánimo' : 'Mood', key: 'mood', color: '#06b6d4' }
-                                ].map(metric => {
+                                {/* Gráfico de área con degradado — mismo estilo que el aviso de LUMI del día 3, pero visible siempre que hay 3+ días registrados */}
+                                {(() => {
+                                    // symptoms viene del más reciente al más antiguo: los 7 primeros son "los últimos 7 días".
+                                    // Se invierten para pintar de izquierda (más antiguo) a derecha (hoy).
                                     const last7 = symptoms.slice(0, 7).reverse();
+                                    const keySueno = language === 'es' ? 'Sueño' : 'Sleep';
+                                    const keyEnergia = language === 'es' ? 'Energía' : 'Energy';
+                                    const keyAnimo = language === 'es' ? 'Ánimo' : 'Mood';
+                                    const progresoChartData = last7.map((s, i) => {
+                                        const dateStr = s.symptom_date || s.date;
+                                        const d = parseLocalDate(dateStr);
+                                        const dia = d
+                                            ? (language === 'es' ? ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][d.getDay()] : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()])
+                                            : (language === 'es' ? `Día ${i + 1}` : `Day ${i + 1}`);
+                                        const fecha = d ? `${d.getDate()}/${d.getMonth() + 1}` : '';
+                                        return {
+                                            dia, fecha,
+                                            [keySueno]: s.sleep || 0,
+                                            [keyEnergia]: s.energy || 0,
+                                            [keyAnimo]: s.mood || 0,
+                                        };
+                                    });
                                     return (
-                                        <div key={metric.key} className="mb-3">
-                                            <p className={`text-xs font-semibold mb-1 ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>{metric.label}</p>
-                                            <div className="flex items-end gap-1 h-10">
-                                                {last7.map((s, i) => {
-                                                    const val = s[metric.key] || 0;
-                                                    const height = (val / 10) * 100;
-                                                    return (
-                                                        <div
-                                                            key={i}
-                                                            className="flex-1 rounded-t-sm transition-all"
-                                                            style={{ height: height + '%', backgroundColor: metric.color, opacity: 0.7 + (i / last7.length) * 0.3 }}
-                                                            title={val + '/10'}
-                                                        />
-                                                    );
-                                                })}
-                                            </div>
-                                            <div className="flex justify-between mt-1">
-                                                <span className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                                                    {language === 'es' ? 'hace 7 días' : '7 days ago'}
-                                                </span>
-                                                <span className={`text-xs ${darkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                                                    {language === 'es' ? 'hoy' : 'today'}
-                                                </span>
-                                            </div>
-                                        </div>
+                                        <ResponsiveContainer width="100%" height={200}>
+                                            <AreaChart data={progresoChartData} margin={{ top: 5, right: 8, left: -20, bottom: 0 }}>
+                                                <defs>
+                                                    <linearGradient id="gradProgresoSueno" x1="0" y1="0" x2="0" y2="1">
+                                                        <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.35} />
+                                                        <stop offset="95%" stopColor="#60a5fa" stopOpacity={0} />
+                                                    </linearGradient>
+                                                    <linearGradient id="gradProgresoEnergia" x1="0" y1="0" x2="0" y2="1">
+                                                        <stop offset="5%" stopColor="#C9935A" stopOpacity={0.35} />
+                                                        <stop offset="95%" stopColor="#C9935A" stopOpacity={0} />
+                                                    </linearGradient>
+                                                    <linearGradient id="gradProgresoAnimo" x1="0" y1="0" x2="0" y2="1">
+                                                        <stop offset="5%" stopColor="#0D9488" stopOpacity={0.35} />
+                                                        <stop offset="95%" stopColor="#0D9488" stopOpacity={0} />
+                                                    </linearGradient>
+                                                </defs>
+                                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'} />
+                                                <XAxis
+                                                    dataKey="dia"
+                                                    tick={({ x, y, payload, index }) => (
+                                                        <g transform={`translate(${x},${y})`}>
+                                                            <text x={0} y={0} dy={12} textAnchor="middle" fontSize={11} fontWeight={600} fill={darkMode ? '#e7e5e4' : '#44403c'}>{payload.value}</text>
+                                                            <text x={0} y={0} dy={26} textAnchor="middle" fontSize={9} fill={darkMode ? '#78716c' : '#a8a29e'}>{progresoChartData[index]?.fecha}</text>
+                                                        </g>
+                                                    )}
+                                                    axisLine={false} tickLine={false} height={34}
+                                                />
+                                                <YAxis domain={[0, 10]} tick={{ fontSize: 10, fill: darkMode ? '#9ca3af' : '#6b7280' }} axisLine={false} tickLine={false} width={22} />
+                                                <Tooltip contentStyle={{ fontSize: '0.78rem', borderRadius: '0.6rem', border: 'none', boxShadow: '0 8px 24px rgba(0,0,0,0.15)' }} />
+                                                <Legend wrapperStyle={{ fontSize: '0.7rem', paddingTop: '0.4rem' }} iconType="circle" iconSize={8} />
+                                                <Area type="monotone" dataKey={keySueno} stroke="#60a5fa" strokeWidth={2.5} fill="url(#gradProgresoSueno)" dot={{ r: 3, strokeWidth: 0, fill: '#60a5fa' }} activeDot={{ r: 6 }} />
+                                                <Area type="monotone" dataKey={keyEnergia} stroke="#C9935A" strokeWidth={2.5} fill="url(#gradProgresoEnergia)" dot={{ r: 3, strokeWidth: 0, fill: '#C9935A' }} activeDot={{ r: 6 }} />
+                                                <Area type="monotone" dataKey={keyAnimo} stroke="#0D9488" strokeWidth={2.5} fill="url(#gradProgresoAnimo)" dot={{ r: 3, strokeWidth: 0, fill: '#0D9488' }} activeDot={{ r: 6 }} />
+                                            </AreaChart>
+                                        </ResponsiveContainer>
                                     );
-                                })}
+                                })()}
 
                                 {/* Para trial: mensaje para upgrade */}
                             </div>
@@ -5477,8 +5520,11 @@ query = query.eq('region', region.toUpperCase());
                         </div>
 
                         {symptoms.length > 0 && (() => {
-                            const trendData = symptoms.slice(-14).map(s => ({
-                                label: new Date(s.symptom_date || s.date).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US', { month: 'short', day: 'numeric' }),
+                            // symptoms viene del más reciente al más antiguo — para "los últimos 14 días" hay que
+                            // coger los 14 PRIMEROS (no los últimos, que serían los 14 más antiguos de todo el historial)
+                            // y luego invertir para pintar de izquierda (antiguo) a derecha (hoy).
+                            const trendData = symptoms.slice(0, 14).reverse().map(s => ({
+                                label: (parseLocalDate(s.symptom_date || s.date) || new Date()).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US', { month: 'short', day: 'numeric' }),
                                 Sueño: s.sleep || 0,
                                 Energía: s.energy || 0,
                                 Ánimo: s.mood || 0,
@@ -7656,42 +7702,66 @@ query = query.eq('region', region.toUpperCase());
                                 </div>
 
                                 {/* GRÁFICO MINI — 3 días, sueño/energía/ánimo */}
-                                <div style={{margin: '1.25rem 1rem 0', padding: '1rem', borderRadius: '0.875rem', background: darkMode ? 'rgba(255,255,255,0.05)' : '#fafaf9', border: '1px solid rgba(0,0,0,0.06)'}}>
+                                <div style={{margin: '1.25rem 1rem 0', padding: '1.1rem 1rem 0.5rem', borderRadius: '1rem', background: darkMode ? 'rgba(255,255,255,0.05)' : '#fafaf9', border: '1px solid rgba(0,0,0,0.06)'}}>
                                     <p style={{fontSize: '0.72rem', fontWeight: 600, color: '#a8a29e', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.75rem'}}>
                                         📊 {language === 'es' ? 'Tus últimos 3 días' : 'Your last 3 days'}
                                     </p>
                                     {(() => {
+                                        // symptoms viene del más reciente al más antiguo: los 3 primeros son "los últimos 3 días".
+                                        // Se invierten aquí para pintar de izquierda (más antiguo) a derecha (hoy), como cualquier gráfico de tendencia.
                                         const last3 = symptoms.slice(0, 3).reverse();
+                                        const keySueno = language === 'es' ? 'Sueño' : 'Sleep';
+                                        const keyEnergia = language === 'es' ? 'Energía' : 'Energy';
+                                        const keyAnimo = language === 'es' ? 'Ánimo' : 'Mood';
                                         const chartData = last3.map((s, i) => {
                                             const dateStr = s.symptom_date || s.date;
-                                            let dia;
-                                            if (dateStr) {
-                                                const d = new Date(dateStr);
-                                                dia = language === 'es'
-                                                    ? ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][d.getDay()]
-                                                    : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
-                                            } else {
-                                                dia = language === 'es' ? `Día ${i + 1}` : `Day ${i + 1}`;
-                                            }
+                                            const d = parseLocalDate(dateStr);
+                                            const dia = d
+                                                ? (language === 'es' ? ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][d.getDay()] : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()])
+                                                : (language === 'es' ? `Día ${i + 1}` : `Day ${i + 1}`);
+                                            const fecha = d ? `${d.getDate()}/${d.getMonth() + 1}` : '';
                                             return {
-                                                dia,
-                                                [language === 'es' ? 'Sueño' : 'Sleep']: s.sleep || 0,
-                                                [language === 'es' ? 'Energía' : 'Energy']: s.energy || 0,
-                                                [language === 'es' ? 'Ánimo' : 'Mood']: s.mood || 0,
+                                                dia, fecha,
+                                                [keySueno]: s.sleep || 0,
+                                                [keyEnergia]: s.energy || 0,
+                                                [keyAnimo]: s.mood || 0,
                                             };
                                         });
                                         return (
-                                            <ResponsiveContainer width="100%" height={160}>
-                                                <LineChart data={chartData} margin={{ top: 5, right: 8, left: -20, bottom: 0 }}>
-                                                    <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'} />
-                                                    <XAxis dataKey="dia" tick={{ fontSize: 11, fill: darkMode ? '#9ca3af' : '#6b7280' }} axisLine={false} tickLine={false} />
+                                            <ResponsiveContainer width="100%" height={190}>
+                                                <AreaChart data={chartData} margin={{ top: 5, right: 8, left: -20, bottom: 0 }}>
+                                                    <defs>
+                                                        <linearGradient id="gradSueno" x1="0" y1="0" x2="0" y2="1">
+                                                            <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.35} />
+                                                            <stop offset="95%" stopColor="#60a5fa" stopOpacity={0} />
+                                                        </linearGradient>
+                                                        <linearGradient id="gradEnergia" x1="0" y1="0" x2="0" y2="1">
+                                                            <stop offset="5%" stopColor="#C9935A" stopOpacity={0.35} />
+                                                            <stop offset="95%" stopColor="#C9935A" stopOpacity={0} />
+                                                        </linearGradient>
+                                                        <linearGradient id="gradAnimo" x1="0" y1="0" x2="0" y2="1">
+                                                            <stop offset="5%" stopColor="#0D9488" stopOpacity={0.35} />
+                                                            <stop offset="95%" stopColor="#0D9488" stopOpacity={0} />
+                                                        </linearGradient>
+                                                    </defs>
+                                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'} />
+                                                    <XAxis
+                                                        dataKey="dia"
+                                                        tick={({ x, y, payload, index }) => (
+                                                            <g transform={`translate(${x},${y})`}>
+                                                                <text x={0} y={0} dy={12} textAnchor="middle" fontSize={11} fontWeight={600} fill={darkMode ? '#e7e5e4' : '#44403c'}>{payload.value}</text>
+                                                                <text x={0} y={0} dy={26} textAnchor="middle" fontSize={9} fill={darkMode ? '#78716c' : '#a8a29e'}>{chartData[index]?.fecha}</text>
+                                                            </g>
+                                                        )}
+                                                        axisLine={false} tickLine={false} height={34}
+                                                    />
                                                     <YAxis domain={[0, 10]} tick={{ fontSize: 10, fill: darkMode ? '#9ca3af' : '#6b7280' }} axisLine={false} tickLine={false} width={22} />
-                                                    <Tooltip contentStyle={{ fontSize: '0.78rem', borderRadius: '0.5rem' }} />
-                                                    <Legend wrapperStyle={{ fontSize: '0.7rem' }} />
-                                                    <Line type="monotone" dataKey={language === 'es' ? 'Sueño' : 'Sleep'} stroke="#60a5fa" strokeWidth={2} dot={{ r: 4 }} />
-                                                    <Line type="monotone" dataKey={language === 'es' ? 'Energía' : 'Energy'} stroke="#C9935A" strokeWidth={2} dot={{ r: 4 }} />
-                                                    <Line type="monotone" dataKey={language === 'es' ? 'Ánimo' : 'Mood'} stroke="#0D3D3D" strokeWidth={2} dot={{ r: 4 }} />
-                                                </LineChart>
+                                                    <Tooltip contentStyle={{ fontSize: '0.78rem', borderRadius: '0.6rem', border: 'none', boxShadow: '0 8px 24px rgba(0,0,0,0.15)' }} />
+                                                    <Legend wrapperStyle={{ fontSize: '0.7rem', paddingTop: '0.4rem' }} iconType="circle" iconSize={8} />
+                                                    <Area type="monotone" dataKey={keySueno} stroke="#60a5fa" strokeWidth={2.5} fill="url(#gradSueno)" dot={{ r: 4, strokeWidth: 0, fill: '#60a5fa' }} activeDot={{ r: 6 }} />
+                                                    <Area type="monotone" dataKey={keyEnergia} stroke="#C9935A" strokeWidth={2.5} fill="url(#gradEnergia)" dot={{ r: 4, strokeWidth: 0, fill: '#C9935A' }} activeDot={{ r: 6 }} />
+                                                    <Area type="monotone" dataKey={keyAnimo} stroke="#0D9488" strokeWidth={2.5} fill="url(#gradAnimo)" dot={{ r: 4, strokeWidth: 0, fill: '#0D9488' }} activeDot={{ r: 6 }} />
+                                                </AreaChart>
                                             </ResponsiveContainer>
                                         );
                                     })()}
@@ -7699,7 +7769,8 @@ query = query.eq('region', region.toUpperCase());
 
                                 {/* TARJETAS RESUMEN — sueño, energía, ánimo, sofocos */}
                                 {(() => {
-                                    const last3 = symptoms.slice(-3);
+                                    // symptoms viene del más reciente al más antiguo — los "últimos 3 días" son los 3 PRIMEROS, no los últimos.
+                                    const last3 = symptoms.slice(0, 3);
                                     if (last3.length === 0) return null;
                                     const sf = (s, c, k) => s[c] !== undefined ? s[c] : (s[k] !== undefined ? s[k] : 0);
                                     const avg = (c, k) => (last3.reduce((a, s) => a + sf(s, c, k), 0) / last3.length);

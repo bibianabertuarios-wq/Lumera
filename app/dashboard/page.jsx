@@ -2,12 +2,9 @@
 import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '../lib/supabase';
 import { getLecturaDelDia, estadoDesdeSintomaHoy } from '../lib/lecturas';
 import { DIAS_AUTO_COMPLETA, HITO_SEMANAS, getSemanaContigo, getFaseSemana, contarDiasEnSemanaActual } from '../lib/planBloques';
-
-const SUPABASE_URL = 'https://pyekwpmbdnmglrjieexc.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5ZWt3cG1iZG5tZ2xyamllZXhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU0ODM0OTgsImV4cCI6MjA4MTA1OTQ5OH0.zQl7GF3E6BhDqW3bEMixAbdDcOsW8BsFOBeAGa-5bzY';
 
 const getHora = () => {
   const h = new Date().getHours();
@@ -335,7 +332,6 @@ export default function Dashboard() {
   const [usoVisible, setUsoVisible] = useState(false);
   const [periodLog, setPeriodLog] = useState([]);
   const router = useRouter();
-  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
   const urlBase64ToUint8Array = (base64String) => {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
