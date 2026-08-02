@@ -4795,271 +4795,19 @@ query = query.eq('region', region.toUpperCase());
                             </div>
                         </details>
                         </div>
-                        {/* MI PROGRESO */}
-                        <details style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white',marginTop:'1.5rem'}}>
-                            <summary style={{listStyle:'none',cursor:'pointer'}}>
-                                <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(255,255,255,0.92))'}}>
-                                    <img src='/images/nutri_progreso.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
-                                    <div style={{flex:1}}>
-                                        <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Mis datos metabólicos':'My metabolic data'}</p>
-                                        <p style={{fontSize:'0.78rem',color:'#C4A882',margin:0}}>{language==='es'?'IMC, TDEE y tendencias':'BMI, TDEE and trends'}</p>
-                                    </div>
+                        {/* TU PROGRESO — vive en la pantalla "Yo" del dashboard (datos metabólicos + tendencias
+                            de sueño/energía/ánimo). Aquí solo un enlace, para no duplicar el mismo gráfico
+                            en tres sitios distintos de la app. */}
+                        <div onClick={() => { window.location.href = '/dashboard?openYo=1'; }} style={{borderRadius:'1.25rem',overflow:'hidden',border:'1px solid rgba(201,147,90,0.2)',background:darkMode?'rgba(255,255,255,0.03)':'white',marginTop:'1.5rem',cursor:'pointer'}}>
+                            <div style={{padding:'1.25rem 1.5rem',display:'flex',alignItems:'center',gap:'1rem',background:'linear-gradient(135deg,rgba(201,147,90,0.12),rgba(255,255,255,0.92))'}}>
+                                <img src='/images/nutri_progreso.png' style={{width:'48px',height:'48px',borderRadius:'50%',objectFit:'cover',flexShrink:0,boxShadow:'0 2px 8px rgba(201,147,90,0.3)'}}/>
+                                <div style={{flex:1}}>
+                                    <p style={{fontFamily:"'Cormorant',serif",fontSize:'1.25rem',fontWeight:600,color:darkMode?'#fdf8f3':'#1c1917',margin:0}}>{language==='es'?'Mi progreso':'My progress'}</p>
+                                    <p style={{fontSize:'0.78rem',color:'#C4A882',margin:0}}>{language==='es'?'IMC, TDEE y tendencias — en tu pantalla Yo':'BMI, TDEE and trends — in your Me screen'}</p>
                                 </div>
-                            </summary>
-                            <div style={{padding:'0.5rem'}}>
-                        {(getUserTier() === 'premium' || getUserTier() === 'trial') && (
-                            <div className="relative rounded-2xl shadow-2xl overflow-hidden mb-8" style={{
-                                background: 'linear-gradient(135deg, rgba(254, 240, 138, 0.3) 0%, rgba(251, 207, 232, 0.3) 25%, rgba(216, 180, 254, 0.3) 50%, rgba(165, 180, 252, 0.3) 75%, rgba(254, 202, 202, 0.3) 100%)'
-                            }}>
-                                {/* Overlay sutil */}
-                                <div className="absolute inset-0" style={{background: 'rgba(255,255,255,0.65)'}}></div>
-
-                                {/* Contenido */}
-                                <div className="relative z-10 p-6">
-                                    <div className="flex items-center justify-between mb-6">
-                                        <div>
-                                            <h3 className="text-2xl font-semibold gradient-text mb-2">
-                                                {language === 'es' ? 'Tu Transformación' : 'Your Transformation'}
-                                            </h3>
-                                            <p className={`text-sm ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                                                {language === 'es' ? 'Como la serpiente muda su piel, tú estás transformándote' : 'Like the snake sheds its skin, you are transforming'}
-                                            </p>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            {chartData && (
-                                                <button
-                                                    onClick={() => setShowDashboardModal(true)}
-                                                    className="text-amber-700 hover:text-amber-800 text-sm font-semibold"
-                                                >
-                                                    📊 {language === 'es' ? 'Ver gráficos' : 'View charts'}
-                                                </button>
-                                            )}
-                                            <button
-                                                onClick={openEditProfileModal}
-                                                className="text-amber-700 hover:text-amber-800 text-sm font-semibold"
-                                            >
-                                                ✏️ {language === 'es' ? 'Editar' : 'Edit'}
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                {getMetrics() ? (
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                        <div className={`${darkMode ? 'bg-blue-900/40' : 'bg-blue-50'} p-4 rounded-xl`}>
-                                            <p className={`text-xs ${darkMode ? 'text-blue-300' : 'text-blue-600'} font-semibold mb-1`}>
-                                                IMC
-                                            </p>
-                                            <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                                                {getMetrics().bmi}
-                                            </p>
-                                        </div>
-                                        <div className={`${darkMode ? 'bg-green-900/40' : 'bg-green-50'} p-4 rounded-xl`}>
-                                            <p className={`text-xs ${darkMode ? 'text-green-300' : 'text-green-600'} font-semibold mb-1`}>
-                                                TMB
-                                            </p>
-                                            <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                                                {getMetrics().bmr}
-                                            </p>
-                                        </div>
-                                        <div className={`${darkMode ? 'bg-stone-900/40' : 'bg-amber-50'} p-4 rounded-xl`}>
-                                            <p className={`text-xs ${darkMode ? 'text-amber-300' : 'text-amber-700'} font-semibold mb-1`}>
-                                                TDEE
-                                            </p>
-                                            <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                                                {getMetrics().tdee}
-                                            </p>
-                                        </div>
-                                        <div className={`${darkMode ? 'bg-pink-900/40' : 'bg-pink-50'} p-4 rounded-xl`}>
-                                            <p className={`text-xs ${darkMode ? 'text-pink-300' : 'text-pink-600'} font-semibold mb-1`}>
-                                                {language === 'es' ? 'Objetivo' : 'Target'}
-                                            </p>
-                                            <p className={`text-2xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>
-                                                {getMetrics().target}
-                                            </p>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className={`${darkMode ? 'bg-yellow-900/40 border-yellow-700' : 'bg-yellow-50 border-yellow-200'} border-2 border-dashed rounded-xl p-6 text-center`}>
-                                        <p className={`text-sm ${darkMode ? 'text-yellow-200' : 'text-yellow-800'} mb-3`}>
-                                            {language === 'es' 
-                                                ? '⚠️ Completa tu perfil metabólico para menús ultra-personalizados'
-                                                : '⚠️ Complete your metabolic profile for ultra-personalized menus'}
-                                        </p>
-                                        <button
-                                            onClick={openCompleteProfileModal}
-                                            className="bg-gradient-to-r from-amber-600 to-amber-400 text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition"
-                                        >
-                                            {language === 'es' ? 'Completar Ahora' : 'Complete Now'}
-                                        </button>
-                                    </div>
-                                )}
-                                </div>
+                                <span style={{color:'#C4A882',fontSize:'1.1rem'}}>→</span>
                             </div>
-                        )}
-
-                        {/* GRÁFICOS DE TENDENCIA - Trial y Premium con síntomas */}
-                        {(getUserTier() === 'premium' || getUserTier() === 'trial') && symptoms.length >= 3 && (
-                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-lg p-6 mb-8`}>
-                                <div className="flex items-center justify-between mb-4">
-                                    <div>
-                                        <h3 className="text-lg font-semibold gradient-text">
-                                            📊 {language === 'es' ? 'Tus Tendencias' : 'Your Trends'}
-                                        </h3>
-                                        <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                                            {language === 'es' ? 'Últimos 7 días' : 'Last 7 days'}
-                                        </p>
-                                    </div>
-                                    <button
-                                        onClick={() => setCurrentPage('symptoms')}
-                                        className="text-xs text-amber-700 font-semibold hover:underline"
-                                    >
-                                        {language === 'es' ? 'Ver detalle →' : 'See detail →'}
-                                    </button>
-                                </div>
-
-                                {/* Mini tarjetas de promedio */}
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-                                    {[
-                                        { label: language === 'es' ? 'Sueño' : 'Sleep', key: 'sleep', color: '#C4A882', icon: '😴' },
-                                        { label: language === 'es' ? 'Energía' : 'Energy', key: 'energy', color: 'pink', icon: '⚡' },
-                                        { label: language === 'es' ? 'Ánimo' : 'Mood', key: 'mood', color: 'blue', icon: '🪨' },
-                                        { label: language === 'es' ? 'Sofocos' : 'Hot flashes', key: 'hot_flashes', color: 'orange', icon: '🔥' }
-                                    ].map(metric => {
-                                        const last7 = symptoms.slice(0, 7);
-                                        const avg = last7.reduce((sum, s) => sum + (s[metric.key] || 0), 0) / last7.length;
-                                        const prev7 = symptoms.slice(7, 14);
-                                        const prevAvg = prev7.length > 0 ? prev7.reduce((sum, s) => sum + (s[metric.key] || 0), 0) / prev7.length : avg;
-                                        const trend = avg > prevAvg ? '↑' : avg < prevAvg ? '↓' : '→';
-                                        const trendColor = metric.key === 'hot_flashes' 
-                                            ? (avg < prevAvg ? 'text-green-500' : avg > prevAvg ? 'text-red-500' : 'text-gray-400')
-                                            : (avg > prevAvg ? 'text-green-500' : avg < prevAvg ? 'text-red-500' : 'text-gray-400');
-                                        return (
-                                            <div key={metric.key} className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-3 text-center`}>
-                                                <div className="text-lg mb-1">{metric.icon}</div>
-                                                <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-500'} mb-1`}>{metric.label}</p>
-                                                <p className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>{avg.toFixed(1)}</p>
-                                                <p className={`text-sm font-semibold ${trendColor}`}>{trend}</p>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-
-                                {/* Gráfico de área con degradado — mismo estilo que el aviso de LUMI del día 3, pero visible siempre que hay 3+ días registrados */}
-                                {(() => {
-                                    // symptoms viene del más reciente al más antiguo: los 7 primeros son "los últimos 7 días".
-                                    // Se invierten para pintar de izquierda (más antiguo) a derecha (hoy).
-                                    const last7 = symptoms.slice(0, 7).reverse();
-                                    const keySueno = language === 'es' ? 'Sueño' : 'Sleep';
-                                    const keyEnergia = language === 'es' ? 'Energía' : 'Energy';
-                                    const keyAnimo = language === 'es' ? 'Ánimo' : 'Mood';
-                                    const progresoChartData = last7.map((s, i) => {
-                                        const dateStr = s.symptom_date || s.date;
-                                        const d = parseLocalDate(dateStr);
-                                        const dia = d
-                                            ? (language === 'es' ? ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'][d.getDay()] : ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()])
-                                            : (language === 'es' ? `Día ${i + 1}` : `Day ${i + 1}`);
-                                        const fecha = d ? `${d.getDate()}/${d.getMonth() + 1}` : '';
-                                        return {
-                                            dia, fecha,
-                                            [keySueno]: s.sleep || 0,
-                                            [keyEnergia]: s.energy || 0,
-                                            [keyAnimo]: s.mood || 0,
-                                        };
-                                    });
-                                    return (
-                                        <ResponsiveContainer width="100%" height={200}>
-                                            <AreaChart data={progresoChartData} margin={{ top: 5, right: 8, left: -20, bottom: 0 }}>
-                                                <defs>
-                                                    <linearGradient id="gradProgresoSueno" x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.35} />
-                                                        <stop offset="95%" stopColor="#60a5fa" stopOpacity={0} />
-                                                    </linearGradient>
-                                                    <linearGradient id="gradProgresoEnergia" x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="5%" stopColor="#C9935A" stopOpacity={0.35} />
-                                                        <stop offset="95%" stopColor="#C9935A" stopOpacity={0} />
-                                                    </linearGradient>
-                                                    <linearGradient id="gradProgresoAnimo" x1="0" y1="0" x2="0" y2="1">
-                                                        <stop offset="5%" stopColor="#0D9488" stopOpacity={0.35} />
-                                                        <stop offset="95%" stopColor="#0D9488" stopOpacity={0} />
-                                                    </linearGradient>
-                                                </defs>
-                                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'} />
-                                                <XAxis
-                                                    dataKey="dia"
-                                                    tick={({ x, y, payload, index }) => (
-                                                        <g transform={`translate(${x},${y})`}>
-                                                            <text x={0} y={0} dy={12} textAnchor="middle" fontSize={11} fontWeight={600} fill={darkMode ? '#e7e5e4' : '#44403c'}>{payload.value}</text>
-                                                            <text x={0} y={0} dy={26} textAnchor="middle" fontSize={9} fill={darkMode ? '#78716c' : '#a8a29e'}>{progresoChartData[index]?.fecha}</text>
-                                                        </g>
-                                                    )}
-                                                    axisLine={false} tickLine={false} height={34}
-                                                />
-                                                <YAxis domain={[0, 10]} tick={{ fontSize: 10, fill: darkMode ? '#9ca3af' : '#6b7280' }} axisLine={false} tickLine={false} width={22} />
-                                                <Tooltip contentStyle={{ fontSize: '0.78rem', borderRadius: '0.6rem', border: 'none', boxShadow: '0 8px 24px rgba(0,0,0,0.15)' }} />
-                                                <Legend wrapperStyle={{ fontSize: '0.7rem', paddingTop: '0.4rem' }} iconType="circle" iconSize={8} />
-                                                <Area type="monotone" dataKey={keySueno} stroke="#60a5fa" strokeWidth={2.5} fill="url(#gradProgresoSueno)" dot={{ r: 3, strokeWidth: 0, fill: '#60a5fa' }} activeDot={{ r: 6 }} />
-                                                <Area type="monotone" dataKey={keyEnergia} stroke="#C9935A" strokeWidth={2.5} fill="url(#gradProgresoEnergia)" dot={{ r: 3, strokeWidth: 0, fill: '#C9935A' }} activeDot={{ r: 6 }} />
-                                                <Area type="monotone" dataKey={keyAnimo} stroke="#0D9488" strokeWidth={2.5} fill="url(#gradProgresoAnimo)" dot={{ r: 3, strokeWidth: 0, fill: '#0D9488' }} activeDot={{ r: 6 }} />
-                                            </AreaChart>
-                                        </ResponsiveContainer>
-                                    );
-                                })()}
-
-                                {/* Para trial: mensaje para upgrade */}
-                            </div>
-                        )}
-
-                        {/* PREVIEW gráficos para TRIAL - día 3 */}
-                        {getUserTier() === 'trial' && symptoms.length >= 3 && (
-                            <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-lg p-6 mb-8 relative overflow-hidden`}>
-                                <div className="flex items-center justify-between mb-4">
-                                    <h3 className="text-lg font-semibold gradient-text">
-                                        📊 {language === 'es' ? 'Tus Tendencias' : 'Your Trends'}
-                                    </h3>
-                                    <span className="text-xs bg-amber-50 text-amber-700 px-2 py-1 rounded-full font-semibold">
-                                        {language === 'es' ? '✦ Premium' : '✦ Premium'}
-                                    </span>
-                                </div>
-
-                                {/* Preview borroso */}
-                                <div className="relative">
-                                    <div className="blur-sm opacity-50 pointer-events-none">
-                                        <div className="grid grid-cols-4 gap-3 mb-4">
-                                            {['😴', '⚡', '🪨', '🔥'].map((icon, i) => (
-                                                <div key={i} className={`${darkMode ? 'bg-gray-700' : 'bg-gray-50'} rounded-xl p-3 text-center`}>
-                                                    <div className="text-lg mb-1">{icon}</div>
-                                                    <p className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>7.{i}</p>
-                                                    <p className="text-sm text-green-500">↑</p>
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <div className="flex items-end gap-1 h-12">
-                                            {[6,7,5,8,7,9,8].map((v, i) => (
-                                                <div key={i} className="flex-1 rounded-t-sm bg-amber-400" style={{ height: (v/10*100) + '%' }} />
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    {/* Overlay CTA */}
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center">
-                                        <p className={`text-sm font-bold ${darkMode ? 'text-white' : 'text-gray-800'} mb-2 text-center`}>
-                                            {language === 'es' 
-                                                ? '¡Ya tienes datos suficientes para ver tus patrones!' 
-                                                : 'You have enough data to see your patterns!'}
-                                        </p>
-                                        <button
-                                            onClick={() => setCurrentPage('premium')}
-                                            className="bg-gradient-to-r from-amber-600 to-amber-400 text-white px-6 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition"
-                                        >
-                                            {language === 'es' ? '✦ Desbloquear tendencias' : '✦ Unlock trends'}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                            </div>
-                        </details>
+                        </div>
                     </div>
                 );
             };
@@ -5519,64 +5267,16 @@ query = query.eq('region', region.toUpperCase());
                             </button>
                         </div>
 
-                        {symptoms.length > 0 && (() => {
-                            // symptoms viene del más reciente al más antiguo — para "los últimos 14 días" hay que
-                            // coger los 14 PRIMEROS (no los últimos, que serían los 14 más antiguos de todo el historial)
-                            // y luego invertir para pintar de izquierda (antiguo) a derecha (hoy).
-                            const trendData = symptoms.slice(0, 14).reverse().map(s => ({
-                                label: (parseLocalDate(s.symptom_date || s.date) || new Date()).toLocaleDateString(language === 'es' ? 'es-ES' : 'en-US', { month: 'short', day: 'numeric' }),
-                                Sueño: s.sleep || 0,
-                                Energía: s.energy || 0,
-                                Ánimo: s.mood || 0,
-                                Sofocos: s.hot_flashes || s.hotFlashes || 0,
-                            }));
-                            const ejeXProps = { dataKey: 'label', tick: { fontSize: 11, fill: darkMode ? '#9ca3af' : '#6b7280' }, axisLine: false, tickLine: false };
-                            const ejeYProps = { domain: [0, 10], tick: { fontSize: 10, fill: darkMode ? '#9ca3af' : '#6b7280' }, axisLine: false, tickLine: false, width: 24 };
-                            const rejilla = <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'} />;
-                            return (
-                                <>
-                                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
-                                        <h3 className="font-semibold text-lg mb-4">📈 {language === 'es' ? 'Tendencia de Sueño' : 'Sleep Trend'}</h3>
-                                        <ResponsiveContainer width="100%" height={220}>
-                                            <LineChart data={trendData}>
-                                                {rejilla}<XAxis {...ejeXProps} /><YAxis {...ejeYProps} /><Tooltip /><Legend wrapperStyle={{fontSize:'0.75rem'}} />
-                                                <Line type="monotone" dataKey="Sueño" name={language === 'es' ? 'Sueño' : 'Sleep'} stroke="#C4A882" strokeWidth={2} dot={{r:3}} />
-                                            </LineChart>
-                                        </ResponsiveContainer>
-                                    </div>
-
-                                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
-                                        <h3 className="font-semibold text-lg mb-4">📈 {language === 'es' ? 'Tendencia de Energía' : 'Energy Trend'}</h3>
-                                        <ResponsiveContainer width="100%" height={220}>
-                                            <LineChart data={trendData}>
-                                                {rejilla}<XAxis {...ejeXProps} /><YAxis {...ejeYProps} /><Tooltip /><Legend wrapperStyle={{fontSize:'0.75rem'}} />
-                                                <Line type="monotone" dataKey="Energía" name={language === 'es' ? 'Energía' : 'Energy'} stroke="#B8997A" strokeWidth={2} dot={{r:3}} />
-                                            </LineChart>
-                                        </ResponsiveContainer>
-                                    </div>
-
-                                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
-                                        <h3 className="font-semibold text-lg mb-4">📈 {language === 'es' ? 'Tendencia de Ánimo' : 'Mood Trend'}</h3>
-                                        <ResponsiveContainer width="100%" height={220}>
-                                            <LineChart data={trendData}>
-                                                {rejilla}<XAxis {...ejeXProps} /><YAxis {...ejeYProps} /><Tooltip /><Legend wrapperStyle={{fontSize:'0.75rem'}} />
-                                                <Line type="monotone" dataKey="Ánimo" name={language === 'es' ? 'Ánimo' : 'Mood'} stroke="#06b6d4" strokeWidth={2} dot={{r:3}} />
-                                            </LineChart>
-                                        </ResponsiveContainer>
-                                    </div>
-
-                                    <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
-                                        <h3 className="font-semibold text-lg mb-4">📈 {language === 'es' ? 'Tendencia de Sofocos' : 'Hot Flashes Trend'}</h3>
-                                        <ResponsiveContainer width="100%" height={220}>
-                                            <BarChart data={trendData}>
-                                                {rejilla}<XAxis {...ejeXProps} /><YAxis {...ejeYProps} /><Tooltip /><Legend wrapperStyle={{fontSize:'0.75rem'}} />
-                                                <Bar dataKey="Sofocos" name={language === 'es' ? 'Sofocos' : 'Hot Flashes'} fill="#f97316" />
-                                            </BarChart>
-                                        </ResponsiveContainer>
-                                    </div>
-                                </>
-                            );
-                        })()}
+                        {/* TU PROGRESO — vive en la pantalla "Yo" del dashboard (mismas 4 tendencias, sin duplicar aquí). */}
+                        {symptoms.length > 0 && (
+                            <div onClick={() => { window.location.href = '/dashboard?openYo=1'; }} className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6 flex items-center justify-between cursor-pointer`}>
+                                <div>
+                                    <h3 className="font-semibold text-lg">📈 {language === 'es' ? 'Tus tendencias' : 'Your trends'}</h3>
+                                    <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>{language === 'es' ? 'Sueño, energía, ánimo y sofocos — en tu pantalla Yo' : 'Sleep, energy, mood and hot flashes — in your Me screen'}</p>
+                                </div>
+                                <span className="text-amber-600 text-lg">→</span>
+                            </div>
+                        )}
                         {symptoms.length > 0 && (
                             <>
 

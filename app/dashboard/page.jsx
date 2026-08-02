@@ -446,6 +446,18 @@ export default function Dashboard() {
     }
   };
 
+  // Abre "Yo" automáticamente si llegamos desde un enlace externo (Nutrición o Síntomas en /lumera
+  // enlazan aquí con ?openYo=1 en vez de duplicar el gráfico de progreso en su propia pantalla).
+  // Se lee window.location.search directamente (en vez de useSearchParams) porque esta página ya
+  // es 100% cliente y así evitamos el requisito de envolver en <Suspense> que pide Next.js.
+  useEffect(() => {
+    if (typeof window === 'undefined' || !user?.id) return;
+    if (new URLSearchParams(window.location.search).get('openYo') === '1') {
+      abrirYo();
+      router.replace('/dashboard');
+    }
+  }, [user?.id]);
+
   const crearRecordatorio = async () => {
     if (!nuevoRecordatorioTexto.trim() || !nuevoRecordatorioFecha) return;
     setGuardandoRecordatorioNuevo(true);
@@ -1017,13 +1029,11 @@ export default function Dashboard() {
                 </p>
               )}
               <div style={{display:'flex',justifyContent:'flex-end',alignItems:'center',marginBottom:'0.9rem'}}>
-                <span onClick={()=>setProgresoDetalleVisible(!progresoDetalleVisible)} style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.72rem',color:'#C9935A',fontWeight:600,cursor:'pointer',whiteSpace:'nowrap'}}>
-                  {progresoDetalleVisible ? (is_es ? '▲ Ocultar' : '▲ Hide') : (is_es ? 'Ver detalle →' : 'See detail →')}
+                <span onClick={abrirYo} style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.72rem',color:'#C9935A',fontWeight:600,cursor:'pointer',whiteSpace:'nowrap'}}>
+                  {is_es ? 'Ver tu progreso completo →' : 'See your full progress →'}
                 </span>
               </div>
-              {progresoDetalleVisible && (!esObjetivoPeso ? (
-                <TendenciaCard tipo={esObjetivoSueno ? 'sueno' : 'energia'} checkins={ultimosCheckins} is_es={is_es} bare />
-              ) : !user?.pesoMeta ? (
+              {(!esObjetivoPeso ? null : !user?.pesoMeta ? (
                 <div onClick={()=>setShowPesoModal(true)} style={{textAlign:'center',cursor:'pointer',padding:'0.5rem 0'}}>
                   <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',color:'#0D3D3D',marginBottom:'0.35rem'}}>
                     {is_es ? '✦ Definir mi meta' : '✦ Set my goal'}
@@ -1116,6 +1126,43 @@ export default function Dashboard() {
                     <div style={{flex:1,background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1rem',padding:'1rem',textAlign:'center'}}>
                       <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.6rem',color:'#0D3D3D',fontWeight:700}}>{fragmentosSemana}/8</div>
                       <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(13,61,61,0.45)',textTransform:'uppercase',letterSpacing:'1px'}}>{is_es?'fragmentos esta semana':'fragments this week'}</div>
+                    </div>
+                  </div>
+
+                  {/* TU PROGRESO — único lugar de la app con datos metabólicos y tendencias de sueño/energía-ánimo.
+                      Antes esto estaba repetido (y con bugs de orden) en Síntomas, Nutrición y el aviso del día 3;
+                      ahora esos sitios solo enlazan aquí. */}
+                  <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem'}}>
+                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,display:'inline-block',background:'rgba(31,122,92,0.1)',border:'1px solid rgba(31,122,92,0.22)',color:'#0D3D3D',borderRadius:'0.5rem',padding:'0.3rem 0.7rem',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.9rem'}}>
+                      {is_es ? 'Tu progreso' : 'Your progress'}
+                    </div>
+                    {(user?.tdee || (user?.peso && user?.talla)) && (
+                      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'0.6rem',marginBottom:'1.1rem'}}>
+                        {user?.peso && user?.talla && (
+                          <div style={{background:'#FAF7F1',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'0.75rem',padding:'0.7rem',textAlign:'center'}}>
+                            <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.3rem',color:'#0D3D3D',fontWeight:700}}>{(user.peso / ((user.talla / 100) ** 2)).toFixed(1)}</div>
+                            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(13,61,61,0.45)',textTransform:'uppercase',letterSpacing:'1px'}}>IMC</div>
+                          </div>
+                        )}
+                        {user?.tdee && (
+                          <div style={{background:'#FAF7F1',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'0.75rem',padding:'0.7rem',textAlign:'center'}}>
+                            <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.3rem',color:'#0D3D3D',fontWeight:700}}>{user.tdee}</div>
+                            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(13,61,61,0.45)',textTransform:'uppercase',letterSpacing:'1px'}}>TDEE</div>
+                          </div>
+                        )}
+                        {user?.objetivo && (
+                          <div style={{background:'#FAF7F1',border:'1px solid rgba(201,147,90,0.15)',borderRadius:'0.75rem',padding:'0.7rem',textAlign:'center'}}>
+                            <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'0.8rem',color:'#0D3D3D',fontWeight:700,lineHeight:1.25}}>{user.objetivo}</div>
+                            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(13,61,61,0.45)',textTransform:'uppercase',letterSpacing:'1px',marginTop:'0.2rem'}}>{is_es ? 'Objetivo' : 'Goal'}</div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    <div style={{marginBottom:'1.1rem'}}>
+                      <TendenciaCard tipo="sueno" checkins={ultimosCheckins} is_es={is_es} bare />
+                    </div>
+                    <div>
+                      <TendenciaCard tipo="energia" checkins={ultimosCheckins} is_es={is_es} bare />
                     </div>
                   </div>
 
