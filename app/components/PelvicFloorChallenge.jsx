@@ -182,10 +182,12 @@ export default function PelvicFloorChallenge({ language = 'es', darkMode = false
             <div className="relative">
                 <video
                     src={meta.heroVideo}
+                    poster="/videos/pelvic-floor-hero-poster.jpg"
                     autoPlay
                     loop
                     muted
                     playsInline
+                    preload="auto"
                     className="w-full object-cover max-h-48"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
