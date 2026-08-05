@@ -536,8 +536,11 @@ export default function Dashboard() {
       sintoma: yoSintoma,
       horaDesayuno, horaComida, horaCena,
     }));
-    await activarPush();
+    // No bloqueamos el botón "Guardando..." esperando el permiso de notificaciones:
+    // ese diálogo del navegador puede tardar o quedarse sin respuesta, y el perfil
+    // (horas de comida incluidas) ya se guardó igualmente en Supabase.
     setGuardandoYo(false);
+    activarPush();
   };
 
   useEffect(() => { init(); }, []);
