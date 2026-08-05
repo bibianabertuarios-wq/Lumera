@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 // Hotmart. Bilingüe ES/EN vía is_es, igual que el resto de la app (ver CLAUDE.md).
 // El botón "Comprar" va directo al checkout de Hotmart (Página de Pago del Hotlink),
 // no a la ficha del Marketplace, para no distraer con otros productos.
-const CHECKOUT_ES = 'https://pay.hotmart.com/F105444282M';
+const CHECKOUT_ES = 'https://pay.hotmart.com/F105444282M?off=4lvf2lak';
 const CHECKOUT_EN = 'https://pay.hotmart.com/M105444457W';
 
 const css = `
