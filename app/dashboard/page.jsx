@@ -317,6 +317,7 @@ export default function Dashboard() {
   const [guardandoYo, setGuardandoYo] = useState(false);
   const [recursosVisibleYo, setRecursosVisibleYo] = useState(false);
   const [misRecordatorios, setMisRecordatorios] = useState([]);
+  const [yoFocusSection, setYoFocusSection] = useState(null);
   const [nuevoRecordatorioCategoria, setNuevoRecordatorioCategoria] = useState('cita');
   const [nuevoRecordatorioTexto, setNuevoRecordatorioTexto] = useState('');
   const [nuevoRecordatorioFecha, setNuevoRecordatorioFecha] = useState('');
@@ -428,10 +429,11 @@ export default function Dashboard() {
     setMetaInput('');
   };
 
-  const abrirYo = async () => {
+  const abrirYo = async (seccion = null) => {
     setYoNombre(user?.nombre || '');
     setYoObjetivo(user?.objetivo || '');
     setYoSintoma(user?.sintoma || '');
+    setYoFocusSection(seccion);
     setShowYoModal(true);
     const { data, error } = await supabase
       .from('custom_reminders')
@@ -542,6 +544,19 @@ export default function Dashboard() {
     setGuardandoYo(false);
     activarPush();
   };
+
+  // Cuando "Yo" se abre apuntando a una sección concreta (ej. desde "¿Necesitas que
+  // te recuerde tus horas o citas?"), la lleva ahí en vez de dejarla en la parte de
+  // arriba del modal a que la busque haciendo scroll.
+  useEffect(() => {
+    if (!showYoModal || !yoFocusSection) return;
+    const id = yoFocusSection === 'recordatorios' ? 'yo-horas-comida' : null;
+    if (!id) return;
+    const t = setTimeout(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+    return () => clearTimeout(t);
+  }, [showYoModal, yoFocusSection]);
 
   useEffect(() => { init(); }, []);
 
@@ -887,7 +902,7 @@ export default function Dashboard() {
               </a>
             )}
 
-            <div onClick={abrirYo} role="button" style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:'0.6rem',background:'rgba(201,147,90,0.12)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.9rem',padding:'0.85rem 1rem',cursor:'pointer'}}>
+            <div onClick={()=>abrirYo('recordatorios')} role="button" style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:'0.6rem',background:'rgba(201,147,90,0.12)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.9rem',padding:'0.85rem 1rem',cursor:'pointer'}}>
               <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',fontWeight:600,color:'white',lineHeight:1.3}}>
                 {is_es ? '¿Necesitas que te recuerde tus horas o citas?' : 'Need a reminder for your times or appointments?'}
               </span>
@@ -1193,7 +1208,7 @@ export default function Dashboard() {
                       {SINTOMAS.map(s => <option key={s} value={s}>{s}</option>)}
                     </select>
 
-                    <label style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(13,61,61,0.5)',display:'block',marginBottom:'0.5rem'}}>
+                    <label id="yo-horas-comida" style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(13,61,61,0.5)',display:'block',marginBottom:'0.5rem'}}>
                       {is_es ? 'Tus horas de comida' : 'Your meal times'}
                     </label>
                     {[
