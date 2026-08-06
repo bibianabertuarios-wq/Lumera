@@ -26,4 +26,4 @@ App de bienestar hormonal para mujeres 40+. Bilingüe ES/EN, controlado por la v
 
 ## Pendiente prioritario
 
-- Notificación push diaria de LUMI.
+- Recordatorios: Google Calendar es la vía principal (botón junto a cada hora de comida, con repetición diaria opcional). El push por notificación del navegador se mantiene como opción secundaria, sin insistir en activarlo — muchos móviles lo bloquean por defecto sin avisar (confirmado: solo 1 de 20 usuarias lo tenía realmente activo).
