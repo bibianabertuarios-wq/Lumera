@@ -426,10 +426,39 @@ import './lumera.css'
             const [lumiInput, setLumiInput] = useState('');
             const [lumiLoading, setLumiLoading] = useState(false);
 
-            // MODAL PATRÓN DÍA 3
+            // MODAL PATRÓN DÍA 3 / RESUMEN SEMANAL
             const [showPatternModal, setShowPatternModal] = useState(false);
             const [patternResult, setPatternResult] = useState(null);
             const [patternShown, setPatternShown] = useState(false);
+            const [patternEsPrimeraVez, setPatternEsPrimeraVez] = useState(true);
+
+            const DIAS_ENTRE_RESUMENES_PATTERN = 7;
+
+            // patternShown solo vivía en memoria y se reseteaba en cada recarga, así que este
+            // resumen (texto fijo "primeros 3 días" / "llevas 3 días") volvía a dispararse cada
+            // vez que la usuaria registraba un síntoma en una sesión nueva. Ahora se comporta como
+            // un modo resumen real: aparece al día 3 de trial y, a partir de ahí, como mucho 1 vez
+            // por semana — no en cada registro — guardando la última fecha en localStorage.
+            const puedeMostrarPatternResumen = () => {
+                if (!currentUser?.id) return true;
+                try {
+                    const ultimo = localStorage.getItem(`pattern_summary_last_shown_${currentUser.id}`);
+                    if (!ultimo) return true;
+                    const diasPasados = (Date.now() - new Date(ultimo).getTime()) / 86400000;
+                    return diasPasados >= DIAS_ENTRE_RESUMENES_PATTERN;
+                } catch (e) { return true; }
+            };
+
+            const marcarPatternShown = () => {
+                setPatternShown(true);
+                if (currentUser?.id) {
+                    try {
+                        const key = `pattern_summary_last_shown_${currentUser.id}`;
+                        setPatternEsPrimeraVez(!localStorage.getItem(key));
+                        localStorage.setItem(key, new Date().toISOString());
+                    } catch (e) {}
+                }
+            };
 
             // LUMI PROACTIVA - NUEVO ✨
             const [unreadLumiMessages, setUnreadLumiMessages] = useState(0);
@@ -2957,6 +2986,15 @@ query = query.eq('region', region.toUpperCase());
                 }
             }, [currentUser]);
 
+            // Sincroniza patternShown con el cooldown semanal ya guardado en este dispositivo
+            // (ver marcarPatternShown / puedeMostrarPatternResumen más arriba).
+            useEffect(() => {
+                if (!currentUser?.id) return;
+                if (!puedeMostrarPatternResumen()) {
+                    setPatternShown(true);
+                }
+            }, [currentUser?.id]);
+
             useEffect(() => {
                 if (!currentUser) return;
                 const trialDaysLeft = getTrialDaysLeft();
@@ -3004,10 +3042,10 @@ query = query.eq('region', region.toUpperCase());
                         if (hasSeenShula) {
                             setTimeout(() => {
                                 if (getTrialDaysLeft() <= 1) setShowPatternModal(true);
-                                setPatternShown(true);
+                                marcarPatternShown();
                             }, 1500);
                         } else {
-                            setPatternShown(true);
+                            marcarPatternShown();
                         }
                     }
                 }
@@ -3634,14 +3672,14 @@ query = query.eq('region', region.toUpperCase());
                 return patterns;
             };
 
-            // VERIFICAR SI DEBE MOSTRAR MODAL DE PATRÓN
+            // VERIFICAR SI DEBE MOSTRAR MODAL DE PATRÓN (día 3, y luego como mucho 1 vez/semana)
             const checkAndShowPattern = (newSymptoms) => {
-                if (newSymptoms.length >= 3 && !patternShown) {
+                if (newSymptoms.length >= 3 && !patternShown && puedeMostrarPatternResumen()) {
                     const result = analyzePatterns(newSymptoms);
                     if (result && result.length > 0) {
                         setPatternResult(result);
                         if (getTrialDaysLeft() <= 1) setShowPatternModal(true);
-                        setPatternShown(true);
+                        marcarPatternShown();
                     }
                 }
             };
@@ -7278,7 +7316,7 @@ query = query.eq('region', region.toUpperCase());
                                                     }]);
                                                 }
                                                 if (getTrialDaysLeft() <= 1) setShowPatternModal(true);
-                                                setPatternShown(true);
+                                                marcarPatternShown();
                                             }}
                                             style={{
                                                 width: '100%',
@@ -7397,7 +7435,9 @@ query = query.eq('region', region.toUpperCase());
                                             : `${currentUser?.profile_name || ''}, I have been paying attention`}
                                     </h3>
                                     <p style={{fontSize:'0.85rem',color:'rgba(184,115,51,0.7)'}}>
-                                        {language === 'es' ? '✦ Aquí está lo que he visto en tus primeros 3 días' : '✦ Here is what I noticed in your first 3 days'}
+                                        {patternEsPrimeraVez
+                                            ? (language === 'es' ? '✦ Aquí está lo que he visto en tus primeros 3 días' : '✦ Here is what I noticed in your first 3 days')
+                                            : (language === 'es' ? '✦ Tu resumen de esta semana' : '✦ Your summary this week')}
                                     </p>
                                 </div>
 
@@ -7510,9 +7550,13 @@ query = query.eq('region', region.toUpperCase());
                                 {/* MENSAJE LUMI PERSONAL */}
                                 <div style={{margin: '1rem', padding: '1rem', background: 'linear-gradient(135deg, #fff7ed, #fdf4ff)', borderRadius: '0.875rem', border: '1px solid rgba(244,63,94,0.15)'}}>
                                     <p style={{fontSize: '0.85rem', lineHeight: 1.6, color: darkMode ? '#fda4af' : '#9f1239', fontStyle: 'italic'}}>
-                                        {language === 'es'
-                                            ? '"Llevas 3 días conociéndote mejor. Eso ya es más de lo que hace la mayoría. Lo que registras aquí me ayuda a entenderte y a darte exactamente lo que tu cuerpo necesita en esta etapa."'
-                                            : "You’ve spent 3 days getting to know yourself better. That’s already more than most people do. What you log here helps me understand you and give your body exactly what it needs at this stage."}
+                                        {patternEsPrimeraVez
+                                            ? (language === 'es'
+                                                ? '"Llevas 3 días conociéndote mejor. Eso ya es más de lo que hace la mayoría. Lo que registras aquí me ayuda a entenderte y a darte exactamente lo que tu cuerpo necesita en esta etapa."'
+                                                : "You’ve spent 3 days getting to know yourself better. That’s already more than most people do. What you log here helps me understand you and give your body exactly what it needs at this stage.")
+                                            : (language === 'es'
+                                                ? `"Llevas ${symptoms.length} días registrando cómo te sientes. Esto me sigue ayudando a entenderte y a afinar lo que tu cuerpo necesita en esta etapa."`
+                                                : `"You've logged how you feel for ${symptoms.length} days. This keeps helping me understand you and fine-tune what your body needs at this stage."`)}
                                     </p>
                                     <p style={{fontSize: '0.78rem', color: '#a8a29e', marginTop: '0.5rem', fontWeight: 600}}>— LUMI</p>
                                 </div>
