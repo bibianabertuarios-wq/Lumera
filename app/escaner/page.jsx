@@ -136,9 +136,11 @@ export default function Escaner() {
     // que anatomicamente cae por dentro del contorno visual real de la cadera — a diferencia
     // de los landmarks de hombro (11/12), que si coinciden con el borde visual del hombro.
     // Sin corregir esto, el ratio sale sistematicamente bajo para casi cualquier foto y casi
-    // todo el mundo cae en "Manzana invertida". Factor de correccion aproximado (1.15) para
-    // compensar ese sesgo — revisar y ajustar con mas fotos de prueba de formas conocidas.
-    const FACTOR_CALIBRACION_CADERA = 1.15;
+    // todo el mundo cae en "Manzana invertida". El factor 1.15 usado antes no compensaba lo
+    // suficiente (confirmado con uso real: seguia dando "Manzana invertida" a casi todo el
+    // mundo) — subido a 1.3. Sigue siendo aproximado, revisar y ajustar con mas fotos de
+    // prueba de formas conocidas si se detectan sesgos hacia otro lado (ej. exceso de "Pera").
+    const FACTOR_CALIBRACION_CADERA = 1.3;
     const ratio = (hipWidth / shoulderWidth) * FACTOR_CALIBRACION_CADERA;
     
     let tipo, zona, consejo;
