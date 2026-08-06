@@ -1226,9 +1226,14 @@ export default function Dashboard() {
                       {SINTOMAS.map(s => <option key={s} value={s}>{s}</option>)}
                     </select>
 
-                    <label id="yo-horas-comida" style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(13,61,61,0.5)',display:'block',marginBottom:'0.5rem'}}>
+                    <label id="yo-horas-comida" style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(13,61,61,0.5)',display:'block',marginBottom:'0.3rem'}}>
                       {is_es ? 'Tus horas de comida' : 'Your meal times'}
                     </label>
+                    <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.68rem',color:'rgba(13,61,61,0.4)',marginBottom:'0.7rem',lineHeight:1.4}}>
+                      {is_es
+                        ? 'Recomendado: añade cada hora a Google Calendar 📅 — es más fiable que la notificación del navegador, que muchos móviles bloquean sin avisar.'
+                        : 'Recommended: add each time to Google Calendar 📅 — more reliable than the browser notification, which many phones block without asking.'}
+                    </p>
                     {[
                       { label: is_es ? 'Desayunar' : 'Breakfast', val: horaDesayuno, set: setHoraDesayuno },
                       { label: is_es ? 'Comer' : 'Lunch', val: horaComida, set: setHoraComida },
@@ -1242,9 +1247,9 @@ export default function Dashboard() {
                             value=""
                             onChange={e => { if (e.target.value) { window.open(buildGoogleCalendarLink(label, val, e.target.value), '_blank'); e.target.value = ''; } }}
                             title={is_es ? 'Añadir a Google Calendar' : 'Add to Google Calendar'}
-                            style={{padding:'0.4rem 0.3rem',borderRadius:'0.5rem',border:'1px solid rgba(201,147,90,0.3)',fontSize:'0.85rem',background:'white',color:'#0D3D3D',cursor:'pointer'}}
+                            style={{padding:'0.4rem 0.5rem',borderRadius:'0.6rem',border:'1.5px solid #C9935A',fontSize:'0.78rem',fontWeight:600,background:'rgba(201,147,90,0.12)',color:'#A06030',cursor:'pointer'}}
                           >
-                            <option value="">📅</option>
+                            <option value="">{is_es ? '📅 Calendar' : '📅 Calendar'}</option>
                             <option value="dia">{is_es ? 'Solo hoy' : 'Just today'}</option>
                             <option value="semana">{is_es ? '1 semana' : '1 week'}</option>
                             <option value="siempre">{is_es ? 'Recordarme siempre' : 'Remind me always'}</option>
