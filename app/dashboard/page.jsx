@@ -341,6 +341,24 @@ export default function Dashboard() {
     return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)));
   };
 
+  // Enlace para añadir la hora de comida como evento a Google Calendar, con
+  // repetición diaria opcional — pensado como alternativa/refuerzo al push cuando
+  // este falla o el navegador no da permiso, para que no haya que apuntarlo a mano
+  // cada día. No usa la API de Calendar ni pide login: solo abre el editor de
+  // Google con el evento ya rellenado, y la usuaria lo confirma ella misma.
+  const buildGoogleCalendarLink = (titulo, horaHHMM, repeticion) => {
+    const [h, m] = horaHHMM.split(':').map(Number);
+    const inicio = new Date();
+    inicio.setHours(h, m, 0, 0);
+    const fin = new Date(inicio.getTime() + 30 * 60000);
+    const pad = (n) => String(n).padStart(2, '0');
+    const formatear = (d) => `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
+    let url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('Lumera · ' + titulo)}&dates=${formatear(inicio)}/${formatear(fin)}&details=${encodeURIComponent(is_es ? 'Recordatorio de Lumera' : 'Lumera reminder')}`;
+    if (repeticion === 'semana') url += '&recur=RRULE:FREQ=DAILY;COUNT=7';
+    if (repeticion === 'siempre') url += '&recur=RRULE:FREQ=DAILY';
+    return url;
+  };
+
   // Pide permiso de notificaciones y suscribe al usuario a push si aún no lo está.
   // Se dispara desde donde la usuaria realmente gestiona sus recordatorios (pantalla "Yo"):
   // al guardar sus horas de comida o al crear su primer recordatorio a demanda.
@@ -1216,9 +1234,22 @@ export default function Dashboard() {
                       { label: is_es ? 'Comer' : 'Lunch', val: horaComida, set: setHoraComida },
                       { label: is_es ? 'Cenar' : 'Dinner', val: horaCena, set: setHoraCena },
                     ].map(({label,val,set}) => (
-                      <div key={label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.6rem'}}>
+                      <div key={label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.6rem',gap:'0.4rem'}}>
                         <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#0D3D3D'}}>{label}</span>
-                        <input type="time" value={val} onChange={e=>set(e.target.value)} style={{padding:'0.4rem 0.6rem',borderRadius:'0.5rem',border:'1px solid rgba(201,147,90,0.3)',fontSize:'0.85rem',background:'white'}}/>
+                        <div style={{display:'flex',alignItems:'center',gap:'0.35rem'}}>
+                          <input type="time" value={val} onChange={e=>set(e.target.value)} style={{padding:'0.4rem 0.6rem',borderRadius:'0.5rem',border:'1px solid rgba(201,147,90,0.3)',fontSize:'0.85rem',background:'white'}}/>
+                          <select
+                            value=""
+                            onChange={e => { if (e.target.value) { window.open(buildGoogleCalendarLink(label, val, e.target.value), '_blank'); e.target.value = ''; } }}
+                            title={is_es ? 'Añadir a Google Calendar' : 'Add to Google Calendar'}
+                            style={{padding:'0.4rem 0.3rem',borderRadius:'0.5rem',border:'1px solid rgba(201,147,90,0.3)',fontSize:'0.85rem',background:'white',color:'#0D3D3D',cursor:'pointer'}}
+                          >
+                            <option value="">📅</option>
+                            <option value="dia">{is_es ? 'Solo hoy' : 'Just today'}</option>
+                            <option value="semana">{is_es ? '1 semana' : '1 week'}</option>
+                            <option value="siempre">{is_es ? 'Recordarme siempre' : 'Remind me always'}</option>
+                          </select>
+                        </div>
                       </div>
                     ))}
 
