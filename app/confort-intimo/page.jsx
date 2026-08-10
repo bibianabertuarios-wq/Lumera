@@ -8,6 +8,7 @@ import { useEffect, useRef } from 'react';
 // golpe), y "Qué vas a encontrar" es un carrusel horizontal deslizable, como las
 // diapositivas del carrusel de Instagram, en vez de una cuadrícula estática densa.
 const CHECKOUT_ES = 'https://pay.hotmart.com/M8269215?off=8740eb8i';
+const CHECKOUT_LATAM = 'https://pay.hotmart.com/M8269215?off=u504rs0a';
 
 const css = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,500&family=Montserrat:wght@400;500;600;700&display=swap');
@@ -30,8 +31,12 @@ const css = `
   .ci-slide-sub{font-size:1.02rem;font-style:italic;color:rgba(250,247,241,0.65);line-height:1.4;}
 `;
 
-export default function ConfortIntimo() {
+export default function ConfortIntimo({ searchParams }) {
   const rootRef = useRef(null);
+  const isLatam = searchParams?.mercado === 'latam';
+  const currency = isLatam ? 'USD' : 'EUR';
+  const priceOld = isLatam ? '$9.90' : '9,90€';
+  const priceNew = isLatam ? '$7.90' : '7,90€';
 
   useEffect(() => {
     const els = rootRef.current ? rootRef.current.querySelectorAll('.ci-reveal') : [];
@@ -50,14 +55,14 @@ export default function ConfortIntimo() {
     return () => io.disconnect();
   }, []);
 
-  const checkoutUrl = CHECKOUT_ES;
+  const checkoutUrl = isLatam ? CHECKOUT_LATAM : CHECKOUT_ES;
   const coverImg = '/images/confort-intimo-40-es.png';
   const flowerImg = '/images/confort-intimo-flor.jpg';
 
   const handleCtaClick = () => {
     // El Pixel de Meta ya está instalado globalmente en layout.js (fbq init + PageView).
     if (typeof window !== 'undefined' && typeof window.fbq === 'function') {
-      window.fbq('track', 'InitiateCheckout', { value: 7.9, currency: 'EUR' });
+      window.fbq('track', 'InitiateCheckout', { value: 7.9, currency });
     }
   };
 
@@ -170,10 +175,10 @@ export default function ConfortIntimo() {
           {/* PRECIO / ANCLA */}
           <div className="ci-reveal" style={{ textAlign: 'center', marginBottom: '1rem' }}>
             <span style={{ fontFamily: 'Montserrat,sans-serif', fontSize: '1.05rem', color: 'rgba(250,247,241,0.4)', textDecoration: 'line-through', marginRight: '0.6rem' }}>
-              {'9,90€'}
+              {priceOld}
             </span>
             <span style={{ fontFamily: 'Montserrat,sans-serif', fontSize: '1.6rem', fontWeight: 700, color: '#E3AC71' }}>
-              {'7,90€'}
+              {priceNew}
             </span>
             <div style={{ fontFamily: 'Montserrat,sans-serif', fontSize: '0.72rem', color: 'rgba(250,247,241,0.45)', letterSpacing: '0.05em', marginTop: '0.2rem' }}>
               {'Precio de lanzamiento por tiempo limitado'}
@@ -183,7 +188,7 @@ export default function ConfortIntimo() {
           {/* CTA PRINCIPAL */}
           <div className="ci-reveal" style={{ marginBottom: '0.75rem' }}>
             <a href={checkoutUrl} target="_blank" rel="noopener noreferrer" onClick={handleCtaClick} className="ci-cta ci-pulse">
-              {'→ Quiero mi guía — 7,90€'}
+              {`→ Quiero mi guía — ${priceNew}`}
             </a>
           </div>
           <div className="ci-reveal" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
