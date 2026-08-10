@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Página de ventas propia para la guía "Confort Íntimo 40+" (Hotmart), pensada para
 // recibir tráfico de pago (Meta Ads) sin depender de la página estándar del
@@ -31,9 +31,17 @@ const css = `
   .ci-slide-sub{font-size:1.02rem;font-style:italic;color:rgba(250,247,241,0.65);line-height:1.4;}
 `;
 
-export default function ConfortIntimo({ searchParams }) {
+export default function ConfortIntimo() {
   const rootRef = useRef(null);
-  const isLatam = searchParams?.mercado === 'latam';
+  const [isLatam, setIsLatam] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('mercado') === 'latam') setIsLatam(true);
+    }
+  }, []);
+
   const currency = isLatam ? 'USD' : 'EUR';
   const priceOld = isLatam ? '$9.90' : '9,90€';
   const priceNew = isLatam ? '$7.90' : '7,90€';
