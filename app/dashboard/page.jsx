@@ -6,6 +6,7 @@ import { supabase } from '../lib/supabase';
 import { getLecturaDelDia, estadoDesdeSintomaHoy } from '../lib/lecturas';
 import { DIAS_AUTO_COMPLETA, HITO_SEMANAS, getSemanaContigo, getFaseSemana, contarDiasEnSemanaActual } from '../lib/planBloques';
 import { lumiMarkdownToHtml } from '../lib/lumiMarkdown';
+import CirculoDeHoy from './CirculoDeHoy';
 
 const getHora = () => {
   const h = new Date().getHours();
@@ -883,6 +884,13 @@ export default function Dashboard() {
             <p style={{fontSize:'0.8rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.4)',marginBottom:'0.1rem'}}>{saludoHora}</p>
             <h1 style={{fontSize:'clamp(1.6rem,4vw,2rem)',fontWeight:700,color:'#0D3D3D',lineHeight:1.15}}>{user?.nombre}</h1>
           </div>
+
+          {/* CÍRCULO DE HOY — pieza central del día, propuesta por la auditoría UX de fable */}
+          {checkinHecho && !planLoading && (
+            <div className={`fade d2 ${visible?'in':''}`}>
+              <CirculoDeHoy plan={planGenerado || plan} planHecho={planHecho} onToggle={togglePlanItem} is_es={is_es} />
+            </div>
+          )}
 
           {/* MI PLAN — mensaje de LUMI + puerta de recordatorios + plan de hoy (resumen que expande) */}
           <div className={`fade d2 ${visible?'in':''}`} style={{background:'linear-gradient(135deg,rgba(13,61,61,0.97),rgba(10,45,45,0.98))',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'1.25rem',padding:'1.25rem',margin:'0 0.3rem 1.25rem',boxShadow:'0 4px 20px rgba(13,61,61,0.15)'}}>
