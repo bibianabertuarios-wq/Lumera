@@ -30,6 +30,36 @@ function calcularRacha(fechasCheckin) {
   return racha;
 }
 
+// Días transcurridos desde el último registro (0 = hoy). Si nunca registró, devuelve 0
+// para no penalizar a una usuaria recién llegada.
+function diasDesdeUltimoRegistro(fechasCheckin) {
+  const fechas = (fechasCheckin || []).filter(Boolean).sort();
+  if (!fechas.length) return 0;
+  const ultima = new Date(fechas[fechas.length - 1] + 'T00:00:00');
+  const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+  return Math.max(0, Math.round((hoy - ultima) / 86400000));
+}
+
+// ESTADO VIVO DE LA SILUETA.
+// · LUZ = constancia. Con registros recientes va luminosa; si hace días que no registras
+//   se queda en penumbra — nunca "triste" ni en rojo: es una luz esperándote, no un reproche.
+//   (Regla de la auditoría de fable y del propio proyecto: nunca culpar a la usuaria.)
+// · VELOCIDAD = equilibrio. Gira lenta y pesada con poca energía, acelerada cuando hay
+//   energía alta con mal descanso (agitación), y a ritmo sereno cuando está equilibrada.
+//   El objetivo visual no es "más rápido", es encontrar el ritmo estable.
+function getEstadoSilueta({ diasSinRegistrar, energiaPct, suenoPct, animoPct }) {
+  const luz = Math.max(0.32, 1 - diasSinRegistrar * 0.17);
+  const enPenumbra = diasSinRegistrar >= 2;
+  const medidas = [energiaPct, suenoPct, animoPct].filter(v => v > 0);
+  if (!medidas.length) return { luz, velocidad: 1, enPenumbra };
+  const media = medidas.reduce((a, b) => a + b, 0) / medidas.length;
+  const descanso = suenoPct > 0 ? suenoPct : media;
+  let velocidad = 1;
+  if (media < 45) velocidad = 0.65;
+  else if (media >= 60 && descanso < 45) velocidad = 1.5;
+  return { luz, velocidad, enPenumbra };
+}
+
 // Próxima comida/hora pendiente hoy (o la primera de mañana si ya pasaron todas).
 function getProximaAccion(user, is_es) {
   const candidatos = [
@@ -925,11 +955,27 @@ export default function Dashboard() {
           </div>
 
           {/* CÍRCULO DE HOY — pieza central del día, propuesta por la auditoría UX de fable */}
-          {checkinHecho && !planLoading && (
-            <div className={`fade d2 ${visible?'in':''}`}>
-              <CirculoDeHoy plan={planGenerado || plan} planHecho={planHecho} onToggle={togglePlanItem} is_es={is_es} racha={calcularRacha(fechasActividadBloques.checkins)} objetivoKcal={getObjetivoKcalHoy()} onAbrirCalma={()=>setCalmaActiva(true)} />
-            </div>
-          )}
+          {!planLoading && (() => {
+            // Se muestra también antes del check-in: ahí la silueta aparece en penumbra
+            // y el propio círculo es la invitación a registrar cómo estás hoy.
+            const estado = getEstadoSilueta({
+              diasSinRegistrar: diasDesdeUltimoRegistro(fechasActividadBloques.checkins),
+              energiaPct, suenoPct, animoPct,
+            });
+            return (
+              <div className={`fade d2 ${visible?'in':''}`}>
+                <CirculoDeHoy
+                  plan={planGenerado || plan} planHecho={planHecho} onToggle={togglePlanItem} is_es={is_es}
+                  racha={calcularRacha(fechasActividadBloques.checkins)}
+                  objetivoKcal={getObjetivoKcalHoy()}
+                  onAbrirCalma={()=>setCalmaActiva(true)}
+                  checkinHecho={checkinHecho}
+                  onRegistrar={()=>{ window.location.href = '/lumera?tab=symptoms'; }}
+                  luz={estado.luz} velocidad={estado.velocidad} enPenumbra={estado.enPenumbra}
+                />
+              </div>
+            );
+          })()}
 
           {/* MI PLAN — mensaje de LUMI + puerta de recordatorios + plan de hoy (resumen que expande) */}
           <div className={`fade d2 ${visible?'in':''}`} style={{background:'linear-gradient(135deg,rgba(13,61,61,0.97),rgba(10,45,45,0.98))',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'1.25rem',padding:'1.25rem',margin:'0 0.3rem 1.25rem',boxShadow:'0 4px 20px rgba(13,61,61,0.15)'}}>

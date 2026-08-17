@@ -27,7 +27,8 @@ function truncar(texto, n) {
   return texto.length > n ? texto.slice(0, n - 1).trimEnd() + '…' : texto;
 }
 
-export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha = 0, objetivoKcal, onAbrirCalma }) {
+export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha = 0, objetivoKcal, onAbrirCalma,
+  checkinHecho = true, onRegistrar, luz = 1, velocidad = 1, enPenumbra = false }) {
   const [abierto, setAbierto] = useState(null); // tipo de la tarea actualmente expandida, o null
   const videoRef = useRef(null);
 
@@ -41,9 +42,18 @@ export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha =
   const pleno = total > 0 && hechas === total;
   const estados = is_es ? ESTADOS_ES : ESTADOS_EN;
 
+  // La velocidad del giro viene del estado de la usuaria; al completar el día se
+  // acelera un poco más como micro-recompensa.
   useEffect(() => {
-    if (videoRef.current) videoRef.current.playbackRate = pleno ? 1.8 : 1;
-  }, [pleno]);
+    if (videoRef.current) videoRef.current.playbackRate = Math.min(2.5, velocidad * (pleno ? 1.6 : 1));
+  }, [pleno, velocidad]);
+
+  // Luz: 1 = registró hoy · baja progresivamente con los días sin registrar.
+  const brillo = (0.35 + 0.65 * luz).toFixed(2);
+  const saturacion = (0.15 + 0.85 * luz).toFixed(2);
+  const filtroSilueta = pleno
+    ? `brightness(${brillo}) saturate(${saturacion}) drop-shadow(0 0 18px rgba(201,147,90,0.85))`
+    : `brightness(${brillo}) saturate(${saturacion})`;
 
   const itemAbierto = abierto !== null && idxPorTipo[abierto] !== undefined ? plan[idxPorTipo[abierto]] : null;
   const idxAbierto = abierto !== null ? idxPorTipo[abierto] : null;
@@ -92,7 +102,8 @@ export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha =
               objectPosition:'center 18%',
               WebkitMaskImage:'radial-gradient(ellipse 48% 44% at 50% 40%, black 60%, transparent 100%)',
               maskImage:'radial-gradient(ellipse 48% 44% at 50% 40%, black 60%, transparent 100%)',
-              filter: pleno ? 'drop-shadow(0 0 18px rgba(201,147,90,0.85))' : 'none',
+              filter: filtroSilueta,
+              transition:'filter 1.2s ease',
             }}
           />
         </div>
@@ -103,14 +114,30 @@ export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha =
         </div>
       </div>
 
-      {objetivoKcal && (
+      {/* Antes del check-in la silueta está en penumbra y el círculo es la invitación.
+          El mensaje nunca reprocha la ausencia: llama a volver, no señala el fallo. */}
+      {!checkinHecho && (
+        <div style={{marginTop:'1.1rem'}}>
+          <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',color:'rgba(255,255,255,0.75)',lineHeight:1.5,marginBottom:'0.9rem'}}>
+            {enPenumbra
+              ? (is_es ? 'Tu luz lleva unos días en penumbra. Cuéntame cómo estás y vuelve a encenderse.' : 'Your light has been dim for a few days. Tell me how you are and it lights up again.')
+              : (is_es ? 'Cuéntame cómo estás hoy y preparo tu plan.' : "Tell me how you are today and I'll prepare your plan.")}
+          </p>
+          <button type="button" onClick={onRegistrar}
+            style={{background:'linear-gradient(135deg,#C9935A,#A06030)',color:'white',border:'none',borderRadius:'0.75rem',padding:'0.75rem 1.4rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',fontWeight:700,cursor:'pointer'}}>
+            {is_es ? 'Registrar cómo estoy →' : 'Log how I feel →'}
+          </button>
+        </div>
+      )}
+
+      {checkinHecho && objetivoKcal && (
         <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',color:'rgba(255,255,255,0.35)',marginTop:'0.9rem'}}>
           {is_es ? `Objetivo diario de referencia: ~${objetivoKcal} kcal` : `Reference daily target: ~${objetivoKcal} kcal`}
         </p>
       )}
 
       {/* Píldoras: un verbo cada una. Tocar abre SOLO esa tarea — nunca las 3 a la vez. */}
-      <div style={{display:'flex',justifyContent:'center',gap:'0.5rem',marginTop:'1.1rem',flexWrap:'wrap'}}>
+      <div style={{display:checkinHecho?'flex':'none',justifyContent:'center',gap:'0.5rem',marginTop:'1.1rem',flexWrap:'wrap'}}>
         {tiposPresentes.map((t) => {
           const idx = idxPorTipo[t];
           const item = plan[idx];
