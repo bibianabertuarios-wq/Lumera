@@ -15,6 +15,50 @@ const getHora = () => {
   return 'noche';
 };
 
+// Racha real de días consecutivos con check-in, contando hacia atrás desde hoy
+// (o desde ayer si hoy aún no se ha registrado, para no "romper" la racha antes de tiempo).
+function calcularRacha(fechasCheckin) {
+  const set = new Set(fechasCheckin || []);
+  let racha = 0;
+  const cursor = new Date();
+  const hoyStr = cursor.toISOString().split('T')[0];
+  if (!set.has(hoyStr)) cursor.setDate(cursor.getDate() - 1);
+  while (set.has(cursor.toISOString().split('T')[0])) {
+    racha++;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  return racha;
+}
+
+// Próxima comida/hora pendiente hoy (o la primera de mañana si ya pasaron todas).
+function getProximaAccion(user, is_es) {
+  const candidatos = [
+    { tipo:'desayuno', label: is_es ? 'Desayuno' : 'Breakfast', val: user?.horaDesayuno, icono:'☀️' },
+    { tipo:'comida', label: is_es ? 'Comida' : 'Lunch', val: user?.horaComida, icono:'🍽' },
+    { tipo:'cena', label: is_es ? 'Cena' : 'Dinner', val: user?.horaCena, icono:'🌙' },
+  ].filter(c => c.val);
+  if (!candidatos.length) return null;
+  const ahora = new Date();
+  const conDiff = candidatos.map(c => {
+    const [h, m] = c.val.split(':').map(Number);
+    const t = new Date(ahora); t.setHours(h, m, 0, 0);
+    let diffMin = Math.round((t - ahora) / 60000);
+    const manana = diffMin < 0;
+    if (manana) diffMin += 24 * 60;
+    return { ...c, diffMin, manana };
+  }).sort((a, b) => a.diffMin - b.diffMin);
+  return conDiff[0];
+}
+
+function formatearRestante(diffMin, manana, is_es) {
+  if (manana) return is_es ? 'mañana' : 'tomorrow';
+  if (diffMin <= 0) return is_es ? 'ahora' : 'now';
+  const h = Math.floor(diffMin / 60), m = diffMin % 60;
+  if (h <= 0) return is_es ? `en ${m} min` : `in ${m} min`;
+  if (m === 0) return is_es ? `en ${h} h` : `in ${h}h`;
+  return is_es ? `en ${h}h ${m}min` : `in ${h}h ${m}min`;
+}
+
 function getCicloCode(cicloRaw) {
   const CICLO_TEXTOS = {
     'Regular como siempre': 'regular',
@@ -888,7 +932,7 @@ export default function Dashboard() {
           {/* CÍRCULO DE HOY — pieza central del día, propuesta por la auditoría UX de fable */}
           {checkinHecho && !planLoading && (
             <div className={`fade d2 ${visible?'in':''}`}>
-              <CirculoDeHoy plan={planGenerado || plan} planHecho={planHecho} onToggle={togglePlanItem} is_es={is_es} />
+              <CirculoDeHoy plan={planGenerado || plan} planHecho={planHecho} onToggle={togglePlanItem} is_es={is_es} racha={calcularRacha(fechasActividadBloques.checkins)} />
             </div>
           )}
 
@@ -1043,27 +1087,25 @@ export default function Dashboard() {
             );
           })()}
 
-          {/* TU RITMO DE HOY — LUMI secretaria: horas ya guardadas, sin carga mental para ella */}
-          {checkinHecho && user?.pushEnabled && (user?.horaDesayuno || user?.horaComida || user?.horaCena) && (
-            <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
-              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,display:'inline-block',background:'rgba(31,122,92,0.1)',border:'1px solid rgba(31,122,92,0.22)',color:'#0D3D3D',borderRadius:'0.5rem',padding:'0.3rem 0.7rem',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.5rem'}}>
-                {is_es ? 'Tu ritmo de hoy' : 'Your rhythm today'}
-              </div>
-              <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.9rem',color:'rgba(13,61,61,0.6)',lineHeight:1.5,marginBottom:'0.9rem'}}>
-                {is_es ? 'Yo me encargo de avisarte — tú solo vive el día.' : 'I take care of the reminders — you just live the day.'}
-              </p>
-              {[
-                { label: is_es?'Desayuno':'Breakfast', val: user?.horaDesayuno, icono:'☀️' },
-                { label: is_es?'Comida':'Lunch', val: user?.horaComida, icono:'🍽' },
-                { label: is_es?'Cena':'Dinner', val: user?.horaCena, icono:'🌙' },
-              ].filter(x => x.val).map(x => (
-                <div key={x.label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'0.4rem 0'}}>
-                  <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#0D3D3D'}}>{x.icono} {x.label}</span>
-                  <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#A06030',fontWeight:600}}>{x.val}</span>
+          {/* AHORA — próxima acción del día, en grande, en vez de la lista de 3 horas (zona 2 del rediseño de fable) */}
+          {checkinHecho && user?.pushEnabled && (() => {
+            const proxima = getProximaAccion(user, is_es);
+            return proxima && (
+              <div className={`fade d2 ${visible?'in':''}`} onClick={()=>abrirYo('recordatorios')} role="button" style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.1rem 1.25rem',marginBottom:'1.25rem',display:'flex',alignItems:'center',justifyContent:'space-between',gap:'1rem',cursor:'pointer'}}>
+                <div style={{minWidth:0}}>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase',marginBottom:'0.35rem'}}>
+                    {is_es ? 'Ahora' : 'Now'}
+                  </div>
+                  <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.4rem',fontWeight:600,color:'#0D3D3D',lineHeight:1.2}}>
+                    {proxima.icono} {proxima.label} · {proxima.val}
+                  </div>
                 </div>
-              ))}
-            </div>
-          )}
+                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.9rem',fontWeight:700,color:'#C9935A',whiteSpace:'nowrap',flexShrink:0}}>
+                  {formatearRestante(proxima.diffMin, proxima.manana, is_es)}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* TU PROGRESO — gráfica/meta + silueta en una sola card */}
           <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',overflow:'hidden',marginBottom:'1.25rem'}}>
