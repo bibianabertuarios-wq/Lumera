@@ -97,7 +97,7 @@ function QuizInner() {
         .fade{opacity:0;transform:translateY(16px);transition:opacity 0.5s ease,transform 0.5s ease;}
         .fade.in{opacity:1;transform:translateY(0);}
         .opcion{width:100%;background:rgba(255,255,255,0.7);border:1.5px solid rgba(201,147,90,0.25);border-radius:0.75rem;padding:1rem 1.25rem;color:#0D3D3D;font-size:1rem;font-family:'Cormorant Garamond',Georgia,serif;cursor:pointer;text-align:left;transition:all 0.2s ease;margin-bottom:0.6rem;display:flex;align-items:center;gap:0.75rem;}
-        .opcion:hover{border-color:#C9935A;background:rgba(201,147,90,0.08);}
+        .opcion:hover{border-color:#C9935A;background:rgba(255,255,255,0.85);}
         .opcion.sel{border-color:#C9935A;background:rgba(201,147,90,0.12);font-weight:600;}
         .btn-next{width:100%;background:linear-gradient(135deg,#C9935A,#A06030);border:none;border-radius:0.75rem;padding:1rem;color:white;font-size:1rem;font-family:Montserrat,sans-serif;font-weight:700;cursor:pointer;margin-top:1rem;}
         .btn-next:disabled{opacity:0.4;cursor:not-allowed;}
