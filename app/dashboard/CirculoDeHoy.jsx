@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 // EL CÍRCULO DE HOY — pieza central del Inicio, propuesta por la auditoría UX de fable
 // (lumera-rediseno-dashboard.html, sección 3 y 4: "un dato dominante por pantalla",
@@ -10,14 +10,17 @@ import { useState } from 'react';
 // etiqueta + enlace + "¿por qué?" para las 3 tareas a la vez). Ahora solo una tarea se
 // puede ver en detalle cada vez — tocas una píldora, se abre SOLO esa, la marcas hecha
 // y pasas a la siguiente. Es un flujo, no una lista.
+//
+// v3: la silueta ya no es una forma SVG abstracta — usa /videos/silueta-circulo.mp4,
+// recorte de /videos/silueta.mp4 (asset real de Lumera, ya existente) sin las etiquetas,
+// el rótulo "LUMERA" ni la marca de agua. Se le aplica una viñeta suave (mask-image) para
+// disimular cualquier resto de las etiquetas originales en los bordes.
 
 const TIPOS = ['nutricion', 'movimiento', 'interior'];
 const COLORES = { nutricion: '#C9935A', movimiento: '#A06030', interior: '#0D3D3D' };
 const RADIOS = { nutricion: 100, movimiento: 84, interior: 68 };
 const ESTADOS_ES = ['Empieza tu día', 'Vas arrancando', 'Casi lo tienes', '✦ Día completo'];
 const ESTADOS_EN = ['Start your day', 'Getting going', 'Almost there', '✦ Day complete'];
-
-const SILUETA_PATH = 'M48 6c-6.6 0-11 4.9-11 11.4 0 4.3 1.9 7.6 4.4 9.5-6.6 2.3-11.6 6.4-13.4 12.6-1.7 5.9-2.2 13.4-3.6 20.5-1 5.2-2.7 9.6-4.3 13.4-1 2.4.3 4.8 2.6 5.4 2.3.6 4.4-.6 5.3-2.8 1.5-3.7 2.9-7.6 3.9-11.9.4 6.6-.2 12.6-1 18.4-.7 5.3-1.4 9.4-1.4 13.2 0 3.4 1.3 5.6 4 6.6-.6 6.4-1.3 13-1.8 19.2-.4 5.2-.7 9.7-.7 12.6 0 3.6 2.5 6.1 6 6.1s5.9-2.4 6.2-6c.3-4 1.2-11.4 2.3-19.2.5-3.5 1.4-5.6 2.5-5.6s2 2.1 2.5 5.6c1.1 7.8 2 15.2 2.3 19.2.3 3.6 2.7 6 6.2 6s6-2.5 6-6.1c0-2.9-.3-7.4-.7-12.6-.5-6.2-1.2-12.8-1.8-19.2 2.7-1 4-3.2 4-6.6 0-3.8-.7-7.9-1.4-13.2-.8-5.8-1.4-11.8-1-18.4 1 4.3 2.4 8.2 3.9 11.9.9 2.2 3 3.4 5.3 2.8 2.3-.6 3.6-3 2.6-5.4-1.6-3.8-3.3-8.2-4.3-13.4-1.4-7.1-1.9-14.6-3.6-20.5-1.8-6.2-6.8-10.3-13.4-12.6 2.5-1.9 4.4-5.2 4.4-9.5C59 10.9 54.6 6 48 6z';
 
 function truncar(texto, n) {
   if (!texto) return '';
@@ -26,6 +29,7 @@ function truncar(texto, n) {
 
 export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha = 0, objetivoKcal, onAbrirCalma }) {
   const [abierto, setAbierto] = useState(null); // tipo de la tarea actualmente expandida, o null
+  const videoRef = useRef(null);
 
   const idxPorTipo = {};
   (plan || []).forEach((p, i) => {
@@ -37,13 +41,16 @@ export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha =
   const pleno = total > 0 && hechas === total;
   const estados = is_es ? ESTADOS_ES : ESTADOS_EN;
 
+  useEffect(() => {
+    if (videoRef.current) videoRef.current.playbackRate = pleno ? 1.8 : 1;
+  }, [pleno]);
+
   const itemAbierto = abierto !== null && idxPorTipo[abierto] !== undefined ? plan[idxPorTipo[abierto]] : null;
   const idxAbierto = abierto !== null ? idxPorTipo[abierto] : null;
   const hechoAbierto = idxAbierto !== null && planHecho.includes(idxAbierto);
 
   return (
     <div style={{background:'linear-gradient(170deg,#0D3D3D 0%,#0A2A2A 100%)',borderRadius:'1.5rem',padding:'2rem 1.5rem 1.75rem',marginBottom:'1.25rem',textAlign:'center',position:'relative',overflow:'hidden'}}>
-      <style>{`@keyframes lumeraCirculoGirar { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }`}</style>
       <div style={{position:'absolute',inset:0,background:'radial-gradient(circle at 50% 10%, rgba(201,147,90,0.18), transparent 62%)',pointerEvents:'none'}}/>
 
       {racha > 0 && (
@@ -70,16 +77,24 @@ export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha =
           })}
         </svg>
 
-        <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center',perspective:'700px'}}>
-          <svg width="84" height="132" viewBox="0 0 96 150" style={{animation:`lumeraCirculoGirar ${pleno ? '5s' : '14s'} linear infinite`,filter:pleno ? 'drop-shadow(0 0 20px rgba(201,147,90,0.85))' : 'none'}}>
-            <defs>
-              <linearGradient id="lumeraSilGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#F3E4C8"/>
-                <stop offset="100%" stopColor="#C9935A"/>
-              </linearGradient>
-            </defs>
-            <path fill="url(#lumeraSilGrad)" opacity="0.92" d={SILUETA_PATH}/>
-          </svg>
+        <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
+          <video
+            ref={videoRef}
+            src="/videos/silueta-circulo.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+            style={{
+              width:'104px',
+              height:'192px',
+              objectFit:'cover',
+              objectPosition:'center 18%',
+              WebkitMaskImage:'radial-gradient(ellipse 48% 44% at 50% 40%, black 60%, transparent 100%)',
+              maskImage:'radial-gradient(ellipse 48% 44% at 50% 40%, black 60%, transparent 100%)',
+              filter: pleno ? 'drop-shadow(0 0 18px rgba(201,147,90,0.85))' : 'none',
+            }}
+          />
         </div>
 
         <div style={{position:'absolute',left:0,right:0,bottom:'22px',textAlign:'center'}}>
