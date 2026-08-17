@@ -103,6 +103,8 @@ function QuizInner() {
         .btn-next:disabled{opacity:0.4;cursor:not-allowed;}
         .input-text{width:100%;background:rgba(255,255,255,0.8);border:1.5px solid rgba(201,147,90,0.3);border-radius:0.75rem;padding:1rem 1.25rem;font-size:1.1rem;font-family:'Cormorant Garamond',Georgia,serif;color:#0D3D3D;outline:none;margin-bottom:1rem;}
         .input-text:focus{border-color:#C9935A;}
+        #input-fecha{font-size:1.4rem;padding:1.1rem 1.25rem;}
+        #input-fecha::-webkit-calendar-picker-indicator{transform:scale(1.4);cursor:pointer;}
         .input-num{width:100%;background:rgba(255,255,255,0.8);border:1.5px solid rgba(201,147,90,0.3);border-radius:0.75rem;padding:1rem;font-size:1.1rem;font-family:'Cormorant Garamond',Georgia,serif;color:#0D3D3D;outline:none;text-align:center;}
         .input-num:focus{border-color:#C9935A;}
       `}</style>
