@@ -31,6 +31,17 @@ const PREGUNTAS_EN = [
   { id:'region', tipo:'opciones', pregunta:'Where are you writing to us from?', sub:'So we can adapt your recipe ingredients to what you can find nearby', opciones:['Spain','Latin America','United States / Canada'] },
 ];
 
+function formatearRespuesta(q, valor, is_es) {
+  if (valor === undefined || valor === null || valor === '') return '—';
+  if (q.tipo === 'multiple') return Array.isArray(valor) ? valor.join(', ') : valor;
+  if (q.tipo === 'medidas') return valor ? `${valor.altura || '—'} cm · ${valor.peso || '—'} kg` : '—';
+  if (q.tipo === 'fecha') {
+    const [y, m] = (valor || '').split('-');
+    return y && m ? `${m}/${y}` : valor;
+  }
+  return valor;
+}
+
 function QuizInner() {
   const [lang, setLang] = useState('es');
   const [paso, setPaso] = useState(0);
@@ -39,6 +50,8 @@ function QuizInner() {
   const [altura, setAltura] = useState('');
   const [peso, setPeso] = useState('');
   const [visible, setVisible] = useState(false);
+  const [revision, setRevision] = useState(false);
+  const [editando, setEditando] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -50,33 +63,60 @@ function QuizInner() {
   useEffect(() => {
     setVisible(false);
     setTimeout(() => setVisible(true), 50);
-    setSeleccionMultiple([]);
+    const listaPreguntas = lang === 'es' ? PREGUNTAS_ES : PREGUNTAS_EN;
+    const actual = listaPreguntas[paso];
+    if (actual && actual.tipo === 'multiple') {
+      setSeleccionMultiple(Array.isArray(respuestas[actual.id]) ? respuestas[actual.id] : []);
+    } else {
+      setSeleccionMultiple([]);
+    }
+    if (actual && actual.tipo === 'medidas') {
+      const m = respuestas[actual.id];
+      setAltura(m?.altura || '');
+      setPeso(m?.peso || '');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [paso]);
 
   const preguntas = lang === 'es' ? PREGUNTAS_ES : PREGUNTAS_EN;
   const is_es = lang === 'es';
   const p = preguntas[paso];
   const total = preguntas.length;
-  const progreso = ((paso) / total) * 100;
+  const progreso = revision ? 100 : ((paso) / total) * 100;
 
   const siguiente = (valor) => {
     const nuevas = { ...respuestas, [p.id]: valor };
     setRespuestas(nuevas);
+    if (editando) {
+      setEditando(false);
+      setRevision(true);
+      return;
+    }
     if (paso < total - 1) {
       setPaso(paso + 1);
     } else {
-      const params = new URLSearchParams();
-      Object.entries(nuevas).forEach(([k, v]) => {
-        if (k === 'medidas' && typeof v === 'object') {
+      setRevision(true);
+    }
+  };
+
+  const editarPregunta = (index) => {
+    setPaso(index);
+    setEditando(true);
+    setRevision(false);
+  };
+
+  const enviarResultado = () => {
+    const params = new URLSearchParams();
+    Object.entries(respuestas).forEach(([k, v]) => {
+      if (k === 'medidas' && typeof v === 'object') {
         params.set('peso', v.peso || '');
         params.set('talla', v.altura || '');
       } else {
         params.set(k, Array.isArray(v) ? v.join('|') : v);
       }
-      });
-      params.set('lang', lang);
-      router.push('/quiz/resultado?' + params.toString());
-    }
+    });
+    params.set('lang', lang);
+    router.push('/quiz/resultado?' + params.toString());
   };
 
   const siguienteMultiple = () => {
@@ -128,6 +168,37 @@ function QuizInner() {
         <div style={{maxWidth:'480px',width:'100%',margin:'0 auto',flex:1}}>
           <div className={`fade ${visible?'in':''}`}>
 
+            {revision && (
+              <>
+                <h2 style={{fontSize:'clamp(1.5rem,4vw,1.9rem)',fontWeight:600,color:'white',lineHeight:1.2,marginBottom:'0.5rem',textAlign:'center'}}>
+                  {is_es ? 'Esto es lo que nos contaste' : "Here's what you told us"}
+                </h2>
+                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(255,255,255,0.55)',textAlign:'center',marginBottom:'1.75rem'}}>
+                  {is_es ? '¿Quieres cambiar algo antes de ver tu resultado?' : 'Want to change anything before seeing your result?'}
+                </div>
+
+                {preguntas.map((q, i) => (
+                  <div key={q.id} style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'1rem',background:'rgba(255,255,255,0.9)',borderRadius:'0.65rem',padding:'0.9rem 1.1rem',marginBottom:'0.6rem'}}>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.68rem',color:'#A06030',letterSpacing:'0.5px',marginBottom:'0.2rem'}}>{q.pregunta}</div>
+                      <div style={{color:'#0D3D3D',fontSize:'1.05rem',fontFamily:"'Cormorant Garamond',Georgia,serif",overflowWrap:'break-word'}}>
+                        {formatearRespuesta(q, respuestas[q.id], is_es)}
+                      </div>
+                    </div>
+                    <button onClick={() => editarPregunta(i)} style={{flexShrink:0,background:'none',border:'1px solid rgba(201,147,90,0.5)',borderRadius:'0.5rem',padding:'0.4rem 0.8rem',color:'#C9935A',fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',fontWeight:600,cursor:'pointer'}}>
+                      {is_es?'Editar':'Edit'}
+                    </button>
+                  </div>
+                ))}
+
+                <button className="btn-next" onClick={enviarResultado} style={{marginTop:'1.5rem'}}>
+                  {is_es ? 'Ver mi resultado →' : 'See my result →'}
+                </button>
+              </>
+            )}
+
+            {!revision && (
+            <>
             {p.sub && (
               <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(201,147,90,0.7)',letterSpacing:'1px',marginBottom:'0.75rem',textAlign:'center'}}>
                 {p.sub}
@@ -214,6 +285,8 @@ function QuizInner() {
                   {is_es?'Continuar →':'Continue →'}
                 </button>
               </>
+            )}
+            </>
             )}
 
           </div>
