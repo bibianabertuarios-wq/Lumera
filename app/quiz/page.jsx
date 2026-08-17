@@ -173,19 +173,19 @@ function QuizInner() {
                 <h2 style={{fontSize:'clamp(1.5rem,4vw,1.9rem)',fontWeight:600,color:'white',lineHeight:1.2,marginBottom:'0.5rem',textAlign:'center'}}>
                   {is_es ? 'Esto es lo que nos contaste' : "Here's what you told us"}
                 </h2>
-                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(255,255,255,0.55)',textAlign:'center',marginBottom:'1.75rem'}}>
+                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'1rem',color:'rgba(255,255,255,0.6)',textAlign:'center',marginBottom:'1.75rem'}}>
                   {is_es ? '¿Quieres cambiar algo antes de ver tu resultado?' : 'Want to change anything before seeing your result?'}
                 </div>
 
                 {preguntas.map((q, i) => (
                   <div key={q.id} style={{display:'flex',justifyContent:'space-between',alignItems:'center',gap:'1rem',background:'rgba(255,255,255,0.9)',borderRadius:'0.65rem',padding:'0.9rem 1.1rem',marginBottom:'0.6rem'}}>
                     <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.68rem',color:'#A06030',letterSpacing:'0.5px',marginBottom:'0.2rem'}}>{q.pregunta}</div>
-                      <div style={{color:'#0D3D3D',fontSize:'1.05rem',fontFamily:"'Cormorant Garamond',Georgia,serif",overflowWrap:'break-word'}}>
+                      <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'#A06030',letterSpacing:'0.5px',marginBottom:'0.25rem'}}>{q.pregunta}</div>
+                      <div style={{color:'#0D3D3D',fontSize:'1.1rem',fontFamily:"'Cormorant Garamond',Georgia,serif",overflowWrap:'break-word'}}>
                         {formatearRespuesta(q, respuestas[q.id], is_es)}
                       </div>
                     </div>
-                    <button onClick={() => editarPregunta(i)} style={{flexShrink:0,background:'none',border:'1px solid rgba(201,147,90,0.5)',borderRadius:'0.5rem',padding:'0.4rem 0.8rem',color:'#C9935A',fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',fontWeight:600,cursor:'pointer'}}>
+                    <button onClick={() => editarPregunta(i)} style={{flexShrink:0,background:'none',border:'1px solid rgba(201,147,90,0.5)',borderRadius:'0.5rem',padding:'0.5rem 0.9rem',color:'#C9935A',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',fontWeight:600,cursor:'pointer'}}>
                       {is_es?'Editar':'Edit'}
                     </button>
                   </div>
@@ -200,7 +200,7 @@ function QuizInner() {
             {!revision && (
             <>
             {p.sub && (
-              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(201,147,90,0.7)',letterSpacing:'1px',marginBottom:'0.75rem',textAlign:'center'}}>
+              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.9rem',color:'rgba(201,147,90,0.8)',letterSpacing:'0.5px',marginBottom:'0.75rem',textAlign:'center'}}>
                 {p.sub}
               </div>
             )}
@@ -273,11 +273,11 @@ function QuizInner() {
               <>
                 <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'1rem',marginBottom:'1rem'}}>
                   <div>
-                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.72rem',color:'rgba(255,255,255,0.5)',marginBottom:'0.5rem',textAlign:'center'}}>{is_es?'ALTURA (cm)':'HEIGHT (cm)'}</div>
+                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(255,255,255,0.6)',marginBottom:'0.5rem',textAlign:'center'}}>{is_es?'ALTURA (cm)':'HEIGHT (cm)'}</div>
                     <input className="input-num" type="number" placeholder={is_es?'ej. 165':'e.g. 165'} value={altura} onChange={e=>setAltura(e.target.value)} min="140" max="210"/>
                   </div>
                   <div>
-                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.72rem',color:'rgba(255,255,255,0.5)',marginBottom:'0.5rem',textAlign:'center'}}>{is_es?'PESO (kg)':'WEIGHT (kg)'}</div>
+                    <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'rgba(255,255,255,0.6)',marginBottom:'0.5rem',textAlign:'center'}}>{is_es?'PESO (kg)':'WEIGHT (kg)'}</div>
                     <input className="input-num" type="number" placeholder={is_es?'ej. 65':'e.g. 65'} value={peso} onChange={e=>setPeso(e.target.value)} min="40" max="200"/>
                   </div>
                 </div>
@@ -293,7 +293,7 @@ function QuizInner() {
         </div>
 
         {/* Disclaimer */}
-        <div style={{maxWidth:'480px',width:'100%',margin:'2rem auto 0',textAlign:'center',fontSize:'0.75rem',color:'rgba(255,255,255,0.2)',fontStyle:'italic',fontFamily:'Montserrat,sans-serif',lineHeight:1.5}}>
+        <div style={{maxWidth:'480px',width:'100%',margin:'2rem auto 0',textAlign:'center',fontSize:'0.8rem',color:'rgba(255,255,255,0.3)',fontFamily:'Montserrat,sans-serif',lineHeight:1.5}}>
           {is_es?'Lumera no diagnostica ni sustituye el consejo médico profesional.':'Lumera does not diagnose or replace professional medical advice.'}
         </div>
 
