@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '../lib/supabase';
 import { getLecturaDelDia, estadoDesdeSintomaHoy } from '../lib/lecturas';
 import { DIAS_AUTO_COMPLETA, HITO_SEMANAS, getSemanaContigo, getFaseSemana, contarDiasEnSemanaActual } from '../lib/planBloques';
+import { lumiMarkdownToHtml } from '../lib/lumiMarkdown';
 
 const getHora = () => {
   const h = new Date().getHours();
@@ -1594,7 +1595,7 @@ export default function Dashboard() {
                   {lumiChatMessages.map((m,i) => (
                     <div key={i} style={{display:'flex',justifyContent:m.role==='user'?'flex-end':'flex-start'}}>
                       <div style={{maxWidth:'80%',background:m.role==='user'?'rgba(201,147,90,0.2)':'rgba(255,255,255,0.08)',border:`1px solid ${m.role==='user'?'rgba(201,147,90,0.3)':'rgba(255,255,255,0.1)'}`,borderRadius:m.role==='user'?'1rem 1rem 0 1rem':'1rem 1rem 1rem 0',padding:'0.75rem 1rem'}}>
-                        <p style={{fontSize:'0.9rem',fontStyle:'italic',color:'rgba(255,255,255,0.9)',lineHeight:1.6,fontFamily:"'Cormorant Garamond',serif"}}>{m.content}</p>
+                        <div style={{fontSize:'0.9rem',color:'rgba(255,255,255,0.9)',lineHeight:1.6,fontFamily:"'Cormorant Garamond',serif"}} dangerouslySetInnerHTML={{__html: lumiMarkdownToHtml(m.content)}}></div>
                       </div>
                     </div>
                   ))}
