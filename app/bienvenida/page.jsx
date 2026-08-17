@@ -162,6 +162,7 @@ const insightPorSintoma = (sintoma, is_es) => {
 function BienvenidaInner() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [aceptaTerminos, setAceptaTerminos] = useState(false);
   const [error, setError] = useState('');
@@ -332,7 +333,12 @@ function BienvenidaInner() {
               {is_es ? 'Para que pueda acompañarte y guardar tu plan, crea tu acceso:' : 'To let me guide you and save your plan, create your access:'}
             </p>
             <input type="email" className="input-field" placeholder={is_es ? 'Tu correo electrónico...' : 'Your email address...'} value={email} onChange={e=>setEmail(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleActivar()}/>
-            <input type="password" className="input-field" placeholder={is_es ? 'Crea una contraseña segura...' : 'Create a secure password...'} value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleActivar()}/>
+            <div style={{position:'relative'}}>
+              <input type={showPassword?'text':'password'} className="input-field" style={{paddingRight:'3rem'}} placeholder={is_es ? 'Crea una contraseña segura...' : 'Create a secure password...'} value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>e.key==='Enter'&&handleActivar()}/>
+              <button type="button" onClick={()=>setShowPassword(!showPassword)} aria-label={is_es?(showPassword?'Ocultar contraseña':'Mostrar contraseña'):(showPassword?'Hide password':'Show password')} style={{position:'absolute',right:'0.9rem',top:'50%',transform:'translateY(-50%)',background:'none',border:'none',color:'rgba(255,255,255,0.5)',fontSize:'0.78rem',fontFamily:'Montserrat,sans-serif',cursor:'pointer',padding:'0.25rem'}}>
+                {showPassword ? (is_es?'Ocultar':'Hide') : (is_es?'Mostrar':'Show')}
+              </button>
+            </div>
             {error && <p style={{color:'#F87171',fontSize:'0.85rem',fontFamily:'Montserrat,sans-serif',marginBottom:'0.75rem',textAlign:'center'}}>{error}</p>}
             <div style={{display:'flex',alignItems:'flex-start',gap:'0.75rem',marginBottom:'1rem',cursor:'pointer'}} onClick={()=>setAceptaTerminos(!aceptaTerminos)}>
               <div style={{width:'18px',height:'18px',borderRadius:'4px',border:'1.5px solid rgba(201,147,90,0.5)',background:aceptaTerminos?'#C9935A':'transparent',flexShrink:0,marginTop:'2px',display:'flex',alignItems:'center',justifyContent:'center',color:'white',fontSize:'0.7rem'}}>
