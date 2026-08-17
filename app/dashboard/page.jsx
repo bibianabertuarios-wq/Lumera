@@ -1290,17 +1290,17 @@ export default function Dashboard() {
                       { label: is_es ? 'Comer' : 'Lunch', val: horaComida, set: setHoraComida },
                       { label: is_es ? 'Cenar' : 'Dinner', val: horaCena, set: setHoraCena },
                     ].map(({label,val,set}) => (
-                      <div key={label} style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'0.6rem',gap:'0.4rem'}}>
+                      <div key={label} style={{display:'flex',flexWrap:'wrap',justifyContent:'space-between',alignItems:'center',marginBottom:'0.6rem',gap:'0.4rem',rowGap:'0.4rem'}}>
                         <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#0D3D3D'}}>{label}</span>
-                        <div style={{display:'flex',alignItems:'center',gap:'0.35rem'}}>
+                        <div style={{display:'flex',flexWrap:'wrap',alignItems:'center',gap:'0.35rem',marginLeft:'auto'}}>
                           <input type="time" value={val} onChange={e=>set(e.target.value)} style={{padding:'0.4rem 0.6rem',borderRadius:'0.5rem',border:'1px solid rgba(201,147,90,0.3)',fontSize:'0.85rem',background:'white'}}/>
                           <select
                             value=""
                             onChange={e => { if (e.target.value) { window.open(buildGoogleCalendarLink(label, val, e.target.value), '_blank'); e.target.value = ''; } }}
                             title={is_es ? 'Añadir a Google Calendar' : 'Add to Google Calendar'}
-                            style={{padding:'0.4rem 0.5rem',borderRadius:'0.6rem',border:'1.5px solid #C9935A',fontSize:'0.78rem',fontWeight:600,background:'rgba(201,147,90,0.12)',color:'#A06030',cursor:'pointer'}}
+                            style={{padding:'0.4rem 0.5rem',borderRadius:'0.6rem',border:'1.5px solid #C9935A',fontSize:'0.78rem',fontWeight:600,background:'rgba(201,147,90,0.12)',color:'#A06030',cursor:'pointer',maxWidth:'100%'}}
                           >
-                            <option value="">{is_es ? '📅 Calendar' : '📅 Calendar'}</option>
+                            <option value="">{is_es ? '📅 Añadir' : '📅 Add'}</option>
                             <option value="dia">{is_es ? 'Solo hoy' : 'Just today'}</option>
                             <option value="semana">{is_es ? '1 semana' : '1 week'}</option>
                             <option value="siempre">{is_es ? 'Recordarme siempre' : 'Remind me always'}</option>
