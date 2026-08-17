@@ -340,7 +340,6 @@ export default function Dashboard() {
   const [fechasActividadBloques, setFechasActividadBloques] = useState({ checkins: [], symptoms: [] });
   const [visible, setVisible] = useState(false);
   const [planVisible, setPlanVisible] = useState(false);
-  const [porqueVisible, setPorqueVisible] = useState([]);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [showGestion, setShowGestion] = useState(false);
   const [pwaOculto, setPwaOculto] = useState(() => { try { return localStorage.getItem('lumera_pwa_hide') === '1'; } catch(e) { return false; } });
@@ -764,10 +763,6 @@ export default function Dashboard() {
     });
   };
 
-  const togglePorqueVisible = (idx) => {
-    setPorqueVisible(prev => prev.includes(idx) ? prev.filter(x => x !== idx) : [...prev, idx]);
-  };
-
   const getPlanDelDia = () => {
     const is_es = user?.lang === 'es';
     const { plan } = getLecturaDelDia({
@@ -932,7 +927,7 @@ export default function Dashboard() {
           {/* CÍRCULO DE HOY — pieza central del día, propuesta por la auditoría UX de fable */}
           {checkinHecho && !planLoading && (
             <div className={`fade d2 ${visible?'in':''}`}>
-              <CirculoDeHoy plan={planGenerado || plan} planHecho={planHecho} onToggle={togglePlanItem} is_es={is_es} racha={calcularRacha(fechasActividadBloques.checkins)} />
+              <CirculoDeHoy plan={planGenerado || plan} planHecho={planHecho} onToggle={togglePlanItem} is_es={is_es} racha={calcularRacha(fechasActividadBloques.checkins)} objetivoKcal={getObjetivoKcalHoy()} onAbrirCalma={()=>setCalmaActiva(true)} />
             </div>
           )}
 
@@ -982,89 +977,18 @@ export default function Dashboard() {
 
           </div>
 
-          {/* TU PLAN DE HOY — tres patas, siempre visibles (nunca en acordeón); solo el "por qué" se pliega */}
-          {checkinHecho && (
-            <div className={`fade d2 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
-              <div style={{marginBottom:'0.5rem'}}>
-                <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,display:'inline-block',background:'rgba(31,122,92,0.1)',border:'1px solid rgba(31,122,92,0.22)',color:'#0D3D3D',borderRadius:'0.5rem',padding:'0.3rem 0.7rem',letterSpacing:'2px',textTransform:'uppercase'}}>
-                  {is_es ? 'Tu plan de hoy' : 'Your plan today'}
-                </span>
+          {/* DESCUBRIMIENTO DEL DÍA — se desbloquea al completar las 3 tareas del Círculo de Hoy.
+              (La lista detallada con checkbox/etiqueta/enlace/"¿por qué?" para las 3 tareas a la vez
+              se quitó de aquí: ahora vive dentro del Círculo de Hoy, una tarea a la vez, como flujo
+              en vez de lista — feedback de fable: "un dato dominante por pantalla, orden narrativo".) */}
+          {checkinHecho && !planLoading && (planGenerado || plan).length > 0 && planHecho.filter(x => x < (planGenerado || plan).length).length === (planGenerado || plan).length && (
+            <div className={`fade d2 ${visible?'in':''}`} style={{background:'linear-gradient(135deg,rgba(13,61,61,0.95),rgba(13,61,61,0.85))',borderRadius:'1rem',padding:'1rem 1.1rem',marginBottom:'1.25rem'}}>
+              <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,letterSpacing:'2px',color:'#C9935A',textTransform:'uppercase',marginBottom:'0.4rem'}}>
+                {is_es ? '✦ Descubrimiento desbloqueado' : '✦ Discovery unlocked'}
               </div>
-              {(() => {
-                const objetivoKcal = getObjetivoKcalHoy();
-                return objetivoKcal && (
-                  <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(13,61,61,0.35)',marginBottom:'0.9rem'}}>
-                    {is_es ? `Objetivo diario de referencia: ~${objetivoKcal} kcal` : `Reference daily target: ~${objetivoKcal} kcal`}
-                  </p>
-                );
-              })()}
-
-              {planLoading ? (
-                <div className="shimmer" style={{color:'rgba(13,61,61,0.4)',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',padding:'0.5rem 0'}}>
-                  {is_es ? 'Preparando tu plan personalizado...' : 'Preparing your personalised plan...'}
-                </div>
-              ) : (planGenerado || plan).map((p, i) => (
-                <div key={i} style={{marginBottom:'1rem',paddingBottom:'0.85rem',borderBottom:i<(planGenerado||plan).length-1?'1px solid rgba(201,147,90,0.15)':'none'}}>
-                  <div onClick={()=>togglePlanItem(i)} style={{display:'flex',alignItems:'flex-start',gap:'0.6rem',marginBottom:'0.3rem',cursor:'pointer'}}>
-                    <span style={{width:'22px',height:'22px',marginTop:'0.1rem',borderRadius:'50%',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.8rem',border:'1.5px solid '+(planHecho.includes(i)?'#C9935A':'rgba(13,61,61,0.25)'),background:planHecho.includes(i)?'#C9935A':'transparent',color:'white',transition:'all 0.2s ease'}}>{planHecho.includes(i)?'✓':''}</span>
-                    <div style={{flex:1}}>
-                      <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.62rem',fontWeight:700,color:'#C9935A',letterSpacing:'1.5px',textTransform:'uppercase',marginBottom:'0.15rem'}}>
-                        {ICONO_TIPO_PLAN[p.tipo]} {(is_es ? LABEL_TIPO_PLAN_ES : LABEL_TIPO_PLAN_EN)[p.tipo]}
-                      </div>
-                      <div style={{fontSize:'0.98rem',color:planHecho.includes(i)?'rgba(13,61,61,0.4)':'#0D3D3D',lineHeight:1.5,fontWeight:500,textDecoration:planHecho.includes(i)?'line-through':'none',transition:'all 0.2s ease'}}>
-                        {p.accion}
-                      </div>
-                    </div>
-                  </div>
-                  {p.etiqueta && (
-                    <div style={{marginLeft:'1.7rem',fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.75rem',color:'#A06030',marginBottom:'0.4rem'}}>
-                      {p.etiqueta}
-                    </div>
-                  )}
-                  {p.tipo === 'interior' ? (
-                    <div onClick={() => setCalmaActiva(true)} style={{marginLeft:'1.7rem',marginBottom:'0.5rem',display:'flex',alignItems:'center',gap:'0.6rem',cursor:'pointer'}} role="button" aria-label={is_es ? 'Abrir tu minuto de calma' : 'Open your calm minute'}>
-                      <AnilloVivo info={infoCiclo} is_es={is_es} size={40} />
-                      <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'#C9935A',fontWeight:600}}>
-                        {is_es ? 'Empezar a respirar →' : 'Start breathing →'}
-                      </span>
-                    </div>
-                  ) : p.link && (
-                    <span onClick={()=>window.location.href=p.link} style={{marginLeft:'1.7rem',display:'inline-block',marginBottom:'0.4rem',fontSize:'0.78rem',fontFamily:'Montserrat,sans-serif',color:'#C9935A',cursor:'pointer',fontWeight:600}}>
-                      {p.linkLabel}
-                    </span>
-                  )}
-                  <div onClick={()=>togglePorqueVisible(i)} style={{marginLeft:'1.7rem',fontSize:'0.72rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.4)',fontWeight:600,cursor:'pointer'}}>
-                    {porqueVisible.includes(i) ? (is_es?'▲ Por qué':'▲ Why') : (is_es?'▼ ¿Por qué?':'▼ Why?')}
-                  </div>
-                  {porqueVisible.includes(i) && (
-                    <div style={{marginLeft:'1.7rem',marginTop:'0.4rem'}}>
-                      <p style={{fontSize:'0.78rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.55)',lineHeight:1.6,margin:0}}>
-                        {p.ciencia}
-                      </p>
-                      {p.fuente && (
-                        <p style={{fontSize:'0.68rem',fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',color:'rgba(13,61,61,0.35)',marginTop:'0.3rem',marginBottom:0}}>
-                          {is_es ? 'Fuente: ' : 'Source: '}{p.fuente}
-                        </p>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ))}
-              {!planLoading && (planGenerado || plan).length > 0 && planHecho.filter(x => x < (planGenerado || plan).length).length === (planGenerado || plan).length && (
-                <div style={{marginTop:'0.25rem',padding:'0.6rem 0.75rem',background:'rgba(201,147,90,0.12)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.75rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',color:'#A06030',fontWeight:600}}>
-                  {is_es ? '✦ Plan de hoy completado. Tu constancia es la que cambia tu biología.' : '✦ Today\'s plan complete. Consistency is what changes your biology.'}
-                </div>
-              )}
-              {!planLoading && (planGenerado || plan).length > 0 && planHecho.filter(x => x < (planGenerado || plan).length).length === (planGenerado || plan).length && (
-                <div style={{marginTop:'0.6rem',padding:'0.9rem 1rem',background:'linear-gradient(135deg,rgba(13,61,61,0.95),rgba(13,61,61,0.85))',borderRadius:'0.75rem'}}>
-                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,letterSpacing:'2px',color:'#C9935A',textTransform:'uppercase',marginBottom:'0.4rem'}}>
-                    {is_es ? '✦ Descubrimiento desbloqueado' : '✦ Discovery unlocked'}
-                  </div>
-                  <p style={{fontSize:'0.9rem',color:'rgba(255,255,255,0.92)',lineHeight:1.65,fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',margin:0}}>
-                    {(is_es ? DESCUBRIMIENTOS_ES : DESCUBRIMIENTOS_EN)[new Date().getDate() % DESCUBRIMIENTOS_ES.length]}
-                  </p>
-                </div>
-              )}
+              <p style={{fontSize:'0.9rem',color:'rgba(255,255,255,0.92)',lineHeight:1.65,fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',margin:0}}>
+                {(is_es ? DESCUBRIMIENTOS_ES : DESCUBRIMIENTOS_EN)[new Date().getDate() % DESCUBRIMIENTOS_ES.length]}
+              </p>
             </div>
           )}
 
