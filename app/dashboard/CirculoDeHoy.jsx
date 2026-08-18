@@ -28,7 +28,8 @@ function truncar(texto, n) {
 }
 
 export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha = 0, objetivoKcal, onAbrirCalma,
-  checkinHecho = true, onRegistrar, luz = 1, velocidad = 1, enPenumbra = false, videoSilueta = '/videos/silueta-circulo.mp4' }) {
+  checkinHecho = true, onRegistrar, luz = 1, velocidad = 1, enPenumbra = false,
+  avatar = { video: '/videos/silueta-circulo.mp4' } }) {
   const [abierto, setAbierto] = useState(null); // tipo de la tarea actualmente expandida, o null
   const videoRef = useRef(null);
 
@@ -42,11 +43,28 @@ export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha =
   const pleno = total > 0 && hechas === total;
   const estados = is_es ? ESTADOS_ES : ESTADOS_EN;
 
-  // La velocidad del giro viene del estado de la usuaria; al completar el día se
-  // acelera un poco más como micro-recompensa.
+  // El ritmo viene del estado de la usuaria; al completar el día se acelera un poco más
+  // como micro-recompensa.
+  const ritmo = Math.min(2.5, velocidad * (pleno ? 1.6 : 1));
   useEffect(() => {
-    if (videoRef.current) videoRef.current.playbackRate = Math.min(2.5, velocidad * (pleno ? 1.6 : 1));
-  }, [pleno, velocidad]);
+    if (videoRef.current) videoRef.current.playbackRate = ritmo;
+  }, [ritmo]);
+
+  // Respiración de las variantes en imagen. Una respiración en calma dura unos 7 segundos
+  // (inspiración corta, espiración más larga), y ese ciclo se estira o se acorta según el
+  // ritmo: lenta y pesada con poca energía, agitada cuando hay tensión.
+  const duracionRespiracion = (7 / ritmo).toFixed(1);
+
+  const estiloSilueta = {
+    width: '104px',
+    height: '192px',
+    objectFit: 'cover',
+    objectPosition: 'center 18%',
+    WebkitMaskImage: 'radial-gradient(ellipse 48% 44% at 50% 40%, black 60%, transparent 100%)',
+    maskImage: 'radial-gradient(ellipse 48% 44% at 50% 40%, black 60%, transparent 100%)',
+    filter: filtroSilueta,
+    transition: 'filter 1.2s ease',
+  };
 
   // Luz: 1 = registró hoy · baja progresivamente con los días sin registrar.
   const brillo = (0.35 + 0.65 * luz).toFixed(2);
@@ -61,6 +79,15 @@ export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha =
 
   return (
     <div style={{background:'linear-gradient(170deg,#0D3D3D 0%,#0A2A2A 100%)',borderRadius:'1.5rem',padding:'2rem 1.5rem 1.75rem',marginBottom:'1.25rem',textAlign:'center',position:'relative',overflow:'hidden'}}>
+      {/* Respiración en calma: la inspiración ocupa menos que la espiración, por eso el
+          punto alto llega al 40% del ciclo y la vuelta es más larga. */}
+      <style>{`
+        @keyframes lumeraRespira {
+          0%   { transform: scale(1); }
+          40%  { transform: scale(1.028); }
+          100% { transform: scale(1); }
+        }
+      `}</style>
       <div style={{position:'absolute',inset:0,background:'radial-gradient(circle at 50% 10%, rgba(201,147,90,0.18), transparent 62%)',pointerEvents:'none'}}/>
 
       {racha > 0 && (
@@ -88,25 +115,30 @@ export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha =
         </svg>
 
         <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
-          <video
-            ref={videoRef}
-            src={videoSilueta}
-            key={videoSilueta}
-            autoPlay
-            loop
-            muted
-            playsInline
-            style={{
-              width:'104px',
-              height:'192px',
-              objectFit:'cover',
-              objectPosition:'center 18%',
-              WebkitMaskImage:'radial-gradient(ellipse 48% 44% at 50% 40%, black 60%, transparent 100%)',
-              maskImage:'radial-gradient(ellipse 48% 44% at 50% 40%, black 60%, transparent 100%)',
-              filter: filtroSilueta,
-              transition:'filter 1.2s ease',
-            }}
-          />
+          {avatar.imagen ? (
+            <img
+              src={avatar.imagen}
+              alt=""
+              style={{
+                ...estiloSilueta,
+                // El pecho se expande hacia arriba, como al respirar de verdad, en vez de
+                // que la figura entera palpite desde el centro.
+                transformOrigin: 'center bottom',
+                animation: `lumeraRespira ${duracionRespiracion}s ease-in-out infinite`,
+              }}
+            />
+          ) : (
+            <video
+              ref={videoRef}
+              src={avatar.video}
+              key={avatar.video}
+              autoPlay
+              loop
+              muted
+              playsInline
+              style={estiloSilueta}
+            />
+          )}
         </div>
 
         <div style={{position:'absolute',left:0,right:0,bottom:'22px',textAlign:'center'}}>

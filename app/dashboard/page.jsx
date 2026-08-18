@@ -8,7 +8,7 @@ import { DIAS_AUTO_COMPLETA, HITO_SEMANAS, getSemanaContigo, getFaseSemana, cont
 import { lumiMarkdownToHtml } from '../lib/lumiMarkdown';
 import CirculoDeHoy from './CirculoDeHoy';
 import MomentoParaTi from './MomentoParaTi';
-import { AVATARES, AVATAR_POR_DEFECTO, getVideoAvatar } from '../lib/avatares';
+import { AVATARES, AVATAR_POR_DEFECTO, getAvatar } from '../lib/avatares';
 
 const getHora = () => {
   const h = new Date().getHours();
@@ -1128,7 +1128,7 @@ export default function Dashboard() {
                   checkinHecho={checkinHecho}
                   onRegistrar={()=>{ window.location.href = '/lumera?tab=symptoms'; }}
                   luz={estado.luz} velocidad={estado.velocidad} enPenumbra={estado.enPenumbra}
-                  videoSilueta={getVideoAvatar(user?.avatarVariante)}
+                  avatar={getAvatar(user?.avatarVariante)}
                 />
               </div>
             );
@@ -1585,7 +1585,9 @@ export default function Dashboard() {
                           return (
                             <button key={a.id} type="button" onClick={()=>guardarAvatar(a.id)}
                               style={{padding:0,background:'#0D3D3D',border:elegida?'2px solid #C9935A':'2px solid transparent',borderRadius:'0.75rem',overflow:'hidden',cursor:'pointer',position:'relative'}}>
-                              <video src={a.video} muted loop autoPlay playsInline style={{width:'100%',aspectRatio:'3/4',objectFit:'cover',display:'block',opacity:elegida?1:0.75}}/>
+                              {a.imagen
+                                ? <img src={a.imagen} alt="" style={{width:'100%',aspectRatio:'3/4',objectFit:'cover',display:'block',opacity:elegida?1:0.75}}/>
+                                : <video src={a.video} muted loop autoPlay playsInline style={{width:'100%',aspectRatio:'3/4',objectFit:'cover',display:'block',opacity:elegida?1:0.75}}/>}
                               {elegida && <span style={{position:'absolute',top:'0.3rem',right:'0.4rem',fontSize:'0.75rem',color:'#C9935A'}}>✓</span>}
                               <span style={{display:'block',fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.8)',padding:'0.3rem 0.2rem',lineHeight:1.2}}>
                                 {is_es ? a.es : a.en}
