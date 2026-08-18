@@ -60,6 +60,17 @@ function getEstadoSilueta({ diasSinRegistrar, energiaPct, suenoPct, animoPct }) 
   return { luz, velocidad, enPenumbra };
 }
 
+// Qué curva enseñar en "Tu avance", según el objetivo que eligió en el quiz.
+// Si su objetivo es dormir, ver la tendencia de energía no le dice nada; quiere ver sueño.
+// Para "perder peso" y "fuerza" la medida propia es la barra de peso, que ya va en la
+// misma tarjeta, así que la curva acompaña con energía.
+function getTipoTendencia(objetivo) {
+  const o = (objetivo || '').toLowerCase();
+  if (o.includes('dorm') || o.includes('sue') || o.includes('sleep')) return 'sueno';
+  if (o.includes('hormonal') || o.includes('equilibrio') || o.includes('balance')) return 'animo';
+  return 'energia';
+}
+
 // Próxima comida/hora pendiente hoy (o la primera de mañana si ya pasaron todas).
 function getProximaAccion(user, is_es) {
   const candidatos = [
@@ -181,10 +192,13 @@ const MITOS_VERDAD_EN = [
 ];
 
 function TendenciaCard({ tipo, checkins, is_es, bare }) {
-  const esSueno = tipo === 'sueno';
-  const val = (c) => esSueno ? Number(c.sueno) : (Number(c.energia) + Number(c.animo)) / 2;
+  const val = (c) => tipo === 'sueno' ? Number(c.sueno)
+    : tipo === 'animo' ? Number(c.animo)
+    : (Number(c.energia) + Number(c.animo)) / 2;
   const datos = (checkins || []).filter(c => val(c) > 0).slice().sort((a, b) => a.fecha < b.fecha ? -1 : 1);
-  const nombre = esSueno ? (is_es ? 'sueño' : 'sleep') : (is_es ? 'energía' : 'energy');
+  const nombre = tipo === 'sueno' ? (is_es ? 'sueño' : 'sleep')
+    : tipo === 'animo' ? (is_es ? 'ánimo' : 'mood')
+    : (is_es ? 'energía' : 'energy');
   const hace7 = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
   const rec = datos.filter(c => c.fecha >= hace7);
   const prev = datos.filter(c => c.fecha < hace7);
@@ -877,6 +891,7 @@ export default function Dashboard() {
   const diasRestantes = Math.max(0, 3 - diasEnApp);
   const diaActual = Math.min(diasEnApp + 1, 3);
   const bloqueado = !user?.isPremium && diasRestantes === 0;
+  const diasContigo = user?.createdAt ? Math.max(0, Math.floor((new Date() - new Date(user.createdAt)) / 86400000)) : 0;
   const cicloCode = getCicloCode(user?.ciclo);
   const infoCiclo = getFaseCicloInfo(cicloCode, periodLog);
   const hace7dias = new Date(Date.now() - 7 * 86400000).toISOString().split('T')[0];
@@ -1064,15 +1079,19 @@ export default function Dashboard() {
           <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',overflow:'hidden',marginBottom:'1.25rem'}}>
             <div style={{padding:'1.25rem'}}>
 
-              {/* Cabecera: semana del camino, abre el plan completo en el perfil */}
+              {/* Cabecera: semana del camino y tiempo juntas, abre el plan completo en el perfil */}
               {(() => {
                 const semana = getSemanaContigo(user?.createdAt);
                 const faseInfo = getFaseSemana(semana, is_es);
+                const dias = diasContigo;
+                const juntas = dias < 7
+                  ? (is_es ? (dias === 1 ? '1 día juntas' : `${dias} días juntas`) : (dias === 1 ? '1 day together' : `${dias} days together`))
+                  : (is_es ? (semana === 0 ? '1 semana juntas' : `${semana + 1} semanas juntas`) : (semana === 0 ? '1 week together' : `${semana + 1} weeks together`));
                 return (
                   <div onClick={abrirYo} role="button" style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:'0.6rem',cursor:'pointer',marginBottom:'1rem'}}>
                     <div style={{minWidth:0}}>
                       <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase',marginBottom:'0.25rem'}}>
-                        {is_es ? 'Tu avance' : 'Your progress'}
+                        {is_es ? 'Tu avance' : 'Your progress'} · {juntas}
                       </div>
                       <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.25rem',fontWeight:600,color:'#0D3D3D',lineHeight:1.25}}>
                         {is_es ? `Semana ${semana + 1}` : `Week ${semana + 1}`} · {faseInfo.titulo}
@@ -1083,9 +1102,10 @@ export default function Dashboard() {
                 );
               })()}
 
-              {/* Curva de evolución — antes solo se veía dentro del perfil */}
+              {/* Curva de evolución — la medida cambia según su objetivo (sueño, ánimo o energía).
+                  Antes siempre era energía, aunque su objetivo fuera dormir mejor. */}
               <div style={{borderTop:'1px solid rgba(201,147,90,0.15)',paddingTop:'1rem',marginBottom:'0.5rem'}}>
-                <TendenciaCard tipo="energia" checkins={ultimosCheckins} is_es={is_es} bare />
+                <TendenciaCard tipo={getTipoTendencia(user?.objetivo)} checkins={ultimosCheckins} is_es={is_es} bare />
               </div>
 
               {(!esObjetivoPeso ? null : !user?.pesoMeta ? (
@@ -1172,7 +1192,6 @@ export default function Dashboard() {
 
           {/* PANTALLA YO — cabecera, cifras, datos editables, recursos */}
           {showYoModal && (() => {
-            const diasContigo = user?.createdAt ? Math.max(0, Math.floor((new Date() - new Date(user.createdAt)) / (1000*60*60*24))) : 0;
             const OBJETIVOS = is_es
               ? ['Perder peso','Ganar energía y vitalidad','Equilibrio hormonal','Ganar fuerza y masa muscular','Dormir mejor']
               : ['Lose weight','Gain energy and vitality','Hormonal balance','Build strength and muscle','Sleep better'];
