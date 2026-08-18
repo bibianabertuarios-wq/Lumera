@@ -1,8 +1,8 @@
 // CATÁLOGO DE SILUETAS — las variantes entre las que elige la usuaria.
 //
 // Cada variante puede ser una IMAGEN o un vídeo:
-//   { id, imagen: '/images/…png' }  → se anima con CSS, respirando (lo preferido)
-//   { id, video:  '/videos/…mp4' }  → se reproduce en bucle
+//   { id, imagen: '/images/…webp' }  → se anima con CSS, respirando (lo preferido)
+//   { id, video:  '/videos/…mp4' }   → se reproduce en bucle
 //
 // Las imágenes son la vía buena: generarlas cuesta una fracción de lo que cuesta un
 // vídeo, pesan KB en vez de MB, y la respiración la hace el navegador — así que además
@@ -17,6 +17,7 @@
 // debería ser su cuerpo.
 //
 // Para añadir una variante: deja el archivo en /public/ y añade su entrada aquí.
+// Las imágenes van en WebP: las mismas ocho en PNG pesaban 5,2 MB y en WebP 300 KB.
 
 export const AVATARES = [
   {
@@ -27,49 +28,49 @@ export const AVATARES = [
   },
   {
     id: 'canas-corto',
-    imagen: '/images/avatar-canas-corto.png',
+    imagen: '/images/avatar-canas-corto.webp',
     es: 'Pelo corto cano',
     en: 'Short grey hair',
   },
   {
-    id: 'castano-largo',
-    imagen: '/images/avatar-castano-largo.png',
-    es: 'Melena castaña',
-    en: 'Long brown hair',
+    id: 'canas-larga',
+    imagen: '/images/avatar-canas-larga.webp',
+    es: 'Melena con canas',
+    en: 'Long salt-and-pepper hair',
   },
   {
     id: 'coral-media',
-    imagen: '/images/avatar-coral-media.png',
+    imagen: '/images/avatar-coral-media.webp',
     es: 'Media melena',
     en: 'Mid-length hair',
   },
   {
     id: 'rizado-color',
-    imagen: '/images/avatar-rizado-color.png',
+    imagen: '/images/avatar-rizado-color.webp',
     es: 'Pelo rizado',
     en: 'Curly hair',
   },
   {
     id: 'rubia-media',
-    imagen: '/images/avatar-rubia-media.png',
+    imagen: '/images/avatar-rubia-media.webp',
     es: 'Rubia media melena',
     en: 'Blonde mid-length',
   },
   {
     id: 'morena-larga',
-    imagen: '/images/avatar-morena-larga.png',
+    imagen: '/images/avatar-morena-larga.webp',
     es: 'Morena melena larga',
     en: 'Long dark hair',
   },
   {
     id: 'afro-corto',
-    imagen: '/images/avatar-afro-corto.png',
+    imagen: '/images/avatar-afro-corto.webp',
     es: 'Pelo afro corto',
     en: 'Short afro hair',
   },
   {
     id: 'pelirroja',
-    imagen: '/images/avatar-pelirroja.png',
+    imagen: '/images/avatar-pelirroja.webp',
     es: 'Pelirroja',
     en: 'Red hair',
   },
@@ -78,7 +79,9 @@ export const AVATARES = [
 export const AVATAR_POR_DEFECTO = 'clasica';
 
 // Devuelve la variante elegida, con reserva a la de por defecto si la usuaria tiene
-// guardada una que ya no existe en el catálogo (por ejemplo si se retiró).
+// guardada una que ya no existe en el catálogo. Pasó al retirar 'castano-largo' por
+// parecerse demasiado a 'morena-larga': quien la tuviera elegida vuelve a la original
+// sin que nada se rompa.
 export function getAvatar(id) {
   const encontrada = AVATARES.find(a => a.id === id);
   return encontrada || AVATARES.find(a => a.id === AVATAR_POR_DEFECTO) || AVATARES[0];
