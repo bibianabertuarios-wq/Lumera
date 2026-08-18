@@ -458,6 +458,7 @@ export default function Dashboard() {
   const [pwaInstruccionesVisibles, setPwaInstruccionesVisibles] = useState(false);
   const [calmaActiva, setCalmaActiva] = useState(false);
   const [momentoActivo, setMomentoActivo] = useState(false);
+  const [herramientasAbiertas, setHerramientasAbiertas] = useState(false);
   // Comer a las 14:00 cae ya en la bajada del ritmo circadiano — sugerimos antes por defecto.
   const [horaDesayuno, setHoraDesayuno] = useState('08:00');
   const [horaComida, setHoraComida] = useState('13:00');
@@ -1627,12 +1628,34 @@ export default function Dashboard() {
           {/* BLOQUE 3 — TU SEMANA + TOOLS */}
           <div className={`fade d4 ${visible?'in':''}`} style={{marginBottom:'1.25rem'}}>
 
-            {/* TUS HERRAMIENTAS — rejilla visual, siempre a la vista (antes era un acordeón
-                cerrado con dos iconos de 48px). Aquí viven también intimidad, conocimiento
-                y el momento de dopamina, en vez de escondidos en el menú "Más". */}
-            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,display:'inline-block',background:'rgba(31,122,92,0.1)',border:'1px solid rgba(31,122,92,0.22)',color:'#0D3D3D',borderRadius:'0.5rem',padding:'0.3rem 0.7rem',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
-              {is_es ? 'Tus herramientas' : 'Your tools'}
+            {/* TUS HERRAMIENTAS — una sola puerta con la imagen de las esferas; al tocarla
+                se abren las opciones. Antes era un acordeón cerrado con dos iconos de 48px. */}
+            <div className="tool-tile" onClick={()=>setHerramientasAbiertas(true)} style={{aspectRatio:'auto'}}>
+              <img src="/images/herramientas.png" alt="" style={{aspectRatio:'1400/560',objectFit:'cover',objectPosition:'center 40%'}} onError={e=>{e.target.style.visibility='hidden'}}/>
+              <div className="velo"/>
+              <div className="txt">
+                <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.35rem',fontWeight:600,color:'white',lineHeight:1.2}}>
+                  {is_es ? 'Tus herramientas' : 'Your tools'}
+                </div>
+                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.7rem',color:'rgba(255,255,255,0.8)',marginTop:'0.15rem'}}>
+                  {is_es ? 'Nutrición, ciclo, música, comunidad y más →' : 'Nutrition, cycle, music, community and more →'}
+                </div>
+              </div>
             </div>
+          </div>
+
+          {/* OPCIONES DE HERRAMIENTAS — se abren desde el cuadrado de arriba */}
+          {herramientasAbiertas && (
+            <div style={{position:'fixed',inset:0,background:'rgba(13,61,61,0.72)',zIndex:255,display:'flex',alignItems:'flex-end',justifyContent:'center'}} onClick={()=>setHerramientasAbiertas(false)}>
+              <div style={{background:'#FBF7F0',borderRadius:'1.5rem 1.5rem 0 0',padding:'1.75rem 1.25rem 2rem',width:'100%',maxWidth:'520px',maxHeight:'88vh',overflowY:'auto'}} onClick={e=>e.stopPropagation()}>
+                <div style={{textAlign:'center',marginBottom:'1.25rem'}}>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px',marginBottom:'0.4rem'}}>
+                    ✦ {is_es ? 'TUS HERRAMIENTAS' : 'YOUR TOOLS'}
+                  </div>
+                  <h2 style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.4rem',fontWeight:600,color:'#0D3D3D'}}>
+                    {is_es ? '¿Qué necesitas ahora?' : 'What do you need now?'}
+                  </h2>
+                </div>
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem'}}>
               {[
                 {img:'/images/kling_20260321_作品__Extremely_4730_1.png', es:'Nutrición', en:'Nutrition', s_es:'Tu menú de hoy', s_en:'Your menu today', route:'/lumera?tab=nutrition', premium:true},
@@ -1650,8 +1673,9 @@ export default function Dashboard() {
                   <div key={i} className="tool-tile" style={inactivo?{opacity:0.6,cursor:'default'}:cerrado?{opacity:0.75}:{}}
                     onClick={()=>{
                       if(inactivo) return;
-                      if(cerrado){setShowPremiumModal(true);return;}
-                      if(t.accion === 'momento'){setMomentoActivo(true);return;}
+                      if(cerrado){setHerramientasAbiertas(false);setShowPremiumModal(true);return;}
+                      if(t.accion === 'momento'){setHerramientasAbiertas(false);setMomentoActivo(true);return;}
+                      setHerramientasAbiertas(false);
                       if(t.route.includes('/lumera')) window.location.href=t.route; else router.push(t.route);
                     }}>
                     <img src={t.img} alt="" onError={e=>{e.target.style.visibility='hidden'}}/>
@@ -1665,7 +1689,12 @@ export default function Dashboard() {
                 );
               })}
             </div>
-          </div>
+                <button onClick={()=>setHerramientasAbiertas(false)} style={{width:'100%',background:'none',border:'none',color:'rgba(13,61,61,0.4)',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',cursor:'pointer',padding:'0.9rem 0.6rem 0'}}>
+                  {is_es ? 'Cerrar' : 'Close'}
+                </button>
+              </div>
+            </div>
+          )}
 
           {user?.isPremium && (
             <div className={`fade d4 ${visible?'in':''}`} style={{textAlign:'center',marginBottom:'1.25rem'}}>
