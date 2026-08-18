@@ -1,0 +1,43 @@
+{
+  // Configuración del editor para que VS Code deje de bloquearse en este proyecto.
+  // Causa: .next (~2.700 archivos) se reescribe entera en cada guardado de `next dev`,
+  // y node_modules son ~23.000 archivos más. Sin estas exclusiones, el vigilante de
+  // archivos, el indexador de búsqueda y las marcas de git los recorren todos a la vez.
+  // Nada de esto afecta al código de la app ni al build de Vercel.
+
+  // 1. Vigilante de archivos — lo que más carga produce.
+  "files.watcherExclude": {
+    "**/.next/**": true,
+    "**/node_modules/**": true,
+    "**/out/**": true,
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/public/videos/**": true
+  },
+
+  // 2. Búsqueda (Cmd+Shift+F) — evita indexar 800 MB de dependencias y builds.
+  "search.exclude": {
+    "**/.next": true,
+    "**/node_modules": true,
+    "**/out": true,
+    "**/package-lock.json": true
+  },
+  "search.followSymlinks": false,
+
+  // 3. Explorador — oculta carpetas generadas que nunca se editan a mano.
+  "files.exclude": {
+    "**/.next": true,
+    "**/.DS_Store": true
+  },
+
+  // 4. Servidor de lenguaje JS. LumeraApp.jsx tiene ~7.900 líneas y se reanaliza
+  //    entero mientras escribes; esto le quita trabajo de encima.
+  "typescript.disableAutomaticTypeAcquisition": true,
+  "javascript.suggest.autoImports": false,
+  "typescript.tsserver.maxTsServerMemory": 4096,
+
+  // 5. Git — el repositorio pesa ~277 MB por los vídeos e imágenes versionados.
+  //    El autofetch periódico sobre un repo así provoca pausas largas.
+  "git.autofetch": false,
+  "git.decorations.enabled": true
+}
