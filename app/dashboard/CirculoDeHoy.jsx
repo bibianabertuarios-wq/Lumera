@@ -29,7 +29,7 @@ function truncar(texto, n) {
 
 export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha = 0, objetivoKcal, onAbrirCalma,
   checkinHecho = true, onRegistrar, luz = 1, velocidad = 1, enPenumbra = false,
-  avatar = { video: '/videos/silueta-circulo.mp4' } }) {
+  avatar = { video: '/videos/silueta-circulo.mp4' }, onCambiarSilueta }) {
   const [abierto, setAbierto] = useState(null); // tipo de la tarea actualmente expandida, o null
   const videoRef = useRef(null);
 
@@ -145,6 +145,17 @@ export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha =
           <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'2.5rem',fontWeight:800,letterSpacing:'-0.03em',color:'white',lineHeight:1}}>{hechas}/{total}</div>
           <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',letterSpacing:'2px',textTransform:'uppercase',color:'rgba(255,255,255,0.55)',marginTop:'0.3rem'}}>{estados[hechas]}</div>
         </div>
+
+        {/* Puerta al selector. Sin esto nadie descubriría que la silueta se puede cambiar:
+            estaba solo en el perfil, donde no hay ninguna pista de que exista. */}
+        {onCambiarSilueta && (
+          <button type="button" onClick={onCambiarSilueta}
+            aria-label={is_es ? 'Cambiar tu silueta' : 'Change your silhouette'}
+            title={is_es ? 'Cambiar tu silueta' : 'Change your silhouette'}
+            style={{position:'absolute',top:'2px',right:'2px',width:'32px',height:'32px',borderRadius:'50%',background:'rgba(255,255,255,0.12)',border:'1px solid rgba(255,255,255,0.22)',color:'rgba(255,255,255,0.85)',fontSize:'0.85rem',cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center',padding:0}}>
+            ✎
+          </button>
+        )}
       </div>
 
       {/* Antes del check-in la silueta está en penumbra y el círculo es la invitación.

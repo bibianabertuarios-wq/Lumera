@@ -9,6 +9,7 @@ import { lumiMarkdownToHtml } from '../lib/lumiMarkdown';
 import CirculoDeHoy from './CirculoDeHoy';
 import MomentoParaTi from './MomentoParaTi';
 import { AVATARES, AVATAR_POR_DEFECTO, getAvatar } from '../lib/avatares';
+import SelectorSilueta from './SelectorSilueta';
 
 const getHora = () => {
   const h = new Date().getHours();
@@ -476,6 +477,7 @@ export default function Dashboard() {
   const [calmaActiva, setCalmaActiva] = useState(false);
   const [momentoActivo, setMomentoActivo] = useState(false);
   const [herramientasAbiertas, setHerramientasAbiertas] = useState(false);
+  const [selectorSilueta, setSelectorSilueta] = useState(false);
   // Comer a las 14:00 cae ya en la bajada del ritmo circadiano — sugerimos antes por defecto.
   const [horaDesayuno, setHoraDesayuno] = useState('08:00');
   const [horaComida, setHoraComida] = useState('13:00');
@@ -1129,6 +1131,7 @@ export default function Dashboard() {
                   onRegistrar={()=>{ window.location.href = '/lumera?tab=symptoms'; }}
                   luz={estado.luz} velocidad={estado.velocidad} enPenumbra={estado.enPenumbra}
                   avatar={getAvatar(user?.avatarVariante)}
+                  onCambiarSilueta={AVATARES.length > 1 ? ()=>setSelectorSilueta(true) : null}
                 />
               </div>
             );
@@ -1569,33 +1572,27 @@ export default function Dashboard() {
                     </button>
                   </div>
 
-                  {/* TU SILUETA — la usuaria elige la que más se le parece. Solo aparece si
-                      hay más de una variante disponible, para no enseñar un selector de uno. */}
+                  {/* TU SILUETA — el selector completo vive en SelectorSilueta.jsx y se abre
+                      también desde el propio círculo, que es donde se descubre de verdad. */}
                   {AVATARES.length > 1 && (
-                    <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem'}}>
-                      <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,display:'inline-block',background:'rgba(31,122,92,0.1)',border:'1px solid rgba(31,122,92,0.22)',color:'#0D3D3D',borderRadius:'0.5rem',padding:'0.3rem 0.7rem',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.5rem'}}>
-                        {is_es ? 'Tu silueta' : 'Your silhouette'}
+                    <div onClick={()=>setSelectorSilueta(true)} role="button" style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:'0.6rem',background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1rem 1.25rem',marginBottom:'1.25rem',cursor:'pointer'}}>
+                      <div style={{display:'flex',alignItems:'center',gap:'0.75rem',minWidth:0}}>
+                        {(() => {
+                          const a = getAvatar(user?.avatarVariante);
+                          return a.imagen
+                            ? <img src={a.imagen} alt="" style={{width:'44px',height:'44px',borderRadius:'50%',objectFit:'cover',objectPosition:'center top',flexShrink:0}}/>
+                            : <video src={a.video} muted loop autoPlay playsInline style={{width:'44px',height:'44px',borderRadius:'50%',objectFit:'cover',flexShrink:0}}/>;
+                        })()}
+                        <div style={{minWidth:0}}>
+                          <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase'}}>
+                            {is_es ? 'Tu silueta' : 'Your silhouette'}
+                          </div>
+                          <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1rem',fontWeight:600,color:'#0D3D3D'}}>
+                            {is_es ? 'Elige la que más se te parezca' : 'Pick the one closest to you'}
+                          </div>
+                        </div>
                       </div>
-                      <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'rgba(13,61,61,0.55)',lineHeight:1.5,marginBottom:'0.9rem'}}>
-                        {is_es ? 'Elige la que más se te parezca. Aparecerá en tu círculo de cada día.' : 'Pick the one closest to you. It will show in your daily circle.'}
-                      </p>
-                      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'0.6rem'}}>
-                        {AVATARES.map(a => {
-                          const elegida = (user?.avatarVariante || AVATAR_POR_DEFECTO) === a.id;
-                          return (
-                            <button key={a.id} type="button" onClick={()=>guardarAvatar(a.id)}
-                              style={{padding:0,background:'#0D3D3D',border:elegida?'2px solid #C9935A':'2px solid transparent',borderRadius:'0.75rem',overflow:'hidden',cursor:'pointer',position:'relative'}}>
-                              {a.imagen
-                                ? <img src={a.imagen} alt="" style={{width:'100%',aspectRatio:'3/4',objectFit:'cover',objectPosition:'center top',display:'block',opacity:elegida?1:0.75}}/>
-                                : <video src={a.video} muted loop autoPlay playsInline style={{width:'100%',aspectRatio:'3/4',objectFit:'cover',objectPosition:'center top',display:'block',opacity:elegida?1:0.75}}/>}
-                              {elegida && <span style={{position:'absolute',top:'0.3rem',right:'0.4rem',fontSize:'0.75rem',color:'#C9935A'}}>✓</span>}
-                              <span style={{display:'block',fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.8)',padding:'0.3rem 0.2rem',lineHeight:1.2}}>
-                                {is_es ? a.es : a.en}
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
+                      <span style={{fontSize:'1.1rem',color:'#C9935A',flexShrink:0}}>→</span>
                     </div>
                   )}
 
@@ -1687,6 +1684,15 @@ export default function Dashboard() {
           {calmaActiva && <CalmaOverlay is_es={is_es} onClose={() => setCalmaActiva(false)} />}
 
           {momentoActivo && <MomentoParaTi is_es={is_es} onClose={() => setMomentoActivo(false)} />}
+
+          {selectorSilueta && (
+            <SelectorSilueta
+              is_es={is_es}
+              elegida={user?.avatarVariante}
+              onElegir={guardarAvatar}
+              onClose={() => setSelectorSilueta(false)}
+            />
+          )}
 
           {/* BLOQUE 3 — TU SEMANA + TOOLS */}
           <div className={`fade d4 ${visible?'in':''}`} style={{marginBottom:'1.25rem'}}>
