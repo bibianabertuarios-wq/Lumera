@@ -948,10 +948,35 @@ export default function Dashboard() {
 
         <div style={{maxWidth:'520px',margin:'0 auto',padding:'1.25rem 1.25rem 0'}}>
 
-          {/* SALUDO */}
-          <div className={`fade d1 ${visible?'in':''}`} style={{background:'#FAF7F1',borderRadius:'1.25rem',boxShadow:'0 2px 12px rgba(13,61,61,0.06)',padding:'0.9rem 1.1rem',marginBottom:'1rem'}}>
+          {/* ——— ZONA 1 · HOY ———
+              Saludo y voz de LUMI fusionados: aquí arriba está la pregunta, y el Círculo
+              de abajo es la respuesta. Antes la misma idea aparecía dos veces (aquí y en
+              una tarjeta oscura aparte más abajo). */}
+          <div className={`fade d1 ${visible?'in':''}`} style={{background:'#FAF7F1',borderRadius:'1.25rem',boxShadow:'0 2px 12px rgba(13,61,61,0.06)',padding:'1.1rem 1.1rem',marginBottom:'1rem'}}>
             <p style={{fontSize:'0.8rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.4)',marginBottom:'0.1rem'}}>{saludoHora}</p>
             <h1 style={{fontSize:'clamp(1.6rem,4vw,2rem)',fontWeight:700,color:'#0D3D3D',lineHeight:1.15}}>{user?.nombre}</h1>
+
+            {!checkinHecho ? (
+              <>
+                <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.15rem',color:'rgba(13,61,61,0.75)',lineHeight:1.5,margin:'0.5rem 0 0.9rem'}}>
+                  {is_es ? '¿Cómo te encuentras hoy? Cuéntamelo y preparo tu plan.' : 'How are you feeling today? Tell me and I\'ll prepare your plan.'}
+                </p>
+                <a href="/lumera?tab=symptoms" style={{display:'inline-block',background:'linear-gradient(135deg,#C9935A,#A06030)',color:'white',borderRadius:'0.75rem',padding:'0.7rem 1.3rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',fontWeight:700,textDecoration:'none'}}>
+                  {is_es ? 'Registrar mis síntomas →' : 'Log my symptoms →'}
+                </a>
+              </>
+            ) : lumiLoading ? (
+              <div className="shimmer" style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',fontStyle:'italic',color:'rgba(13,61,61,0.45)',marginTop:'0.5rem'}}>
+                {is_es ? 'Preparando tu plan...' : 'Preparing your plan...'}
+              </div>
+            ) : (
+              <>
+                <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.1rem',fontStyle:'italic',color:'rgba(13,61,61,0.8)',lineHeight:1.65,margin:'0.5rem 0 0.6rem'}}>{lumiMsg}</p>
+                <a href="/lumera?tab=symptoms" style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'#A06030',textDecoration:'none',fontWeight:600}}>
+                  {is_es ? 'Actualizar cómo me siento →' : 'Update how I feel →'}
+                </a>
+              </>
+            )}
           </div>
 
           {/* CÍRCULO DE HOY — pieza central del día, propuesta por la auditoría UX de fable */}
@@ -977,50 +1002,17 @@ export default function Dashboard() {
             );
           })()}
 
-          {/* MI PLAN — mensaje de LUMI + puerta de recordatorios + plan de hoy (resumen que expande) */}
-          <div className={`fade d2 ${visible?'in':''}`} style={{background:'linear-gradient(135deg,rgba(13,61,61,0.97),rgba(10,45,45,0.98))',border:'1px solid rgba(201,147,90,0.25)',borderRadius:'1.25rem',padding:'1.25rem',margin:'0 0.3rem 1.25rem',boxShadow:'0 4px 20px rgba(13,61,61,0.15)'}}>
-            <div style={{display:'flex',alignItems:'center',gap:'0.5rem',marginBottom:'1rem'}}>
-              <div style={{width:'32px',height:'32px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.85rem',fontWeight:700,color:'white',fontFamily:'Montserrat,sans-serif'}}>L</div>
-              <div>
-                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'#C9935A',letterSpacing:'2px'}}>LUMI</div>
-                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.3)'}}>
-                  {is_es ? 'Tu asesora de bienestar' : 'Your wellness advisor'}
-                </div>
-              </div>
-            </div>
-
-            {!checkinHecho ? (
-              <>
-                <p style={{fontSize:'0.95rem',fontStyle:'italic',color:'rgba(255,255,255,0.7)',lineHeight:1.5,marginBottom:'0.9rem'}}>
-                  {is_es ? 'Cuéntame qué está pasando en tu cuerpo hoy y te preparo tu plan.' : "Tell me what's happening in your body today and I'll prepare your plan."}
-                </p>
-                <a href="/lumera?tab=symptoms" style={{display:'inline-flex',alignItems:'center',gap:'0.4rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',color:'#C9935A',fontWeight:600,textDecoration:'none',marginBottom:'1.25rem'}}>
-                  {is_es ? 'Registra tu síntoma de hoy →' : 'Log your symptom today →'}
-                </a>
-              </>
-            ) : lumiLoading ? (
-              <div className="shimmer" style={{fontSize:'1rem',fontStyle:'italic',color:'rgba(255,255,255,0.4)',lineHeight:1.7}}>
-                {is_es ? 'Preparando tu plan...' : 'Preparing your plan...'}
-              </div>
-            ) : (
-              <p style={{fontSize:'1.05rem',fontStyle:'italic',color:'rgba(255,255,255,0.9)',lineHeight:1.75,marginBottom:'1.25rem'}}>{lumiMsg}</p>
-            )}
-            <span onClick={()=>{setShowLumiChat(true); if(lumiChatMessages.length===0) setLumiChatMessages([{role:'assistant', content: lumiMsg}]);}} style={{display:'block',marginBottom:'0.6rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',color:'#C9935A',fontWeight:600,cursor:'pointer'}}>
-              {is_es ? 'Pregúntame tus dudas →' : 'Ask me anything →'}
-            </span>
-            {checkinHecho && (
-              <a href="/lumera?tab=symptoms" style={{display:'block',marginTop:'-0.2rem',marginBottom:'0.9rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',color:'rgba(255,255,255,0.4)',textDecoration:'none'}}>
-                {is_es ? 'Registro detallado de síntomas →' : 'Detailed symptom log →'}
-              </a>
-            )}
-
-            <div onClick={()=>abrirYo('recordatorios')} role="button" style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:'0.6rem',background:'rgba(201,147,90,0.12)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.9rem',padding:'0.85rem 1rem',cursor:'pointer'}}>
-              <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',fontWeight:600,color:'white',lineHeight:1.3}}>
-                {is_es ? '¿Necesitas que te recuerde tus horas o citas?' : 'Need a reminder for your times or appointments?'}
-              </span>
-              <span style={{fontSize:'1.1rem',color:'#C9935A',flexShrink:0}}>→</span>
-            </div>
-
+          {/* ACCESOS A LUMI — una sola línea. Sustituye a la tarjeta oscura que repetía
+              el saludo y el mensaje del día que ya salen arriba. */}
+          <div className={`fade d2 ${visible?'in':''}`} style={{display:'flex',gap:'0.6rem',marginBottom:'1.25rem'}}>
+            <button type="button" onClick={()=>{setShowLumiChat(true); if(lumiChatMessages.length===0) setLumiChatMessages([{role:'assistant', content: lumiMsg}]);}}
+              style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',gap:'0.4rem',background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.9rem',padding:'0.8rem 0.6rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.82rem',fontWeight:600,color:'#A06030',cursor:'pointer'}}>
+              ✦ {is_es ? 'Pregúntame' : 'Ask me'}
+            </button>
+            <button type="button" onClick={()=>abrirYo('recordatorios')}
+              style={{flex:1,display:'flex',alignItems:'center',justifyContent:'center',gap:'0.4rem',background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.3)',borderRadius:'0.9rem',padding:'0.8rem 0.6rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.82rem',fontWeight:600,color:'#A06030',cursor:'pointer'}}>
+              🔔 {is_es ? 'Recordatorios' : 'Reminders'}
+            </button>
           </div>
 
           {/* DESCUBRIMIENTO DEL DÍA — se desbloquea al completar las 3 tareas del Círculo de Hoy.
