@@ -37,6 +37,12 @@ export const AVATARES = [
     es: 'Melena castaña',
     en: 'Long brown hair',
   },
+  {
+    id: 'coral-media',
+    imagen: '/images/avatar-coral-media.png',
+    es: 'Media melena',
+    en: 'Mid-length hair',
+  },
 ];
 
 export const AVATAR_POR_DEFECTO = 'clasica';
