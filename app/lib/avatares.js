@@ -49,6 +49,18 @@ export const AVATARES = [
     es: 'Pelo rizado',
     en: 'Curly hair',
   },
+  {
+    id: 'rubia-media',
+    imagen: '/images/avatar-rubia-media.png',
+    es: 'Rubia media melena',
+    en: 'Blonde mid-length',
+  },
+  {
+    id: 'morena-larga',
+    imagen: '/images/avatar-morena-larga.png',
+    es: 'Morena melena larga',
+    en: 'Long dark hair',
+  },
 ];
 
 export const AVATAR_POR_DEFECTO = 'clasica';
