@@ -306,6 +306,12 @@ function TendenciaCard({ tipo, checkins, is_es, bare }) {
   const ys = (v) => H - 8 - ((v - 1) / 4) * (H - 20);
   const puntos = ultimos.map((c, i) => `${xs(i).toFixed(1)},${ys(val(c)).toFixed(1)}`).join(' ');
   const ux = xs(ultimos.length - 1), uy = ys(val(ultimos[ultimos.length - 1]));
+  // Largo real de la polilínea, para que el trazo se dibuje de principio a fin sin cortarse.
+  const largoLinea = Math.ceil(ultimos.reduce((total, c, i) => {
+    if (i === 0) return 0;
+    const dx = xs(i) - xs(i - 1), dy = ys(val(c)) - ys(val(ultimos[i - 1]));
+    return total + Math.sqrt(dx * dx + dy * dy);
+  }, 0)) + 4;
   const deltaPct = (mPrev && mPrev > 0 && mRec !== null) ? Math.round((mRec - mPrev) / mPrev * 100) : null;
   const sube = deltaPct !== null && deltaPct > 2;
   const baja = deltaPct !== null && deltaPct < -2;
@@ -322,7 +328,15 @@ function TendenciaCard({ tipo, checkins, is_es, bare }) {
 
   const contenido = (
     <>
-      <style>{`@keyframes tendPulso { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }`}</style>
+      {/* La línea se dibuja sola al entrar y el punto de hoy late: da sensación de camino
+          recorrido en vez de una gráfica quieta. */}
+      <style>{`
+        @keyframes tendPulso { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }
+        @keyframes tendTrazo { from { stroke-dashoffset: var(--largo); } to { stroke-dashoffset: 0; } }
+        @keyframes tendPunto { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: scale(1); } }
+        .tend-linea { animation: tendTrazo 1.6s cubic-bezier(.22,1,.36,1) forwards; }
+        .tend-punto { transform-box: fill-box; transform-origin: center; animation: tendPunto 0.5s ease forwards; opacity: 0; }
+      `}</style>
       {!bare && (
         <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase'}}>
           {is_es ? `Tu camino · ${nombre}` : `Your path · ${nombre}`}
@@ -330,9 +344,11 @@ function TendenciaCard({ tipo, checkins, is_es, bare }) {
       )}
       <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',fontStyle:'italic',color:'#0D3D3D',margin:'0.4rem 0 0.75rem',lineHeight:1.4}}>{frase}</p>
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label={is_es ? `Tendencia de ${nombre}: ${deltaTxt}` : `${nombre} trend: ${deltaTxt}`}>
-        <polyline points={puntos} fill="none" stroke="rgba(201,147,90,0.35)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        <polyline className="tend-linea" points={puntos} fill="none" stroke="rgba(201,147,90,0.55)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+          style={{'--largo': largoLinea, strokeDasharray: largoLinea, strokeDashoffset: largoLinea}} />
         {ultimos.map((c, i) => (
-          <circle key={i} cx={xs(i)} cy={ys(val(c))} r="2.6" fill={c.fecha >= hace7 ? '#C9935A' : 'rgba(13,61,61,0.2)'} />
+          <circle key={i} className="tend-punto" cx={xs(i)} cy={ys(val(c))} r="2.6" fill={c.fecha >= hace7 ? '#C9935A' : 'rgba(13,61,61,0.2)'}
+            style={{animationDelay: `${0.25 + (i / Math.max(1, ultimos.length - 1)) * 1.35}s`}} />
         ))}
         <circle cx={ux} cy={uy} r="5.5" fill="#C9935A" style={{animation:'tendPulso 2.4s ease-in-out infinite'}} />
       </svg>
@@ -1055,7 +1071,7 @@ export default function Dashboard() {
 
             {!checkinHecho ? (
               <>
-                <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.15rem',color:'rgba(13,61,61,0.75)',lineHeight:1.5,margin:'0.5rem 0 0.9rem'}}>
+                <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.4rem',fontWeight:600,color:'#0D3D3D',lineHeight:1.4,margin:'0.6rem 0 1rem'}}>
                   {is_es ? '¿Cómo te encuentras hoy? Cuéntamelo y preparo tu plan.' : 'How are you feeling today? Tell me and I\'ll prepare your plan.'}
                 </p>
                 <a href="/lumera?tab=symptoms" style={{display:'inline-block',background:'linear-gradient(135deg,#C9935A,#A06030)',color:'white',borderRadius:'0.75rem',padding:'0.7rem 1.3rem',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',fontWeight:700,textDecoration:'none'}}>
@@ -1068,7 +1084,7 @@ export default function Dashboard() {
               </div>
             ) : (
               <>
-                <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.1rem',fontStyle:'italic',color:'rgba(13,61,61,0.8)',lineHeight:1.65,margin:'0.5rem 0 0.6rem'}}>{lumiMsg}</p>
+                <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.3rem',fontWeight:500,color:'#0D3D3D',lineHeight:1.55,margin:'0.6rem 0 0.7rem'}}>{lumiMsg}</p>
                 <a href="/lumera?tab=symptoms" style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'#A06030',textDecoration:'none',fontWeight:600}}>
                   {is_es ? 'Actualizar cómo me siento →' : 'Update how I feel →'}
                 </a>
@@ -1656,16 +1672,18 @@ export default function Dashboard() {
                     {is_es ? '¿Qué necesitas ahora?' : 'What do you need now?'}
                   </h2>
                 </div>
+            {/* Aquí solo van herramientas que NO estén ya en la barra inferior ni en el panel
+                "Descubre": nutrición, ejercicio, intimidad, comunidad y síntomas se quitaron
+                por repetidas. El cuadro del ciclo cambia a salud ósea y muscular si en el quiz
+                dijo que ya no tiene periodo. */}
             <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem'}}>
               {[
-                {img:'/images/kling_20260321_作品__Extremely_4730_1.png', es:'Nutrición', en:'Nutrition', s_es:'Tu menú de hoy', s_en:'Your menu today', route:'/lumera?tab=nutrition', premium:true},
-                {img:'/images/kling_20260321_作品_Extremely__4896_1.png', es:'Ejercicio', en:'Exercise', s_es:'Tu rutina de hoy', s_en:'Your routine today', route:'/lumera?tab=exercise', premium:true},
-                {img:'/images/periodo.png', es:'Tu ciclo', en:'Your cycle', s_es:'Dónde estás este mes', s_en:'Where you are this month', route:'/lumera?tab=period'},
-                {img:'/images/carta_aprender.png', es:'Conocimiento', en:'Knowledge', s_es:'Lo que no te contaron', s_en:'What nobody told you', route:'/lumera?tab=myths'},
+                {img:'/images/lente_alquimica.png', es:'Lee tu plato', en:'Read your plate', s_es:'Fotografía y LUMI lo ajusta', s_en:'Snap it and LUMI adjusts', route:'/lumera?tab=chat', premium:true},
+                {img:'/images/silueta_escaner.png', es:'Tu silueta', en:'Your silhouette', s_es:'Una vez al mes', s_en:'Once a month', route:'/escaner'},
+                infoCiclo.tieneCiclo
+                  ? {img:'/images/periodo.png', es:'Tu ciclo', en:'Your cycle', s_es:'Dónde estás este mes', s_en:'Where you are this month', route:'/lumera?tab=period'}
+                  : {img:'/images/kling_20260321_作品_Extremely__4896_1.png', es:'Hueso y músculo', en:'Bone and muscle', s_es:'Próximamente', s_en:'Coming soon', route:null},
                 {img:'/images/dopamina.png', es:'Un momento para ti', en:'A moment for you', s_es:'Música según cómo estás', s_en:'Music for how you feel', accion:'momento'},
-                {img:'/images/carta_intimidad.png', es:'Intimidad', en:'Intimacy', s_es:'Próximamente', s_en:'Coming soon', route:null},
-                {img:'/images/comunidad.png', es:'Comunidad', en:'Community', s_es:'No estás sola en esto', s_en:"You're not alone in this", route:'/lumera?tab=community'},
-                {img:'/images/sintomas.png', es:'Síntomas', en:'Symptoms', s_es:'Registra cómo te sientes', s_en:'Log how you feel', route:'/lumera?tab=symptoms'},
               ].map((t,i) => {
                 const cerrado = t.premium && bloqueado;
                 const inactivo = !t.route && !t.accion;
@@ -1689,6 +1707,25 @@ export default function Dashboard() {
                 );
               })}
             </div>
+
+                {/* TUS GUÍAS — estaban solo escondidas dentro del perfil */}
+                <div style={{marginTop:'1.25rem'}}>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase',marginBottom:'0.6rem'}}>
+                    {is_es ? 'Tus guías' : 'Your guides'}
+                  </div>
+                  {[
+                    {es:'7 días para sentirte menos hinchada', en:'7 days to feel less bloated', href:'/desinflamate'},
+                    {es:'7 noches para calmar tu ansiedad y dormir', en:'7 nights to calm anxiety and sleep', href:'/duerme'},
+                    {es:'3 hábitos GLP-1 naturales para tu energía', en:'3 natural GLP-1 habits for your energy', href:'/guia-glp1'},
+                  ].map((g,i)=>(
+                    <div key={i} onClick={()=>{ setHerramientasAbiertas(false); if (g.href.includes('/lumera')) window.location.href = g.href; else router.push(g.href); }}
+                      style={{background:'white',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'0.75rem',padding:'0.8rem 1rem',marginBottom:'0.5rem',cursor:'pointer',fontFamily:'Montserrat,sans-serif',fontSize:'0.82rem',color:'#0D3D3D',display:'flex',justifyContent:'space-between',alignItems:'center',gap:'0.6rem'}}>
+                      <span>{is_es?g.es:g.en}</span>
+                      <span style={{color:'#C9935A',flexShrink:0}}>→</span>
+                    </div>
+                  ))}
+                </div>
+
                 <button onClick={()=>setHerramientasAbiertas(false)} style={{width:'100%',background:'none',border:'none',color:'rgba(13,61,61,0.4)',fontFamily:'Montserrat,sans-serif',fontSize:'0.85rem',cursor:'pointer',padding:'0.9rem 0.6rem 0'}}>
                   {is_es ? 'Cerrar' : 'Close'}
                 </button>
