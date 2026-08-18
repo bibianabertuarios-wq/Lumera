@@ -1038,26 +1038,8 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* TU CAMINO — teaser compacto; el plan completo vive en Yo, para no saturar el dashboard */}
-          {(() => {
-            const semana = getSemanaContigo(user?.createdAt);
-            const faseInfo = getFaseSemana(semana, is_es);
-            return (
-              <div onClick={abrirYo} role="button" style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:'0.6rem',background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1rem',padding:'0.85rem 1.1rem',marginBottom:'1.25rem',cursor:'pointer'}}>
-                <div>
-                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,display:'inline-block',background:'rgba(31,122,92,0.1)',border:'1px solid rgba(31,122,92,0.22)',color:'#0D3D3D',borderRadius:'0.5rem',padding:'0.3rem 0.7rem',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.2rem'}}>
-                    {is_es ? 'Tu camino' : 'Your path'}
-                  </div>
-                  <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'0.95rem',fontWeight:600,color:'#0D3D3D'}}>
-                    {is_es ? `Semana ${semana + 1}` : `Week ${semana + 1}`} · {faseInfo.titulo}
-                  </div>
-                </div>
-                <span style={{fontSize:'1.1rem',color:'#C9935A',flexShrink:0}}>→</span>
-              </div>
-            );
-          })()}
-
-          {/* AHORA — próxima acción del día, en grande, en vez de la lista de 3 horas (zona 2 del rediseño de fable) */}
+          {/* ——— ZONA 2 · AHORA ———
+              Próxima acción del día, en grande, en vez de la lista de 3 horas. */}
           {checkinHecho && user?.pushEnabled && (() => {
             const proxima = getProximaAccion(user, is_es);
             return proxima && (
@@ -1076,6 +1058,10 @@ export default function Dashboard() {
               </div>
             );
           })()}
+
+          {/* ——— ZONA 3 · TU AVANCE ———
+              Progreso, obra de la semana y camino, juntos y en este orden. Antes estaban
+              repartidos por toda la pantalla con otras cosas en medio. */}
 
           {/* TU PROGRESO — gráfica/meta + silueta en una sola card */}
           <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',overflow:'hidden',marginBottom:'1.25rem'}}>
@@ -1124,9 +1110,49 @@ export default function Dashboard() {
             </div>
           </div>
 
+          {/* TU OBRA DE ESTA SEMANA — la imagen se destapa a medida que avanzas */}
+          <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
+            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,display:'inline-block',background:'rgba(31,122,92,0.1)',border:'1px solid rgba(31,122,92,0.22)',color:'#0D3D3D',borderRadius:'0.5rem',padding:'0.3rem 0.7rem',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.4rem'}}>
+              {is_es ? `Tu obra de esta semana · ${fragmentosSemana} de 8 fragmentos` : `Your artwork this week · ${fragmentosSemana} of 8 fragments`}
+            </div>
+            <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.85rem',color:'rgba(13,61,61,0.55)',marginBottom:'0.9rem'}}>
+              {is_es ? 'Cada cosa que haces destapa un trozo.' : 'Everything you do uncovers a piece.'}
+            </p>
+            <div style={{position:'relative',borderRadius:'0.85rem',overflow:'hidden',aspectRatio:'4/3',background:'#EFE7DA'}}>
+              <svg viewBox="0 0 400 300" preserveAspectRatio="none" style={{position:'absolute',inset:0,width:'100%',height:'100%'}}>
+                <defs>
+                  <mask id="obraMask">
+                    <rect width="400" height="300" fill="black"/>
+                    {[...Array(8)].map((_, i) => i < fragmentosSemana && (
+                      <rect key={i} x={(i%4)*100} y={Math.floor(i/4)*150} width="100" height="150" fill="white"/>
+                    ))}
+                  </mask>
+                </defs>
+                <image href="/images/shula_principal.jpg" x="0" y="0" width="400" height="300" preserveAspectRatio="xMidYMid slice" mask="url(#obraMask)"/>
+              </svg>
+            </div>
+          </div>
 
+          {/* TU CAMINO — teaser compacto; el plan completo vive en Yo, para no saturar el dashboard */}
+          {(() => {
+            const semana = getSemanaContigo(user?.createdAt);
+            const faseInfo = getFaseSemana(semana, is_es);
+            return (
+              <div onClick={abrirYo} role="button" style={{display:'flex',alignItems:'center',justifyContent:'space-between',gap:'0.6rem',background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1rem',padding:'0.85rem 1.1rem',marginBottom:'1.25rem',cursor:'pointer'}}>
+                <div>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,display:'inline-block',background:'rgba(31,122,92,0.1)',border:'1px solid rgba(31,122,92,0.22)',color:'#0D3D3D',borderRadius:'0.5rem',padding:'0.3rem 0.7rem',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.2rem'}}>
+                    {is_es ? 'Tu camino' : 'Your path'}
+                  </div>
+                  <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'0.95rem',fontWeight:600,color:'#0D3D3D'}}>
+                    {is_es ? `Semana ${semana + 1}` : `Week ${semana + 1}`} · {faseInfo.titulo}
+                  </div>
+                </div>
+                <span style={{fontSize:'1.1rem',color:'#C9935A',flexShrink:0}}>→</span>
+              </div>
+            );
+          })()}
 
-                    {showPesoModal && (
+          {showPesoModal && (
             <div style={{position:'fixed',inset:0,background:'rgba(13,61,61,0.6)',zIndex:250,display:'flex',alignItems:'flex-end',justifyContent:'center'}} onClick={()=>setShowPesoModal(false)}>
               <div style={{background:'#FBF7F0',borderRadius:'1.5rem 1.5rem 0 0',padding:'1.75rem 1.5rem',width:'100%',maxWidth:'520px'}} onClick={e=>e.stopPropagation()}>
                 <h2 style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.3rem',color:'#0D3D3D',marginBottom:'1rem',textAlign:'center'}}>
@@ -1443,29 +1469,6 @@ export default function Dashboard() {
           )}
 
           {calmaActiva && <CalmaOverlay is_es={is_es} onClose={() => setCalmaActiva(false)} />}
-
-          {/* TU OBRA DE ESTA SEMANA — único marcador de progreso de Inicio */}
-          <div className={`fade d1 ${visible?'in':''}`} style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',backdropFilter:'blur(8px)',padding:'1.25rem',marginBottom:'1.25rem'}}>
-            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,display:'inline-block',background:'rgba(31,122,92,0.1)',border:'1px solid rgba(31,122,92,0.22)',color:'#0D3D3D',borderRadius:'0.5rem',padding:'0.3rem 0.7rem',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.4rem'}}>
-              {is_es ? `Tu obra de esta semana · ${fragmentosSemana} de 8 fragmentos` : `Your artwork this week · ${fragmentosSemana} of 8 fragments`}
-            </div>
-            <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.85rem',color:'rgba(13,61,61,0.55)',marginBottom:'0.9rem'}}>
-              {is_es ? 'Cada cosa que haces destapa un trozo.' : 'Everything you do uncovers a piece.'}
-            </p>
-            <div style={{position:'relative',borderRadius:'0.85rem',overflow:'hidden',aspectRatio:'4/3',background:'#EFE7DA'}}>
-              <svg viewBox="0 0 400 300" preserveAspectRatio="none" style={{position:'absolute',inset:0,width:'100%',height:'100%'}}>
-                <defs>
-                  <mask id="obraMask">
-                    <rect width="400" height="300" fill="black"/>
-                    {[...Array(8)].map((_, i) => i < fragmentosSemana && (
-                      <rect key={i} x={(i%4)*100} y={Math.floor(i/4)*150} width="100" height="150" fill="white"/>
-                    ))}
-                  </mask>
-                </defs>
-                <image href="/images/shula_principal.jpg" x="0" y="0" width="400" height="300" preserveAspectRatio="xMidYMid slice" mask="url(#obraMask)"/>
-              </svg>
-            </div>
-          </div>
 
           {/* BLOQUE 3 — TU SEMANA + TOOLS */}
           <div className={`fade d4 ${visible?'in':''}`} style={{marginBottom:'1.25rem'}}>
