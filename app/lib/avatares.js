@@ -25,6 +25,12 @@ export const AVATARES = [
     es: 'Silueta original',
     en: 'Original silhouette',
   },
+  {
+    id: 'canas-corto',
+    imagen: '/images/avatar-canas-corto.png',
+    es: 'Pelo corto cano',
+    en: 'Short grey hair',
+  },
 ];
 
 export const AVATAR_POR_DEFECTO = 'clasica';
