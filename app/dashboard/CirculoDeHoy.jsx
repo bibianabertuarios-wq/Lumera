@@ -55,6 +55,14 @@ export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha =
   // ritmo: lenta y pesada con poca energía, agitada cuando hay tensión.
   const duracionRespiracion = (7 / ritmo).toFixed(1);
 
+  // Luz: 1 = registró hoy · baja progresivamente con los días sin registrar.
+  const brillo = (0.35 + 0.65 * luz).toFixed(2);
+  const saturacion = (0.15 + 0.85 * luz).toFixed(2);
+  const filtroSilueta = pleno
+    ? `brightness(${brillo}) saturate(${saturacion}) drop-shadow(0 0 18px rgba(201,147,90,0.85))`
+    : `brightness(${brillo}) saturate(${saturacion})`;
+
+  // Ojo al orden: esto usa filtroSilueta, así que tiene que ir después de declararlo.
   const estiloSilueta = {
     width: '104px',
     height: '192px',
@@ -65,13 +73,6 @@ export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha =
     filter: filtroSilueta,
     transition: 'filter 1.2s ease',
   };
-
-  // Luz: 1 = registró hoy · baja progresivamente con los días sin registrar.
-  const brillo = (0.35 + 0.65 * luz).toFixed(2);
-  const saturacion = (0.15 + 0.85 * luz).toFixed(2);
-  const filtroSilueta = pleno
-    ? `brightness(${brillo}) saturate(${saturacion}) drop-shadow(0 0 18px rgba(201,147,90,0.85))`
-    : `brightness(${brillo}) saturate(${saturacion})`;
 
   const itemAbierto = abierto !== null && idxPorTipo[abierto] !== undefined ? plan[idxPorTipo[abierto]] : null;
   const idxAbierto = abierto !== null ? idxPorTipo[abierto] : null;
