@@ -20,8 +20,9 @@ const ESTADOS = [
     // Salimpoor et al., Nature Neuroscience 2011: la música que provoca escalofríos libera
     // dopamina en el estriado. El efecto depende de que la música te guste y la conozcas,
     // no del género — por eso el primer paso son canciones que ya te sabes.
-    ciencia_es: 'La música que te pone la piel de gallina libera dopamina, igual que otras recompensas. Funciona mejor con canciones que ya conoces y te gustan que con una lista nueva.',
-    ciencia_en: 'Music that gives you goosebumps releases dopamine, like other rewards do. It works better with songs you already know and love than with a brand-new playlist.',
+    ciencia_es: 'La música que te pone la piel de gallina libera dopamina en el cerebro, igual que otras recompensas. El efecto depende de que la canción te guste y te la sepas, no del estilo: por eso se empieza por lo tuyo y se sube desde ahí.',
+    ciencia_en: 'Music that gives you goosebumps releases dopamine in the brain, like other rewards do. The effect depends on the song being yours and familiar, not on the genre: that is why you start with what you know and lift from there.',
+    fuente: 'Salimpoor et al., Nature Neuroscience (2011)',
     pasos: [
       { es: 'Empieza por lo que ya te sabes', en: 'Start with what you know by heart', q_es: 'canciones que todos nos sabemos para cantar', q_en: 'feel good singalong classics' },
       { es: 'Y sube el ritmo', en: 'Then lift the tempo', q_es: 'musica alegre para bailar en casa', q_en: 'upbeat happy dance music at home' },
@@ -35,8 +36,9 @@ const ESTADOS = [
     // Taruffi & Koelsch, PLOS ONE 2014 (772 personas): la música triste no hunde. Lo que
     // más se describe es nostalgia, paz y ternura, y sirve de consuelo y regulación
     // emocional. El segundo paso existe para acompañar la salida, no para quedarse ahí.
-    ciencia_es: 'Escuchar música triste cuando lo estás pasando mal no te hunde más: en el mayor estudio sobre esto, lo que más describe la gente es nostalgia, paz y consuelo.',
-    ciencia_en: "Listening to sad music when you're low doesn't sink you further: in the largest study on this, what people describe most is nostalgia, peace and comfort.",
+    ciencia_es: 'Escuchar música triste cuando lo estás pasando mal no te hunde más: en una encuesta a 772 personas, lo que más se describe es nostalgia, paz y consuelo, no tristeza a secas.',
+    ciencia_en: "Listening to sad music when you're low doesn't sink you further: in a survey of 772 people, what came up most was nostalgia, peace and comfort, not plain sadness.",
+    fuente: 'Taruffi y Koelsch, PLOS ONE (2014)',
     pasos: [
       { es: 'Acompaña lo que sientes', en: 'Meet how you feel', q_es: 'piano melancolico instrumental para llorar', q_en: 'melancholic piano instrumental' },
       { es: 'Y sal poco a poco', en: 'Then come back up slowly', q_es: 'musica serena esperanzadora instrumental', q_en: 'calm hopeful instrumental music' },
@@ -49,8 +51,9 @@ const ESTADOS = [
     en: { titulo: 'I need to let off steam', sub: 'Release the tension' },
     // Principio ISO: con rabia o tensión alta, poner música suave de entrada no funciona
     // porque no conecta con el estado real. Primero se iguala la intensidad y después se baja.
-    ciencia_es: 'Con la tensión alta, poner música suave de golpe no suele funcionar. Iguala primero cómo estás y baja después: así es como se usa en musicoterapia.',
-    ciencia_en: "When tension is high, jumping straight to soft music rarely works. Match how you feel first, then come down — that's how it's used in music therapy.",
+    ciencia_es: 'Con la tensión alta, poner música suave de golpe no suele funcionar porque no conecta con cómo estás. En musicoterapia se iguala primero la intensidad y se baja después.',
+    ciencia_en: "When tension is high, jumping straight to soft music rarely works because it doesn't connect with how you feel. In music therapy you match the intensity first, then come down.",
+    fuente: 'Principio ISO · Altshuler (1944)',
     pasos: [
       { es: 'Iguala la intensidad', en: 'Match the intensity', q_es: 'rock potente para descargar energia', q_en: 'powerful rock to release energy' },
       { es: 'Y baja revoluciones', en: 'Then wind down', q_es: 'musica tempo medio para bajar revoluciones', q_en: 'mid tempo music to wind down' },
@@ -64,8 +67,9 @@ const ESTADOS = [
     // Entrainment: a 60-80 BPM la música se acerca al pulso en reposo y el cuerpo tiende a
     // sincronizarse. Ensayos con música lenta muestran bajada de cortisol y subida de
     // oxitocina en saliva (Ooishi et al., PLOS ONE 2017).
-    ciencia_es: 'A unos 60 pulsaciones por minuto la música se acerca a tu ritmo cardiaco en reposo y el cuerpo tiende a sincronizarse: baja el cortisol y sube la oxitocina.',
-    ciencia_en: 'At around 60 beats per minute music sits near your resting heart rate and the body tends to sync with it: cortisol drops and oxytocin rises.',
+    ciencia_es: 'A unos 60 pulsaciones por minuto la música se acerca a tu ritmo cardiaco en reposo y el cuerpo tiende a sincronizarse con ella. Medido en saliva, el cortisol baja y la oxitocina sube.',
+    ciencia_en: 'At around 60 beats per minute music sits near your resting heart rate and the body tends to sync with it. Measured in saliva, cortisol drops and oxytocin rises.',
+    fuente: 'Ooishi et al., PLOS ONE (2017)',
     pasos: [
       { es: 'Si vienes acelerada, empieza aquí', en: 'If you arrive wound up, start here', q_es: 'musica ambiental suave tempo medio', q_en: 'soft ambient music mid tempo' },
       { es: 'Y baja a 60 bpm', en: 'Then drop to 60 bpm', q_es: 'musica relajante 60 bpm piano lento', q_en: 'relaxing music 60 bpm slow piano' },
@@ -87,10 +91,10 @@ export default function MomentoParaTi({ is_es, onClose }) {
           <h2 style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.5rem',fontWeight:600,color:'#0D3D3D',lineHeight:1.25}}>
             {is_es ? '¿Cómo estás ahora mismo?' : 'How are you right now?'}
           </h2>
-          <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',color:'rgba(13,61,61,0.5)',marginTop:'0.4rem',lineHeight:1.5}}>
+          <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.8rem',color:'rgba(13,61,61,0.55)',marginTop:'0.4rem',lineHeight:1.55}}>
             {is_es
-              ? 'La música que mejor funciona es la que primero acompaña cómo estás, y solo después te mueve.'
-              : 'The music that works best meets you where you are first, and only then moves you.'}
+              ? 'En musicoterapia esto tiene nombre: principio ISO. La música que mejor regula el ánimo es la que primero acompaña cómo estás, y solo después te lleva a donde quieres ir. Por eso cada opción tiene dos pasos y no una lista suelta.'
+              : "In music therapy this has a name: the ISO principle. The music that regulates mood best meets you where you are first, and only then takes you where you want to go. That's why each option has two steps rather than one loose playlist."}
           </p>
         </div>
 
@@ -106,9 +110,15 @@ export default function MomentoParaTi({ is_es, onClose }) {
                 </div>
               </div>
 
-              <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'rgba(13,61,61,0.6)',lineHeight:1.55,margin:'0.5rem 0 0.85rem'}}>
-                {is_es ? e.ciencia_es : e.ciencia_en}
-              </p>
+              {/* El porqué siempre visible y con la fuente: si no, parece una lista inventada. */}
+              <div style={{background:'rgba(201,147,90,0.08)',borderLeft:'2px solid rgba(201,147,90,0.5)',borderRadius:'0 0.5rem 0.5rem 0',padding:'0.6rem 0.75rem',margin:'0.5rem 0 0.85rem'}}>
+                <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'rgba(13,61,61,0.65)',lineHeight:1.55,margin:0}}>
+                  {is_es ? e.ciencia_es : e.ciencia_en}
+                </p>
+                <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(13,61,61,0.42)',margin:'0.4rem 0 0',fontStyle:'italic'}}>
+                  {is_es ? 'Estudio: ' : 'Study: '}{e.fuente}
+                </p>
+              </div>
 
               {e.pasos.map((p, i) => (
                 <button key={i} type="button" onClick={()=>abrir(is_es ? p.q_es : p.q_en)}
