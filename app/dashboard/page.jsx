@@ -1586,8 +1586,8 @@ export default function Dashboard() {
                             <button key={a.id} type="button" onClick={()=>guardarAvatar(a.id)}
                               style={{padding:0,background:'#0D3D3D',border:elegida?'2px solid #C9935A':'2px solid transparent',borderRadius:'0.75rem',overflow:'hidden',cursor:'pointer',position:'relative'}}>
                               {a.imagen
-                                ? <img src={a.imagen} alt="" style={{width:'100%',aspectRatio:'3/4',objectFit:'cover',display:'block',opacity:elegida?1:0.75}}/>
-                                : <video src={a.video} muted loop autoPlay playsInline style={{width:'100%',aspectRatio:'3/4',objectFit:'cover',display:'block',opacity:elegida?1:0.75}}/>}
+                                ? <img src={a.imagen} alt="" style={{width:'100%',aspectRatio:'3/4',objectFit:'cover',objectPosition:'center top',display:'block',opacity:elegida?1:0.75}}/>
+                                : <video src={a.video} muted loop autoPlay playsInline style={{width:'100%',aspectRatio:'3/4',objectFit:'cover',objectPosition:'center top',display:'block',opacity:elegida?1:0.75}}/>}
                               {elegida && <span style={{position:'absolute',top:'0.3rem',right:'0.4rem',fontSize:'0.75rem',color:'#C9935A'}}>✓</span>}
                               <span style={{display:'block',fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.8)',padding:'0.3rem 0.2rem',lineHeight:1.2}}>
                                 {is_es ? a.es : a.en}

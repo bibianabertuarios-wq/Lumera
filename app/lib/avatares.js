@@ -61,6 +61,18 @@ export const AVATARES = [
     es: 'Morena melena larga',
     en: 'Long dark hair',
   },
+  {
+    id: 'afro-corto',
+    imagen: '/images/avatar-afro-corto.png',
+    es: 'Pelo afro corto',
+    en: 'Short afro hair',
+  },
+  {
+    id: 'pelirroja',
+    imagen: '/images/avatar-pelirroja.png',
+    es: 'Pelirroja',
+    en: 'Red hair',
+  },
 ];
 
 export const AVATAR_POR_DEFECTO = 'clasica';
