@@ -31,6 +31,12 @@ export const AVATARES = [
     es: 'Pelo corto cano',
     en: 'Short grey hair',
   },
+  {
+    id: 'castano-largo',
+    imagen: '/images/avatar-castano-largo.png',
+    es: 'Melena castaña',
+    en: 'Long brown hair',
+  },
 ];
 
 export const AVATAR_POR_DEFECTO = 'clasica';
