@@ -7,6 +7,7 @@ import { getLecturaDelDia, estadoDesdeSintomaHoy } from '../lib/lecturas';
 import { DIAS_AUTO_COMPLETA, HITO_SEMANAS, getSemanaContigo, getFaseSemana, contarDiasEnSemanaActual } from '../lib/planBloques';
 import { lumiMarkdownToHtml } from '../lib/lumiMarkdown';
 import CirculoDeHoy from './CirculoDeHoy';
+import MomentoParaTi from './MomentoParaTi';
 
 const getHora = () => {
   const h = new Date().getHours();
@@ -456,6 +457,7 @@ export default function Dashboard() {
   const [pwaOculto, setPwaOculto] = useState(() => { try { return localStorage.getItem('lumera_pwa_hide') === '1'; } catch(e) { return false; } });
   const [pwaInstruccionesVisibles, setPwaInstruccionesVisibles] = useState(false);
   const [calmaActiva, setCalmaActiva] = useState(false);
+  const [momentoActivo, setMomentoActivo] = useState(false);
   // Comer a las 14:00 cae ya en la bajada del ritmo circadiano — sugerimos antes por defecto.
   const [horaDesayuno, setHoraDesayuno] = useState('08:00');
   const [horaComida, setHoraComida] = useState('13:00');
@@ -1620,6 +1622,8 @@ export default function Dashboard() {
 
           {calmaActiva && <CalmaOverlay is_es={is_es} onClose={() => setCalmaActiva(false)} />}
 
+          {momentoActivo && <MomentoParaTi is_es={is_es} onClose={() => setMomentoActivo(false)} />}
+
           {/* BLOQUE 3 — TU SEMANA + TOOLS */}
           <div className={`fade d4 ${visible?'in':''}`} style={{marginBottom:'1.25rem'}}>
 
@@ -1635,18 +1639,19 @@ export default function Dashboard() {
                 {img:'/images/kling_20260321_作品_Extremely__4896_1.png', es:'Ejercicio', en:'Exercise', s_es:'Tu rutina de hoy', s_en:'Your routine today', route:'/lumera?tab=exercise', premium:true},
                 {img:'/images/periodo.png', es:'Tu ciclo', en:'Your cycle', s_es:'Dónde estás este mes', s_en:'Where you are this month', route:'/lumera?tab=period'},
                 {img:'/images/carta_aprender.png', es:'Conocimiento', en:'Knowledge', s_es:'Lo que no te contaron', s_en:'What nobody told you', route:'/lumera?tab=myths'},
-                {img:'/images/dopamina.png', es:'Un momento para ti', en:'A moment for you', s_es:'Sube tu dopamina hoy', s_en:'Lift your dopamine today', route:'/lumera?tab=tips'},
+                {img:'/images/dopamina.png', es:'Un momento para ti', en:'A moment for you', s_es:'Música según cómo estás', s_en:'Music for how you feel', accion:'momento'},
                 {img:'/images/carta_intimidad.png', es:'Intimidad', en:'Intimacy', s_es:'Próximamente', s_en:'Coming soon', route:null},
                 {img:'/images/comunidad.png', es:'Comunidad', en:'Community', s_es:'No estás sola en esto', s_en:"You're not alone in this", route:'/lumera?tab=community'},
                 {img:'/images/sintomas.png', es:'Síntomas', en:'Symptoms', s_es:'Registra cómo te sientes', s_en:'Log how you feel', route:'/lumera?tab=symptoms'},
               ].map((t,i) => {
                 const cerrado = t.premium && bloqueado;
-                const inactivo = !t.route;
+                const inactivo = !t.route && !t.accion;
                 return (
                   <div key={i} className="tool-tile" style={inactivo?{opacity:0.6,cursor:'default'}:cerrado?{opacity:0.75}:{}}
                     onClick={()=>{
                       if(inactivo) return;
                       if(cerrado){setShowPremiumModal(true);return;}
+                      if(t.accion === 'momento'){setMomentoActivo(true);return;}
                       if(t.route.includes('/lumera')) window.location.href=t.route; else router.push(t.route);
                     }}>
                     <img src={t.img} alt="" onError={e=>{e.target.style.visibility='hidden'}}/>
