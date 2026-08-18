@@ -28,7 +28,7 @@ function truncar(texto, n) {
 }
 
 export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha = 0, objetivoKcal, onAbrirCalma,
-  checkinHecho = true, onRegistrar, luz = 1, velocidad = 1, enPenumbra = false }) {
+  checkinHecho = true, onRegistrar, luz = 1, velocidad = 1, enPenumbra = false, videoSilueta = '/videos/silueta-circulo.mp4' }) {
   const [abierto, setAbierto] = useState(null); // tipo de la tarea actualmente expandida, o null
   const videoRef = useRef(null);
 
@@ -90,7 +90,8 @@ export default function CirculoDeHoy({ plan, planHecho, onToggle, is_es, racha =
         <div style={{position:'absolute',inset:0,display:'flex',alignItems:'center',justifyContent:'center'}}>
           <video
             ref={videoRef}
-            src="/videos/silueta-circulo.mp4"
+            src={videoSilueta}
+            key={videoSilueta}
             autoPlay
             loop
             muted

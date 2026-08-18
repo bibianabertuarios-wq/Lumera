@@ -8,6 +8,7 @@ import { DIAS_AUTO_COMPLETA, HITO_SEMANAS, getSemanaContigo, getFaseSemana, cont
 import { lumiMarkdownToHtml } from '../lib/lumiMarkdown';
 import CirculoDeHoy from './CirculoDeHoy';
 import MomentoParaTi from './MomentoParaTi';
+import { AVATARES, AVATAR_POR_DEFECTO, getVideoAvatar } from '../lib/avatares';
 
 const getHora = () => {
   const h = new Date().getHours();
@@ -582,6 +583,22 @@ export default function Dashboard() {
     }
   };
 
+  // Guarda la silueta elegida. Se pinta al instante y luego se persiste; si la escritura
+  // falla, se revierte para no enseñarle una elección que en realidad no se guardó.
+  const guardarAvatar = async (idVariante) => {
+    const anterior = user?.avatarVariante || AVATAR_POR_DEFECTO;
+    if (idVariante === anterior) return;
+    setUser(prev => ({ ...prev, avatarVariante: idVariante }));
+    const { error } = await supabase
+      .from('users')
+      .update({ avatar_variante: idVariante })
+      .eq('id', user?.id);
+    if (error) {
+      console.error('Error guardando la silueta:', error.message);
+      setUser(prev => ({ ...prev, avatarVariante: anterior }));
+    }
+  };
+
   const guardarPeso = async () => {
     const nuevoPeso = parseFloat(pesoInput);
     if (!nuevoPeso || nuevoPeso <= 0) return;
@@ -796,6 +813,7 @@ export default function Dashboard() {
       horaDesayuno: profile?.hora_desayuno || null,
       horaComida: profile?.hora_comida || null,
       horaCena: profile?.hora_cena || null,
+      avatarVariante: profile?.avatar_variante || AVATAR_POR_DEFECTO,
     };
     setUser(userData);
 
@@ -1110,6 +1128,7 @@ export default function Dashboard() {
                   checkinHecho={checkinHecho}
                   onRegistrar={()=>{ window.location.href = '/lumera?tab=symptoms'; }}
                   luz={estado.luz} velocidad={estado.velocidad} enPenumbra={estado.enPenumbra}
+                  videoSilueta={getVideoAvatar(user?.avatarVariante)}
                 />
               </div>
             );
@@ -1549,6 +1568,34 @@ export default function Dashboard() {
                       {guardandoRecordatorioNuevo ? (is_es?'Guardando...':'Saving...') : (is_es ? 'Crear recordatorio' : 'Create reminder')}
                     </button>
                   </div>
+
+                  {/* TU SILUETA — la usuaria elige la que más se le parece. Solo aparece si
+                      hay más de una variante disponible, para no enseñar un selector de uno. */}
+                  {AVATARES.length > 1 && (
+                    <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem'}}>
+                      <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,display:'inline-block',background:'rgba(31,122,92,0.1)',border:'1px solid rgba(31,122,92,0.22)',color:'#0D3D3D',borderRadius:'0.5rem',padding:'0.3rem 0.7rem',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.5rem'}}>
+                        {is_es ? 'Tu silueta' : 'Your silhouette'}
+                      </div>
+                      <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.78rem',color:'rgba(13,61,61,0.55)',lineHeight:1.5,marginBottom:'0.9rem'}}>
+                        {is_es ? 'Elige la que más se te parezca. Aparecerá en tu círculo de cada día.' : 'Pick the one closest to you. It will show in your daily circle.'}
+                      </p>
+                      <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:'0.6rem'}}>
+                        {AVATARES.map(a => {
+                          const elegida = (user?.avatarVariante || AVATAR_POR_DEFECTO) === a.id;
+                          return (
+                            <button key={a.id} type="button" onClick={()=>guardarAvatar(a.id)}
+                              style={{padding:0,background:'#0D3D3D',border:elegida?'2px solid #C9935A':'2px solid transparent',borderRadius:'0.75rem',overflow:'hidden',cursor:'pointer',position:'relative'}}>
+                              <video src={a.video} muted loop autoPlay playsInline style={{width:'100%',aspectRatio:'3/4',objectFit:'cover',display:'block',opacity:elegida?1:0.75}}/>
+                              {elegida && <span style={{position:'absolute',top:'0.3rem',right:'0.4rem',fontSize:'0.75rem',color:'#C9935A'}}>✓</span>}
+                              <span style={{display:'block',fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',color:'rgba(255,255,255,0.8)',padding:'0.3rem 0.2rem',lineHeight:1.2}}>
+                                {is_es ? a.es : a.en}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
 
                   {/* ¿CÓMO USAR LUMERA? — vive aquí, en el perfil. Antes ocupaba sitio en el
                       Inicio, donde solo estorba a partir del segundo día. */}
