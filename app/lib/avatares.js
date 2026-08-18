@@ -43,6 +43,12 @@ export const AVATARES = [
     es: 'Media melena',
     en: 'Mid-length hair',
   },
+  {
+    id: 'rizado-color',
+    imagen: '/images/avatar-rizado-color.png',
+    es: 'Pelo rizado',
+    en: 'Curly hair',
+  },
 ];
 
 export const AVATAR_POR_DEFECTO = 'clasica';
