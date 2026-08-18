@@ -71,6 +71,73 @@ function getTipoTendencia(objetivo) {
   return 'energia';
 }
 
+// Fecha del lunes de la semana en curso, en formato YYYY-MM-DD. Sirve de clave para
+// recordar que ya se cerró el resumen de esta semana.
+function claveSemana() {
+  const d = new Date();
+  const diaSemana = (d.getDay() + 6) % 7; // 0 = lunes
+  d.setDate(d.getDate() - diaSemana);
+  // Se compone a mano en hora local: toISOString pasa a UTC y en España restaría un día.
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${d.getFullYear()}-${mm}-${dd}`;
+}
+
+// RESUMEN SEMANAL — se calcula comparando los 7 últimos días con los 7 anteriores.
+// Solo aparece los lunes y se puede cerrar; queda guardado para no repetirlo esa semana.
+// Nunca se muestra en rojo ni con reproche: si una medida baja, se nombra sin culpar.
+function getResumenSemanal(checkins, is_es) {
+  const hoy = new Date();
+  const dia = (f) => f.toISOString().split('T')[0];
+  const hace7 = dia(new Date(hoy - 7 * 86400000));
+  const hace14 = dia(new Date(hoy - 14 * 86400000));
+  const lista = checkins || [];
+  const estaSemana = lista.filter(c => c.fecha >= hace7);
+  const anterior = lista.filter(c => c.fecha >= hace14 && c.fecha < hace7);
+  if (estaSemana.length < 2) return null;
+
+  const media = (arr, campo) => {
+    const v = arr.map(c => Number(c[campo])).filter(n => n > 0);
+    return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null;
+  };
+  const metricas = [
+    { campo: 'energia', es: 'energía', en: 'energy' },
+    { campo: 'sueno', es: 'sueño', en: 'sleep' },
+    { campo: 'animo', es: 'ánimo', en: 'mood' },
+  ].map(m => {
+    const act = media(estaSemana, m.campo), prev = media(anterior, m.campo);
+    const delta = (act !== null && prev !== null && prev > 0) ? Math.round((act - prev) / prev * 100) : null;
+    return { ...m, act, delta };
+  }).filter(m => m.act !== null);
+  if (!metricas.length) return null;
+
+  const conDelta = metricas.filter(m => m.delta !== null);
+  const mejor = conDelta.length ? conDelta.reduce((a, b) => (b.delta > a.delta ? b : a)) : null;
+  const nombre = (m) => is_es ? m.es : m.en;
+
+  // Se habla en la escala real (x,x de 5) y no en porcentajes: sobre una escala de 1 a 5
+  // un cambio pequeño se convierte en "+150%" y suena a dato inflado.
+  let titular;
+  if (!mejor) {
+    titular = is_es
+      ? `Tu primera semana registrada: ${estaSemana.length} días. Ya hay base para comparar.`
+      : `Your first logged week: ${estaSemana.length} days. Now there's a baseline to compare.`;
+  } else if (mejor.delta > 2) {
+    titular = is_es
+      ? `Tu ${nombre(mejor)} es lo que más ha mejorado esta semana.`
+      : `Your ${nombre(mejor)} improved the most this week.`;
+  } else if (mejor.delta < -2) {
+    titular = is_es
+      ? 'Ha sido una semana más baja que la anterior. Registrarlo también sirve — así sabemos por dónde empezar.'
+      : "This week ran lower than last one. Logging it counts too — now we know where to start.";
+  } else {
+    titular = is_es
+      ? 'Semana estable. Mantener también es avanzar.'
+      : 'A steady week. Holding steady is progress too.';
+  }
+  return { dias: estaSemana.length, metricas, titular };
+}
+
 // Próxima comida/hora pendiente hoy (o la primera de mañana si ya pasaron todas).
 function getProximaAccion(user, is_es) {
   const candidatos = [
@@ -418,6 +485,8 @@ export default function Dashboard() {
   const [planLoading, setPlanLoading] = useState(false);
   const [planHecho, setPlanHecho] = useState([]);
   const [progresoDetalleVisible, setProgresoDetalleVisible] = useState(false);
+  // Clave por semana: al cerrar el resumen del lunes no vuelve a salir esa semana.
+  const [resumenCerrado, setResumenCerrado] = useState(false);
   const [usoVisible, setUsoVisible] = useState(false);
   const [periodLog, setPeriodLog] = useState([]);
   const router = useRouter();
@@ -762,6 +831,11 @@ export default function Dashboard() {
       setPeriodLog(JSON.parse(localStorage.getItem('lumeraPeriod') || '[]'));
     } catch(e) {}
 
+    // ¿Ya cerró el resumen de esta semana? La clave lleva el lunes de la semana en curso.
+    try {
+      setResumenCerrado(localStorage.getItem(`lumera_resumen_${session.user.id}_${claveSemana()}`) === '1');
+    } catch(e) {}
+
     // Ver si ya hizo checkin hoy
     const hoy = new Date().toISOString().split('T')[0];
     const checkinHoy = checkins?.find(c => c.fecha === hoy);
@@ -1067,6 +1141,40 @@ export default function Dashboard() {
                 <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.9rem',fontWeight:700,color:'#C9935A',whiteSpace:'nowrap',flexShrink:0}}>
                   {formatearRestante(proxima.diffMin, proxima.manana, is_es)}
                 </div>
+              </div>
+            );
+          })()}
+
+          {/* RESUMEN DE LA SEMANA — solo los lunes, y se puede cerrar.
+              No se apoya en notificaciones porque muchos móviles las bloquean sin avisar. */}
+          {new Date().getDay() === 1 && !resumenCerrado && (() => {
+            const resumen = getResumenSemanal(ultimosCheckins, is_es);
+            return resumen && (
+              <div className={`fade d1 ${visible?'in':''}`} style={{background:'linear-gradient(135deg,#0D3D3D,#0A2A2A)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem',position:'relative'}}>
+                <button type="button" aria-label={is_es?'Cerrar resumen':'Dismiss summary'}
+                  onClick={()=>{ setResumenCerrado(true); try { localStorage.setItem(`lumera_resumen_${user?.id}_${claveSemana()}`,'1'); } catch(e) {} }}
+                  style={{position:'absolute',top:'0.6rem',right:'0.8rem',background:'none',border:'none',color:'rgba(255,255,255,0.45)',fontSize:'1rem',cursor:'pointer',padding:'0.2rem'}}>✕</button>
+                <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.6rem',fontWeight:700,letterSpacing:'2px',color:'#C9935A',textTransform:'uppercase',marginBottom:'0.5rem'}}>
+                  {is_es ? '✦ Tu semana' : '✦ Your week'}
+                </div>
+                <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.15rem',color:'rgba(255,255,255,0.92)',lineHeight:1.5,marginBottom:'0.9rem'}}>
+                  {resumen.titular}
+                </p>
+                <div style={{display:'flex',gap:'0.5rem',flexWrap:'wrap'}}>
+                  {resumen.metricas.map(m => (
+                    <div key={m.campo} style={{flex:'1 1 30%',background:'rgba(255,255,255,0.08)',borderRadius:'0.7rem',padding:'0.6rem 0.5rem',textAlign:'center'}}>
+                      <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'1.05rem',fontWeight:700,color:'white'}}>
+                        {m.act.toFixed(1).replace('.', is_es ? ',' : '.')}<span style={{fontSize:'0.7rem',color:'rgba(255,255,255,0.45)'}}>/5</span>
+                      </div>
+                      <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.62rem',color:'rgba(255,255,255,0.6)',textTransform:'uppercase',letterSpacing:'0.5px',marginTop:'0.15rem'}}>
+                        {is_es ? m.es : m.en} {m.delta === null ? '' : m.delta > 2 ? '↑' : m.delta < -2 ? '↓' : '→'}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <p style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',color:'rgba(255,255,255,0.4)',marginTop:'0.8rem',marginBottom:0}}>
+                  {is_es ? `Sobre ${resumen.dias} día${resumen.dias===1?'':'s'} registrados` : `Based on ${resumen.dias} logged day${resumen.dias===1?'':'s'}`}
+                </p>
               </div>
             );
           })()}
