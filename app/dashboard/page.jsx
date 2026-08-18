@@ -1267,17 +1267,10 @@ export default function Dashboard() {
                 );
               })())}
 
-              {/* La obra que se destapa — dentro de la misma tarjeta, ya no suelta */}
-              <div style={{borderTop:'1px solid rgba(201,147,90,0.15)',paddingTop:'1rem',marginTop:'1rem'}}>
-                <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',gap:'0.6rem',marginBottom:'0.6rem'}}>
-                  <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase'}}>
-                    {is_es ? 'Tu obra de esta semana' : 'Your artwork this week'}
-                  </span>
-                  <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.75rem',fontWeight:700,color:'#A06030',whiteSpace:'nowrap'}}>
-                    {fragmentosSemana}/8
-                  </span>
-                </div>
-                <div style={{position:'relative',borderRadius:'0.85rem',overflow:'hidden',aspectRatio:'4/3',background:'#EFE7DA'}}>
+              {/* La obra que se destapa — en formato reducido y en fila, para que no compita
+                  con el Círculo de Hoy, que es el objeto dominante de la pantalla. */}
+              <div style={{borderTop:'1px solid rgba(201,147,90,0.15)',paddingTop:'1rem',marginTop:'1rem',display:'flex',alignItems:'center',gap:'0.9rem'}}>
+                <div style={{position:'relative',borderRadius:'0.6rem',overflow:'hidden',width:'96px',height:'72px',flexShrink:0,background:'#EFE7DA'}}>
                   <svg viewBox="0 0 400 300" preserveAspectRatio="none" style={{position:'absolute',inset:0,width:'100%',height:'100%'}}>
                     <defs>
                       <mask id="obraMask">
@@ -1290,9 +1283,14 @@ export default function Dashboard() {
                     <image href="/images/shula_principal.jpg" x="0" y="0" width="400" height="300" preserveAspectRatio="xMidYMid slice" mask="url(#obraMask)"/>
                   </svg>
                 </div>
-                <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.85rem',color:'rgba(13,61,61,0.55)',marginTop:'0.6rem',marginBottom:0}}>
-                  {is_es ? 'Cada cosa que haces destapa un trozo.' : 'Everything you do uncovers a piece.'}
-                </p>
+                <div style={{minWidth:0}}>
+                  <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,color:'rgba(13,61,61,0.4)',letterSpacing:'1.5px',textTransform:'uppercase',marginBottom:'0.2rem'}}>
+                    {is_es ? 'Tu obra' : 'Your artwork'} · <span style={{color:'#A06030'}}>{fragmentosSemana}/8</span>
+                  </div>
+                  <p style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontStyle:'italic',fontSize:'0.9rem',color:'rgba(13,61,61,0.6)',margin:0,lineHeight:1.4}}>
+                    {is_es ? 'Cada cosa que haces destapa un trozo.' : 'Everything you do uncovers a piece.'}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
