@@ -403,7 +403,6 @@ export default function Dashboard() {
   const [planGenerado, setPlanGenerado] = useState(null);
   const [planLoading, setPlanLoading] = useState(false);
   const [planHecho, setPlanHecho] = useState([]);
-  const [toolsVisible, setToolsVisible] = useState(false);
   const [progresoDetalleVisible, setProgresoDetalleVisible] = useState(false);
   const [usoVisible, setUsoVisible] = useState(false);
   const [periodLog, setPeriodLog] = useState([]);
@@ -920,6 +919,12 @@ export default function Dashboard() {
         .estado-btn.sel{border-color:#C9935A;background:rgba(201,147,90,0.12);font-weight:600;}
         .tool-card{background:white;border:1px solid rgba(201,147,90,0.15);border-radius:1rem;padding:1rem;text-align:center;cursor:pointer;transition:all 0.2s ease;}
         .tool-card:hover{border-color:#C9935A;transform:translateY(-2px);box-shadow:0 4px 16px rgba(201,147,90,0.12);}
+        /* Tarjeta de herramienta con imagen grande: la imagen manda, el texto acompaña. */
+        .tool-tile{position:relative;border-radius:1rem;overflow:hidden;cursor:pointer;aspect-ratio:1/1;border:1px solid rgba(201,147,90,0.18);transition:transform 0.2s ease,box-shadow 0.2s ease;}
+        .tool-tile:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(201,147,90,0.18);}
+        .tool-tile img{width:100%;height:100%;object-fit:cover;display:block;}
+        .tool-tile .velo{position:absolute;inset:0;background:linear-gradient(to top,rgba(13,61,61,0.88) 0%,rgba(13,61,61,0.35) 45%,rgba(13,61,61,0.05) 100%);}
+        .tool-tile .txt{position:absolute;left:0;right:0;bottom:0;padding:0.7rem 0.8rem;text-align:left;}
         .nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:0.5rem;min-width:50px;transition:opacity 0.2s;}
         .nav-item:hover{opacity:0.7;}
         .btn-premium{width:100%;background:linear-gradient(135deg,#C9935A,#A06030);border:none;border-radius:0.75rem;padding:1rem;color:white;font-size:1rem;font-family:Montserrat,sans-serif;font-weight:700;cursor:pointer;}
@@ -1401,6 +1406,31 @@ export default function Dashboard() {
                     </button>
                   </div>
 
+                  {/* ¿CÓMO USAR LUMERA? — vive aquí, en el perfil. Antes ocupaba sitio en el
+                      Inicio, donde solo estorba a partir del segundo día. */}
+                  <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem',marginBottom:'1.25rem'}}>
+                    <div onClick={()=>setUsoVisible(!usoVisible)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer'}}>
+                      <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,display:'inline-block',background:'rgba(31,122,92,0.1)',border:'1px solid rgba(31,122,92,0.22)',color:'#0D3D3D',borderRadius:'0.5rem',padding:'0.3rem 0.7rem',letterSpacing:'2px',textTransform:'uppercase'}}>
+                        {is_es ? '¿Cómo usar Lumera?' : 'How to use Lumera?'}
+                      </span>
+                      <span style={{fontSize:'0.75rem',color:'#C9935A',fontWeight:600}}>{usoVisible ? '▲' : '▼'}</span>
+                    </div>
+                    {usoVisible && (
+                      <div style={{marginTop:'0.9rem'}}>
+                        {[
+                          is_es ? 'Registra cómo te sientes' : 'Log how you feel',
+                          is_es ? 'Marca tu plan de hoy' : "Check off today's plan",
+                          is_es ? 'Pregunta a tu asesora' : 'Ask your advisor',
+                        ].map((step, i) => (
+                          <div key={i} style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'0.6rem'}}>
+                            <div style={{width:'24px',height:'24px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',color:'white',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.7rem',fontWeight:700,flexShrink:0}}>{i+1}</div>
+                            <span style={{fontSize:'0.85rem',color:'rgba(13,61,61,0.7)',fontFamily:'Montserrat,sans-serif'}}>{step}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
                   {/* Recursos / biblioteca */}
                   <div style={{background:'rgba(255,255,255,0.9)',border:'1px solid rgba(201,147,90,0.2)',borderRadius:'1.25rem',padding:'1.25rem'}}>
                     <div onClick={()=>setRecursosVisibleYo(!recursosVisibleYo)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer'}}>
@@ -1466,50 +1496,42 @@ export default function Dashboard() {
           {/* BLOQUE 3 — TU SEMANA + TOOLS */}
           <div className={`fade d4 ${visible?'in':''}`} style={{marginBottom:'1.25rem'}}>
 
-            {/* ¿CÓMO USAR LUMERA? — acordeón cerrado por defecto */}
-            <div onClick={()=>setUsoVisible(!usoVisible)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',marginBottom:'0.75rem'}}>
-              <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,display:'inline-block',background:'rgba(31,122,92,0.1)',border:'1px solid rgba(31,122,92,0.22)',color:'#0D3D3D',borderRadius:'0.5rem',padding:'0.3rem 0.7rem',letterSpacing:'2px',textTransform:'uppercase'}}>
-                {is_es ? '¿Cómo usar Lumera?' : 'How to use Lumera?'}
-              </span>
-              <span style={{fontSize:'0.75rem',color:'#C9935A',fontWeight:600}}>{usoVisible ? '▲' : '▼'}</span>
+            {/* TUS HERRAMIENTAS — rejilla visual, siempre a la vista (antes era un acordeón
+                cerrado con dos iconos de 48px). Aquí viven también intimidad, conocimiento
+                y el momento de dopamina, en vez de escondidos en el menú "Más". */}
+            <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,display:'inline-block',background:'rgba(31,122,92,0.1)',border:'1px solid rgba(31,122,92,0.22)',color:'#0D3D3D',borderRadius:'0.5rem',padding:'0.3rem 0.7rem',letterSpacing:'2px',textTransform:'uppercase',marginBottom:'0.75rem'}}>
+              {is_es ? 'Tus herramientas' : 'Your tools'}
             </div>
-            {usoVisible && (
-              <div style={{marginBottom:'1.5rem'}}>
-                {[
-                  is_es ? 'Registra cómo te sientes' : 'Log how you feel',
-                  is_es ? 'Marca tu plan de hoy' : "Check off today's plan",
-                  is_es ? 'Pregunta a tu asesora' : 'Ask your advisor',
-                ].map((step, i) => (
-                  <div key={i} style={{display:'flex',alignItems:'center',gap:'0.75rem',marginBottom:'0.6rem'}}>
-                    <div style={{width:'24px',height:'24px',borderRadius:'50%',background:'linear-gradient(135deg,#C9935A,#A06030)',color:'white',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'0.7rem',fontWeight:700,flexShrink:0}}>{i+1}</div>
-                    <span style={{fontSize:'0.85rem',color:'rgba(13,61,61,0.7)',fontFamily:'Montserrat,sans-serif'}}>{step}</span>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'0.75rem'}}>
+              {[
+                {img:'/images/kling_20260321_作品__Extremely_4730_1.png', es:'Nutrición', en:'Nutrition', s_es:'Tu menú de hoy', s_en:'Your menu today', route:'/lumera?tab=nutrition', premium:true},
+                {img:'/images/kling_20260321_作品_Extremely__4896_1.png', es:'Ejercicio', en:'Exercise', s_es:'Tu rutina de hoy', s_en:'Your routine today', route:'/lumera?tab=exercise', premium:true},
+                {img:'/images/periodo.png', es:'Tu ciclo', en:'Your cycle', s_es:'Dónde estás este mes', s_en:'Where you are this month', route:'/lumera?tab=period'},
+                {img:'/images/carta_aprender.png', es:'Conocimiento', en:'Knowledge', s_es:'Lo que no te contaron', s_en:'What nobody told you', route:'/lumera?tab=myths'},
+                {img:'/images/dopamina.png', es:'Un momento para ti', en:'A moment for you', s_es:'Sube tu dopamina hoy', s_en:'Lift your dopamine today', route:'/lumera?tab=tips'},
+                {img:'/images/carta_intimidad.png', es:'Intimidad', en:'Intimacy', s_es:'Próximamente', s_en:'Coming soon', route:null},
+                {img:'/images/comunidad.png', es:'Comunidad', en:'Community', s_es:'No estás sola en esto', s_en:"You're not alone in this", route:'/lumera?tab=community'},
+                {img:'/images/sintomas.png', es:'Síntomas', en:'Symptoms', s_es:'Registra cómo te sientes', s_en:'Log how you feel', route:'/lumera?tab=symptoms'},
+              ].map((t,i) => {
+                const cerrado = t.premium && bloqueado;
+                const inactivo = !t.route;
+                return (
+                  <div key={i} className="tool-tile" style={inactivo?{opacity:0.6,cursor:'default'}:cerrado?{opacity:0.75}:{}}
+                    onClick={()=>{
+                      if(inactivo) return;
+                      if(cerrado){setShowPremiumModal(true);return;}
+                      if(t.route.includes('/lumera')) window.location.href=t.route; else router.push(t.route);
+                    }}>
+                    <img src={t.img} alt="" onError={e=>{e.target.style.visibility='hidden'}}/>
+                    <div className="velo"/>
+                    {(cerrado || inactivo) && <span style={{position:'absolute',top:'0.5rem',right:'0.6rem',fontSize:'0.8rem'}}>{inactivo?'✦':'🔒'}</span>}
+                    <div className="txt">
+                      <div style={{fontFamily:"'Cormorant Garamond',Georgia,serif",fontSize:'1.05rem',fontWeight:600,color:'white',lineHeight:1.2}}>{is_es?t.es:t.en}</div>
+                      <div style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.66rem',color:'rgba(255,255,255,0.75)',marginTop:'0.1rem'}}>{is_es?t.s_es:t.s_en}</div>
+                    </div>
                   </div>
-                ))}
-              </div>
-            )}
-
-            {/* Tools grid */}
-            <div onClick={()=>setToolsVisible(!toolsVisible)} style={{display:'flex',justifyContent:'space-between',alignItems:'center',cursor:'pointer',marginBottom:'0.75rem'}}>
-              <span style={{fontFamily:'Montserrat,sans-serif',fontSize:'0.65rem',fontWeight:700,display:'inline-block',background:'rgba(31,122,92,0.1)',border:'1px solid rgba(31,122,92,0.22)',color:'#0D3D3D',borderRadius:'0.5rem',padding:'0.3rem 0.7rem',letterSpacing:'2px',textTransform:'uppercase'}}>
-                {is_es ? 'Tus herramientas' : 'Your tools'}
-              </span>
-              <span style={{fontSize:'0.75rem',color:'#C9935A',fontWeight:600}}>{toolsVisible ? '▲' : '▼'}</span>
-            </div>
-            <div style={{display:toolsVisible?'grid':'none',gridTemplateColumns:'1fr 1fr',gap:'0.75rem'}}>
-              {(is_es ? [
-                {img:"/images/kling_20260321_作品__Extremely_4730_1.png", title:'Nutrición', sub:'Tu menú de hoy', route:'/lumera?tab=nutrition'},
-                {img:"/images/kling_20260321_作品_Extremely__4896_1.png", title:'Ejercicio', sub:'Tu rutina de hoy', route:'/lumera?tab=exercise'},
-              ] : [
-                {img:"/images/kling_20260321_作品__Extremely_4730_1.png", title:'Nutrition', sub:'Your menu today', route:'/lumera?tab=nutrition'},
-                {img:"/images/kling_20260321_作品_Extremely__4896_1.png", title:'Exercise', sub:'Your routine today', route:'/lumera?tab=exercise'},
-              ]).map((t,i) => (
-                <div key={i} className="tool-card" style={bloqueado?{opacity:0.55,position:'relative'}:{}} onClick={()=>{ if(bloqueado){setShowPremiumModal(true);return;} if(t.route==='__lumi_chat__'){setShowLumiChat(true);if(lumiChatMessages.length===0)setLumiChatMessages([{role:'assistant',content:lumiMsg}]);} else if(t.route.includes('/lumera')) window.location.href=t.route; else router.push(t.route); }}>
-                  {bloqueado && <span style={{position:'absolute',top:'0.5rem',right:'0.5rem',fontSize:'0.75rem'}}>🔒</span>}
-                  <img src={t.img} alt={t.title} style={{width:'48px',height:'48px',objectFit:'cover',borderRadius:'50%',marginBottom:'0.4rem'}} onError={e=>{e.target.style.display='none'}}/>
-                  <div style={{fontSize:'0.95rem',fontWeight:600,color:'#0D3D3D',marginBottom:'0.1rem'}}>{t.title}</div>
-                  <div style={{fontSize:'0.7rem',fontFamily:'Montserrat,sans-serif',color:'rgba(13,61,61,0.4)'}}>{t.sub}</div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
